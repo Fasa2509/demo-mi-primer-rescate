@@ -14,7 +14,7 @@ export const Header: FC<Props> = ({ index }) => {
   const { passedImage } = useContext( ScrollContext );
 
   return (
-    <nav className={ `${ styles.nav }${ index ? !passedImage ? ` ${ styles.nav__transparent }` : '' : '' }` }>
+    <nav className={ `${ styles.nav }${ index ? ( !passedImage ? ` ${ styles.nav__transparent }` : '' ) : '' }` }>
       <header className={ styles.header }>
         <LinkLogo />
         <button className={ `hamburger hamburger--squeeze ${ isMenuOpen ? 'is-active' : '' } ${ styles.button__menu }` } type="button" onClick={ toggleSideMenu }>

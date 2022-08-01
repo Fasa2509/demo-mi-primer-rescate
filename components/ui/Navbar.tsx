@@ -37,7 +37,7 @@ export const Navbar: FC = () => {
 
   return (
     <>
-    <Header />
+    <Header index={ router.asPath === '/' } />
     {/* si ya se hace hecho scroll, le agrega la clase scrolled que hace que se reduzca su height */}
     {/* <nav className={ `${styles.navbar}${ scrolled ? ` ${ styles['navbar--scrolled'] }` : '' }` }>
       
