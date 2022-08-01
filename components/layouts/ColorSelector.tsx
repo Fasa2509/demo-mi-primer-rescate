@@ -21,14 +21,15 @@ export const ColorSelector = () => {
     const [colors, setColors] = useState(initialColor);
 
     useEffect(() => {
-        document.addEventListener('click', e => {
-            if ( e.target.matches('.color-selector div') ) {
-                aColor = e.target.style.backgroundColor
-            } else if ( e.target.matches('.color-selector') || e.target.matches('.color-selector input') || e.target.matches('.color-selector button') ) {
+        document.addEventListener('click', (e: any) => {
+            let target = e.target
+            if ( target.matches('.color-selector div') ) {
+                aColor = target.style.backgroundColor
+            } else if ( target.matches('.color-selector') || target.matches('.color-selector input') || target.matches('.color-selector button') ) {
                 return
             } else {
                 if ( !aColor ) return;
-                e.target.style.backgroundColor = aColor
+                target.style.backgroundColor = aColor
             }
         })
     }, [])
@@ -67,7 +68,7 @@ export const ColorSelector = () => {
             // console.log(aColor)
             aColor = ''
             // console.log(aColor)
-            if ( document.querySelector('.active-color') ) document.querySelector('.active-color').classList.remove('active-color')
+            if ( document.querySelector('.active-color') ) document.querySelector('.active-color')!.classList.remove('active-color')
         } }>Quitar</button>
     </div>
   )

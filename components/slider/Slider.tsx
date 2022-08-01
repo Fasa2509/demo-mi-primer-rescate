@@ -23,8 +23,9 @@ export const Slider: FC<Props> = ({ children, style }) => {
 
     // if ( childs[active] ?? true ) return
 
-    childs[active].classList.remove('is-active')
-    childs[active+change].classList.add('is-active')
+    let obj1: any = childs[active], obj2: any = childs[active+change]
+    obj1.classList.remove('is-active')
+    obj2.classList.add('is-active')
 
     setActive( active + change )
   }
