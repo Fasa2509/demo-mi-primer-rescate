@@ -1,9 +1,44 @@
+@import 'hamburgers.css';
+
+:root {
+  --main-color: #2ACED8;
+  --main-color-hover: #2FE3EC;
+  --secondary-color-1: #2AD8A4;
+  --secondary-color-1-hover: #27be91;
+  --secondary-color-2: #B74FD1;
+}
+
 html,
 body {
-  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  scroll-behavior: smooth;
+  /* color: #444; */
+  line-height: 1.35;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #fbfbfb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+*::selection {
+  background-color: var(--secondary-color-1);
+}
+
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+h1, h2, h3, p, hr {
+  margin: 1rem 0;
 }
 
 a {
@@ -11,6 +46,88 @@ a {
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
+.button {
+  background-color: var(--secondary-color-1);
+  color: #FFF;
+  border: none;
+  border-radius: 3px;
+  padding: .5rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 1rem;
+  transition: background-color 100ms ease;
+}
+
+.button--full {
+  margin: 1rem 0;
+  width: 100%;
+  padding: .6rem 1.2rem;
+  border-radius: 5px;
+}
+
+.input {
+  padding: .8rem;
+  margin: .25rem auto;
+  font-size: 1em;
+  color: #666;
+  border: thin solid #ddd;
+  border-radius: 3px;
+  width: 100%;
+}
+
+textarea {
+  resize: none;
+}
+
+form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+section .is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+
+@media (hover: hover) {
+  .button:hover {
+    background-color: var(--secondary-color-1-hover);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.active-color {
+  border: 2px solid rgb(0, 0, 0);
 }

@@ -1,0 +1,1 @@
+export const getParagraphs = ( content:string ): string[] => content.split('\n').filter(text => text)

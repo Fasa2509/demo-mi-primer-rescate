@@ -1,0 +1,115 @@
+.father {
+    overflow: hidden;
+    margin-bottom: 1rem;
+    min-height: 3rem;
+    box-shadow: 0 .5rem 3rem -1.8rem rgb(124, 124, 124);
+}
+
+.title__container {
+    display: flex;
+    justify-content: flex-start;
+    min-height: 3rem;
+    background-color: var(--secondary-color-1);
+    border-radius: 1.5rem;
+    position: relative;
+    z-index: 995;
+    padding: .5rem 0;
+    transition: border-end-start-radius 400ms ease, border-end-end-radius 400ms ease;
+}
+
+.title__container.active {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+}
+
+.title {
+    width: calc(100% - 2rem);
+    padding: 0 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    border-radius: 10rem;
+    font-size: 18px;
+    font-weight: 600;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #FFF;
+    position: relative;
+    z-index: 990;
+    border-radius: 1rem;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+    transition: margin-top 800ms ease-in-out;
+}
+
+.content > * {
+    margin: 0;
+}
+
+.display {
+    margin-top: 0;
+}
+
+
+
+
+
+
+.wings::before,
+.wings::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: calc(1.5rem + .6rem);
+    height: 4px;
+    width: 1rem;
+    background-color: #FFF;
+    cursor: pointer;
+    transform: rotate(40deg);
+    transition: transform 250ms ease;
+}
+
+.wings::after {
+    right: 1.5rem;
+    transform: rotate(-40deg);
+}
+
+.wings.active::before {
+    transform: rotate(-40deg);
+}
+
+.wings.active::after {
+    transform: rotate(40deg);
+}
+
+
+
+
+
+
+@media screen and (min-width: 576px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .father {
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        min-height: 3rem;
+        box-shadow: 0 .5rem 3rem -1.8rem rgb(124, 124, 124);
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .title {
+        font-size: 24px;
+    }
+}

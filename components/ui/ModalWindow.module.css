@@ -1,0 +1,75 @@
+.modal__window {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .05);
+    backdrop-filter: blur(1px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.modal__container {
+    padding: 1rem;
+    min-width: 5rem;
+    width: 80vw;
+    max-width: 900px;
+    min-height: 5rem;
+    background-color: #FFF;
+    border-radius: 1.5rem;
+    position: relative;
+    animation: modalAppear 500ms ease-out 0ms 1 normal both;
+}
+
+.modal__title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 200;
+    max-width: 90%;
+}
+
+.modal__close {
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    position: absolute;
+    background-color: transparent;
+    top: .8rem;
+    right: 1rem;
+    cursor: pointer;
+    transition: transform 100ms ease;
+}
+
+.modal__close:active {
+    transform: scale(.75);
+}
+
+.modal__close::before,
+.modal__close::after {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 4px;
+    background-color: #66666699;
+    border-radius: 1rem;
+    position: absolute;
+    transform: rotate(45deg);
+}
+
+.modal__close::after {
+    transform: rotate(-45deg);
+}
+
+@keyframes modalAppear {
+    0% {
+        transform: translateX(100vw);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}

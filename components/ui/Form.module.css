@@ -1,0 +1,164 @@
+.form {
+    max-width: 750px;
+    margin: 2rem auto;
+    padding: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form input[type="submit"] {
+    display: block;
+}
+
+.form input[type="file"] {
+    display: none;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    width: 90%;
+    margin: 0;
+}
+
+.form__field {
+    color: #666;
+    font-size: 1rem;
+    font-family: Roboto, 'Open Sans', sans-serif ;
+    display: block;
+    width: 100%;
+    border: thin solid #aaa;
+    border-radius: 5px;
+    padding: .5rem;
+    resize: none;
+}
+
+.button {
+    background-color: var(--secondary-color-1);
+    color: #FFF;
+    border: none;
+    border-radius: 3px;
+    padding: .5rem 1rem;
+    font-size: .8rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 0;
+    min-width: max-content;
+    transition: background-color 100ms ease, transform 100ms ease;
+}
+
+.button:active {
+    transform: scale(0.95);
+}
+
+
+.article {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    border: thin solid #eaeaea;
+    background-color: #FFF;
+    border-radius: 5px;
+    color: #444;
+    padding: 1.5em;
+    margin-bottom: 2rem;
+}
+
+.article > * {
+    margin: 0;
+}
+
+.article > span {
+    align-self: flex-end;
+    color: #888;
+}
+
+
+@media (hover: hover) {
+    .button:hover {
+        background-color: var(--secondary-color-1-hover);
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .button {
+        font-size: 1rem;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/* .field__agregator {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.field__agregator__button,
+.field__quit__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: .4rem;
+    border: none;
+    background-color: var(--secondary-color-1);
+    font-weight: bold;
+    font-size: 2rem;
+    color: #FFF;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.field__quit__button {
+    width: 2rem;
+    height: 2rem;
+}
+
+.field__container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    border: thin solid #ddd;
+    border-radius: 5px;
+    padding: .5rem;
+    gap: .5rem;
+    min-height: 80px;
+    margin: .5rem 0;
+    background-color: #FFF;
+}
+
+.textarea {
+    flex-basis: 200px;
+    flex-grow: 1;
+    max-width: 600px;
+    margin: .3rem;
+}
+
+.field__reposition_1,
+.field__reposition_2 {
+    width: 1.8rem;
+    height: .5rem;
+    background-color: #000;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    cursor: pointer;
+}
+
+.field__reposition_2 {
+    margin-top: 5px;
+    transform: rotate(180deg);
+} */

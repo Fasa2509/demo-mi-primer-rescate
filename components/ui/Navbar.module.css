@@ -1,0 +1,116 @@
+.nav {
+    min-width: 300px;
+    width: 100vw;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    background-color: var(--secondary-color-1);
+    transition: background-color 250ms ease;
+}
+
+.nav__transparent {
+    background-color: transparent;
+    top: 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    height: 45px;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.header > a {
+    display: flex;
+    align-items: center;
+    transition: transform 250ms ease;
+}
+
+.button__menu {
+    position: absolute;
+    top: 8px;
+    right: 5vw;
+}
+
+.navbar {
+    display: none;
+    justify-content: center;
+    position: sticky;
+    z-index: 1100;
+    background-color: #FFF;
+    padding: 0 3vw;
+    height: 60px;
+    top: 0;
+    transition: height 300ms ease, background-color 300ms ease;
+}
+
+.navbar--scrolled {
+    height: 45px;
+}
+
+.navbar__routes {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.navbar__routes a {
+    display: flex;
+    align-items: center;
+    padding: .8rem;
+    transition: color 200ms ease, transform 200ms ease;
+}
+
+.navbar__route__active {
+    color: var(--main-color);
+}
+
+.navbar__index {
+    background-color: transparent;
+    /* border-bottom: thin solid #FFF; */
+}
+
+.navbar__route__index__active {
+    color: #fafafa;
+}
+
+@media (hover :hover) {
+    .navbar__routes > a:hover {
+        color: var(--main-color);
+        transform: translateY(-1px)
+    }
+
+    .navbar__index a:hover {
+        color: #fafafa;
+    }
+    
+    .header > a:hover {
+        transform: scale(1.05);
+    }
+}
+
+@media screen and (min-width: 576px) {
+    /* .header {
+        position: relative;
+    }
+
+    .button__menu {
+        display: none;
+    } */
+
+    .navbar {
+        display: flex;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .navbar {
+        justify-content: flex-end;
+        /* gap: 1.5rem; */
+    }
+}
