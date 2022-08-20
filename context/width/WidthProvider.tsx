@@ -5,7 +5,7 @@ export type breakpoint = 'xs' | 'sm' | 'md'
 
 
 interface props {
-    children: JSX.Element
+    children: JSX.Element | JSX.Element[];
 }
 
 

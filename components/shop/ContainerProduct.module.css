@@ -1,0 +1,46 @@
+.title {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin: .5em 0;
+}
+
+.subtitle {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: .5em 0;
+}
+
+/* ContainerFavProduct */
+
+.most__sold__container {
+    background-color: #FFF;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.most__sold__products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+/* ContainerProductType */
+
+.products__type__container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.products__link {
+    align-self: flex-end;
+    color: var(--secondary-color-1);
+    font-weight: 600;
+}
+
+@media (hover: hover) {
+    .products__link:hover {
+        text-decoration: underline;
+    }
+}

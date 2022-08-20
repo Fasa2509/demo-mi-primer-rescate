@@ -1,23 +1,26 @@
 import { FC } from "react";
-import { getParagraphs } from '../../utils';
-import styles from './Form.module.css'
 
-interface Props {
-    article: {
-        title: string;
-        content: string;
-        createdAt: number;
-    }
-}
+import { IArticle } from "../../interfaces";
+import { ArticleField } from "./ArticleField";
+import styles from './Article.module.css'
+import { getDistanceToNow } from "../../utils";
 
-export const Article: FC<Props> = ({ article }) => {
+let now = Date.now();
+
+export const Article: FC<IArticle> = ({ title, fields, createdAt = now }) => {
   return (
-    <section className={ styles.article }>
-        <p className={ styles.subtitle }>{ article.title }</p>
+    <section className={ styles.article } id={ 'article-' + title }>
+        
+        <p className={ styles.title }>{ title }</p>
+        
         {
-            getParagraphs( article.content ).map(( content, i ) => <p key={ i }>{ content }</p>)
+          ( fields && fields.length > 0 )
+            ? fields.map((field, index) => <ArticleField key={ index } field={ field } selector={ 'article-' + title } />)
+            : <></>
         }
-        <span>{ new Date( article.createdAt ).toLocaleDateString() }</span>
+
+        <span className={ styles.date }>{ getDistanceToNow( createdAt ) }</span>
+
     </section>
   )
 }

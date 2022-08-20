@@ -54,7 +54,7 @@ export const SideMenu: FC = () => {
 
                 <Divider />
 
-                <NextLink href={ '/' }>
+                <NextLink href={ '/' } scroll={ false }>
                     <a onClick={ toggleSideMenu }>
                         <ListItem button sx={{ backgroundColor: router.asPath === '/' ? '#eaeaea' : '' }}>
                             <ListItemIcon>

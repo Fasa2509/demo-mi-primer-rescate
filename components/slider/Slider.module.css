@@ -1,9 +1,9 @@
 .container {
+    width: 100%;
+    height: min(400px, 50vh);
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: min(400px, 50vh);
     border-radius: 5px;
     box-shadow: 0 0 16px -6px black;
     position: relative;
@@ -43,6 +43,28 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 200ms ease;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 500ms ease;
+    opacity: 1;
+}
+
+.button__visible {
+    visibility: visible;
+}
+
+.button__animation {
+    animation: butAnimation 2s ease-out 0ms infinite linear both;
+}
+
+@keyframes butAnimation {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1.2);
+    }
 }
 
 .button::before,

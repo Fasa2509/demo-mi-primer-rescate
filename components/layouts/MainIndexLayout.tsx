@@ -2,7 +2,6 @@ import { FC, useContext } from "react"
 import Head from "next/head";
 
 import { Divider } from "@mui/material";
-
 import { ScrollContext } from "../../context";
 import { Footer, Header, HeroWelcome, SideMenu } from "../ui";
 import { ColorSelector } from './ColorSelector';
@@ -51,7 +50,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       <main className={ styles.main__container }>
         <h1 className={ styles.title }>{ H1 || title }</h1>
 
-        <Divider sx={{ margin: '.8rem 0 1rem' /*{ xs: '.5rem 0', md: '1rem 0' }*/ }} />
+        <Divider sx={{ margin: '.8rem 0 1rem' }} />
 
         { children }
       </main>

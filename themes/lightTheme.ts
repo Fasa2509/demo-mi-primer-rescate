@@ -12,8 +12,8 @@ export const lightTheme = createTheme({
   },
   typography: {
     fontFamily: [
-      "sans-serif",
       "Roboto",
+      "sans-serif",
       "Nunito",
       "Helvetica Neue",
       "Arial",
@@ -27,12 +27,9 @@ export const lightTheme = createTheme({
     secondary: {
       main: '#2AD8A4'
     },
-    // terciary: {
-    //   main: '#B74FD1'
-    // },
     info: {
       main: '#FFF'
-    }
+    },
   },
   components: {
     MuiLink: {

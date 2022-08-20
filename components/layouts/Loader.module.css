@@ -1,0 +1,40 @@
+.loader {
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+}
+
+.print {
+    width: 25px;
+    height: 25px;
+    background-image: url(/dog-print.png);
+    background-size: contain;
+    opacity: 0;
+}
+
+.print__1,
+.print__3 {
+    align-self: flex-start;
+    transform: rotate(-15deg);
+    animation: fade 4s linear 0s linear normal backwards;
+}
+
+.print__2 {
+    align-self: flex-end;
+    transform: rotate(15deg);
+    animation: fade 4s linear 1s linear normal backwards;
+}
+
+.print__3 {
+    animation: fade 4s linear 2s linear normal backwards;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    25%, 100% {
+        opacity: 1;
+    }
+}

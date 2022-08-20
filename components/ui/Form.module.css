@@ -1,164 +1,87 @@
+/* CustomForm & CustomField */
+
 .form {
-    max-width: 750px;
-    margin: 2rem auto;
-    padding: 0;
-    position: relative;
+    max-width: 850px;
+    margin: 2em auto;
+    padding: 1em;
+    font-family: inherit;
+    background-color: #FFF;
+    border-radius: 1.5em;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 1rem;
+    box-shadow: 0 0 2.5em -1.5em #666;
 }
 
-.form input[type="submit"] {
-    display: block;
-}
-
-.form input[type="file"] {
-    display: none;
+.form button {
+    align-self: center;
 }
 
 .subtitle {
     font-size: 1.2rem;
     font-weight: 700;
-    width: 90%;
     margin: 0;
 }
 
-.form__field {
-    color: #666;
-    font-size: 1rem;
-    font-family: Roboto, 'Open Sans', sans-serif ;
-    display: block;
-    width: 100%;
-    border: thin solid #aaa;
-    border-radius: 5px;
-    padding: .5rem;
-    resize: none;
-}
-
-.button {
-    background-color: var(--secondary-color-1);
-    color: #FFF;
-    border: none;
+.form select {
+    padding: 4px;
+    border: 2px solid var(--secondary-color-1);
     border-radius: 3px;
-    padding: .5rem 1rem;
-    font-size: .8rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin: 0;
-    min-width: max-content;
-    transition: background-color 100ms ease, transform 100ms ease;
 }
 
-.button:active {
-    transform: scale(0.95);
-}
-
-
-.article {
-    display: flex;
-    flex-direction: column;
-    gap: .6rem;
-    border: thin solid #eaeaea;
-    background-color: #FFF;
-    border-radius: 5px;
-    color: #444;
-    padding: 1.5em;
-    margin-bottom: 2rem;
-}
-
-.article > * {
-    margin: 0;
-}
-
-.article > span {
-    align-self: flex-end;
-    color: #888;
-}
-
-
-@media (hover: hover) {
-    .button:hover {
-        background-color: var(--secondary-color-1-hover);
-    }
-}
-
-@media screen and (min-width: 576px) {
-    .button {
-        font-size: 1rem;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-/* .field__agregator {
-    display: flex;
-    justify-content: flex-start;
-    gap: 1.5rem;
-    margin: 1rem 0;
-}
-
-.field__agregator__button,
-.field__quit__button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: .4rem;
-    border: none;
-    background-color: var(--secondary-color-1);
-    font-weight: bold;
-    font-size: 2rem;
-    color: #FFF;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.field__quit__button {
-    width: 2rem;
-    height: 2rem;
-}
-
-.field__container {
+.field {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-evenly;
-    border: thin solid #ddd;
-    border-radius: 5px;
-    padding: .5rem;
-    gap: .5rem;
-    min-height: 80px;
-    margin: .5rem 0;
+    justify-content: flex-start;
+    width: 100%;
     background-color: #FFF;
+    border: thin solid #eaeaea;
+    border-radius: 1em;
+    min-height: 50px;
+    padding: 1em;
+    gap: 1em;
 }
 
-.textarea {
-    flex-basis: 200px;
+.field input,
+.field textarea {
+    align-self: center;
+    border: 2px solid var(--secondary-color-1);
+    border-radius: 5px;
+    padding: .5em;
+    font-size: .9em;
     flex-grow: 1;
-    max-width: 600px;
-    margin: .3rem;
+    font-family: inherit;
 }
 
-.field__reposition_1,
-.field__reposition_2 {
-    width: 1.8rem;
-    height: .5rem;
-    background-color: #000;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    cursor: pointer;
+@media screen and (min-width: 770px) {
+    .field input {
+        flex-basis: 250px;
+    }
 }
 
-.field__reposition_2 {
-    margin-top: 5px;
-    transform: rotate(180deg);
-} */
+.input__dimensions {
+    display: flex;
+    width: 100%;
+    gap: 5px;
+}
+
+.input__dimensions > input {
+    flex-grow: 1;
+}
+
+.input__dimensions > label {
+    align-self: center;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1em;
+}
+
+.header p {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}

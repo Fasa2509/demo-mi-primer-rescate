@@ -1,9 +1,10 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 
+import { ReactNotifications } from 'react-notifications-component';
 import { ThemeProvider } from '@mui/material'
-import { AuthProvider, MenuProvider, ScrollProvider } from '../context'
 import { lightTheme } from '../themes';
+import { AuthProvider, MenuProvider, ScrollProvider } from '../context'
 import { WidthProvider } from '../context/width';
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -15,6 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ScrollProvider selector='#hero-welcome'>
             <WidthProvider>
               {/* <CssBaseline /> */}
+              <ReactNotifications />
               <Component {...pageProps} />
             </WidthProvider>
           </ScrollProvider>

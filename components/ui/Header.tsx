@@ -2,7 +2,7 @@ import { FC, useContext } from 'react';
 import { MenuContext, ScrollContext } from '../../context';
 
 import { LinkLogo } from './LinkLogo'
-import styles from './Navbar.module.css'
+import styles from './Header.module.css'
 
 interface Props {
   index: boolean;

@@ -47,9 +47,9 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription }) 
       <Header index={ false } />
       
       <main className={ styles.main__container }>
-        <h1 style={{ margin: 0, fontWeight: 500 }}>{ H1 || title }</h1>
+        <h1 className={ styles.title }>{ H1 || title }</h1>
 
-        <Divider sx={{ margin: '.8rem 0 1rem' /*{ xs: '.5rem 0', md: '1rem 0' }*/ }} />
+        <Divider sx={{ margin: '.8rem 0 1rem' }} />
 
         { children }
       </main>

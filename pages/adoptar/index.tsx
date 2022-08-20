@@ -1,7 +1,8 @@
-import { Button } from '@mui/material';
-import { NextPage } from 'next'
 import { useState } from 'react';
+import { NextPage } from 'next'
+
 import { MainLayout } from '../../components'
+import styles from '../../styles/Adoptar.module.css'
 
 type Route = '' | 'Proceso' | 'Formulario'
 

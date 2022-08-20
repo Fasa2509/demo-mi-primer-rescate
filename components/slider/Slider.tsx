@@ -10,6 +10,7 @@ export const Slider: FC<Props> = ({ children, style }) => {
   
   const [active, setActive] = useState( 0 );
   const [childs, setChilds] = useState([]);
+  const [buttonClicked, setbuttonClicked] = useState( false );
 
   useEffect(() => {
     let elements = document.querySelectorAll('.slider__element')
@@ -36,8 +37,8 @@ export const Slider: FC<Props> = ({ children, style }) => {
         { children }
 
         <div className={ styles.button__container }>
-            <button className={ styles.button } onClick={ () => handleChangeActive(-1) }></button>
-            <button className={ styles.button } onClick={ () => handleChangeActive(1) }></button>
+            <button className={ `${styles.button} ${ active > 0 ?  ` ${styles.button__visible}` : '' }` } onClick={ () => handleChangeActive(-1) }></button>
+            <button className={ `${styles.button} ${ active < childs.length - 1 ?  ` ${styles.button__visible}` : '' }` } onClick={ () => handleChangeActive(1) }></button>
         </div>
 
     </section>

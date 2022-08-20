@@ -1,4 +1,6 @@
 @import 'hamburgers.css';
+@import 'react-notifications-component/dist/theme.css';
+@import "react-slideshow-image/dist/styles.css";
 
 :root {
   --main-color: #2ACED8;
@@ -28,13 +30,13 @@ body {
   margin: 0;
 }
 
-*::selection {
-  background-color: var(--secondary-color-1);
-}
-
 *::before,
 *::after {
   box-sizing: inherit;
+}
+
+*::selection {
+  background-color: var(--secondary-color-1);
 }
 
 h1, h2, h3, p, hr {
@@ -52,10 +54,10 @@ a {
   border: none;
   border-radius: 3px;
   padding: .5rem 1rem;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1em;
+  font-weight: 600;
   cursor: pointer;
-  margin: 1rem;
+  margin: .5em;
   transition: background-color 100ms ease;
 }
 

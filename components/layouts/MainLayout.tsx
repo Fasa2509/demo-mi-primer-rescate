@@ -1,13 +1,12 @@
-import { FC, MouseEventHandler, useContext } from "react"
-
+import { FC, useContext } from "react"
+import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { Footer, Header, HeroWelcome, SideMenu } from "../ui";
-import { ScrollContext } from "../../context";
-import styles from './MainLayout.module.css'
 import { Divider } from "@mui/material";
-import { useRouter } from "next/router";
+import { ScrollContext } from "../../context";
+import { Footer, Header, SideMenu } from "../ui";
 import { ColorSelector } from './ColorSelector';
+import styles from './MainLayout.module.css'
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -51,7 +50,7 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription }) 
       <main className={ styles.main__container }>
         <h1 className={ styles.title }>{ H1 || title }</h1>
 
-        <Divider sx={{ margin: '.8rem 0 1rem' /*{ xs: '.5rem 0', md: '1rem 0' }*/ }} />
+        <Divider sx={{ margin: '.8rem 0 1rem' }} />
 
         { children }
       </main>

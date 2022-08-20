@@ -8,6 +8,11 @@
     padding: .5rem 1.5rem 3rem;
 }
 
+.title {
+    margin: 0;
+    font-weight: 400;
+}
+
 .scroll__button {
     position: fixed;
     z-index: 1000;

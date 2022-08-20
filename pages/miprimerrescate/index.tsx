@@ -1,23 +1,24 @@
 import { useMemo } from 'react'
 import { NextPage } from 'next'
+
 import { CardText, ContentSlider, MainLayout } from '../../components'
 import styles from '../../styles/ProyectoMPR.module.css'
 
 const MiPrimerRescatePage: NextPage = () => {
 
-  const text_1 = `- Asignar buenos hogares que se comprometan a darles la calidad de vida que ameritan
-  - Ofrecer asesoramiento a nuestros seguidores para garantizar felicidad también a los peludos que ya gozan de un hogar
-  - Asistir a los animales que necesiten de atención veterinaria para sacarlos del dolor que puedan sentir y lograr que se sanen
-  - Organizar charlas y campañas que permitan llevar a cada rincón de nuestro país nuestra visión y así invitar a que más personas se unan a esta labor
-  - Luchar contra el maltrato y el abandono de las mascotas debido a la diáspora de personas en nuestro país y al poco conocimiento del respeto que ellos merecen
-  - Concientizar sobre la importancia de Castrar y esterilizar a las mascotas para evitar la sobrepoblación de animales en las calles además de garantizar larga vida y salud para la mascota
-  - Utilizar las redes sociales a beneficio de los animales, así también como instrumento para ayudar a personas que lo necesiten, como a los abuelos en los asilos, niños huérfanos, personas en situación de calle o en hospitales
-  - Llevar a cabo el Proyecto Helenden, nuestro más ambicioso proyecto hasta la fecha`
+  const text_1 = `Asignar buenos hogares que se comprometan a darles la calidad de vida que ameritan
+  Ofrecer asesoramiento a nuestros seguidores para garantizar felicidad también a los peludos que ya gozan de un hogar
+  Asistir a los animales que necesiten de atención veterinaria para sacarlos del dolor que puedan sentir y lograr que se sanen
+  Organizar charlas y campañas que permitan llevar a cada rincón de nuestro país nuestra visión y así invitar a que más personas se unan a esta labor
+  Luchar contra el maltrato y el abandono de las mascotas debido a la diáspora de personas en nuestro país y al poco conocimiento del respeto que ellos merecen
+  Concientizar sobre la importancia de Castrar y esterilizar a las mascotas para evitar la sobrepoblación de animales en las calles además de garantizar larga vida y salud para la mascota
+  Utilizar las redes sociales a beneficio de los animales, así también como instrumento para ayudar a personas que lo necesiten, como a los abuelos en los asilos, niños huérfanos, personas en situación de calle o en hospitales
+  Llevar a cabo el Proyecto Helenden, nuestro más ambicioso proyecto hasta la fecha`
 
   const array_1 = useMemo(() => text_1.split('\n'), [text_1])
 
   return (
-    <MainLayout title={ 'Nosotros' } H1={ 'Proyecto Mi Primer Rescate' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que buscamos para conseguirlos!' }>
+    <MainLayout title={ 'Nosotros' } H1={ 'Proyecto Mi Primer Rescate' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!' }>
 
         <ContentSlider title='Misión' initiallyDisplayed>
           <p>La Misión de la fundación es cumplir el ciclo MPR, el cual garantiza calidad de vida para el peludo rescatado.</p>
@@ -32,17 +33,6 @@ const MiPrimerRescatePage: NextPage = () => {
             }
           </section>
         </ContentSlider>
-
-
-        {/* <ContentSlider title='Objetivos 2' style={{ minHeight: `${ ( 2.5 ) * 8 + 3 + 8 }rem`, paddingTop: '10rem' }}>
-          <section className={ styles.goals__container }>
-            {
-              array_1.map( (txt, index) => (
-                <CardGoal style={{ top: `${ (index * 2) + ( 0.5 * index ) }rem`, }} key={ index } index={ index } txt={ txt } initiallyDisplayed={ index === 0 } />
-              ))
-            }
-          </section>
-        </ContentSlider> */}
 
         <ContentSlider title='¿Cómo llevamos a cabo la labor?'>
           <p>En primer lugar está la identificación del caso directamente en la calle o indirectamente mediante nuestras redes sociales o terceras personas que se comunican con nosotros.</p>

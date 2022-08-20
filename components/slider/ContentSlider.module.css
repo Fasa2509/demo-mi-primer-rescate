@@ -1,4 +1,4 @@
-.father {
+.container {
     overflow: hidden;
     margin-bottom: 1rem;
     min-height: 3rem;
@@ -56,11 +56,6 @@
 .display {
     margin-top: 0;
 }
-
-
-
-
-
 
 .wings::before,
 .wings::after {

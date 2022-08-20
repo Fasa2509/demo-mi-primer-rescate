@@ -1,15 +1,15 @@
 import { NextPage } from 'next'
+
 import { ContentSlider, MainLayout } from '../../components'
+import styles from '../../styles/Apoyo.module.css'
 
 const ApoyoPage: NextPage = () => {
   return (
-    <MainLayout title={ 'Cómo ayudar' } pageDescription={ '¿Cómo ayudarnos a cumplir con nuestra labor?' }>
-        {/* <p>Agradecemos toda la ayuda posible!</p> */}
+    <MainLayout title={ 'Cómo ayudar' } pageDescription={ '¿Te preguntas cómo ayudarnos a cumplir con nuestra labor? Pues es muy fácil. Conoce los detalles aquí.' }>
 
-        <ContentSlider title={ 'Ayuda aquí' } initiallyDisplayed >
+        <ContentSlider title={ 'Ayuda aquí' } initiallyDisplayed>
           <p>Elit enim ex occaecat sint occaecat.</p>
           <p>Aliqua culpa pariatur magna ullamco. Excepteur laborum magna dolore. Eiusmod sit non reprehenderit. Elit aliqua magna quis duis reprehenderit ea in mollit aute non exercitation ipsum. Aute Lorem aliquip do aute adipisicing dolor dolore dolore incididunt dolor do labore. Duis est velit ad laboris culpa. Pariatur aliquip velit laboris aliqua culpa sint eu amet do excepteur proident elit non nostrud.</p>
-          <p>Labore qui ut nostrud voluptate ipsum. Proident cillum ea voluptate non elit sint veniam in anim ex mollit. Aliquip in dolor irure cillum qui cupidatat ea aute quis. Consequat et sint incididunt id exercitation. Id consectetur excepteur consequat veniam ipsum magna irure in magna nisi. Minim veniam consequat culpa ipsum elit.</p>
         </ContentSlider>
 
         <ContentSlider title={ 'Cómo donar' }>
@@ -25,10 +25,8 @@ const ApoyoPage: NextPage = () => {
           <p>Id excepteur enim do magna eiusmod proident voluptate sunt incididunt labore eiusmod. Enim mollit officia fugiat anim labore irure eiusmod excepteur id. Aliquip incididunt dolor minim aute dolor. Aute labore aliqua duis ea aute esse adipisicing deserunt. Laborum ex voluptate Lorem non cupidatat deserunt non minim aliqua. Exercitation minim fugiat deserunt sunt.. Elit enim ex occaecat sint occaecat. Elit enim ex occaecat sint occaecat.</p>
           <p>Aliqua culpa pariatur magna ullamco. Excepteur laborum exercitation ipsum. Aute Lorem aliquip do aute adipisicing dolor dolore dolore incididunt dolor do labore. Duis est velit ad laboris culpa. Pariatur aliquip velit laboris aliqua culpa sint eu amet do excepteur proident elit non nostrud.</p>
           <p>Labore qui ut nostrud  sint veniam in anim ex mollit. Aliquip in dolor. Consequat et sint incididunt id exercitation. Id consectetur excepteur consequat veniam ipsum magna irure in magna nisi. Minim veniam consequat culpa ipsum elit.</p>
-          <p>Elit enim ex occaecat sint occaecat. Sit non laboris laboris minim ea sit mollit exercitation commodo consequat occaecat magna consectetur do. Dolore incididunt exercitation reprehenderit nisi exercitation deserunt adipisicing ut cillum qui laborum velit id Lorem. Id id reprehenderit cillum ad esse elit sit est. Ex ea in mollit sint commodo velit aute eu ea dolor do.</p>
-          <p>Aliqua culpa pariatur magna ullamco. Excepteur laborum exercitation ipsum. Aute Lorem aliquip do aute adipisicing dolor dolore dolore incididunt dolor do labore. Duis est velit ad laboris culpa. Pariatur aliquip velit laboris aliqua culpa sint eu amet do excepteur proident elit non nostrud.</p>
-          <p>Labore qui ut nostrud  sint veniam in anim ex mollit. Aliquip in dolor. Consequat et sint incididunt id exercitation. Id consectetur excepteur consequat veniam ipsum magna irure in magna nisi. Minim veniam consequat culpa ipsum elit.</p>
         </ContentSlider>
+
     </MainLayout>
   )
 }

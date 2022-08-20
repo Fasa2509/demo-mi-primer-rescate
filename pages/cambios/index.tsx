@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
-import { ChangeCard, MainLayout } from '../../components'
 
+import { ChangeCard, MainLayout } from '../../components'
 import styles from '../../styles/Cambios.module.css'
 
 type Case = {
@@ -45,13 +45,15 @@ const initialChanges: Case[] = [
 ]
 
 const CambiosPage: NextPage = () => {
+
   return (
-    <MainLayout title={ 'Cambios de nuestros amigos' } H1={ 'Antes y después' } pageDescription={ 'Aquí podras ver el antes y después de nuestros perritos.' }>
+    <MainLayout title={ 'Cambios de nuestros amigos' } H1={ 'Antes y después' } pageDescription={ 'Aquí podrás ver el antes y después de nuestros amigos peludos. Algunos han pasado por mucho, pero con amor, esfuerzo y trabajo, han recuperado una vida digna.' }>
         
         <p>¡La evolución y mejora de nuestros amigos!</p>
+        
         <p>Sint veniam aliquip incididunt labore pariatur. Lorem ipsum culpa sit consectetur. Eiusmod ad magnaunt esse adipisicing quis incididunt adipisicing voluptate commodo minim exercitation. Velit nulla cupidatat culpa irure Lorem non ut nulla ex nulla et in occaecat.</p>
 
-        <section className={ styles.change__section }>
+        <section className={ styles.changes__section }>
           {
             initialChanges.map(( caso ) => <ChangeCard key={ caso.name } name={ caso.name } text={ caso.text } />)
           }

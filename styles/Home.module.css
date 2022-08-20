@@ -9,7 +9,6 @@
     background-image: url(/background-blob-scatter.svg);
     background-size: contain;
     background-repeat: repeat-y;
-    padding: 0 1rem;
 }
 
 @media screen and (min-width: 576px) {

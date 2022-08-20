@@ -11,7 +11,7 @@ export const CardSocial = () => {
 
         <p>Mantente al tanto de nuestro proyecto, síguenos por aquí</p>
 
-        <div className={ `${styles.flex__container} ${styles.space__evenly}` }>
+        <div className={ styles.social__container }>
 
             <a href="https://twitter.com/" target="_blank" rel="noreferrer">
                 <IconButton>

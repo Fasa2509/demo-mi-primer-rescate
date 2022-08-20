@@ -13,12 +13,14 @@
 }
 
 .modal__container {
-    padding: 1rem;
     min-width: 5rem;
     width: 80vw;
     max-width: 900px;
     min-height: 5rem;
-    background-color: #FFF;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #fafafa;
     border-radius: 1.5rem;
     position: relative;
     animation: modalAppear 500ms ease-out 0ms 1 normal both;
