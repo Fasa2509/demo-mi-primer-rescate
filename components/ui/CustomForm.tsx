@@ -70,11 +70,11 @@ export const CustomForm = () => {
                 duration: 4000,
             })
 
-        let lastArticles: IArticle[] = JSON.parse( window.localStorage.getItem('articles') || '[]' );
+        let lastArticles: IArticle[] = JSON.parse( window.localStorage.getItem('articles_2') || '[]' );
 
         lastArticles.unshift({ title, fields, createdAt: Date.now() });
 
-        window.localStorage.setItem('articles', JSON.stringify( lastArticles ));
+        window.localStorage.setItem('articles_2', JSON.stringify( lastArticles ));
 
         return callNotification({
             title: '¡Listo!',
