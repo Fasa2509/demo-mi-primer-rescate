@@ -35,11 +35,11 @@ export const CustomInput: FC<Props> = ({ field, setField }) => {
                     <p>/dog-hero-image.webp <b>1280x720px</b></p>
                     <p>/perro-1.webp <b>450x450px</b></p>
                     <p>/perro-2.webp <b>450x450px</b></p>
-                    <p>¡Copia la dirrección y agrégala!</p>
+                    <p>¡Copia la dirrección (sin las dimensiones) y agrégala!</p>
                 </div>
-                <input value={ field.content } type={ 'text' } name={ 'imagen' } placeholder={ 'Dirección de la imagen aquí' } required onChange={ ( e: any ) => setField({ ...field, content: e.target.value }) } />
-                <input value={ field.content_ } type={ 'text' } name={ 'imageLink' } placeholder={ 'Texto aquí' } required onChange={ ( e: any ) => setField({ ...field, content_: e.target.value }) } />
-                <p> El texto hace referencia a un texto que aparecerá únicamente cuando la imagen por alguna razón NO pueda ser cargada, es OBLIGATORIO y debe ser conciso y con pocas palabras (menos de 8). Las propiedades de ancho y alto definen el mayor valor de esa propiedad respectivamente. Las imágenes se adaptarán de forma automática a tamaños de pantalla más pequeños.</p>
+                <input value={ field.content.trim() } type={ 'text' } name={ 'imagen' } placeholder={ 'Dirección de la imagen aquí' } required onChange={ ( e: any ) => setField({ ...field, content: e.target.value }) } />
+                <input value={ field.content_ } type={ 'text' } name={ 'imageAlt' } placeholder={ 'Texto aquí' } required onChange={ ( e: any ) => setField({ ...field, content_: e.target.value }) } />
+                <p> El texto hace referencia a un texto que aparecerá únicamente cuando la imagen por alguna razón NO pueda ser cargada, es OBLIGATORIO y debe ser conciso y con pocas palabras (menos de 8). Las propiedades de ancho y alto definen <b>el mayor valor de esa propiedad respectivamente</b>. Las imágenes se adaptarán de forma automática a tamaños de pantalla más pequeños.</p>
                 <div className={ styles.input__dimensions }>
                     <label htmlFor="imageWitdh">Ancho:</label>
                     <input id={ 'imageWidth' } value={ field.width } type={ 'number' } name={ 'ancho' } placeholder={ 'Ancho' } required onChange={ ( e: any ) => setField({ ...field, width: Math.abs(e.target.value) }) } />

@@ -30,7 +30,7 @@ export const ArticleField: FC<Props> = ({ field, selector }) => {
             return (
                 <div className={ styles.image__container }>
                     {
-                        field.images?.length === 1
+                        ( field.images?.length === 1 )
                             ? (
                                 <Image src={ field.images[0].url } alt={ field.images[0].alt } width={ field.images[0].width } height={ field.images[0].height } />
                             ) : (
