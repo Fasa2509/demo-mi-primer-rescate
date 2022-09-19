@@ -1,24 +1,29 @@
 import { FC } from "react";
 import Image from "next/image";
-import { Fade } from "react-slideshow-image";
 import { ImageObj } from "../../interfaces";
-import { Button, Paper } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 
 interface Props {
-    fadeImages: ImageObj[];
+    images: ImageObj[];
+    options?: {
+      indicators?: boolean;
+      cycleNavigation?: boolean;
+      animation?: 'fade' | 'slide';
+      navButtonsAlwaysVisible?: boolean;
+      autoPlay?: boolean;
+    };
+    layout?: 'intrinsic' | 'responsive';
 }
+//  display: 'block', width: '100%', height: '100%',
+export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic' }) => {
 
-export const SliderImages: FC<Props> = ({ fadeImages }) => {
   return (
-    <div className="slide-container">
-      <Carousel>
+    <div>
+      <Carousel indicators={ options ? options.indicators : true } animation={ options ? options.animation || 'fade' : 'fade' } navButtonsAlwaysVisible={ options ? options.navButtonsAlwaysVisible : false } autoPlay={ options ? options.autoPlay : true }>
         {
-          fadeImages.map((fadeImage, index) => (
-            <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="each-fade" key={index}>
-              <div className="image-container">
-                <Image src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } />
-              </div>
+          images.map((fadeImage, index) => (
+            <div style={{ justifyContent: 'center', alignItems: 'center' }} key={index}>
+              <Image src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } />
             </div>
         ))}
       </Carousel>
@@ -50,11 +55,11 @@ export const SliderImages: FC<Props> = ({ fadeImages }) => {
 
 
 
-// export const SliderImages: FC<Props> = ({ fadeImages }) => {
+// export const SliderImages: FC<Props> = ({ images }) => {
 //   return (
 //     <div className="slide-container">
 //     <Fade>
-//       {fadeImages.map((fadeImage, index) => (
+//       {images.map((fadeImage, index) => (
 //         <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="each-fade" key={index}>
 //           <div className="image-container">
 //             <Image src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } />

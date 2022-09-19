@@ -1,28 +1,56 @@
 import { FC } from 'react';
-import Image from 'next/image'
 
 import { ModalWindow } from '../ui'
-import styles from './ChangeCard.module.css'
+import { SliderImages } from '../slider';
+import { ImageObj } from '../../interfaces';
 import { getParagraphs } from '../../utils';
+import styles from './ChangeCard.module.css'
 
 interface Props {
     name: string;
     text: string;
+    images: ImageObj[];
 }
 
-export const ChangeCard: FC<Props> = ({ name, text }) => {
+export const ChangeCard: FC<Props> = ({ name, text, images }) => {
   return (
     <div className={ styles.card__container }>
-      <p className={ styles.title }>{ name }</p>
-      <div className={ styles.flip__card }>
-        <div>
-          <Image src={ '/perro-1.webp' } alt={ 'dog-1' } width={ 300 } height={ 300 } />
-        </div>
-        <div>
-          <Image src={ '/perro-2.webp' } alt={ 'dog-2' } width={ 300 } height={ 300 } />
-        </div>
-      </div>
-      <ModalWindow buttonTxt={ `Historia de ${ name }` } title={ `Historia de ${ name }` }>
+      <SliderImages images={ images } options={{ indicators: false, cycleNavigation: false, animation: 'slide' }} />
+      <ModalWindow buttonTxt={ name } title={ `Historia de ${ name }` } buttonStyle={{ margin: '0', marginTop: '-.3rem' }}>
+        {
+          getParagraphs( text ).map(( txt, index ) => (
+            <p key={ index }>{ txt }</p>
+          ))
+        }
+      </ModalWindow>
+    </div>
+  )
+}
+
+
+
+
+
+/*
+import { FC } from 'react';
+
+import { ModalWindow } from '../ui'
+import { SliderImages } from '../slider';
+import { ImageObj } from '../../interfaces';
+import { getParagraphs } from '../../utils';
+import styles from './ChangeCard.module.css'
+
+interface Props {
+    name: string;
+    text: string;
+    images: ImageObj[];
+}
+
+export const ChangeCard: FC<Props> = ({ name, text, images }) => {
+  return (
+    <div className={ styles.card__container }>
+      <SliderImages images={ images } options={{ indicators: false, cycleNavigation: false, animation: 'slide', autoPlay: false }} />
+      <ModalWindow buttonTxt={ name } title={ `Historia de ${ name }` } buttonStyle={{ width: '100%', margin: '0' }}>
        {
         getParagraphs( text ).map(( txt, index ) => (
           <p key={ index }>{ txt }</p>
@@ -32,3 +60,4 @@ export const ChangeCard: FC<Props> = ({ name, text }) => {
     </div>
   )
 }
+*/

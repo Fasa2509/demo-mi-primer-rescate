@@ -61,7 +61,7 @@ export const CustomInput: FC<Props> = ({ field, setField }) => {
     }
 
   return (
-    <div className={ styles.field }>        
+<div className={ styles.field }>
         <input value={ field.content } type={ 'text' } name={ 'subtitulo' } placeholder={ 'Subtítulo aquí' } required onChange={ ( e: any ) => setField({ ...field, content: e.target.value }) } />
     </div>
   )

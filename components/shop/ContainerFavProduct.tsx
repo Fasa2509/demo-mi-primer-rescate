@@ -13,7 +13,7 @@ export const ContainerFavProduct: FC<Props> = ({ initialFavProducts }) => {
     return (
         <section className={ styles.most__sold__container }>
             <p className={ styles.title }>
-                Lo más vendido la última semana!
+                ¡Lo más vendido la última semana!
                 <Star />
             </p>
             <div className={ styles.most__sold__products }>

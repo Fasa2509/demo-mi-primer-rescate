@@ -1,20 +1,28 @@
 .container {
+    --min-height: 3rem;
+    min-height: var(--min-height);
     overflow: hidden;
-    margin-bottom: 1rem;
-    min-height: 3rem;
+    margin-bottom: 1.2rem;
+    border-radius: 1.5rem;
     box-shadow: 0 .5rem 3rem -1.8rem rgb(124, 124, 124);
 }
 
+.container * {
+    margin: 0;
+}
+
 .title__container {
+    min-height: var(--min-height);
+    padding-left: 1rem;
     display: flex;
-    justify-content: flex-start;
-    min-height: 3rem;
+    justify-content: space-between;
+    align-items: center;
     background-color: var(--secondary-color-1);
     border-radius: 1.5rem;
     position: relative;
-    z-index: 995;
-    padding: .5rem 0;
-    transition: border-end-start-radius 400ms ease, border-end-end-radius 400ms ease;
+    z-index: 10;
+    cursor: pointer;
+    transition: border-end-start-radius 500ms ease, border-end-end-radius 500ms ease;
 }
 
 .title__container.active {
@@ -22,39 +30,11 @@
     border-end-end-radius: 0;
 }
 
-.title {
-    width: calc(100% - 2rem);
-    padding: 0 1rem;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    border-radius: 10rem;
+.title__text {
+    flex-grow: 1;
     font-size: 18px;
     font-weight: 600;
     color: #FFF;
-    cursor: pointer;
-}
-
-.content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
-    background-color: #FFF;
-    position: relative;
-    z-index: 990;
-    border-radius: 1rem;
-    border-start-start-radius: 0;
-    border-start-end-radius: 0;
-    transition: margin-top 800ms ease-in-out;
-}
-
-.content > * {
-    margin: 0;
-}
-
-.display {
-    margin-top: 0;
 }
 
 .wings::before,
@@ -63,7 +43,7 @@
     display: block;
     position: absolute;
     top: 50%;
-    right: calc(1.5rem + .6rem);
+    right: 1.8rem;
     height: 4px;
     width: 1rem;
     background-color: #FFF;
@@ -73,7 +53,7 @@
 }
 
 .wings::after {
-    right: 1.5rem;
+    right: 1.2rem;
     transform: rotate(-40deg);
 }
 
@@ -85,13 +65,26 @@
     transform: rotate(40deg);
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.4rem;
+    padding-bottom: 5rem;
+    background-color: #fefefe;
+    position: relative;
+    border-radius: 1rem;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+    transition: margin-top 800ms ease-in-out;
+}
 
-
-
-
+.display {
+    margin-top: 0;
+}
 
 @media screen and (min-width: 576px) {
-    .title {
+    .title__text {
         font-size: 20px;
     }
 
@@ -104,7 +97,11 @@
 }
 
 @media screen and (min-width: 992px) {
-    .title {
+    .title__text {
         font-size: 24px;
+    }
+
+    .content {
+        padding-bottom: 7rem;
     }
 }

@@ -1,17 +1,20 @@
 import { FC, useContext } from "react"
 import NextLink from 'next/link'
+import { useRouter } from "next/router"
 
 import { Box, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
-import { Pets, AddAlertOutlined, VolunteerActivismOutlined, TrendingUp,  ShoppingBagOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, LoginOutlined, VpnKeyOutlined, Home } from "@mui/icons-material"
+import { Pets, AddAlert, VolunteerActivism, TrendingUp,  ShoppingBag, AdminPanelSettings, Category, ConfirmationNumber, LoginOutlined, VpnKey, Home } from "@mui/icons-material"
+import { useSnackbar } from "notistack"
 
-import { useRouter } from "next/router"
 import { AuthContext, MenuContext } from "../../context"
+import { ConfirmCloseSession } from "../../utils"
 
 export const SideMenu: FC = () => {
 
     const router = useRouter()
     const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
     const { isLoggedIn, logIn, logOut } = useContext( AuthContext );
+    const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Drawer
@@ -20,7 +23,7 @@ export const SideMenu: FC = () => {
         sx={{ backdropFilter: 'blur(2px)', transition: 'all 0.5s ease-out' }}
         onClose={ toggleSideMenu }
     >
-        <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: 5, position: 'relative' }}>
+        <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: 4.7, position: 'relative' }}>
 
             <div style={{
                 width: '100%',
@@ -36,16 +39,22 @@ export const SideMenu: FC = () => {
                 {
                     isLoggedIn
                         ? (
-                            <ListItem button onClick={ () => logOut() }>
+                            <ListItem button onClick={ () => {
+                                enqueueSnackbar('¿Quieres salir?', {
+                                    autoHideDuration: 15000,
+                                    variant: 'info',
+                                    action: ConfirmCloseSession,
+                                })
+                            }}>
                                 <ListItemIcon>
                                     <LoginOutlined color='secondary' />
                                 </ListItemIcon>
-                                <ListItemText primary={'Salir'} />
+                                <ListItemText primary={'Cerrar sesión'} />
                             </ListItem>
                         ) : (
                             <ListItem button onClick={ () => logIn() }>
                                 <ListItemIcon>
-                                    <VpnKeyOutlined color='secondary' />
+                                    <VpnKey color='secondary' />
                                 </ListItemIcon>
                                 <ListItemText primary={'Ingresar'} />
                             </ListItem>
@@ -80,7 +89,7 @@ export const SideMenu: FC = () => {
                     <a onClick={ toggleSideMenu }>
                         <ListItem button sx={{ backgroundColor: router.asPath === '/apoyo' ? '#eaeaea' : '' }}>
                             <ListItemIcon>
-                                <AddAlertOutlined color='secondary' />
+                                <AddAlert color='secondary' />
                             </ListItemIcon>
                             <ListItemText primary={'Apoyo'} />
                         </ListItem>
@@ -91,7 +100,7 @@ export const SideMenu: FC = () => {
                     <a onClick={ toggleSideMenu }>
                         <ListItem button  sx={{ backgroundColor: router.asPath === '/adoptar' ? '#eaeaea' : '' }}>
                             <ListItemIcon>
-                                <VolunteerActivismOutlined color='secondary' />
+                                <VolunteerActivism color='secondary' />
                             </ListItemIcon>
                             <ListItemText primary={'Adoptar'} />
                         </ListItem>
@@ -113,7 +122,7 @@ export const SideMenu: FC = () => {
                     <a onClick={ toggleSideMenu }>
                         <ListItem button  sx={{ backgroundColor: router.asPath === '/tienda' ? '#eaeaea' : '' }}>
                             <ListItemIcon>
-                                <ShoppingBagOutlined color='secondary' />
+                                <ShoppingBag color='secondary' />
                             </ListItemIcon>
                             <ListItemText primary={'Tienda'} />
                         </ListItem>
@@ -129,13 +138,13 @@ export const SideMenu: FC = () => {
                     
                     <ListItem button>
                         <ListItemIcon>
-                            <CategoryOutlined color='secondary' />
+                            <Category color='secondary' />
                         </ListItemIcon>
                         <ListItemText primary={'Productos'} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon>
-                            <ConfirmationNumberOutlined color='secondary' />
+                            <ConfirmationNumber color='secondary' />
                         </ListItemIcon>
                         <ListItemText primary={'Ordenes'} />
                     </ListItem>

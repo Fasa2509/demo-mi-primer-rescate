@@ -3,6 +3,7 @@ import { MenuContext } from './';
 
 export interface MenuState {
     isMenuOpen: boolean;
+    confirmation: boolean | null;
 }
 
 
@@ -13,14 +14,17 @@ interface props {
 
 export const MenuProvider: FC<props> = ({ children }) => {
 
-    const [isMenuOpen, setIsMenuOpen] = useState( false );
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>( false );
+    const [confirmation, setConfirmation] = useState<boolean | null>( null );
 
-    const toggleSideMenu = () => setIsMenuOpen( !isMenuOpen )
+    const toggleSideMenu = () => setIsMenuOpen( !isMenuOpen );
 
-    return(
+    return (
         <MenuContext.Provider value={{
             isMenuOpen,
             toggleSideMenu,
+            confirmation,
+            setConfirmation,
         }}>
             { children }
         </MenuContext.Provider>

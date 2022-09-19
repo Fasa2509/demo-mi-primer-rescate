@@ -1,23 +1,17 @@
 .card__container {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    border-radius: 1rem;
 }
 
-.card__container button {
-    align-self: center;
-}
+@media (hover: hover) {
+    .card__container img {
+        filter: brightness(85%);
+        transition: filter 250ms ease;
+    }
 
-.title {
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.flip__card {
-    position: relative;
-    display: flex;
-    justify-content: center;
-}
-
-.flip__card > div {
-    margin: 0 auto;
+    .card__container:hover img {
+        filter: brightness(100%)
+    }
 }

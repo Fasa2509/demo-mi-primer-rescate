@@ -18,7 +18,7 @@ export const ContainerProductType: FC<Props> = ({ type, initialProducts }) => {
                 {
                     initialProducts.map( (product) => <LongProductCard key={ product.name } product={ product } />)
                 }
-            <NextLink href={ `tienda/${ type.toLowerCase() }` } passHref>
+            <NextLink href={ `tienda?tipo=${ type.toLowerCase() }` } passHref>
                 <a className={ styles.products__link }>Explorar más...</a>
             </NextLink>
         </section>

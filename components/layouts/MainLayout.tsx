@@ -1,11 +1,10 @@
 import { FC, useContext } from "react"
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { Divider } from "@mui/material";
 import { ScrollContext } from "../../context";
-import { Footer, Header, SideMenu } from "../ui";
-import { ColorSelector } from './ColorSelector';
+import { Footer, Header, SideMenu, Title } from "../ui";
+// import { ColorSelector } from './ColorSelector';
 import styles from './MainLayout.module.css'
 
 interface Props {
@@ -13,14 +12,17 @@ interface Props {
   title: string;
   H1?: string;
   pageDescription: string;
+  pageImage?: string;
+  titleIcon: JSX.Element;
+  nextPage: string;
 }
 
-export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription }) => {
+export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage, titleIcon, nextPage }) => {
 
   let finalTitle = `${ title } | MPR`
 
-  const router = useRouter();
-  const { scrolled } = useContext( ScrollContext )
+  // const router = useRouter();
+  const { passedElements } = useContext( ScrollContext )
 
   const handleClick = () => {
     window.scrollTo({
@@ -38,27 +40,29 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription }) 
         <meta name="og:title" content={ title } />
         <meta name="og:description" content={ pageDescription } />
 
-        {/* TODO: meta og:image */}
+        <meta name="og:image" content={ pageImage ? `http://localhost:3000/${ pageImage }` : 'http://localhost:3000/Logo-MPR.png' } />
       </Head>
 
-      <ColorSelector />
+      {/* <ColorSelector /> */}
 
       <SideMenu />
 
       <Header index={ false } />
       
       <main className={ styles.main__container }>
-        <h1 className={ styles.title }>{ H1 || title }</h1>
+        {/* <h1 className={ styles.title }>{ H1 || title }</h1> */}
+        <Title title={ H1 || title } nextPage={ nextPage }>
+          { titleIcon }
+        </Title>
 
-        <Divider sx={{ margin: '.8rem 0 1rem' }} />
+        {/* <Divider sx={{ margin: '.4rem 0 .7rem' }} /> */}
 
         { children }
       </main>
 
-      <button className={ `${styles.scroll__button}${ scrolled ? ` ${styles['scroll__button--scrolled']}` : '' }` } onClick={ handleClick }></button>
+      <button className={ 'scroll__button ' + styles.scroll__button + `${ passedElements.includes('.scroll__button') ? ` ${styles['scroll__button--scrolled']}` : '' }` } onClick={ handleClick }></button>
 
       <Footer />
-
     </>
   )
 }

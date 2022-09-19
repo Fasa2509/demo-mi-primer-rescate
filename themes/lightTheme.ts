@@ -28,7 +28,7 @@ export const lightTheme = createTheme({
       main: '#2AD8A4'
     },
     info: {
-      main: '#FFF'
+      main: '#fafafa'
     },
   },
   components: {

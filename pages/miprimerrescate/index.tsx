@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 
 import { CardText, ContentSlider, MainLayout } from '../../components'
 import styles from '../../styles/ProyectoMPR.module.css'
+import { Pets } from '@mui/icons-material'
 
 const MiPrimerRescatePage: NextPage = () => {
 
@@ -18,13 +19,13 @@ const MiPrimerRescatePage: NextPage = () => {
   const array_1 = useMemo(() => text_1.split('\n'), [text_1])
 
   return (
-    <MainLayout title={ 'Nosotros' } H1={ 'Proyecto Mi Primer Rescate' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!' }>
+    <MainLayout title={ 'Nosotros' } H1={ 'Proyecto MPR' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!' } titleIcon={ <Pets color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/apoyo'>
 
         <ContentSlider title='Misión' initiallyDisplayed>
           <p>La Misión de la fundación es cumplir el ciclo MPR, el cual garantiza calidad de vida para el peludo rescatado.</p>
         </ContentSlider>
 
-        <ContentSlider title='Objetivos'>
+        <ContentSlider title='Objetivos' style={{ backgroundImage: 'url(/background-blob-scatter.svg), url(/wave-haikei-1.svg)', backgroundSize: 'contain', backgroundPosition: 'top left, bottom left', backgroundRepeat: 'repeat, no-repeat' }}>
           <section className={ styles.section__objectives }>
             {
               array_1.map( (txt, index) => (

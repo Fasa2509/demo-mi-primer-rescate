@@ -35,10 +35,8 @@
     justify-content: flex-start;
     width: 100%;
     background-color: #FFF;
-    border: thin solid #eaeaea;
     border-radius: 1em;
     min-height: 50px;
-    padding: 1em;
     gap: 1em;
 }
 
@@ -51,12 +49,6 @@
     font-size: .9em;
     flex-grow: 1;
     font-family: inherit;
-}
-
-@media screen and (min-width: 770px) {
-    .field input {
-        flex-basis: 250px;
-    }
 }
 
 .input__dimensions {
@@ -84,4 +76,31 @@
     font-size: 1rem;
     font-weight: 700;
     margin: 0;
+}
+
+/* Adoption Form */
+
+.adoption__form {
+    /* display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem; */
+    max-width: 900px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+/* .adoption__form > * {
+    margin-bottom: 1rem;
+} */
+
+@media screen and (min-width: 770px) {
+    .field input {
+        flex-basis: 250px;
+    }
+
+    .adoption__form {
+        grid-template-columns: minmax(250px, 1fr) minmax(250px, 1fr);
+    }
 }

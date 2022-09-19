@@ -38,6 +38,11 @@
     right: 5vw;
 }
 
+.shopping__cart {
+    position: absolute;
+    left: 5vw;
+}
+
 .navbar {
     display: none;
     justify-content: center;

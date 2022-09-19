@@ -34,7 +34,7 @@ export const ArticleField: FC<Props> = ({ field, selector }) => {
                             ? (
                                 <Image src={ field.images[0].url } alt={ field.images[0].alt } width={ field.images[0].width } height={ field.images[0].height } />
                             ) : (
-                                <SliderImages fadeImages={ field.images as ImageObj[] } />
+                                <SliderImages images={ field.images as ImageObj[] } options={{ autoPlay: false }} />
                             )
                     }
                 </div>

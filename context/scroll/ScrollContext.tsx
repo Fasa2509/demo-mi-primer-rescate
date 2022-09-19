@@ -2,8 +2,7 @@ import { createContext } from 'react';
 
 
 interface ContextProps {
-    scrolled: boolean;
-    passedImage: boolean;
+    passedElements: string[];
 }
 
 

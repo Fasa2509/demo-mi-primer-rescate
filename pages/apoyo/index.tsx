@@ -1,11 +1,13 @@
 import { NextPage } from 'next'
+import { AddAlert } from '@mui/icons-material'
 
 import { ContentSlider, MainLayout } from '../../components'
 import styles from '../../styles/Apoyo.module.css'
 
 const ApoyoPage: NextPage = () => {
+  
   return (
-    <MainLayout title={ 'Cómo ayudar' } pageDescription={ '¿Te preguntas cómo ayudarnos a cumplir con nuestra labor? Pues es muy fácil. Conoce los detalles aquí.' }>
+    <MainLayout title={ 'Cómo ayudar' } pageDescription={ '¿Te preguntas cómo ayudarnos a cumplir con nuestra labor? Pues es muy fácil. Conoce los detalles aquí.' } titleIcon={ <AddAlert color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar'>
 
         <ContentSlider title={ 'Ayuda aquí' } initiallyDisplayed>
           <p>Elit enim ex occaecat sint occaecat.</p>

@@ -12,10 +12,10 @@ interface Props {
 
 export const BigProductCard: FC<Props> = ({ product }) => {
   return (
-    <NextLink href={ product.slug } prefetch={ false }>
+    <NextLink href={ 'tienda' + product.slug } prefetch={ false }>
       <div className={ styles.product }>
         <div className={ styles.product__image }>
-          <Image src={ product.image } alt={ product.name } width={ 400 } height={ 400 } />
+          <Image src={ product.images[0].url } alt={ product.name } width={ 400 } height={ 400 } layout='responsive' />
         </div>
         <div className={ styles.product__name }>{ product.name }</div>
         <div 

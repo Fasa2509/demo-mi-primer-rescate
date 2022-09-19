@@ -1,29 +1,27 @@
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 import { isBefore } from 'date-fns';
 
 import { CustomInput } from './CustomInput';
 import { Article } from './Article';
-import { callNotification } from '../../utils/notification';
 import { IArticle, Field } from '../../interfaces';
+import { ConfirmNotificationButtons } from '../../utils';
 import styles from './Form.module.css';
 
 export const CustomForm = () => {
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const [title, setTitle] = useState( '' );
     const [currentField, setCurrentField] = useState<Field>({ type: 'texto', content: '', content_: '' });
     const [fields, setFields] = useState<Array<Field>>([]);
 
-    const handleSubmit = ( e: any ) => {
+    const addFieldArticle = ( e: any ) => {
         e.preventDefault();
 
         if ( currentField.type === 'contador' ) {
             if ( isBefore( new Date( currentField.content ), new Date() ) ) {
-                return callNotification({
-                    title: 'Error de Fecha',
-                    message: 'La fecha final no puede ser anterior a la fecha inicial',
-                    notType: 'danger',
-                    duration: 3000,
-                })
+                return enqueueSnackbar('La fecha final no puede ser anterior a la fecha inicial', { variant: 'error' })
             }
         }
 
@@ -43,51 +41,99 @@ export const CustomForm = () => {
 
         setCurrentField({ ...currentField, content: '', content_: '', width: 0, height: 0 })
 
-        callNotification({
-            title: 'Campo agregado',
-            message: 'El campo ha sido agregado exitosamente',
-            notType: 'success',
-            duration: 2000,
-        })
+        enqueueSnackbar('El campo fue agregado', { variant: 'success', autoHideDuration: 2500 })
+    }
+
+    const cleanArticle = () => {
+        new Promise((resolve) => {
+            let key = enqueueSnackbar('¿Estás segur@ de que quieres vaciar el formulario?', {
+                variant: 'info',
+                autoHideDuration: 150000,
+                action: ConfirmNotificationButtons,
+            });
+
+            const callback = ( e: any ) => {
+                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
+                    console.log(e.target)
+                    resolve({
+                        accepted: true,
+                        callback
+                    });
+                }
+
+                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
+                    console.log(e.target)
+                    resolve({
+                        accepted: false,
+                        callback
+                    });
+                }
+            }
+
+            document.addEventListener('click', callback)
+            // @ts-ignore
+        }).then(({ accepted, callback }: { accepted: boolean, callback: any }) => {
+            document.removeEventListener('click', callback);
+
+            if ( !accepted ) return;
+            setFields([]);
+            setTitle( '' );
+            enqueueSnackbar('El artículo fue vaciado', { variant: 'info', autoHideDuration: 5000 });
+        });
     }
 
     const saveArticle = () => {
         if ( fields.length === 0 )
-            return callNotification({
-                title: 'Error',
-                message: 'No puedes guardar un artículo sin contenido',
-                notType: 'danger',
-                duration: 4000,
-            })
+            return enqueueSnackbar('No puedes guardar un artículo sin contenido', { variant: 'error', autoHideDuration: 3000 })
         
-        let confirm = window.confirm('¿Estás segur@ de que quieres guardar este artículo?');
-
-        if ( !confirm )
-            return callNotification({
-                title: 'Aviso',
-                message: 'El artículo no fue guardado',
-                notType: 'warning',
-                duration: 4000,
+        new Promise(( resolve ) => {
+            let key = enqueueSnackbar('¿Estás segur@ de que quieres guardar este artículo?', {
+                variant: 'info',
+                autoHideDuration: 15000,
+                action: ConfirmNotificationButtons,
             })
 
-        let lastArticles: IArticle[] = JSON.parse( window.localStorage.getItem('articles_2') || '[]' );
+            const callback = ( e: any ) => {
+                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
+                    resolve({
+                        accepted: true,
+                        callback,
+                    })
+                }
 
-        lastArticles.unshift({ title, fields, createdAt: Date.now() });
+                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
+                    resolve({
+                        accepted: false,
+                        callback,
+                    })
+                }
+            }
 
-        window.localStorage.setItem('articles_2', JSON.stringify( lastArticles ));
+            document.addEventListener('click', callback);
+        })
+        // @ts-ignore
+        .then(({ accepted, callback }: { accepted: boolean, callback: any }) => {
+            document.removeEventListener('click', callback);
 
-        return callNotification({
-            title: '¡Listo!',
-            message: 'El artículo fue guardado con éxito',
-            onScreen: false,
-            duration: 5000,
+            if ( !accepted ) return;
+
+            if ( fields.length === 0 )
+                return enqueueSnackbar('No puedes guardar un artículo sin contenido', { variant: 'error', autoHideDuration: 3000 })
+        
+            let lastArticles: IArticle[] = JSON.parse( window.localStorage.getItem('articles_2') || '[]' );
+            
+            lastArticles.unshift({ title, fields, createdAt: Date.now() });
+            
+            window.localStorage.setItem('articles_2', JSON.stringify( lastArticles ));
+            
+            return enqueueSnackbar('El artículo fue guardado con éxito', { variant: 'success' });
         })
     }
 
   return (
     <section>
 
-        <form className={ styles.form } onSubmit={ handleSubmit }>
+        <form className={ styles.form } onSubmit={ addFieldArticle }>
 
             <p className={ styles.subtitle }>Crea un artículo para la página</p>
             
@@ -116,10 +162,7 @@ export const CustomForm = () => {
 
         <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '1em' }}>
             <button style={{ margin: 0 }} className='button' onClick={ () => setFields(fields.slice(0, fields.length - 1)) }>Quitar último</button>
-            <button style={{ margin: 0 }} className='button' onClick={ () => {
-                setFields([])
-                setTitle( '' )
-            } }>Limpiar artículo</button>
+            <button style={{ margin: 0 }} className='button' onClick={ cleanArticle }>Limpiar artículo</button>
         </div>
 
         <div style={{ textAlign: 'center' }}>

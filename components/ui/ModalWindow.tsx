@@ -1,5 +1,5 @@
-import { Divider } from '@mui/material';
 import { FC } from 'react';
+import { Divider } from '@mui/material';
 import { useModal } from '../../hooks';
 import styles from './ModalWindow.module.css'
 
@@ -16,7 +16,6 @@ export const ModalWindow: FC<Props> = ({ children, buttonTxt = 'Abrir', title, b
 
     const handleClose = ( e: any ) => {
         if ( e.target.matches('.main__window *') ) return;
-
         closeModal();
     }
 
@@ -25,14 +24,16 @@ export const ModalWindow: FC<Props> = ({ children, buttonTxt = 'Abrir', title, b
         <button style={ buttonStyle } className='button' onClick={ openModal }>{ buttonTxt }</button>
         {
             isOpen &&
-            <section className={ `main__window ${styles.modal__window}` } onClick={ handleClose }>
+            <section className={ `main__window fadeIn ${ styles.modal__window }` } onClick={ handleClose }>
                 <div className={ styles.modal__container }>
                     <button className={ styles.modal__close } onClick={ closeModal }></button>
                     <p className={ styles.modal__title }>{ title }</p>
 
-                    <Divider style={{ marginTop: '.5rem', marginBottom: '.3rem' }} />
+                    <Divider className={ styles.divider } />
 
-                    { children }
+                    <div className={ styles.modal__content }>
+                        { children }
+                    </div>
                 </div>
             </section>
         }

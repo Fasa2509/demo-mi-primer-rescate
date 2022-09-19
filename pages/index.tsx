@@ -1,39 +1,41 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next'
 
-import { PetsOutlined } from '@mui/icons-material';
+import { Home, PetsOutlined } from '@mui/icons-material';
 import { Article, CustomForm, MainIndexLayout, Slider } from '../components';
 import { IArticle } from '../interfaces';
 import styles from '../styles/Home.module.css';
+import { AuthContext } from '../context';
 
-const fadeImages = [
-  {
-    url: '/perro-1.webp',
-    alt: 'Perro 1',
-    width: 350,
-    height: 350,
-  },
-  {
-    url: '/perro-2.webp',
-    alt: 'Perro 2',
-    width: 350,
-    height: 350,
-  },
-  {
-    url: '/dog-hero-image.webp',
-    alt: 'Perro Hero',
-    width: 620,
-    height: 350,
-  },
-]
+// const fadeImages = [
+//   {
+//     url: '/perro-1.webp',
+//     alt: 'Perro 1',
+//     width: 350,
+//     height: 350,
+//   },
+//   {
+//     url: '/perro-2.webp',
+//     alt: 'Perro 2',
+//     width: 350,
+//     height: 350,
+//   },
+//   {
+//     url: '/dog-hero-image.webp',
+//     alt: 'Perro Hero',
+//     width: 620,
+//     height: 350,
+//   },
+// ]
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
 
   const [articles, setArticles] = useState<IArticle[]>([]);
+  const { isLoggedIn } = useContext( AuthContext );
 
   // TODO: traer notas de la DB
   useEffect(() => {
-    // window.localStorage.clear();
+    window.localStorage.clear();
 
     let lastArticles: IArticle[] = JSON.parse( window.localStorage.getItem('articles_2') || '[]' );
 
@@ -48,10 +50,9 @@ const Home: NextPage = () => {
     setArticles( lastArticles );
 }, [])
 
-  return (      
-    <MainIndexLayout title={ 'Bienvenidos' } H1={ 'Mi Primer Rescate' } pageDescription={ 'Esta es la página oficial de @miprimerrescate, fundación dedicada al rescate y cuidado de animales y personas en situación de calle.' }>
-
-      <Slider style={{ backgroundImage: 'url(/wave-haikei-1.svg), url(/wave-haikei-2.svg)', backgroundPosition: 'bottom left', backgroundSize: 'cover' }}>
+  return (
+    <MainIndexLayout title={ 'Bienvenid@' } H1={ 'Mi Primer Rescate' } pageDescription={ 'Esta es la página oficial de @miprimerrescate, fundación dedicada al rescate y cuidado de animales y personas en situación de calle.' } pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> }>
+      {/* <Slider style={{ backgroundImage: 'url(/wave-haikei-1.svg), url(/wave-haikei-2.svg)', backgroundPosition: 'bottom left', backgroundSize: 'cover' }}>
         <h2 className={ `slider__element is-active` }>Quiénes somos y qué hacemos <PetsOutlined /></h2>
 
         <p className={ `slider__element` }>Nuestro equipo de Mi Primer Rescate está formado por un grupo de voluntarios que se dedican a realizar la labor sin ningún fin de lucro</p>
@@ -60,10 +61,13 @@ const Home: NextPage = () => {
         <p className={ `slider__element` }>Disminuir la sobrepoblación de los peludos en la calle</p>
         <p className={ `slider__element` }>Acobijar a las mascotas abandonadas y en situación de calle</p>
         <p className={ `slider__element` }>Marcar una pauta de respeto y concientización en todo el país, específicamente donde realizamos la labor (Carabobo/ Venezuela) y a donde podamos llegar al rededor del mundo.</p>
-      </Slider>
+      </Slider> */}
       
-      {/* TODO: factorizacion cuando haya superusuarios */}
-      <CustomForm />
+      {/* TODO: refactorizacion cuando haya superusuarios */}
+      { isLoggedIn
+        ? <CustomForm />
+        : <></>
+      }
 
       <p className={ styles.subtitle }>¿Qué estamos haciendo ahora?</p>
 
@@ -79,4 +83,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home;
+export default HomePage;

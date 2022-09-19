@@ -2,17 +2,89 @@ import { FC, useEffect, useState } from 'react';
 import { ScrollContext } from './';
 
 export interface ScrollState {
+    passedElements: string[];
+}
+
+
+interface Props {
+    children: JSX.Element | JSX.Element[];
+    elements: ObjectToTop[];
+}
+
+
+export interface ObjectToTop {
+    selector: string;
+    distanceToTop: number;
+    limit?: 'top' | 'bottom';
+    // action?: ( element: string ) => void;
+}
+
+
+export const ScrollProvider: FC<Props> = ({ children, elements }) => {
+
+    const [passedElements, setPassedElements] = useState<string[]>([]);
+
+    useEffect(() => {
+        window.addEventListener("scroll", () => {
+            elements.forEach(( element ) => {
+                let el = document.querySelector( element.selector ) as HTMLElement;
+
+                if ( !el ) return;
+                
+                if ( element.limit ) {
+                    return ( el.getClientRects()[0][element.limit] < element.distanceToTop )
+                        ? setPassedElements(( prevState: string[] ) => !prevState.includes(element.selector) ? [...prevState, element.selector] : prevState)
+                        : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
+                } 
+                
+                let scroll = window.scrollY || document.documentElement.scrollTop;
+
+                return ( element.distanceToTop < scroll )
+                    ? setPassedElements(( prevState: string[] ) => !prevState.includes(element.selector) ? [...prevState, element.selector] : prevState)
+                    : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
+            })
+        })
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [])
+
+    return(
+        <ScrollContext.Provider value={{
+            passedElements,
+        }}>
+            { children }
+        </ScrollContext.Provider>
+    )
+}
+
+
+
+
+
+
+
+
+/* import { FC, useEffect, useState } from 'react';
+import { ScrollContext } from './';
+
+export interface ScrollState {
     scrolled: boolean;
 }
 
 
-interface props {
+interface Props {
     children: JSX.Element | JSX.Element[];
     selector: string;
 }
 
 
-export const ScrollProvider: FC<props> = ({ children, selector }) => {
+export interface ObjectToTop {
+    selector: string;
+    distanceToTop: number;
+    action?: () => void;
+}
+
+
+export const ScrollProvider: FC<Props> = ({ children, selector }) => {
 
     const [scrolled, setScrolled] = useState( false );
     const [passedImage, setpassedImage] = useState( false );
@@ -44,4 +116,4 @@ export const ScrollProvider: FC<props> = ({ children, selector }) => {
             { children }
         </ScrollContext.Provider>
     )
-}
+} */

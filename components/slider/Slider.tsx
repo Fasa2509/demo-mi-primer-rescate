@@ -10,7 +10,6 @@ export const Slider: FC<Props> = ({ children, style }) => {
   
   const [active, setActive] = useState( 0 );
   const [childs, setChilds] = useState([]);
-  const [buttonClicked, setbuttonClicked] = useState( false );
 
   useEffect(() => {
     let elements = document.querySelectorAll('.slider__element')

@@ -1,6 +1,6 @@
 export * from './CardContact'
-export * from './CardGoal'
 export * from './CardShop'
 export * from './CardSocial'
 export * from './CardText'
 export * from './ChangeCard'
+export * from './PetCard'
