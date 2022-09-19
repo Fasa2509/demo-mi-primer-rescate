@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     
     const { slug } = ctx.params as { slug: string };
 
-    const product = allProducts.find(( product: IProduct ) => product.slug === '/' + slug);
+    const product = allProducts.find(( product: IProduct ) => product.slug === slug);
 
     return {
         props: {
