@@ -27,7 +27,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
     
-    const productSlug = allProducts.map(( product ) => product.slug);
+    const productSlug = allProducts.map(( product ) => product.slug.substring(1));
 
     return {
         paths: productSlug.map(( slug ) => ({
@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     
     const { slug } = ctx.params as { slug: string };
 
-    const product = allProducts.find(( product: IProduct ) => product.slug === slug);
+    const product = JSON.parse( JSON.stringify(allProducts.find(( product: IProduct ) => product.slug === `/${ slug }`)) );
 
     return {
         props: {
