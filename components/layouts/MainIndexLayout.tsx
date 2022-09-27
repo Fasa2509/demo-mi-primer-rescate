@@ -41,7 +41,12 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
         <meta property="og:title" content={ title } />
         <meta property="og:description" content={ pageDescription } />
 
-        <meta property="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-MPR.png' } />
+        <meta property="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
+
+        <meta name="og:title" content={ title } />
+        <meta name="og:description" content={ pageDescription } />
+
+        <meta name="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
       </Head>
 
       {/* <ColorSelector /> */}
