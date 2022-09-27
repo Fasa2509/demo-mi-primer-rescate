@@ -11,6 +11,8 @@ interface Props {
       animation?: 'fade' | 'slide';
       navButtonsAlwaysVisible?: boolean;
       autoPlay?: boolean;
+      fullHeightHover?: boolean;
+      interval?: number;
     };
     layout?: 'intrinsic' | 'responsive';
 }
@@ -19,10 +21,10 @@ export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic' 
 
   return (
     <div>
-      <Carousel indicators={ options ? options.indicators : true } animation={ options ? options.animation || 'fade' : 'fade' } navButtonsAlwaysVisible={ options ? options.navButtonsAlwaysVisible : false } autoPlay={ options ? options.autoPlay : true }>
+      <Carousel indicators={ options ? options.indicators : true } animation={ options ? options.animation || 'fade' : 'fade' } navButtonsAlwaysVisible={ options ? options.navButtonsAlwaysVisible : false } autoPlay={ options ? options.autoPlay : true } fullHeightHover={ options ? options.fullHeightHover : false } interval={ options ? options.interval || 6000 : 6000 }>
         {
           images.map((fadeImage, index) => (
-            <div style={{ justifyContent: 'center', alignItems: 'center' }} key={index}>
+            <div style={{ display: layout !== 'responsive' ? 'flex' : 'block', justifyContent: 'center', alignItems: 'center' }} key={index}>
               <Image src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } />
             </div>
         ))}

@@ -16,7 +16,6 @@ export interface ObjectToTop {
     selector: string;
     distanceToTop: number;
     limit?: 'top' | 'bottom';
-    // action?: ( element: string ) => void;
 }
 
 

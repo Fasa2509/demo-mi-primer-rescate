@@ -39,6 +39,11 @@
     height: 90vh;
 }
 
+.content__container {
+    display: flex;
+    flex-direction: column;
+}
+
 .content__1,
 .content__2,
 .content__3 {
@@ -48,7 +53,7 @@
     padding: .8rem 1rem;
     min-width: 200px;
     width: 80%;
-    max-width: 500px;
+    max-width: 450px;
     position: relative;
     background-color: var(--secondary-color-2);
     display: flex;
@@ -58,7 +63,13 @@
 }
 
 .content__2 {
-    transform: translateX(calc(-100% + 1px));
+    transform: translateX(-100%);
+}
+
+.content__1,
+.content__3 {
+    align-self: flex-end;
+    transform: translate(100%);
 }
 
 .content__3 > p {
@@ -96,7 +107,7 @@
 
 .content__1.active,
 .content__3.active {
-    transform: translateX(calc(100vw - 100%));
+    transform: translateX(0);
 }
 
 .content__2.active {
@@ -104,10 +115,10 @@
 }
 
 @media screen and (min-width: 600px) {
-    .content__1,
+    /* .content__1,
     .content__3 {
         transform: translateX(calc(100vw - 17px));
-    }
+    } */
 }
 
 .custom__shape__divider {

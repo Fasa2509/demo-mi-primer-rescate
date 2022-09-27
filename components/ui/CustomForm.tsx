@@ -48,13 +48,12 @@ export const CustomForm = () => {
         new Promise((resolve) => {
             let key = enqueueSnackbar('¿Estás segur@ de que quieres vaciar el formulario?', {
                 variant: 'info',
-                autoHideDuration: 150000,
+                autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,
             });
 
             const callback = ( e: any ) => {
                 if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
-                    console.log(e.target)
                     resolve({
                         accepted: true,
                         callback
@@ -62,7 +61,6 @@ export const CustomForm = () => {
                 }
 
                 if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
-                    console.log(e.target)
                     resolve({
                         accepted: false,
                         callback

@@ -1,5 +1,7 @@
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material"
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Input, Radio, RadioGroup, TextField, Typography } from "@mui/material"
+import { useSnackbar } from "notistack";
 import { ChangeEvent, FC, useState } from "react"
+import { ConfirmNotificationButtons } from "../../utils";
 import styles from './Form.module.css'
 
 // Antes de empezar el cuestionario ¿Está usted interesado en algún perro/gato en particular de la manada MPR? De ser así escriba su nombre aquí. 
@@ -88,20 +90,66 @@ export const AdoptionForm: FC = () => {
         input17: '',
         input18: '',
         input19: 0,
-        input20: '',
+        input20: 0,
         input21: true,
         input22: '',
         input23: '',
         cachorro: false,
         input24: '',
         input25: '',
-        input26: '',
+        input26: true,
         input27: true,
         input28: '',
     });
+
+    const { enqueueSnackbar } = useSnackbar();
+
+    const sendForm = () => {
+        new Promise(( resolve ) => {
+            let key = enqueueSnackbar('¿Quieres enviar el formulario?', {
+                variant: 'info',
+                autoHideDuration: 15000,
+                action: ConfirmNotificationButtons
+            });
+
+            const callback = ( e: any ) => {
+                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
+                    resolve({
+                        callback,
+                        accepted: true,
+                    })
+                }
+                
+                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
+                    resolve({
+                        callback,
+                        accepted: false,
+                    })
+                }
+            };
+
+            document.addEventListener('click', callback);
+        })
+        // @ts-ignore
+        .then(({ callback, accepted }: { callback: any, accepted: boolean }) => {
+            document.removeEventListener('click', callback);
+
+            accepted && enqueueSnackbar('La solicitud de adopción ha sido enviada', {
+                variant: 'success',
+                autoHideDuration: 4000,
+            })
+            
+            accepted || enqueueSnackbar('La solicitud de adopción no fue enviada', {
+                variant: 'warning',
+                autoHideDuration: 6000,
+            })
+        })
+    }
     
     const handleSubmit = ( e: any ) => {
         e.preventDefault();
+
+        sendForm();
     }
 
   return (
@@ -144,17 +192,19 @@ export const AdoptionForm: FC = () => {
             fullWidth
             multiline
             onChange={ ( e ) => setForm({ ...form, input1: e.target.value }) }
+            required
         />
 
         <TextField
             name='input2'
             value={ form.input2 }
-            label='2. ¿En que lugar/zona reside usted?'
+            label='2. ¿En qué lugar o zona reside?'
             type='text'
             color='secondary'
             variant='filled'
             fullWidth
             onChange={ ( e ) => setForm({ ...form, input2: e.target.value }) }
+            required
         />
 
         <Box>
@@ -190,6 +240,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input4: e.target.value }) }
+                required
             />
         </Box>
 
@@ -203,6 +254,7 @@ export const AdoptionForm: FC = () => {
             fullWidth
             multiline
             onChange={ ( e ) => setForm({ ...form, input5: e.target.value }) }
+            required
         />
 
         <Box>
@@ -262,11 +314,12 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input8: e.target.value }) }
+                required={ form.input7 }
             />
         </Box>
 
         <Box>
-            <Typography>9. ¿Ha vivido con animales anteriormente? ¿Por qué ya no?</Typography>
+            { form.input7 || <Typography className='fadeIn'>9. ¿Ha vivido con animales anteriormente? ¿Por qué ya no?</Typography> }
             <TextField
                 name='input9'
                 value={ !form.input7 ? form.input9 : '' }
@@ -278,6 +331,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input9: e.target.value }) }
+                required={ !form.input7 }
             />
         </Box>
 
@@ -317,6 +371,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input11: e.target.value }) }
+                required={ form.input10 }
             />
         </Box>
 
@@ -355,6 +410,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input13: e.target.value }) }
+                required
             />
         </Box>
 
@@ -393,6 +449,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input15: e.target.value }) }
+                required
             />
         </Box>
 
@@ -406,10 +463,11 @@ export const AdoptionForm: FC = () => {
             fullWidth
             multiline
             onChange={ ( e ) => setForm({ ...form, input16: e.target.value }) }
+            required
         />
 
         <Box>
-            <Typography>17. ¿Su vivienda cuenta con un espacio al aire libre? {'('}patio, porche, terraza, balcón{')'}. De ser así indique cómo es y si tiene un cercado en buenas condiciones {'('}rejas, muros, red, entre otros{')'}</Typography>
+            <Typography>17. ¿Su vivienda cuenta con un espacio al aire libre {'('}patio, porche, terraza, balcón{')'}?. De ser así indique cómo es y si tiene un cercado en buenas condiciones {'('}rejas, muros, red, entre otros{')'}</Typography>
             <TextField
                 name='input17'
                 value={ form.input17 }
@@ -420,6 +478,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input17: e.target.value }) }
+                required
             />
         </Box>
 
@@ -435,6 +494,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input18: e.target.value }) }
+                required
             />
         </Box>
 
@@ -450,7 +510,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => {
-                    if ( isNaN(Number( e.target.value )) || Number( e.target.value ) < 0 ) return;
+                    if ( isNaN(Number( e.target.value )) || Number( e.target.value ) < 0 || Number( e.target.value ) > 24 ) return;
                     setForm({ ...form, input19: Number(e.target.value) })}
                 }
             />
@@ -468,8 +528,8 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => {
-                    if ( isNaN(Number( e.target.value )) || Number( e.target.value ) < 0 ) return;
-                    setForm({ ...form, input20: e.target.value })
+                    if ( isNaN(Number( e.target.value )) || Number( e.target.value ) < 0 || Number( e.target.value ) > 24 ) return;
+                    setForm({ ...form, input20: Number( e.target.value ) })
                 }}
             />
         </Box>
@@ -509,6 +569,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input22: e.target.value }) }
+                required
             />
         </Box>
 
@@ -524,6 +585,7 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 multiline
                 onChange={ ( e ) => setForm({ ...form, input23: e.target.value }) }
+                required
             />
         </Box>
 
@@ -565,6 +627,7 @@ export const AdoptionForm: FC = () => {
                             fullWidth
                             multiline
                             onChange={ ( e ) => setForm({ ...form, input24: e.target.value }) }
+                            required
                         />
                     </Box>
                     
@@ -580,22 +643,31 @@ export const AdoptionForm: FC = () => {
                             fullWidth
                             multiline
                             onChange={ ( e ) => setForm({ ...form, input25: e.target.value }) }
+                            required
                         />
                     </Box>
 
                     <Box>
-                        <Typography>26. Es un requisito prioritario castrar al animal adoptado entre los primeros 6-8 meses después de su adopción ¿Está de acuerdo? ¿Se compromete a cumplirlo?</Typography>
-                        <TextField
-                            name='input26'
-                            value={ form.input26 }
-                            label='26. Es un requisito prioritario castrar al animal adoptado entre los primeros 6-8 meses después de su adopción ¿Está de acuerdo? ¿Se compromete a cumplirlo?'
-                            type='text'
-                            color='secondary'
-                            variant='filled'
-                            fullWidth
-                            multiline
-                            onChange={ ( e ) => setForm({ ...form, input26: e.target.value }) }
-                        />
+                        <Typography>26. Es un requisito prioritario castrar al animal adoptado entre los primeros 6-8 meses después de su adopción. ¿Está de acuerdo? ¿Se compromete a cumplirlo?</Typography>
+                        <FormLabel>
+                            <RadioGroup
+                                name="input26"
+                                row
+                                value={ form.input26 }
+                                onChange={( e: ChangeEvent<HTMLInputElement> ) => setForm({ ...form, input26: e.target.value === 'true' }) }
+                            >
+                            {
+                                ['Sí', 'No'].map( option => (
+                                    <FormControlLabel
+                                        key={ option }
+                                        value={ option !== 'No' }
+                                        control={ <Radio color='secondary' /> }
+                                        label={ option }
+                                    />
+                                ))
+                            }
+                            </RadioGroup>
+                        </FormLabel>
                     </Box>
 
                     <Box>
@@ -633,11 +705,14 @@ export const AdoptionForm: FC = () => {
                             fullWidth
                             multiline
                             onChange={ ( e ) => setForm({ ...form, input28: e.target.value }) }
+                            required
                         />
                     </Box>
                 </Box>
             )
         }
+
+        <Input type='submit' color='secondary' />
     </form>
   )
 }

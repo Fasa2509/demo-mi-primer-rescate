@@ -13,7 +13,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     <ShopLayout title={ product.name } pageDescription={ product.name + ' | Tienda' }>
         <section className={ styles.product__container }>
             <div className={ styles.slider__container }>
-                <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide' }} layout={ 'responsive' } />
+                <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 6500 }} layout={ 'responsive' } />
             </div>
             <div className={ styles.product__info }>
                 <ProductInfo product={ product } />

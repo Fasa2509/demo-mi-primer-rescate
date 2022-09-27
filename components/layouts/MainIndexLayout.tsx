@@ -37,11 +37,11 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       <Head>
         <title>{ finalTitle }</title>
 
-        <meta name="description" content={ pageDescription } />
-        <meta name="og:title" content={ title } />
-        <meta name="og:description" content={ pageDescription } />
+        <meta property="description" content={ pageDescription } />
+        <meta property="og:title" content={ title } />
+        <meta property="og:description" content={ pageDescription } />
 
-        <meta name="og:image" content={ 'http://localhost:3000/Logo-MPR.png' } />
+        <meta property="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-MPR.png' } />
       </Head>
 
       {/* <ColorSelector /> */}
@@ -67,7 +67,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       <WelcomePath />
       
       <div className={ styles.phrases__container }>
-          <Carousel>
+          <Carousel interval={ 8000 }>
             <div className={ styles.phrase }>
               <blockquote className={ styles.phrase__text }>“La compasión por los animales se conecta tan exactamente con la bondad del carácter, que se puede afirmar con seguridad que quien es cruel con los animales, no puede ser un buen hombre.”</blockquote>
               <p className={ styles.phrase__autor }>Arthur Schopenhauer</p>
