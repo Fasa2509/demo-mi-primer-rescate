@@ -1,14 +1,20 @@
-import { FC } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { FC } from 'react';
+import NextLink from 'next/link';
+import Image from 'next/image';
+import { Link, Typography } from '@mui/material';
+import styles from './LinkLogo.module.css';
 
-export const LinkLogo: FC = () => {
+interface Props {
+  shop?: boolean;
+}
+
+export const LinkLogo: FC<Props> = ({ shop = false }) => {
   return (
-    <Link href={ '/' } passHref>
-      <a style={{ display: 'flex', gap: '.3rem' }}>
-        <Image priority src={ '/favicon.ico' } alt={ 'doggie' } width={ 32 } height={ 32 } />
-          Mi Primer Rescate
-      </a>
-    </Link>
+    <NextLink href={ '/' } passHref>
+      <Link className={ styles.link } sx={{ marginLeft: { xs: '0', md: shop ? '4.5rem' : 0 } }}>
+        <Image priority src={ '/favicon.ico' } alt={ 'doggie' } width={ 48 } height={ 48 } />
+        <Typography sx={{ display: { xs: 'flex', md: 'none' }, color: '#fafafa', fontSize: '1.2rem', fontWeight: 'bold' }}>Mi Primer Rescate</Typography>
+      </Link>
+    </NextLink>
   )
 }

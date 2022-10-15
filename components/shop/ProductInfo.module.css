@@ -8,16 +8,17 @@
     font-weight: 600;
 }
 
-.price {
-    font-weight: 600;
-    font-size: .9rem;
-    color: #333;
+.product__price {
+    /* color: #666; */
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.25rem;
 }
 
-.discount {
+.product__discount {
+    margin: 0;
     font-weight: 600;
-    font-size: 1.05rem;
-    color: rgb(83, 83, 83);
+    font-size: 1.25rem;
 }
 
 .tags__container {

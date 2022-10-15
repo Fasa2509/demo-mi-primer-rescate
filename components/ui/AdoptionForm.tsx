@@ -467,7 +467,7 @@ export const AdoptionForm: FC = () => {
         />
 
         <Box>
-            <Typography>17. ¿Su vivienda cuenta con un espacio al aire libre {'('}patio, porche, terraza, balcón{')'}?. De ser así indique cómo es y si tiene un cercado en buenas condiciones {'('}rejas, muros, red, entre otros{')'}</Typography>
+            <Typography>17. ¿Su vivienda cuenta con un espacio al aire libre {'('}patio, porche, terraza, balcón{')'}? De ser así indique cómo es y si tiene un cercado en buenas condiciones {'('}rejas, muros, red, entre otros{')'}</Typography>
             <TextField
                 name='input17'
                 value={ form.input17 }

@@ -20,29 +20,31 @@ export const Countdown: FC<Props> = ({ end, selector }) => {
             if ( selector && isToday( new Date( end ) ) ) {
                 let element = document.getElementById( selector );
 
-                element && element.scrollIntoView({ block: 'end' });
+                setTimeout(() => {
+                    element && element.scrollIntoView({ block: 'center', behavior: 'smooth' });
 
-                confetti({
-                    zIndex: 12000,
-                    particleCount: 150,
-                    spread: 200,
-                    angle: 100,
-                    origin: {
-                        x: 1,
-                        y: 1,
-                    }
-                })
-            
-                confetti({
-                    zIndex: 12000,
-                    particleCount: 150,
-                    spread: 200,
-                    angle: 100,
-                    origin: {
-                        x: 0,
-                        y: 1,
-                    }
-                })
+                    confetti({
+                        zIndex: 12000,
+                        particleCount: 150,
+                        spread: 200,
+                        angle: 100,
+                        origin: {
+                            x: 1,
+                            y: 1,
+                        }
+                    })
+                
+                    confetti({
+                        zIndex: 12000,
+                        particleCount: 150,
+                        spread: 200,
+                        angle: 100,
+                        origin: {
+                            x: 0,
+                            y: 1,
+                        }
+                    })
+                }, 2500)
             }
         } else {
             let clockInterval = setInterval(() => {

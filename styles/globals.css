@@ -83,8 +83,20 @@ a {
   font-size: 1em;
   font-weight: 600;
   cursor: pointer;
-  margin: .5em;
+  /* margin: .5em; */
   transition: background-color 100ms ease;
+}
+
+.buttonOutlined {
+  /* color: var(--secondary-color-1); */
+  color: #fafafa;
+  font-weight: 600;
+  padding: .5rem;
+  font-size: 1rem;
+  border: thin solid var(--secondary-color-1);
+  border-radius: 10rem;
+  cursor: pointer;
+  transition: background-color 250ms ease, color 250ms ease;
 }
 
 .button--full {
@@ -146,11 +158,24 @@ section .is-active {
   .notification__buttons.transparent:hover {
     background-color: rgba(0, 0, 0, .35);
   }
+
+  .buttonOutlined:hover {
+    background-color: transparent;
+    color: var(--secondary-color-1);
+  }
+}
+
+.admin__link {
+  font-size: .9rem;
+}
+
+.admin__link:hover {
+  text-decoration: underline;
 }
 
 @media screen and (max-width: 576px) {
   html {
-    font-size: 15px;
+    font-size: 16px;
   }
 }
 

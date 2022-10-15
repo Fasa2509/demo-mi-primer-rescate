@@ -7,7 +7,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 10000;
+    z-index: 9999;
+}
+
+.modal__window__animation {
     animation: modalOpacity 500ms cubic-bezier(.19,.87,.43,.98) 0ms 1 normal both;
 }
 
@@ -19,7 +22,7 @@
 }
 
 .modal__container {
-    min-width: 250px;
+    min-width: 10vw;
     width: 80vw;
     max-width: 900px;
     min-height: 5rem;

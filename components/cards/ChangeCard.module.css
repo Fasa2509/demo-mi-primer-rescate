@@ -1,13 +1,17 @@
 .card__container {
+    min-width: min(250px, 100%);
+    width: 100%;
+    max-width: 400px;
     display: flex;
     flex-direction: column;
+    align-content: center;
     overflow: hidden;
-    border-radius: 1rem;
+    border-radius: .8rem;
 }
 
 @media (hover: hover) {
     .card__container img {
-        filter: brightness(85%);
+        filter: brightness(90%);
         transition: filter 250ms ease;
     }
 

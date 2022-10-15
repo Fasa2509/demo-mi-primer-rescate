@@ -30,22 +30,3 @@ export const ConfirmNotificationButtons: FC = ( snackbarKey: any ) => {
         </>
     )
 }
-
-export const ConfirmCloseSession: FC = ( snackbarKey: any ) => {
-    
-    const router = useRouter();
-    // const { isLoggedIn, logIn, logOut } = useContext( AuthContext );
-    const { closeSnackbar } = useSnackbar();
-
-    return (
-        <>
-            <button className='notification__buttons' onClick={ () => {
-                // logOut();
-                router.reload();
-            }}><Check color='success' /></button>
-            <button className='notification__buttons' onClick={ () => {
-                closeSnackbar( snackbarKey )
-            }}><Close color='error' /></button>
-        </>
-    )
-}

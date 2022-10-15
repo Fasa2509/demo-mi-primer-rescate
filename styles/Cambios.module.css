@@ -1,6 +1,19 @@
 .changes__section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    justify-items: center;
+    grid-template-columns: 1fr;
     gap: 1.8rem;
     margin: 1.5rem 0;
+}
+
+@media screen and (min-width: 576px) {
+    .changes__section {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .changes__section {
+        grid-template-columns: 1fr 1fr;
+    }
 }

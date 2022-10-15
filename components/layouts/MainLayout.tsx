@@ -1,10 +1,14 @@
-import { FC, useContext } from "react"
-// import { useRouter } from "next/router";
+import { FC, useContext, useEffect } from 'react';
 import Head from "next/head";
+import { useSession, getSession } from 'next-auth/react';
+import { useSnackbar } from 'notistack';
+import Cookies from 'js-cookie';
+import { isToday, isTomorrow } from 'date-fns';
 
 import { ScrollContext } from "../../context";
 import { Footer, Header, SideMenu, Title } from "../ui";
-// import { ColorSelector } from './ColorSelector';
+import { Loader } from "./Loader";
+import { ConfirmNotificationButtons } from '../../utils';
 import styles from './MainLayout.module.css'
 
 interface Props {
@@ -19,10 +23,11 @@ interface Props {
 
 export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage, titleIcon, nextPage }) => {
 
-  let finalTitle = `${ title } | MPR`
+  let finalTitle = `${ title } | MPR`;
 
-  // const router = useRouter();
-  const { passedElements } = useContext( ScrollContext )
+  const { data: session, status } = useSession();
+  const { passedElements, isLoading } = useContext( ScrollContext );
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleClick = () => {
     window.scrollTo({
@@ -30,6 +35,60 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
       top: 0,
     })
   }
+
+  useEffect(() => {
+    console.log(session)
+    if ( session ) {
+      if ( Cookies.get('mpr__extendSession') === 'true' && isToday( new Date(session.expires) ) || isTomorrow( new Date(session.expires) )) {
+        new Promise(( resolve, reject ) => {
+          let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
+              variant: 'info',
+              autoHideDuration: 15000,
+              action: ConfirmNotificationButtons,
+          })
+
+          let timer = setTimeout(() => reject(callback), 15000);
+
+          const callback = ( e: any ) => {
+              if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
+                  resolve({
+                      accepted: true,
+                      callback,
+                      timer,
+                  })
+              }
+
+              if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
+                  resolve({
+                      accepted: false,
+                      callback,
+                      timer,
+                  })
+              }
+          }
+
+          document.addEventListener('click', callback);
+      })
+      // @ts-ignore
+      .then(({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
+          document.removeEventListener('click', callback);
+          clearTimeout( timer );
+
+          if ( !accepted ) {
+            Cookies.set('mpr__extendSession', 'false');
+            return;
+          }
+
+          getSession();
+
+          return;
+      })
+      .catch(({ callback }: { callback: any }) => {
+          document.removeEventListener('click', callback);
+      })
+      }
+    }
+}, [session, status, enqueueSnackbar])
 
   return (
     <>
@@ -43,11 +102,11 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
         <meta name="og:image" content={ pageImage ? `https://demo-mi-primer-rescate.vercel.app/${ pageImage }` : 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
       </Head>
 
-      {/* <ColorSelector /> */}
+      <Header index={ false } shop={ false } />
 
       <SideMenu />
 
-      <Header index={ false } />
+      <Loader />
       
       <main className={ styles.main__container }>
         {/* <h1 className={ styles.title }>{ H1 || title }</h1> */}

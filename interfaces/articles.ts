@@ -1,4 +1,5 @@
 export interface IArticle {
+    _id: string;
     title: string;
     fields: Field[];
     createdAt: number;
@@ -7,10 +8,8 @@ export interface IArticle {
 export type Field = {
     type: FieldType;
     content: string;
-    content_?: string;
-    images?: ImageObj[];
-    width?: number;
-    height?: number;
+    content_: string;
+    images: ImageObj[];
 };
 
 export interface ImageObj {

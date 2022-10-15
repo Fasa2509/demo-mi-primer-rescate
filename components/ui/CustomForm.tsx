@@ -4,17 +4,21 @@ import { isBefore } from 'date-fns';
 
 import { CustomInput } from './CustomInput';
 import { Article } from './Article';
-import { IArticle, Field } from '../../interfaces';
+import { Field, IArticle } from '../../interfaces';
 import { ConfirmNotificationButtons } from '../../utils';
 import styles from './Form.module.css';
+import { mprApi, mprRevalidatePage } from '../../api';
+import axios from 'axios';
+import { dbArticles } from '../../database';
 
 export const CustomForm = () => {
 
     const { enqueueSnackbar } = useSnackbar();
 
     const [title, setTitle] = useState( '' );
-    const [currentField, setCurrentField] = useState<Field>({ type: 'texto', content: '', content_: '' });
+    const [currentField, setCurrentField] = useState<Field>({ type: 'texto', content: '', content_: '', images: [] });
     const [fields, setFields] = useState<Array<Field>>([]);
+    const [dimension, setDimension] = useState<{ width: number; height: number; }>({ width: 1, height: 1 });
 
     const addFieldArticle = ( e: any ) => {
         e.preventDefault();
@@ -29,80 +33,95 @@ export const CustomForm = () => {
             setFields([...fields, currentField]);
         } else {
             if ( fields.length > 0 && fields.at(-1)?.type === 'imagen' ) {
-                let lastState: Field[] = JSON.parse( JSON.stringify(fields) );
+                let lastState: Field[] = JSON.parse( JSON.stringify( fields || '[]' ) );
 
-                lastState.at(-1)?.images?.push({ url: currentField.content, alt: currentField.content_ || '', width: currentField.width || 0, height: currentField.height || 0 });
+                lastState.at(-1)?.images.push({ url: currentField.content.trim(), alt: currentField.content_.trim(), width: dimension.width, height: dimension.height });
 
-                setFields( lastState )
+                setFields( lastState );
             } else {
-                setFields([...fields, { type: 'imagen', content: '', images: [{ url: currentField.content, alt: currentField.content_ || '', width: currentField.width || 0, height: currentField.height || 0 }] }])
+                setFields([...fields, { type: 'imagen', content: '', content_: '', images: [{ url: currentField.content.startsWith('/') ? currentField.content : '/' + currentField.content, alt: currentField.content_, width: dimension.width, height: dimension.height }] }])
             }
         }
 
-        setCurrentField({ ...currentField, content: '', content_: '', width: 0, height: 0 })
+        setCurrentField({ ...currentField, content: '', content_: '', images: [] });
+        setDimension({ width: 1, height: 1 });
 
-        enqueueSnackbar('El campo fue agregado', { variant: 'success', autoHideDuration: 2500 })
+        enqueueSnackbar('El campo fue agregado', { variant: 'success', autoHideDuration: 2500 });
     }
 
     const cleanArticle = () => {
-        new Promise((resolve) => {
-            let key = enqueueSnackbar('¿Estás segur@ de que quieres vaciar el formulario?', {
+        new Promise((resolve, reject) => {
+            let key = enqueueSnackbar('¿Segur@ que quieres vaciar el formulario?', {
                 variant: 'info',
                 autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,
             });
 
+            let timer = setTimeout(() => reject( callback ), 15000);
+
             const callback = ( e: any ) => {
-                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
+                if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
                     resolve({
                         accepted: true,
-                        callback
+                        callback,
+                        timer,
                     });
                 }
 
-                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
+                if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
                     resolve({
                         accepted: false,
-                        callback
+                        callback,
+                        timer,
                     });
                 }
             }
 
-            document.addEventListener('click', callback)
+            document.addEventListener('click', callback);
             // @ts-ignore
-        }).then(({ accepted, callback }: { accepted: boolean, callback: any }) => {
+        }).then(({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
             document.removeEventListener('click', callback);
-
+            clearTimeout( timer );
+            
             if ( !accepted ) return;
             setFields([]);
             setTitle( '' );
             enqueueSnackbar('El artículo fue vaciado', { variant: 'info', autoHideDuration: 5000 });
+        }).catch(({ callback }: { callback: any }) => {
+            document.removeEventListener('click', callback);
         });
     }
 
     const saveArticle = () => {
+        if ( !title )
+            return enqueueSnackbar('No puedes guardar un artículo sin título', { variant: 'error', autoHideDuration: 3000 });
+
         if ( fields.length === 0 )
-            return enqueueSnackbar('No puedes guardar un artículo sin contenido', { variant: 'error', autoHideDuration: 3000 })
+            return enqueueSnackbar('No puedes guardar un artículo sin contenido', { variant: 'error', autoHideDuration: 3000 });
         
-        new Promise(( resolve ) => {
-            let key = enqueueSnackbar('¿Estás segur@ de que quieres guardar este artículo?', {
+        new Promise(( resolve, reject ) => {
+            let key = enqueueSnackbar('¿Segur@ que quieres guardar este artículo?', {
                 variant: 'info',
                 autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,
             })
 
+            let timer = setTimeout(() => reject(callback), 15000);
+
             const callback = ( e: any ) => {
-                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
+                if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
                     resolve({
                         accepted: true,
                         callback,
+                        timer,
                     })
                 }
 
-                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
+                if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
                     resolve({
                         accepted: false,
                         callback,
+                        timer,
                     })
                 }
             }
@@ -110,22 +129,33 @@ export const CustomForm = () => {
             document.addEventListener('click', callback);
         })
         // @ts-ignore
-        .then(({ accepted, callback }: { accepted: boolean, callback: any }) => {
+        .then(async ({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
             document.removeEventListener('click', callback);
+            clearTimeout( timer );
 
             if ( !accepted ) return;
 
-            if ( fields.length === 0 )
-                return enqueueSnackbar('No puedes guardar un artículo sin contenido', { variant: 'error', autoHideDuration: 3000 })
-        
-            let lastArticles: IArticle[] = JSON.parse( window.localStorage.getItem('articles_2') || '[]' );
+            const res = await dbArticles.saveNewArticle( title, fields );
+            console.log( res );
+            enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' });
             
-            lastArticles.unshift({ title, fields, createdAt: Date.now() });
-            
-            window.localStorage.setItem('articles_2', JSON.stringify( lastArticles ));
-            
-            return enqueueSnackbar('El artículo fue guardado con éxito', { variant: 'success' });
+            if ( !res.error ) {
+                if ( process.env.NODE_ENV === 'production' ) {
+                    const revRes = await mprRevalidatePage( '/' );
+                    enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });                    
+                }
+            }
+
+            return;
         })
+        .catch(({ callback }: { callback: any }) => {
+            document.removeEventListener('click', callback);
+        })
+    }
+
+    const resetForms = ( e: any ) => {
+        setCurrentField({ type: e.target.value, content: '', content_: '', images: [] });
+        setDimension({ width: 1, height: 1 });
     }
 
   return (
@@ -135,12 +165,12 @@ export const CustomForm = () => {
 
             <p className={ styles.subtitle }>Crea un artículo para la página</p>
             
-            <input style={{ border: '2px solid var(--secondary-color-1)' }} className='input' value={ title } type={ 'text' } name={ 'title' } placeholder={ 'Título' } required onChange={ ( e: any ) => setTitle( e.target.value ) } />
+            <input style={{ border: '2px solid var(--secondary-color-1)' }} className='input' value={ title } type={ 'text' } name={ 'title' } placeholder={ 'Título' } onChange={ ( e: any ) => setTitle( e.target.value ) } />
             
             <div className={ styles.header }>
                 <p>Agrega un campo</p>
 
-                <select value={ currentField.type } onChange={ ( e: any ) => setCurrentField({ type: e.target.value, content: '', content_: '', width: 1, height: 1 }) }>
+                <select value={ currentField.type } onChange={ resetForms }>
                     <option value="texto">Texto</option>
                     <option value="link">Link</option>
                     <option value="subtitulo">Subtítulo</option>
@@ -149,14 +179,14 @@ export const CustomForm = () => {
                 </select>
             </div>
 
-            <CustomInput field={ currentField } setField={ setCurrentField } />
+            <CustomInput field={ currentField } setField={ setCurrentField } dimension={ dimension } setDimension={ setDimension } />
 
             <button className='button'>Añadir campo</button>
         </form>
 
         <p style={{ marginBottom: '.5em' }} className={ styles.subtitle }>Esto es un preview del artículo a publicar</p>
 
-        <Article title={ title } fields={ fields } createdAt={ Date.now() } />
+        <Article article={{ _id: 'article_example',title, fields, createdAt: Date.now() }} />
 
         <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '1em' }}>
             <button style={{ margin: 0 }} className='button' onClick={ () => setFields(fields.slice(0, fields.length - 1)) }>Quitar último</button>

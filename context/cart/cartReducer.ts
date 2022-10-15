@@ -18,18 +18,21 @@ export const cartReducer = ( state: CartState, action: CartActionType ): CartSta
             }
 
         case 'Cart - Update Product in Cart':
-            
-            let productInCart = state.cart.find(product => product._id === action.payload._id);
+            let productInCart = state.cart.find(product => product._id === action.payload._id && product.size === action.payload.size);
+
+            if ( action.payload.quantity < 1 ) {
+                return  {
+                        ...state,
+                        cart: state.cart.filter(p => p._id !== action.payload._id || p.size !== action.payload.size)
+                    }
+            }
 
             return productInCart
                 ? {
                     ...state,
                     cart: state.cart.map(p => {
-                        if ( p._id !== action.payload._id ) return p;
-                        return {
-                            ...p,
-                            quantity: action.payload.quantity,
-                        }
+                        if ( p._id !== action.payload._id || p.size !== action.payload.size ) return p;
+                        return action.payload
                     })
                 }
                 : {
@@ -46,7 +49,9 @@ export const cartReducer = ( state: CartState, action: CartActionType ): CartSta
         case 'Cart - Remove Product From Cart':
             return {
                 ...state,
-                cart: state.cart.filter(p => p._id !== action.payload._id)
+                cart: !action.payload.size
+                    ? state.cart.filter(p => p._id !== action.payload._id)
+                    : state.cart.filter(p => p._id !== action.payload._id || p.size !== action.payload.size)        
             }
 
         case 'NumberOfItems - Update':

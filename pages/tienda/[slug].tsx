@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ProductInfo, ShopLayout, SliderImages } from '../../components';
+import { dbProducts } from '../../database';
 import { allProducts, IProduct } from '../../interfaces';
 import styles from '../../styles/Tienda.module.css';
 
@@ -27,27 +28,42 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
     
-    const productSlug = allProducts.map(( product ) => product.slug.substring(1));
+    const products = await dbProducts.getAllProducts();
+
+    if ( !products ) throw new Error('No se encontraron productos');
+
+    const productSlugs = products.map(( product ) => product.slug.substring(1));
 
     return {
-        paths: productSlug.map(( slug ) => ({
+        paths: productSlugs.map(( slug ) => ({
             params: {
-                slug
+                slug,
             }
         })),
-        fallback: "blocking"
+        fallback: "blocking",
     }
 }
 
 export const getStaticProps: GetStaticProps = async ( ctx ) => {
     
-    const { slug } = ctx.params as { slug: string };
+    const { slug = '' } = ctx.params as { slug: string };
 
-    const product = JSON.parse( JSON.stringify(allProducts.find(( product: IProduct ) => product.slug === `/${ slug }`)) );
+    if ( !slug ) throw new Error('Falta el slug del producto');
+
+    const product = await dbProducts.getProductBySlug( '/' + slug );
+
+    if ( !product ) {
+        return {
+            redirect: {
+                destination: '/tienda',
+                permanent: false,
+            }
+        }
+    }
 
     return {
         props: {
-            product
+            product,
         }
     }
 }

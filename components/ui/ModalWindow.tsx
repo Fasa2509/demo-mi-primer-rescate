@@ -7,10 +7,13 @@ interface Props {
     children: JSX.Element | JSX.Element[];
     buttonTxt?: string;
     title: string;
+    buttonClassName?: string;
     buttonStyle?: any;
+    modalStyle?: any;
+    modalBg?: boolean;
 }
 
-export const ModalWindow: FC<Props> = ({ children, buttonTxt = 'Abrir', title, buttonStyle = {} }) => {
+export const ModalWindow: FC<Props> = ({ children, buttonTxt = 'Abrir', title, buttonClassName, buttonStyle = {}, modalStyle = {}, modalBg = true }) => {
 
     const { isOpen, openModal, closeModal } = useModal();
 
@@ -21,11 +24,11 @@ export const ModalWindow: FC<Props> = ({ children, buttonTxt = 'Abrir', title, b
 
   return (
     <>
-        <button style={ buttonStyle } className='button' onClick={ openModal }>{ buttonTxt }</button>
+        <button style={ buttonStyle } className={ `button${ buttonClassName ? ' ' + buttonClassName : '' }` } onClick={ openModal }>{ buttonTxt }</button>
         {
             isOpen &&
-            <section className={ `main__window fadeIn ${ styles.modal__window }` } onClick={ handleClose }>
-                <div className={ styles.modal__container }>
+            <section className={ `main__window fadeIn ${ styles.modal__window } ${ modalBg ? styles.modal__window__animation : '' }` } onClick={ handleClose }>
+                <div style={ modalStyle } className={ styles.modal__container }>
                     <button className={ styles.modal__close } onClick={ closeModal }></button>
                     <p className={ styles.modal__title }>{ title }</p>
 

@@ -17,7 +17,7 @@
     position: absolute;
     width: 100vw;
     height: auto;
-    z-index: 999;
+    z-index: 900;
     top: 2px;
     left: 0;
 }
@@ -40,47 +40,5 @@
 }
 
 .custom__shape__divider__bottom .shape__fill {
-    fill: #B74FD1;
-}
-
-.custom__shape__divider__bottom_2 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-    transform: rotate(180deg);
-}
-
-.custom__shape__divider__bottom_2 svg {
-    position: relative;
-    display: block;
-    width: calc(100% + 1.3px);
-    height: 55px;
-}
-
-.custom__shape__divider__bottom_2 .shape__fill_2 {
-    fill: #B74FD1;
-}
-
-.custom__shape__divider__bottom_3 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-    transform: rotate(180deg);
-}
-
-.custom__shape__divider__bottom_3 svg {
-    position: relative;
-    display: block;
-    width: calc(100% + 1.3px);
-    height: 45px;
-}
-
-.custom__shape__divider__bottom_3 .shape__fill_3 {
     fill: #B74FD1;
 }

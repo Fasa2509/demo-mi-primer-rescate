@@ -6,10 +6,10 @@ import { IProduct } from '../../interfaces'
 import styles from './ContainerProduct.module.css'
 
 interface Props {
-    initialFavProducts: IProduct[];
+    products: IProduct[];
 }
 
-export const ContainerFavProduct: FC<Props> = ({ initialFavProducts }) => {
+export const ContainerFavProduct: FC<Props> = ({ products }) => {
     return (
         <section className={ styles.most__sold__container }>
             <p className={ styles.title }>
@@ -18,7 +18,7 @@ export const ContainerFavProduct: FC<Props> = ({ initialFavProducts }) => {
             </p>
             <div className={ styles.most__sold__products }>
                 {
-                    initialFavProducts.map( (product, index) => <BigProductCard key={ product.name + index } product={ product } />)
+                    products.map((product, index) => <BigProductCard key={ product.name + index } product={ product } />)
                 }
             </div>
         </section>

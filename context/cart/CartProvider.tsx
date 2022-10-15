@@ -1,16 +1,16 @@
 import { FC, useEffect, useReducer } from 'react';
 import Cookies from 'js-cookie';
 import { CartContext, cartReducer } from './';
-import { ICartProduct } from '../../interfaces';
+import { ICartProduct, Sizes } from '../../interfaces';
 
 
 export interface CartState {
     cart: ICartProduct[];
     numberOfItems: number;
-    // subTotal: number;
-    // tax: number;
-    total: number;
-    shippingAddress: string;
+    shippingAddress: {
+        address: string;
+        maps: string;
+    };
 }
 
 
@@ -22,10 +22,10 @@ interface Props {
 export const CART_INITIAL_STATE: CartState = {
     cart: [],
     numberOfItems: 0,
-    // subTotal: 0,
-    // tax: 0,
-    total: 0,
-    shippingAddress: '',
+    shippingAddress: {
+        address: '',
+        maps: '',
+    }
 }
 
 
@@ -45,8 +45,16 @@ export const CartProvider: FC<Props> = ({ children }) => {
         dispatch({ type: 'NumberOfItems - Update' });
     }, [state.cart]);
 
-    const addProductToCart = ( product: ICartProduct ) =>
+    const updateProductQuantity = ( product: ICartProduct ) =>
         dispatch({ type: 'Cart - Update Product in Cart', payload: product });
+
+    const getProductQuantity = ( productId: string, productSize: Sizes ): number => {
+        const productInCart = state.cart.find(p => p._id === productId && p.size === productSize)
+
+        return productInCart
+            ? productInCart.quantity
+            : 0;
+    }
 
     const clearCart = () => {
         Cookies.set('mpr__cart', JSON.stringify( [] ));
@@ -62,7 +70,8 @@ export const CartProvider: FC<Props> = ({ children }) => {
             ...state,
 
             // methods
-            addProductToCart,
+            updateProductQuantity,
+            getProductQuantity,
             clearCart,
             removeProductFromCart
         }}>

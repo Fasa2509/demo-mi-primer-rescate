@@ -6,9 +6,11 @@ import styles from './Form.module.css'
 interface Props {
     field: Field;
     setField: ( a: any ) => void;
+    dimension: { width: number; height: number; };
+    setDimension: ( a: any ) => void;
 }
 
-export const CustomInput: FC<Props> = ({ field, setField }) => {
+export const CustomInput: FC<Props> = ({ field, setField, dimension, setDimension }) => {
 
     if ( field.type === 'link' ) {
         return (
@@ -42,11 +44,11 @@ export const CustomInput: FC<Props> = ({ field, setField }) => {
                 <p> El texto hace referencia a un texto que aparecerá únicamente cuando la imagen por alguna razón NO pueda ser cargada, es OBLIGATORIO y debe ser conciso y con pocas palabras (menos de 8). Las propiedades de ancho y alto definen <b>el mayor valor de esa propiedad respectivamente</b>. Las imágenes se adaptarán de forma automática a tamaños de pantalla más pequeños.</p>
                 <div className={ styles.input__dimensions }>
                     <label htmlFor="imageWitdh">Ancho:</label>
-                    <input id={ 'imageWidth' } value={ field.width } type={ 'number' } name={ 'ancho' } placeholder={ 'Ancho' } required onChange={ ( e: any ) => setField({ ...field, width: Math.abs(e.target.value) }) } />
+                    <input id={ 'imageWidth' } value={ dimension.width } type={ 'number' } name={ 'ancho' } placeholder={ 'Ancho' } required onChange={ ( e: any ) => setDimension({ ...dimension, width: Math.abs(e.target.value) }) } />
                 </div>
                 <div style={{ gap: '21px' }} className={ styles.input__dimensions }>
                     <label htmlFor="imageHeight">Alto:</label>
-                    <input id={ 'imageHeight' } value={ field.height } type={ 'number' } name={ 'alto' } placeholder={ 'Alto' } required onChange={ ( e: any ) => setField({ ...field, height: Math.abs(e.target.value) }) } />
+                    <input id={ 'imageHeight' } value={ dimension.height } type={ 'number' } name={ 'alto' } placeholder={ 'Alto' } required onChange={ ( e: any ) => setDimension({ ...dimension, height: Math.abs(e.target.value) }) } />
                 </div>
             </div>
         )

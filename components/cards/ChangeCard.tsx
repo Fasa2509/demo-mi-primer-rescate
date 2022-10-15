@@ -15,8 +15,8 @@ interface Props {
 export const ChangeCard: FC<Props> = ({ name, text, images }) => {
   return (
     <div className={ styles.card__container }>
-      <SliderImages images={ images } options={{ indicators: false, cycleNavigation: false, animation: 'slide' }} />
-      <ModalWindow buttonTxt={ name } title={ `Historia de ${ name }` } buttonStyle={{ margin: '0', marginTop: '-.3rem' }}>
+      <SliderImages images={ images } options={{ indicators: false, cycleNavigation: false, animation: 'slide', interval: 8000 }} />
+      <ModalWindow buttonTxt={ name } title={ `Historia de ${ name }` } buttonStyle={{ borderRadius: 0 }}>
         {
           getParagraphs( text ).map(( txt, index ) => (
             <p key={ index }>{ txt }</p>

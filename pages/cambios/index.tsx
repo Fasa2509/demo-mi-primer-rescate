@@ -1,7 +1,8 @@
-import { TrendingUp } from '@mui/icons-material';
 import { NextPage } from 'next'
+import { TrendingUp } from '@mui/icons-material';
+import { Box, Typography } from '@mui/material';
 
-import { ChangeCard, ContentSlider, MainLayout } from '../../components'
+import { ChangeCard, ContentSlider, MainLayout, ModalWindow } from '../../components'
 import { ImageObj } from '../../interfaces';
 import styles from '../../styles/Cambios.module.css'
 
@@ -116,6 +117,17 @@ const CambiosPage: NextPage = () => {
             initialChanges.map(( caso ) => <ChangeCard key={ caso.name } name={ caso.name } text={ caso.text } images={ caso.images } />)
           }
         </section>
+
+        
+
+      <Box display='flex'>
+        <Typography sx={{ alignSelf: 'center' }}>¿Has adoptado una mascota recientemente? Cuéntanos tu experiencia</Typography>
+        <ModalWindow buttonTxt='aquí' title='¿Cómo fue tu experiencia?' buttonStyle={{ fontWeight: '400', backgroundColor: 'transparent', color: 'var(--secondary-color-1)', margin: '0 0 0 .25rem', padding: '.3rem .5rem', border: 'thin solid var(--secondary-color-1)', alignSelf: 'center' }}>
+          <Typography>Dolore pariatur eu fugiat id exercitation id dolore duis anim ex labore laborum sit. Voluptate reprehenderit laborum tempor reprehenderit elit laborum esse deserunt ad fugiat ut dolore aliquip sit. Culpa commodo cupidatat eiusmod reprehenderit laborum adipisicing adipisicing incididunt adipisicing dolore sint. Magna aliquip labore sint sunt aute dolor in duis reprehenderit occaecat duis mollit dolore.</Typography>
+          <Typography>Elit qui exercitation amet ut sunt. Cupidatat consequat labore qui quis excepteur consequat. Minim cillum adipisicing ut ut consequat ex sunt magna ipsum sunt do minim. Proident veniam duis minim velit ea. Cupidatat deserunt in duis nostrud id mollit.</Typography>
+          <Typography>Laborum laborum labore tempor eu voluptate dolore elit. Cupidatat labore quis enim magna minim nostrud. Mollit commodo ad do anim reprehenderit Lorem ex.</Typography>
+        </ModalWindow>
+      </Box>
 
     </MainLayout>
   )

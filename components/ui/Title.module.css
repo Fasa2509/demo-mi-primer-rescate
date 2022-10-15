@@ -1,8 +1,9 @@
 .container {
+    --sticks-height: 1.2rem;
     display: inline-block;
     position: sticky;
-    top: 4rem;
-    margin-bottom: 1.5rem;
+    top: var(--sticks-height);
+    margin: .25rem 0 1rem;
     z-index: 990;
 }
 
@@ -11,7 +12,7 @@
     content: '';
     display: block;
     width: 5px;
-    height: 2rem;
+    height: var(--sticks-height);
     opacity: 1;
     background-color: rgb(134, 82, 32);
     position: absolute;
@@ -64,8 +65,8 @@
 
 @media screen and (min-width: 576px) {
     .container {
-        top: 3.5rem;
-        margin-bottom: 1.2rem;
+        /* top: 3.5rem; */
+        /* margin-bottom: 1.2rem; */
         transition: transform 250ms ease;
     }
 

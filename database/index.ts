@@ -1,2 +1,5 @@
 export * as db from './db'
-export * from './dbConfig'
+export * as dbArticles from './dbArticles'
+export * as dbUsers from './dbUsers'
+export * as dbOrders from './dbOrders'
+export * as dbProducts from './dbProducts'

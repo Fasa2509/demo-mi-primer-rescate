@@ -4,13 +4,15 @@
     position: relative;
     cursor: pointer;
     padding: 6px;
-    border-radius: 5px;
+    border-radius: 8px;
+    background-color: #fff;
     box-shadow: 0 0 2.5rem -2rem #666;
     font-size: 1.4rem;
+    transition: transform 350ms ease, box-shadow 350ms ease;
 }
 
 .product__image {
-    border-radius: 5px;
+    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -19,10 +21,16 @@
 }
 
 .product__price {
-    color: #666;
+    /* color: #666; */
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.15rem;
+}
+
+.product__discount {
+    margin: 0;
     font-weight: 600;
-    font-size: 0.7em;
-    display: inline-block;
+    font-size: 1.25rem;
 }
 
 .product span {
@@ -44,21 +52,26 @@
 
 .product__long {
     display: grid;
-    grid-template-columns: 120px 1fr;
-    max-height: calc(120px + 1rem);
-    gap: 1rem;
+    grid-template-columns: 145px 1fr;
+    max-height: calc(145px + 1rem);
+    gap: .7rem;
     overflow: hidden;
     border-radius: 1rem;
     font-size: 1.4rem;
     box-shadow: 0 4px 3.3rem -2.3rem #888;
     padding: .5rem;
     cursor: pointer;
+    transition: transform 250ms ease, box-shadow 250ms ease;
 }
 
 .product__long__image {
+    position: relative;
+    align-self: flex-start;
+}
+
+.product__long__image img {
     overflow: hidden;
     border-radius: .5rem;
-    max-height: 120px;
 }
 
 .product__info {
@@ -67,22 +80,10 @@
 }
 
 .product__long__description {
-    margin-top: .8rem;
+    margin-top: .5rem;
     font-size: .8em;
     flex-grow: 1;
 }
-
-.div__discount {
-    text-decoration: line-through;
-    display: inline-block;
-}
-
-.span__discount {
-    font-size: 0.9em;
-    font-weight: 600;
-    color: #333;
-}
-
 
 @media (hover: hover) {
     .more__products {
@@ -92,23 +93,28 @@
     .more__products:hover {
         text-decoration: initial;
     }
+
+    .product:hover {
+        transform: translateY(-.4rem);
+        box-shadow: 0 0 1rem -.5rem #606060;
+    }
+    
+    .product__long:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 .8rem -.4rem #606060;    
+    }
 }
 
 @media screen and (min-width: 576px) {
     .product__long {
-        grid-template-columns: 180px 1fr;
-        max-height: calc(180px + 1rem);
-    }
-
-    .product__long__image {
-        max-height: 180px;
+        grid-template-columns: 200px 1fr;
+        max-height: calc(200px + 1rem);
     }
 
     .product__info .product__name {
         font-size: 1.3rem;
     }
 
-    .product__info .product__price,
     .product__info .product__description {
         font-size: 1.1rem;
     }

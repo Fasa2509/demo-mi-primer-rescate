@@ -2,9 +2,9 @@ import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 const getDistanceToNow = ( date: number ) => {
-    const fromNow = formatDistanceToNow( date, { locale: es } )
+    const fromNow = formatDistanceToNow( date, { locale: es } );
 
-    return `hace ${ fromNow }`
+    return `hace ${ fromNow }`;
 }
 
 export {

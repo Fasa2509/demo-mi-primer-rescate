@@ -3,61 +3,98 @@ import NextLink from 'next/link'
 import { useRouter } from "next/router"
 
 import { Box, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
-import { Pets, AddAlert, VolunteerActivism, TrendingUp,  ShoppingBag, AdminPanelSettings, Category, ConfirmationNumber, LoginOutlined, VpnKey, Home } from "@mui/icons-material"
+import { Pets, AddAlert, VolunteerActivism, TrendingUp,  ShoppingBag, AdminPanelSettings, Category, ConfirmationNumber, LoginOutlined, VpnKey, Home, AccountCircle, FilterFrames } from "@mui/icons-material"
 import { useSnackbar } from "notistack"
 
 import { AuthContext, MenuContext } from "../../context"
-import { ConfirmCloseSession } from "../../utils"
+import { ConfirmNotificationButtons } from "../../utils"
 
 export const SideMenu: FC = () => {
 
-    const router = useRouter()
+    const router = useRouter();
     const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
-    const { isLoggedIn, logIn, logOut } = useContext( AuthContext );
+    const { isLoggedIn, logoutUser, user } = useContext( AuthContext );
     const { enqueueSnackbar } = useSnackbar();
+
+    const logOut = () => {
+        new Promise(( resolve ) => {
+            let key = enqueueSnackbar('¿Quieres cerrar sesión?', {
+                variant: 'info',
+                autoHideDuration: 15000,
+                action: ConfirmNotificationButtons,
+            })
+
+            const callback = ( e: any ) => {
+                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
+                    resolve({
+                        accepted: true,
+                        callback,
+                    })
+                }
+
+                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
+                    resolve({
+                        accepted: false,
+                        callback,
+                    })
+                }
+            }
+
+            document.addEventListener('click', callback);
+        })
+        // @ts-ignore
+        .then(({ accepted, callback }: { accepted: boolean, callback: any }) => {
+            document.removeEventListener('click', callback);
+
+            if ( !accepted ) return;
+
+            toggleSideMenu();
+            logoutUser();
+
+            return;
+        })
+    }
 
   return (
     <Drawer
         open={ isMenuOpen }
         anchor='right'
-        sx={{ backdropFilter: 'blur(2px)', transition: 'all 0.5s ease-out' }}
+        sx={{ display: { xs: 'flex', md: 'none' }, backdropFilter: 'blur(2px)', transition: 'all 0.5s ease-out' }}
         onClose={ toggleSideMenu }
     >
-        <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: 4.7, position: 'relative' }}>
+        <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: '72px', position: 'relative' }}>
 
-            <div style={{
+            {/* <div style={{
                 width: '100%',
                 height: '45px',
                 backgroundColor: '#2AD8A4',
                 position: 'absolute',
                 top: 0,
                 left: 0,
-            }}></div>
+            }}></div> */}
 
             <List>
 
                 {
                     isLoggedIn
                         ? (
-                            <ListItem button onClick={ () => {
-                                enqueueSnackbar('¿Quieres salir?', {
-                                    autoHideDuration: 15000,
-                                    variant: 'info',
-                                    action: ConfirmCloseSession,
-                                })
-                            }}>
+                            <ListItem button onClick={ logOut }>
                                 <ListItemIcon>
                                     <LoginOutlined color='secondary' />
                                 </ListItemIcon>
                                 <ListItemText primary={'Cerrar sesión'} />
                             </ListItem>
                         ) : (
-                            <ListItem button onClick={ () => logIn() }>
-                                <ListItemIcon>
-                                    <VpnKey color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Ingresar'} />
-                            </ListItem>
+                            <NextLink href={ '/auth' }>
+                                <a onClick={ toggleSideMenu }>
+                                    <ListItem button>
+                                        <ListItemIcon>
+                                            <VpnKey color='secondary' />
+                                        </ListItemIcon>
+                                        <ListItemText primary={'Ingresar'} />
+                                    </ListItem>
+                                </a>
+                            </NextLink>
                         )
                 }
 
@@ -131,30 +168,83 @@ export const SideMenu: FC = () => {
 
                 {/* Admin */}
                 
-                { isLoggedIn && (
+                { isLoggedIn && user && ( user.role === 'admin' || user.role === 'superuser' ) && (
                     <>
                     <Divider />
                     <ListSubheader>Admin Panel</ListSubheader>
+
+                    <NextLink href={ '/admin/productos' }>
+                        <a onClick={ toggleSideMenu }>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <Category color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Productos'} />
+                            </ListItem>
+                        </a>
+                    </NextLink>
+
+                    <NextLink href={ '/admin/ordenes' }>
+                        <a onClick={ toggleSideMenu }>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <ConfirmationNumber color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Órdenes'} />
+                            </ListItem>
+                        </a>
+                    </NextLink>
                     
-                    <ListItem button>
-                        <ListItemIcon>
-                            <Category color='secondary' />
-                        </ListItemIcon>
-                        <ListItemText primary={'Productos'} />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <ConfirmationNumber color='secondary' />
-                        </ListItemIcon>
-                        <ListItemText primary={'Ordenes'} />
-                    </ListItem>
-                    
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AdminPanelSettings color='secondary' />
-                        </ListItemIcon>
-                        <ListItemText primary={'Usuarios'} />
-                    </ListItem>
+                    <NextLink href={ '/admin/usuarios' }>
+                        <a onClick={ toggleSideMenu }>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <AdminPanelSettings color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Usuarios'} />
+                            </ListItem>
+                        </a>
+                    </NextLink>
+                    </>
+                )}
+
+                { isLoggedIn && (
+                    <>
+                    <Divider />
+                    <ListSubheader>Mi Cuenta</ListSubheader>
+
+                    <NextLink href={ '/personal' } scroll={ false }>
+                        <a onClick={ toggleSideMenu }>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <AccountCircle color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Mi Información'} />
+                            </ListItem>
+                        </a>
+                    </NextLink>
+
+                    {/* <NextLink href={ '/' } scroll={ false }>
+                        <a onClick={ toggleSideMenu }>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <FilterFrames color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Mis Órdenes'} />
+                            </ListItem>
+                        </a>
+                    </NextLink>
+
+                    <NextLink href={ '/' } scroll={ false }>
+                        <a onClick={ toggleSideMenu }>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <Pets color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Adopciones'} />
+                            </ListItem>
+                        </a>
+                    </NextLink> */}
                     </>
                 )}
                         

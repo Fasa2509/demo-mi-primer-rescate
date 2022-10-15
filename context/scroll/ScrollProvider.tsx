@@ -22,6 +22,7 @@ export interface ObjectToTop {
 export const ScrollProvider: FC<Props> = ({ children, elements }) => {
 
     const [passedElements, setPassedElements] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>( false );
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
@@ -49,6 +50,8 @@ export const ScrollProvider: FC<Props> = ({ children, elements }) => {
     return(
         <ScrollContext.Provider value={{
             passedElements,
+            isLoading,
+            setIsLoading,
         }}>
             { children }
         </ScrollContext.Provider>

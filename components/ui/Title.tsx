@@ -9,16 +9,17 @@ interface Props {
     title: string;
     children: JSX.Element;
     nextPage: string;
+    style?: any;
 }
 
-export const Title: FC<Props> = ({ title, children = <PetsOutlined color='info' sx={{ fontSize: '1.5rem' }} />, nextPage }) => {
+export const Title: FC<Props> = ({ title, children = <PetsOutlined color='info' sx={{ fontSize: '1.5rem' }} />, nextPage = '/', style = {} }) => {
     
     const { asPath } = useRouter();
     const { passedElements } = useContext( ScrollContext );
 
   return (
     <Link href={ nextPage } passHref>
-        <a className={ styles.container }>
+        <a className={ styles.container } style={ style }>
             <div className={ styles.sticks + ` sticks ${ asPath === '/' && !passedElements.includes('.sticks') ? styles.inactive : '' }` }></div>
             <div className={ styles.title }>
                 <h1 className={ styles.title__text }>

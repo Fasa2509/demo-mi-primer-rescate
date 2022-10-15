@@ -2,7 +2,6 @@
     font-size: 1.5rem;
     font-weight: 800;
     margin: 1rem 0;
-    text-align: center;
 }
 
 .articles__container {
@@ -12,7 +11,7 @@
 }
 
 @media screen and (min-width: 576px) {
-    .subtitle {
+    /* .subtitle {
         text-align: left;
-    }
+    } */
 }
