@@ -22,6 +22,8 @@ export const TagsArray: Tags[] = ['accesorios', 'consumibles', 'ropa', 'útil'];
 
 export type Sizes = 'unique'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL';
 
+export const SizesArray: Sizes[] = [ 'unique', 'S','M', 'L', 'XL', 'XXL', 'XXXL' ];
+
 export type InStockSizes = {
   unique: number;
   S?: number;

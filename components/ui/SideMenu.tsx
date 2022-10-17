@@ -7,7 +7,7 @@ import { Pets, AddAlert, VolunteerActivism, TrendingUp,  ShoppingBag, AdminPanel
 import { useSnackbar } from "notistack"
 
 import { AuthContext, MenuContext } from "../../context"
-import { ConfirmNotificationButtons } from "../../utils"
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils"
 
 export const SideMenu: FC = () => {
 
@@ -16,43 +16,21 @@ export const SideMenu: FC = () => {
     const { isLoggedIn, logoutUser, user } = useContext( AuthContext );
     const { enqueueSnackbar } = useSnackbar();
 
-    const logOut = () => {
-        new Promise(( resolve ) => {
-            let key = enqueueSnackbar('¿Quieres cerrar sesión?', {
-                variant: 'info',
-                autoHideDuration: 15000,
-                action: ConfirmNotificationButtons,
-            })
-
-            const callback = ( e: any ) => {
-                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: true,
-                        callback,
-                    })
-                }
-
-                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: false,
-                        callback,
-                    })
-                }
-            }
-
-            document.addEventListener('click', callback);
+    const logOut = async () => {
+        let key = enqueueSnackbar('¿Quieres cerrar sesión?', {
+            variant: 'info',
+            autoHideDuration: 10000,
+            action: ConfirmNotificationButtons,
         })
-        // @ts-ignore
-        .then(({ accepted, callback }: { accepted: boolean, callback: any }) => {
-            document.removeEventListener('click', callback);
 
-            if ( !accepted ) return;
+        const confirm = await PromiseConfirmHelper( key, 10000 );
+      
+        if ( !confirm ) return;
 
-            toggleSideMenu();
-            logoutUser();
+        toggleSideMenu();
+        logoutUser();
 
-            return;
-        })
+        return;
     }
 
   return (

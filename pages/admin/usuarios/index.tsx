@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { AdminPanelSettings } from '@mui/icons-material';
 import { Box, Button, Grid, Typography } from '@mui/material';
@@ -8,7 +8,7 @@ import { dbUsers } from '../../../database';
 import { MainLayout } from '../../../components';
 import { IUser, Role } from '../../../interfaces';
 import { useSnackbar } from 'notistack';
-import { ConfirmNotificationButtons } from '../../../utils';
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../../utils';
 import { ScrollContext } from '../../../context';
 
 const columns: GridColDef[] = [
@@ -79,100 +79,44 @@ const UsuariosPage: NextPage<Props> = ({ users }) => {
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
 
-  const updateUser = ( userId: string, role: Role ) => {
-    new Promise((resolve, reject) => {
+  const updateUser = async ( userId: string, role: Role ) => {
       let key = enqueueSnackbar(`¿Segur@ quieres hacer este usuario ${ role }?`, {
           variant: 'info',
           autoHideDuration: 10000,
           action: ConfirmNotificationButtons,
       });
 
-      let timer = setTimeout(() => reject( callback ), 10000);
+      const confirm = await PromiseConfirmHelper( key, 10000 );
 
-      const callback = ( e: any ) => {
-          if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
-              resolve({
-                  accepted: true,
-                  callback,
-                  timer,
-              });
-          }
+      if ( !confirm ) return;
 
-          if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
-              resolve({
-                  accepted: false,
-                  callback,
-                  timer,
-              });
-          }
-      }
+      setIsLoading( true );
+      
+      const res = await dbUsers.updateUserRole( userId, role );
+      
+      setIsLoading( false );
 
-      document.addEventListener('click', callback);
-      // @ts-ignore
-    }).then(async ({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
-        document.removeEventListener('click', callback);
-        clearTimeout( timer );
-
-        if ( !accepted ) return;
-
-        setIsLoading( true );
-        
-        const res = await dbUsers.updateUserRole( userId, role );
-        
-        setIsLoading( false );
-
-        enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
-    }).catch(({ callback }: { callback: any }) => {
-        document.removeEventListener('click', callback);
-    });
+      enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
   }
   
-  const deleteUser = ( userId: string ) => {
-    new Promise((resolve, reject) => {
+  const deleteUser = async ( userId: string ) => {
       let key = enqueueSnackbar('¿Segur@ que quieres eliminar este usuario?', {
           variant: 'info',
           autoHideDuration: 10000,
           action: ConfirmNotificationButtons,
       });
 
-      let timer = setTimeout(() => reject( callback ), 10000);
+      const confirm = await PromiseConfirmHelper( key, 10000 );
 
-      const callback = ( e: any ) => {
-          if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
-              resolve({
-                  accepted: true,
-                  callback,
-                  timer,
-              });
-          }
+      if ( !confirm ) return;
 
-          if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
-              resolve({
-                  accepted: false,
-                  callback,
-                  timer,
-              });
-          }
-      }
+      setIsLoading( true );
 
-      document.addEventListener('click', callback);
-      // @ts-ignore
-    }).then(async ({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
-        document.removeEventListener('click', callback);
-        clearTimeout( timer );
+      const res = await dbUsers.deleteUserById( userId );
 
-        if ( !accepted ) return;
-
-        setIsLoading( true );
+      setIsLoading( false );
         
-        const res = await dbUsers.deleteUserById( userId );
-        
-        setIsLoading( false );
-
-        enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
-    }).catch(({ callback }: { callback: any }) => {
-        document.removeEventListener('click', callback);
-    });
+      enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
   }
 
   const rows = users.map(( user ) => ({

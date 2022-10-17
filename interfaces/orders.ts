@@ -8,12 +8,15 @@ export interface IOrder {
     isPaid         : Paid;
     shippingAddress: IAddress;
     contact        : IContact;
-    createdAt      : string;
+    createdAt      : number;
 }
 
 export interface IAddress {
     address: string;
-    maps   : string;
+    maps   : {
+        latitude : number | null;
+        longitude: number | null;
+    };
 }
 
 export interface IContact {

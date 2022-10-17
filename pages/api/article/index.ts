@@ -34,6 +34,7 @@ const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
         return res.status(200).json({ error: false, message: '¡El artículo fue guardado!' });
     } catch( error ) {
         console.log( error );
+        await db.disconnect();
         return res.status(400).json({ error: true, message: 'Ocurrió un error en la DB' });
     }
 }

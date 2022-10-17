@@ -80,7 +80,10 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
     isPaid: 'notpaid',
     shippingAddress: {
       address: '',
-      maps: '',
+      maps: {
+        longitude: null,
+        latitude: null,
+      },
     },
     contact: {
       name: '',

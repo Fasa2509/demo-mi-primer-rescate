@@ -16,7 +16,8 @@ const userSchema = new Schema({
         }
     },
     isSubscribed: { type: Boolean, default: false },
-    createdAt: { type: Number, default: () => Date.now() }
+    isAble: { type: Boolean, default: true },
+    createdAt: { type: Number, default: () => Date.now() },
 })
 
 // @ts-ignore

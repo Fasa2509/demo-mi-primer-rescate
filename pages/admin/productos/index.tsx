@@ -1,12 +1,13 @@
+import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { Category } from '@mui/icons-material';
 
-import { MainLayout } from '../../../components';
-import { Typography, CardMedia, Box, Grid, Link } from '@mui/material';
+import { AdminProductInfo, MainLayout } from '../../../components';
+import { Typography, CardMedia, Box, Grid, Link, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { useContext } from 'react';
 import { ScrollContext } from '../../../context';
-import { IProduct } from '../../../interfaces';
+import { InStockSizes, IProduct, Sizes, Tags } from '../../../interfaces';
 import { dbProducts } from '../../../database';
 import { format } from '../../../utils';
 
@@ -20,7 +21,8 @@ const columns: GridColDef[] = [
         <CardMedia
           component='img'
           className='fadeIn'
-          image={ row.image.url }
+          image={ row.images[0].url }
+          alt={ row.images[0].alt }
         />
       )
     },
@@ -53,6 +55,7 @@ const columns: GridColDef[] = [
               if ( el[1] === -1 ) return <div key={ el[0] } style={{ display: 'none' }}></div>
               if ( el[0] === '_id' ) return <div key={ el[0] } style={{ display: 'none' }}></div>
               if ( el[0] === 'unique' ) return <p key={ el[0] }><>única: { el[1] }</></p>
+              if ( row.inStock.unique > -1 && el[1] === 0 ) return <div key={ el[0] } style={{ display: 'none' }}></div>
               return <p key={ el[0] }><>{ el[0] }: { el[1] }</></p>
             })
           }
@@ -85,6 +88,35 @@ const columns: GridColDef[] = [
     align: 'center',
   },
   {
+    field: 'setNewProduct',
+    headerName: 'Editar',
+    // @ts-ignore
+    renderCell: ({ row }: GridValueGetterParams) => {
+      return (
+        <Button
+          color='secondary'
+          onClick={ () => row.setNewProduct({
+            _id: row.id,
+            name: row.name,
+            description: row.description,
+            images: [row.images],
+            inStock: row.inStock,
+            price: row.price,
+            discount: row.discount,
+            tags: row.tags,
+            sold: row.sold,
+            slug: row.slug,
+          })
+          }
+        >
+          Ver info
+        </Button>
+      )
+    },
+    sortable: false,
+    disableColumnMenu: true,
+  },
+  {
     field: 'tags',
     headerName: 'Etiquetas',
     // @ts-ignore
@@ -114,20 +146,85 @@ interface Props {
   products: IProduct[];
 }
 
+const newProductInitialState: IProduct = {
+  _id: '',
+  name: '',
+  description: '',
+  images: [
+    {
+      url: '',
+      alt: '',
+      width: 500,
+      height: 500,
+    }
+  ],
+  inStock: {
+    unique: 0,
+    S: 0,
+    M: 0,
+    L: 0,
+    XL: 0,
+    XXL: 0,
+    XXXL: 0,
+  },
+  price: 0,
+  discount: 0,
+  tags: [],
+  sold: 0,
+  slug: '/',
+}
+
+// export interface FormProductState {
+//   _id: string;
+//   description: string;
+//   price: number;
+//   inStock: InStockSizes;
+//   tags: Tags[];
+// }
+
+// export const formInitialState: FormProductState = {
+//   _id: '',
+//   description: '',
+//   price: 0,
+//   inStock: {
+//     unique: 0,
+//     S: 0,
+//     M: 0,
+//     L: 0,
+//     XL: 0,
+//     XXL: 0,
+//     XXXL: 0,
+//   },
+//   tags: [],
+// }
+
 const ProductosPage: NextPage<Props> = ({ products }) => {
 
-  const { isLoading } = useContext( ScrollContext );
+  const [newProduct, setNewProduct] = useState( newProductInitialState );
+  const [method, setMethod] = useState<'create' | 'update'>('create');
+  // const [form, setForm] = useState<FormProductState>( formInitialState );
+
+  // const setNewProduct_ = (p: IProduct) => {
+  //   setBool( !bool );
+  //   setForm( formInitialState );
+  //   setNewProduct( p );
+  // }
 
   const rows = products.map(product => ({
     id: product._id,
-    image: product.images[0],
+    images: product.images,
     name: product.name,
+    description: product.description,
     inStock: product.inStock,
     price: product.price,
     discount: product.discount,
     tags: product.tags,
     sold: product.sold,
     slug: product.slug,
+    setNewProduct: ( p: any ) => {
+      setMethod( 'update' );
+      setNewProduct(p);
+    },
   }))
 
   return (
@@ -147,6 +244,14 @@ const ProductosPage: NextPage<Props> = ({ products }) => {
             </Grid>
           : <Typography variant='h2'>Ocurrió un error buscando los productos en la base de datos.</Typography>
       }
+
+      {/* {
+        ( bool )
+          ? <AdminProductInfo product={ newProduct } setProduct={ setNewProduct_ } form={ form } setForm={ setForm } />
+          : <AdminProductInfo product={ newProduct } setProduct={ setNewProduct_ } form={ form } setForm={ setForm } />
+      } */}
+
+      <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } />
 
     </MainLayout>
   )

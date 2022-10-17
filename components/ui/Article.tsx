@@ -6,7 +6,7 @@ import { useSnackbar } from "notistack";
 import { dbArticles } from "../../database";
 import { mprRevalidatePage } from '../../api';
 import { ArticleField } from "./ArticleField";
-import { ConfirmNotificationButtons, getDistanceToNow } from "../../utils";
+import { ConfirmNotificationButtons, getDistanceToNow, PromiseConfirmHelper } from "../../utils";
 import { IArticle } from "../../interfaces";
 import styles from './Article.module.css'
 
@@ -20,59 +20,27 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
   const deleteArticle = async () => {
     if ( !article._id ) return enqueueSnackbar('No hay id del artículo', { variant: 'warning' });
 
-    new Promise(( resolve, reject ) => {
-      let key = enqueueSnackbar('¿Segur@ que quieres eliminar este artículo?', {
-          variant: 'warning',
-          autoHideDuration: 15000,
-          action: ConfirmNotificationButtons,
-      })
-
-      let timer = setTimeout(() => reject(callback), 15000);
-
-      const callback = ( e: any ) => {
-          if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
-              resolve({
-                  accepted: true,
-                  callback,
-                  timer,
-              })
-          }
-
-          if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
-              resolve({
-                  accepted: false,
-                  callback,
-                  timer,
-              })
-          }
-      }
-
-      document.addEventListener('click', callback);
+    let key = enqueueSnackbar('¿Segur@ que quieres eliminar este artículo?', {
+        variant: 'warning',
+        autoHideDuration: 15000,
+        action: ConfirmNotificationButtons,
     })
-    // @ts-ignore
-    .then(async ({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
-        document.removeEventListener('click', callback);
-        clearTimeout( timer );
 
-        if ( !accepted ) return;
+    const confirm = await PromiseConfirmHelper( key, 15000 );
 
-        const res = await dbArticles.removeArticle( article._id );
-        console.log( res );
-        enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' });
+    if ( !confirm ) return;
+    
+    const res = await dbArticles.removeArticle( article._id );
+    enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' });
+    
+    if ( !res.error ) {
+      if ( process.env.NODE_ENV === 'production' ) {
+        const revRes = await mprRevalidatePage('/');
         
-        if ( !res.error ) {
-          if ( process.env.NODE_ENV === 'production' ) {
-            const revRes = await mprRevalidatePage('/');
-            
-            enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
-          };
-        }
-
-        return;
-    })
-    .catch(({ callback }: { callback: any }) => {
-        document.removeEventListener('click', callback);
-    })
+        enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
+      };
+    }
+    return;
   }
 
   return (

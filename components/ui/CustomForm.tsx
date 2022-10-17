@@ -5,7 +5,7 @@ import { isBefore } from 'date-fns';
 import { CustomInput } from './CustomInput';
 import { Article } from './Article';
 import { Field, IArticle } from '../../interfaces';
-import { ConfirmNotificationButtons } from '../../utils';
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import styles from './Form.module.css';
 import { mprApi, mprRevalidatePage } from '../../api';
 import axios from 'axios';
@@ -49,94 +49,41 @@ export const CustomForm = () => {
         enqueueSnackbar('El campo fue agregado', { variant: 'success', autoHideDuration: 2500 });
     }
 
-    const cleanArticle = () => {
-        new Promise((resolve, reject) => {
+    const cleanArticle = async () => {
             let key = enqueueSnackbar('¿Segur@ que quieres vaciar el formulario?', {
                 variant: 'info',
                 autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,
             });
 
-            let timer = setTimeout(() => reject( callback ), 15000);
+            const confirm = await PromiseConfirmHelper( key, 15000 );
 
-            const callback = ( e: any ) => {
-                if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: true,
-                        callback,
-                        timer,
-                    });
-                }
+            if ( !confirm ) return;
 
-                if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: false,
-                        callback,
-                        timer,
-                    });
-                }
-            }
-
-            document.addEventListener('click', callback);
-            // @ts-ignore
-        }).then(({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
-            document.removeEventListener('click', callback);
-            clearTimeout( timer );
-            
-            if ( !accepted ) return;
             setFields([]);
             setTitle( '' );
+
             enqueueSnackbar('El artículo fue vaciado', { variant: 'info', autoHideDuration: 5000 });
-        }).catch(({ callback }: { callback: any }) => {
-            document.removeEventListener('click', callback);
-        });
     }
 
-    const saveArticle = () => {
+    const saveArticle = async () => {
         if ( !title )
             return enqueueSnackbar('No puedes guardar un artículo sin título', { variant: 'error', autoHideDuration: 3000 });
 
         if ( fields.length === 0 )
             return enqueueSnackbar('No puedes guardar un artículo sin contenido', { variant: 'error', autoHideDuration: 3000 });
-        
-        new Promise(( resolve, reject ) => {
+
             let key = enqueueSnackbar('¿Segur@ que quieres guardar este artículo?', {
                 variant: 'info',
                 autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,
             })
 
-            let timer = setTimeout(() => reject(callback), 15000);
+            const confirm = await PromiseConfirmHelper( key, 15000 );
 
-            const callback = ( e: any ) => {
-                if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: true,
-                        callback,
-                        timer,
-                    })
-                }
-
-                if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: false,
-                        callback,
-                        timer,
-                    })
-                }
-            }
-
-            document.addEventListener('click', callback);
-        })
-        // @ts-ignore
-        .then(async ({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
-            document.removeEventListener('click', callback);
-            clearTimeout( timer );
-
-            if ( !accepted ) return;
+            if ( !confirm ) return;
 
             const res = await dbArticles.saveNewArticle( title, fields );
-            console.log( res );
             enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' });
             
             if ( !res.error ) {
@@ -147,10 +94,6 @@ export const CustomForm = () => {
             }
 
             return;
-        })
-        .catch(({ callback }: { callback: any }) => {
-            document.removeEventListener('click', callback);
-        })
     }
 
     const resetForms = ( e: any ) => {

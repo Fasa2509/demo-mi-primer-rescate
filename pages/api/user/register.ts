@@ -21,7 +21,6 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
     
     switch( req.method ) {
         case 'POST':
-
             return registerUser( req, res );
     
         default:
@@ -67,6 +66,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
             password: hash,
             isSubscribed,
             role: 'user',
+            isAble: true,
         });
 
         await newUser.save({ validateBeforeSave: true });

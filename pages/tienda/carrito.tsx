@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, CardContent, Divider, Grid, TextField, Typography } from '@mui/material';
-import { AddShoppingCart, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
+import { Box, Button, Card, CardContent, Checkbox, Chip, Divider, Grid, TextField, Typography } from '@mui/material';
+import { AddShoppingCart, Check, Close, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
 import { AuthContext, CartContext, ScrollContext } from '../../context';
 import { CartProductInfo, DirectionForm, ShopLayout } from '../../components';
-import { ConfirmNotificationButtons, format } from '../../utils';
+import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
 import { dbOrders } from '../../database';
 import { IAddress, IContact } from '../../interfaces';
 
@@ -19,62 +19,56 @@ const CarritoPage: NextPage = () => {
   const { isLoading, setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
   const [contact, setContact] = useState<IContact>({ name: '', facebook: '', instagram: '', whatsapp: '' });
-  const [direction, setDirection] = useState<IAddress>({ address: '', maps: '' });
+  const [direction, setDirection] = useState<IAddress>({ address: '', maps: { latitude: null, longitude: null } });
+  const [directionError, setDirectionError] = useState('');
+  const [checkboxInfo, setCheckboxInfo] = useState( false );
 
-  const cleaningCart = () => {
-    new Promise(( resolve ) => {
+  useEffect(() => {
+    let shopInfo = JSON.parse( window.localStorage.getItem('mpr__shopInfo') || '{ "any": "" }' );
+    if ( shopInfo === undefined || shopInfo === null || shopInfo.any === '' || Object.values( shopInfo.contact ).filter(c => c).length < 2 || Object.values( shopInfo.direction.maps ).filter(d => d).length < 2 ) return;
+
+    setContact( shopInfo.contact );
+    setDirection( shopInfo.direction );
+  }, [])
+
+  const cleaningCart = async () => {
       let key = enqueueSnackbar('¿Quieres vaciar el carrito?', {
         variant: 'info',
         autoHideDuration: 15000,
         action: ConfirmNotificationButtons
       });
 
-      const callback = ( e: any ) => {
-        if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) )
-          resolve({
-            accepted: true,
-            callback,
-          })
+      const confirm = await PromiseConfirmHelper( key, 15000 );
 
-        if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') }`) ) {
-          resolve({
-            accepted: false,
-            callback,
-          })
-        }
-      }
-
-      document.addEventListener('click', callback);
-      // @ts-ignore
-    }).then(({ accepted, callback }: { accepted: boolean, callback: any }) => {
-      document.removeEventListener('click', callback);
-      accepted && clearCart();
-    })
+      confirm && clearCart();
+      return;
   }
 
   const handleCheckout = async () => {
-    setIsLoading( true );
-    
     if ( !user ) {
       router.push('/auth?p=/tienda/carrito');
       return;
     }
 
+    if ( Object.values( direction.maps ).filter(m => m).length !== 2 ) {
+      return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
+    }
+
     if ( contact.name.length < 3 ) {
-      setIsLoading( false );
       return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
     }
 
-    if ( Object.values( direction ).filter(d => d).length < 2 ) {
-      setIsLoading( false );
+    // if ( Object.values( direction ).filter(d => d).length < 2 ) {
+    if ( direction.address.length < 5 ) {
       return enqueueSnackbar('Necesitamos una dirección de entrega', { variant: 'warning' });
     }
     
     if ( Object.values( contact ).filter(c => c).length < 1 ) {
-      setIsLoading( false );
       return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
     }
 
+    setIsLoading( true );
+    
     const total = cart.reduce(( prev, { quantity, price, discount } ) => prev + quantity * ( discount || price ), 0)
 
     const res = await dbOrders.createNewOrder( user._id, cart, total, direction, contact );
@@ -85,17 +79,58 @@ const CarritoPage: NextPage = () => {
       return;
     }
 
+    if ( checkboxInfo ) window.localStorage.setItem('mpr__shopInfo', JSON.stringify({ direction, contact }));
+    
     enqueueSnackbar(res.message, { variant: 'success' });
     setIsLoading( false );
     return;
+  }
+
+  const handleLocation = () => {
+    
+    const success: PositionCallback = function( position ) {
+      console.log(position);
+      setDirectionError('');
+
+      const { coords } = position;
+      const { latitude, longitude, accuracy } = coords;
+
+      if ( accuracy > 70 ) {
+        setDirectionError('La precisión de tu ubicación fue baja. Por favor vuelve a intentarlo.');
+        setTimeout(() => setDirectionError(''), 15000);
+        return;
+      }
+
+      setDirection({
+        ...direction,
+        maps: {
+          latitude,
+          longitude,
+        }
+      })
+    }
+    
+    const error: PositionErrorCallback = function(err) {
+      console.log(err);
+      setDirectionError('Ocurrió un error con tu ubicación. Por favor vuelve a intentarlo.');
+      setTimeout(() => setDirectionError(''), 15000);
+    }
+
+    const options: PositionOptions = {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0,
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error, options);
   }
 
   return (
     <ShopLayout title={ 'Carrito de compras' } H1={ 'Tienda' } pageDescription={ 'Carrito de compras, lista de productos' } nextPage={ '/tienda' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> }>
         <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#333', mb: 3 }}>Tu carrito <AddShoppingCart color='secondary' sx={{ transform: 'translateY(6px)' }} /></Typography>
         
-        <Grid container display='flex' gap='.5rem'>  
-          <Grid item display='flex' flexDirection='column' gap='1.5rem' flexGrow={ 1 }>
+        <Box display='flex' gap='.5rem' flexWrap='wrap'>  
+          <Box display='flex' flexDirection='column' gap='1.5rem' alignItems='center' flexGrow={ 1 }>
             {
               cart.map(( product, index ) => <CartProductInfo key={ product.name + index } product={ product } /> )
             }
@@ -112,9 +147,9 @@ const CarritoPage: NextPage = () => {
                   )
                 : <Typography>No tienes nada en el carrito <RemoveShoppingCart sx={{ transform: { xs: 'translateY(4px)', sm: 'translateY(6px)', md: 'translateY(8px)' } }} color='secondary' /></Typography>
             }
-          </Grid>
+          </Box>
             
-          <Grid item flexGrow={ 1 }>
+          <Box flexGrow={ 1 }>
             <Card>
               <CardContent>
                 <Typography sx={{ fontSize: '1.3rem', fontWeight: '700' }}>Productos</Typography>
@@ -153,7 +188,7 @@ const CarritoPage: NextPage = () => {
                     <TextField
                       name='address'
                       value={ direction.address }
-                      label='Descripción corta'
+                      label='Descripción de tu ubicación'
                       type='text'
                       color='secondary'
                       variant='filled'
@@ -163,17 +198,19 @@ const CarritoPage: NextPage = () => {
                       />
                   </Box>
 
-                  <Box sx={{ mb: 1 }}>
-                    <TextField
-                      name='maps'
-                      value={ direction.maps }
-                      label='Google Maps'
-                      type='text'
-                      color='secondary'
-                      variant='filled'
-                      fullWidth
-                      onChange={ ( e ) => setDirection({ ...direction, maps: e.target.value }) }
-                      />
+                  <Box sx={{ mb: 1 }} display='flex' flexDirection='column'>
+                      <Button color='secondary' sx={{ py: 1, fontSize: '1rem' }} onClick={ handleLocation }>Obtener ubicación en Maps</Button>
+                      { Object.values( direction.maps ).filter(m => m).length === 2 &&
+                        <Box display='flex' gap='.5rem' className='fadeIn' sx={{ maxWidth: 'max(250px, 20rem)', borderRadius: '10rem', mt: 1, padding: '.4rem 1rem .4rem .5rem', fontWeight: '600', backgroundColor: 'var(--success-color)' }}>
+                          <Check color='info' />
+                          <Typography sx={{ color: '#fafafa' }}>Tu ubicación es válida</Typography>
+                        </Box>
+                      }
+                      { directionError.length > 0 &&
+                        <Box display='flex' gap='.5rem' className='fadeIn' sx={{ maxWidth: 'max(250px, 22rem)', borderRadius: '10rem', mt: 1, padding: '.4rem 1rem', fontWeight: '600', fontSize: '.9rem', backgroundColor: 'var(--error-color)' }}>
+                          <Typography sx={{ color: '#fafafa' }}>{ directionError }</Typography>
+                        </Box>
+                      }
                   </Box>
                   
                   <Divider sx={{ my: 1 }} />
@@ -234,23 +271,31 @@ const CarritoPage: NextPage = () => {
                     />
                   </Box>
 
+                  <Box display='flex' alignItems='center'>
+                    <Checkbox
+                      color='secondary'
+                      checked={ checkboxInfo }
+                      onChange={ ({ target }) => setCheckboxInfo( target.checked ) }
+                    />
+                    <Typography sx={{ cursor: 'pointer' }} onClick={ () => setCheckboxInfo( !checkboxInfo ) }>Guardar información</Typography>
+                  </Box>
+
                   <Divider sx={{ my: 1 }} />
 
                   <Button
-                      className='circular-btn'
-                      color='secondary'
-                      fullWidth
-                      disabled={ cart.length < 1 || isLoading }
-                      sx={{ fontSize: '1rem' }}
-                      onClick={ handleCheckout }
-                      >
+                    color='secondary'
+                    fullWidth
+                    disabled={ cart.length < 1 || isLoading }
+                    sx={{ fontSize: '1rem' }}
+                    onClick={ handleCheckout }
+                  >
                     Crear orden
                   </Button>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
           
-        </Grid>
+        </Box>
     </ShopLayout>
   )
 }

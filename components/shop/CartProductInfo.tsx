@@ -18,12 +18,12 @@ export const CartProductInfo: FC<Props> = ({ product }) => {
     let { name, image, price, discount, quantity, size, tags, slug } = product;
 
     return (
-    <Grid container spacing={ 1 } sx={{ display: 'grid', gridTemplateColumns: '160px 1fr', padding: '.5rem', borderRadius: '1rem', boxShadow: '4px 4px 3rem -2rem #888' }}>
+    <Grid container spacing={ 1 } sx={{ display: 'grid', maxWidth: '100%', gridTemplateColumns: '160px 1fr', padding: '.5rem', borderRadius: '1rem', boxShadow: '4px 4px 3rem -2rem #888', border: 'thin solid #eaeaea' }}>
         <div style={{ display: 'block', borderRadius: '.5rem', overflow: 'hidden', alignSelf: 'flex-start' }}>
             <Image src={ image.url } alt={ name } width={ image.width } height={ image.height } layout='responsive' />
         </div>
         <Grid item>
-            <NextLink href={ '/tienda' + slug } passHref>
+            <NextLink href={ '/tienda' + slug } passHref prefetch={ false }>
                 <Link underline="hover" color="#000" display='inline-block'>
                     <Typography>{ name }{ size !== 'unique' ? ` (${ size })` : '' }</Typography>
                 </Link>
@@ -47,11 +47,11 @@ export const CartProductInfo: FC<Props> = ({ product }) => {
                 >{ currentValue > 0 ? 'Llevar' : 'Remover' }</Button>
             </Box>
 
-            <Box display='flex' justifyContent='flex-end' gap='.5rem'>
+            {/* <Box display='flex' justifyContent='flex-end' gap='.5rem' flexWrap='wrap'>
                 {
                     tags.map(tag => <Typography key={ tag } sx={{ fontSize: '.9rem', color: '#8a8a8a' }}>#{ tag }</Typography>)
                 }
-            </Box>
+            </Box> */}
         </Grid>
     </Grid>
   )

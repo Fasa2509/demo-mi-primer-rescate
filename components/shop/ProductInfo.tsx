@@ -54,8 +54,8 @@ export const ProductInfo: FC<Props> = ({ product }) => {
                 <Divider />
 
                 <Box display='flex' gap='.5rem'>
-                    <p className={ styles.product__price } style={ product.discount > 0 && product.discount < 0.5 ? { fontSize: '1.1rem', color: '#666', textDecoration: 'line-through' } : {}}>{ format( product.price ) }</p>
-                    { product.discount > 0 && product.discount < 0.5 && <p className={ styles.product__discount }>{ format( product.price - product.discount * product.price ) }</p> }
+                    <p className={ styles.product__price } style={ product.discount > 0 && product.discount <= 0.5 ? { fontSize: '1.1rem', color: '#666', textDecoration: 'line-through' } : {}}>{ format( product.price ) }</p>
+                    { product.discount > 0 && product.discount <= 0.5 && <p className={ styles.product__discount }>{ format( product.price - product.discount * product.price ) }</p> }
                 </Box>
 
                 <Typography className={ styles.description }>{ description }</Typography>

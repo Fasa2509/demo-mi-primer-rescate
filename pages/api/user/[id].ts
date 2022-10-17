@@ -37,7 +37,7 @@ const updateUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
         const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
         // @ts-ignore
-        if ( !session || session?.user.role !== 'admin' ) return res.status(400).json({ error: true, message: 'No tienes permiso para eliminar un usuario' });
+        if ( !session || session?.user.role !== 'admin' ) return res.status(400).json({ error: true, message: 'No tienes permiso para actualizar un usuario' });
 
         await db.connect();
         
@@ -66,11 +66,13 @@ const deleteUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
         const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
         // @ts-ignore
-        if ( !session || session?.user.role !== 'admin' ) return res.status(400).json({ error: true, message: 'No tienes permiso para actualizar un usuario' });
+        if ( !session || session?.user.role !== 'admin' ) return res.status(400).json({ error: true, message: 'No tienes permiso para eliminar un usuario' });
 
         await db.connect();
 
-        await User.deleteOne({ _id: id });
+        const user = await User.findById( id );
+        user.isAble = false;
+        await user.save();
 
         await db.disconnect();
 

@@ -8,7 +8,7 @@ import { isToday, isTomorrow } from 'date-fns';
 import { ScrollContext } from "../../context";
 import { Footer, Header, SideMenu, Title } from "../ui";
 import { Loader } from "./Loader";
-import { ConfirmNotificationButtons } from '../../utils';
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import styles from './MainLayout.module.css'
 
 interface Props {
@@ -40,52 +40,24 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
     console.log(session)
     if ( session ) {
       if ( Cookies.get('mpr__extendSession') === 'true' && isToday( new Date(session.expires) ) || isTomorrow( new Date(session.expires) )) {
-        new Promise(( resolve, reject ) => {
-          let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
+          (async () => {
+            let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
               variant: 'info',
               autoHideDuration: 15000,
               action: ConfirmNotificationButtons,
-          })
+            })
+            
+            const confirm = await PromiseConfirmHelper( key, 15000 );
 
-          let timer = setTimeout(() => reject(callback), 15000);
+            if ( !confirm ) {
+              Cookies.set('mpr__extendSession', 'false');
+              return;
+            }
 
-          const callback = ( e: any ) => {
-              if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
-                  resolve({
-                      accepted: true,
-                      callback,
-                      timer,
-                  })
-              }
-
-              if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
-                  resolve({
-                      accepted: false,
-                      callback,
-                      timer,
-                  })
-              }
-          }
-
-          document.addEventListener('click', callback);
-      })
-      // @ts-ignore
-      .then(({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
-          document.removeEventListener('click', callback);
-          clearTimeout( timer );
-
-          if ( !accepted ) {
-            Cookies.set('mpr__extendSession', 'false');
+            getSession();
+            
             return;
-          }
-
-          getSession();
-
-          return;
-      })
-      .catch(({ callback }: { callback: any }) => {
-          document.removeEventListener('click', callback);
-      })
+          })();
       }
     }
 }, [session, status, enqueueSnackbar])

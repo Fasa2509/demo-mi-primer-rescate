@@ -50,7 +50,13 @@ const orderSchema = new Schema({
     shippingAddress: {
         type: {
             address: { type: String, required: true },
-            maps: { type: String, required: true },
+            maps: {
+                type: {
+                    longitude: { type: Number, required: true },
+                    latitude: { type: Number, required: true },
+                },
+                required: true,
+            },
         },
         required: true,
     },

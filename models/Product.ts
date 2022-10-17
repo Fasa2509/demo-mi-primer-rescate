@@ -29,12 +29,12 @@ const productSchema = new Schema({
     inStock: {
         type: {
             unique: { type: Number, required: true },
-            S: { type: Number },
-            M: { type: Number },
-            L: { type: Number },
-            XL: { type: Number },
-            XXL: { type: Number },
-            XXXL: { type: Number },
+            S: { type: Number, default: 0 },
+            M: { type: Number, default: 0 },
+            L: { type: Number, default: 0 },
+            XL: { type: Number, default: 0 },
+            XXL: { type: Number, default: 0 },
+            XXXL: { type: Number, default: 0 },
         },
         required: true,
     },
@@ -50,6 +50,7 @@ const productSchema = new Schema({
     }],
     sold: { type: Number, default: 0 },
     slug: { type: String, required: true },
+    isAble: { type: Boolean, default: true },
 })
 
 // @ts-ignore

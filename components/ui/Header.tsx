@@ -2,11 +2,13 @@ import { FC, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { useSession } from 'next-auth/react';
-import { Badge, Box, Link } from '@mui/material';
+import { Badge, Box, Button, Link } from '@mui/material';
 import { ShoppingCart } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 
 import { LinkLogo } from './LinkLogo';
-import { CartContext, MenuContext, ScrollContext } from '../../context';
+import { AuthContext, CartContext, MenuContext } from '../../context';
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import styles from './Header.module.css';
 
 interface Props {
@@ -20,13 +22,30 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
   const { data } = useSession();
   let session: any = data;
   const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
-  // const { passedElements } = useContext( ScrollContext );
+  const { logoutUser } = useContext( AuthContext );
   const { numberOfItems } = useContext( CartContext );
+  const { enqueueSnackbar } = useSnackbar();
   const [linksActive, setLinksActive] = useState( false );
+
+  const logOut = async () => {
+    let key = enqueueSnackbar('¿Quieres cerrar sesión?', {
+      variant: 'info',
+      autoHideDuration: 10000,
+      action: ConfirmNotificationButtons,
+    })
+
+    const confirm = await PromiseConfirmHelper( key, 10000 );
+
+    if ( !confirm ) return;
+
+    logoutUser();
+    return;
+  }
 
   return (
     <nav className={ styles.nav }>
       <header className={ styles.header }>
+
         { shop &&
           <NextLink href='/tienda/carrito' passHref>
               <Link className={ styles.shopping__cart + ' fadeIn' }>
@@ -64,6 +83,15 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
               <Link color='info' className={ `fadeIn ${ router.asPath === '/personal' ? styles.active : '' }` }>Personal</Link>
             </NextLink>
           }
+          {
+            ( session )
+              ? <button className={ `button ${ styles.buttons }` } onClick={ logOut }>
+                  <Link color='info' className='fadeIn'>Salir</Link>
+                </button>
+              : <button className={ `button ${ styles.buttons }` }>
+                  <Link color='info' className='fadeIn' onClick={ () => router.push(`/auth?p=${ router.asPath }`) }>Entrar</Link>
+                </button>
+          }
         </Box>
 
         <Box sx={{ position: 'absolute', right: '5vw', display: { md: 'none' } }}>
@@ -74,6 +102,7 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
           </button>
         </Box>
       </header>
+
       { session && session.user && ( session.user.role === 'superuser' || session.user.role === 'admin' ) &&
         <Box sx={{ transform: !linksActive ? 'translateX(0%)' : 'translateX(84%)', transition: 'transform 500ms ease', filter: 'drop-shadow(0 3px 3px #003021)', display: { xs: 'none', md: 'flex' }, position: 'absolute', right: 0, backgroundColor: '#B74FD1', padding: '.5rem 1.5rem .5rem .5rem', borderStartStartRadius: '10rem', borderEndStartRadius: '10rem' }}>
           <input type='checkbox' className={ styles.checkbox } onClick={ () => setLinksActive( !linksActive ) } />
@@ -92,6 +121,7 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
           <Box sx={{ display: { xs: 'none', md: 'flex' } }} />
         </Box>
       }
+      
     </nav>
   )
 }

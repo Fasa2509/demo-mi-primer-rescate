@@ -13,7 +13,7 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
             return removeArticle( req, res );
 
         default:
-            return res.status(400).json({ error: true, message: 'BAD REQUEST' })
+            return res.status(400).json({ error: true, message: 'BAD REQUEST' });
     }
 
 }

@@ -77,7 +77,7 @@ export const getAllUsers = async (): Promise<IUser[] | null> => {
     try {
         await db.connect();
         
-        const users = await User.find();
+        const users = await User.find({ isAble: true });
 
         await db.disconnect();
 
@@ -120,7 +120,7 @@ export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => 
 
     await db.connect();
 
-    const user = await User.findOne({ email: oAuthEmail });
+    const user = await User.findOne({ email: oAuthEmail, isAble: true });
 
     if ( user ) {
         await db.disconnect();

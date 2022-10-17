@@ -20,10 +20,10 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 const saveOrder = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    const { user = '', orderItems = [], total = 0, shippingAddress = { address: '', maps: '' }, contact = { facebook: '', instagram: '', google: '' } } = req.body;
-
-    if ( !user || !isValidObjectId( user ) || orderItems.length < 1 || total === 0 || Object.values( shippingAddress ).filter(d => d).length < 2 || Object.values( contact ).filter(d => d).length < 1 )
-        return res.status(400).json({ error: true, message: 'Faltan datos de la orden' })
+    const { user = '', orderItems = [], total = 0, shippingAddress = { address: '', maps: { latitud: null, longitude: null, } }, contact = { facebook: '', instagram: '', google: '' } } = req.body;
+    // Object.values( shippingAddress ).filter(d => d).length < 2
+    if ( !user || !isValidObjectId( user ) || orderItems.length < 1 || total === 0 || shippingAddress.address.length < 5 || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(d => d).length < 1 )
+        return res.status(400).json({ error: true, message: 'Faltan datos de la orden' });
 
     try {
         await db.connect();

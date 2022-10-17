@@ -6,6 +6,8 @@
   --secondary-color-1: #2AD8A4;
   --secondary-color-1-hover: #27be91;
   --secondary-color-2: #B74FD1;
+  --success-color: rgb(7, 179, 7);
+  --error-color: #f10606;
 }
 
 html,

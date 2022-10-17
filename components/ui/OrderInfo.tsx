@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import { dbOrders } from "../../database";
 import { ScrollContext } from "../../context";
 import { IOrder, IOrderInfo, Paid } from "../../interfaces";
-import { ConfirmNotificationButtons } from "../../utils";
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils";
 
 interface Props {
     info: IOrderInfo;
@@ -20,40 +20,15 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
     const { enqueueSnackbar } = useSnackbar();
 
     const updatePaidOrder = async ( orderStatus: Paid ) => {
-        new Promise((resolve, reject) => {
             let key = enqueueSnackbar(`¿Segur@ que quieres marcarla como ${ orderStatus === 'paid' ? 'Pagada' : orderStatus === 'notpaid' ? 'No Pagada' : 'Pendiente' }?`, {
                 variant: 'info',
                 autoHideDuration: 10000,
                 action: ConfirmNotificationButtons,
             });
 
-            let timer = setTimeout(() => reject( callback ), 10000);
+            const confirm = await PromiseConfirmHelper( key, 10000 );
 
-            const callback = ( e: any ) => {
-                if ( e.target.matches(`.accept.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: true,
-                        callback,
-                        timer,
-                    });
-                }
-
-                if ( e.target.matches(`.deny.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        accepted: false,
-                        callback,
-                        timer,
-                    });
-                }
-            }
-
-            document.addEventListener('click', callback);
-            // @ts-ignore
-        }).then(async ({ accepted, callback, timer }: { accepted: boolean, callback: any, timer: any }) => {
-            document.removeEventListener('click', callback);
-            clearTimeout( timer );
-            
-            if ( !accepted ) return;
+            if ( !confirm ) return;
             
             setIsLoading( true );
         
@@ -70,9 +45,6 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
             }
 
             setIsLoading( false );
-        }).catch(({ callback }: { callback: any }) => {
-            document.removeEventListener('click', callback);
-        });
 
     }
   
@@ -141,7 +113,9 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
                 <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Dirección:</Typography>
                 <Box display='flex' flexDirection='column' gap='.3rem'>
                     <Typography>{ shippingAddress.address }</Typography>
-                    <Link href={ 'https://google.com/' } target='_blank' rel='noreferrer' alignSelf='flex-start' sx={{ color: '#666', fontWeight: '600' }}>Ver en Maps</Link>
+                    { shippingAddress.maps.latitude && shippingAddress.maps.longitude &&
+                        <Link href={ `https://www.google.com/maps/@${ shippingAddress.maps.latitude },${ shippingAddress.maps.longitude },14z?hl=es` } target='_blank' rel='noreferrer' alignSelf='flex-start' sx={{ color: '#666', fontWeight: '600' }}>Ver en Maps</Link>
+                    }
                 </Box>
             </Box>
 
