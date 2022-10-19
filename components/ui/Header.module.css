@@ -27,7 +27,7 @@
     font-size: 1.1rem;
     padding: .35rem .6rem;
     /* border-radius: 10rem; */
-    transition: color 350ms ease-in-out, background-color 350ms ease-in-out;
+    /* transition: color 350ms ease-in-out, background-color 350ms ease-in-out; */
 }
 
 /*.buttons {
@@ -150,11 +150,7 @@
 
     .navbar__index a:hover {
         color: #fafafa;
-    }
-    
-    .header > a:hover {
-        transform: scale(1.05);
-    } */
+    }*/
 }
 
 @media screen and (min-width: 576px) {

@@ -22,7 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.4",
     "next": "12.2.2",
-    "next-auth": "^4.12.2",
+    "next-auth": "^4.1.2",
     "notistack": "2.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
