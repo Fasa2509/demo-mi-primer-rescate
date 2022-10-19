@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { Category } from '@mui/icons-material';
-
-import { AdminProductInfo, MainLayout } from '../../../components';
 import { Typography, CardMedia, Box, Grid, Link, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { useContext } from 'react';
-import { ScrollContext } from '../../../context';
-import { InStockSizes, IProduct, Sizes, Tags } from '../../../interfaces';
+import { Category } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
+
 import { dbProducts } from '../../../database';
+import { mprRevalidatePage } from '../../../api';
+import { ScrollContext } from '../../../context';
+import { AdminProductInfo, MainLayout } from '../../../components';
 import { format } from '../../../utils';
+import { InStockSizes, IProduct, Sizes, Tags } from '../../../interfaces';
 
 const columns: GridColDef[] = [
   {
@@ -99,7 +100,7 @@ const columns: GridColDef[] = [
             _id: row.id,
             name: row.name,
             description: row.description,
-            images: [row.images],
+            images: row.images,
             inStock: row.inStock,
             price: row.price,
             discount: row.discount,
@@ -134,12 +135,24 @@ const columns: GridColDef[] = [
   },
   {
     field: 'sold',
-    headerName: 'Vendido',
+    headerName: 'Vendidos',
     sortable: false,
     disableColumnMenu: true,
     align: 'center',
     width: 90,
   },
+  {
+    field: 'deleteProduct',
+    headerName: 'Eliminar',
+    sortable: false,
+    disableColumnMenu: true,
+    // @ts-ignore
+    renderCell: ({ row }: GridValueGetterParams) => {
+      return (
+        <Button color='error' onClick={ () => row.deleteProduct( row.id ) }>Eliminar</Button>
+      )
+    }
+  }
 ]
 
 interface Props {
@@ -150,14 +163,7 @@ const newProductInitialState: IProduct = {
   _id: '',
   name: '',
   description: '',
-  images: [
-    {
-      url: '',
-      alt: '',
-      width: 500,
-      height: 500,
-    }
-  ],
+  images: [],
   inStock: {
     unique: 0,
     S: 0,
@@ -174,45 +180,34 @@ const newProductInitialState: IProduct = {
   slug: '/',
 }
 
-// export interface FormProductState {
-//   _id: string;
-//   description: string;
-//   price: number;
-//   inStock: InStockSizes;
-//   tags: Tags[];
-// }
-
-// export const formInitialState: FormProductState = {
-//   _id: '',
-//   description: '',
-//   price: 0,
-//   inStock: {
-//     unique: 0,
-//     S: 0,
-//     M: 0,
-//     L: 0,
-//     XL: 0,
-//     XXL: 0,
-//     XXXL: 0,
-//   },
-//   tags: [],
-// }
-
 const ProductosPage: NextPage<Props> = ({ products }) => {
 
   const [newProduct, setNewProduct] = useState( newProductInitialState );
   const [method, setMethod] = useState<'create' | 'update'>('create');
-  // const [form, setForm] = useState<FormProductState>( formInitialState );
+  const { enqueueSnackbar } = useSnackbar();
+  const { setIsLoading } = useContext( ScrollContext );
+  
+  const deleteProduct = async ( id: string ) => {
+    setIsLoading( true );
 
-  // const setNewProduct_ = (p: IProduct) => {
-  //   setBool( !bool );
-  //   setForm( formInitialState );
-  //   setNewProduct( p );
-  // }
+    const res = await dbProducts.deleteProductById( id );
+
+    enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error' });
+
+    if ( !res.error ) {
+      if ( process.env.NODE_ENV === 'production' ) {
+          const revRes = await mprRevalidatePage( '/tienda' );
+          enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });                    
+          
+          const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
+          enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });                    
+      }
+    }
+  }
 
   const rows = products.map(product => ({
     id: product._id,
-    images: product.images,
+    images: [...product.images],
     name: product.name,
     description: product.description,
     inStock: product.inStock,
@@ -221,10 +216,11 @@ const ProductosPage: NextPage<Props> = ({ products }) => {
     tags: product.tags,
     sold: product.sold,
     slug: product.slug,
-    setNewProduct: ( p: any ) => {
+    setNewProduct: ( p: IProduct ) => {
       setMethod( 'update' );
       setNewProduct(p);
     },
+    deleteProduct,
   }))
 
   return (
@@ -245,13 +241,7 @@ const ProductosPage: NextPage<Props> = ({ products }) => {
           : <Typography variant='h2'>Ocurrió un error buscando los productos en la base de datos.</Typography>
       }
 
-      {/* {
-        ( bool )
-          ? <AdminProductInfo product={ newProduct } setProduct={ setNewProduct_ } form={ form } setForm={ setForm } />
-          : <AdminProductInfo product={ newProduct } setProduct={ setNewProduct_ } form={ form } setForm={ setForm } />
-      } */}
-
-      <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } />
+      <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } products={ products } />
 
     </MainLayout>
   )

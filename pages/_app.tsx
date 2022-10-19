@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return(
     <SessionProvider>
       <ThemeProvider theme={ lightTheme }>
-        <SnackbarProvider dense action={ CloseNotificationButton }>
+        <SnackbarProvider dense action={ CloseNotificationButton } maxSnack={ 4 }>
           <AuthProvider>
             <CartProvider>
               <MenuProvider>

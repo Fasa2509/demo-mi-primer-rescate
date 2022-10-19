@@ -4,20 +4,39 @@ import { mprApi } from "../api";
 import { InStockSizes, IProduct, Tags } from "../interfaces";
 import { Product } from "../models";
 
-interface PayloadUpdate {
-    name: string;
-    description: string;
-    price: number;
-    discount: number;
-    inStock: InStockSizes;
-    tags: Tags[];
-}
+// interface PayloadUpdate {
+//     name: string;
+//     description: string;
+//     price: number;
+//     discount: number;
+//     inStock: InStockSizes;
+//     tags: Tags[];
+// }
 
-export const createNewProduct = async ( form: IProduct ) => {
+export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promise<{ error: boolean; message: string; }> => {
+
+    let { name = '', description = '', images = [], price = 0, discount, inStock, tags = [], slug = '' } = form;
+    
+    if ( !name || !description || images.length < 2 || images.length > 4 || price === 0 || tags.length === 0 ) return { error: true, message: 'La información no es válida' };
+
+    let { unique, ...tallas } = inStock;
+
+    if ( unique > -1 && Object.values( tallas ).some(( value: number, index, array) => typeof value === 'number' && value > 0) ) return { error: true, message: 'Las tallas no son válidas' };
+
     try {
-        let { data } = await mprApi.post('/product', form);
+        let { data } = await mprApi.post('/product', {
+            name,
+            description,
+            images,
+            inStock,
+            price,
+            discount,
+            tags,
+            slug: slug.startsWith('/') ? slug : '/' + slug,
+            unica,
+        });
 
-        return data
+        return data;
     } catch( error ) {
         console.log( error );
 
@@ -36,7 +55,7 @@ export const createNewProduct = async ( form: IProduct ) => {
     }
 }
 
-export const updateProductById = async ( id: string, payload: PayloadUpdate, unique: boolean ): Promise<{ error: boolean; message: string; }> => {
+export const updateProductById = async ( id: string, payload: IProduct, unique: boolean ): Promise<{ error: boolean; message: string; }> => {
 
     try {
         let res;
@@ -94,6 +113,31 @@ export const discountProducts = async ( form: 'tags' | 'slug', discount: number,
         matcher = matcher.toString();
         if ( matcher.startsWith('/') ) matcher.replace('/', '');
         const { data } = await mprApi.get(`/product/${ matcher }?discount=${ discount }`);
+
+        return data;
+    } catch( error: any ) {
+        console.log( error );
+
+        if ( axios.isAxiosError( error ) ) {
+            return {
+                error: true,
+                // @ts-ignore
+                message: error.response ? error.response.data.message || 'Error gen' : 'Error',
+            }
+        }
+
+        return {
+            error: true,
+            message: 'Error',
+        };
+    }
+
+}
+
+export const deleteProductById = async ( id: string ) => {
+
+    try {
+        const { data } = await mprApi.delete(`/product?id=${ id }`);
 
         return data;
     } catch( error: any ) {

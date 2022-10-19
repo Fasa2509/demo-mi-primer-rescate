@@ -37,6 +37,9 @@ export const CustomInput: FC<Props> = ({ field, setField, dimension, setDimensio
                     <p>/dog-hero-image.webp <b>1280x720px</b></p>
                     <p>/perro-1.webp <b>450x450px</b></p>
                     <p>/perro-2.webp <b>450x450px</b></p>
+                    <p>/Logo-MPR.png <b>500x500px</b></p>
+                    <p>/Logo-Redes.png <b>500x500px</b></p>
+                    <p>/square-dog.jpg <b>500x500px</b></p>
                     <p>¡Copia la dirrección (sin las dimensiones) y agrégala!</p>
                 </div>
                 <input value={ field.content.trim() } type={ 'text' } name={ 'imagen' } placeholder={ 'Dirección de la imagen aquí' } required onChange={ ( e: any ) => setField({ ...field, content: e.target.value }) } />

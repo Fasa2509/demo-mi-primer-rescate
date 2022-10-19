@@ -27,7 +27,9 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [linksActive, setLinksActive] = useState( false );
 
-  const logOut = async () => {
+  const logOut = async ( e: any ) => {
+    e.preventDefault();
+
     let key = enqueueSnackbar('¿Quieres cerrar sesión?', {
       variant: 'info',
       autoHideDuration: 10000,
@@ -85,12 +87,8 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
           }
           {
             ( session )
-              ? <button className={ `button ${ styles.buttons }` } onClick={ logOut }>
-                  <Link color='info' className='fadeIn'>Salir</Link>
-                </button>
-              : <button className={ `button ${ styles.buttons }` }>
-                  <Link color='info' className='fadeIn' onClick={ () => router.push(`/auth?p=${ router.asPath }`) }>Entrar</Link>
-                </button>
+              ? <Link sx={{ cursor: 'pointer' }} color='info' className='fadeIn' onClick={ logOut }>Salir</Link>
+              : <Link sx={{ cursor: 'pointer' }} href={ `/auth?p=${ router.asPath }` } color='info' className={ `fadeIn ${ router.asPath === '/auth' ? styles.active : '' }` }>Entrar</Link>
           }
         </Box>
 
@@ -116,6 +114,9 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
             </NextLink>
             <NextLink href='/admin/productos' passHref>
               <Link sx={{ color: '#fafafa', fontWeight: '600' }}>Productos</Link>
+            </NextLink>
+            <NextLink href='/admin/adopciones' passHref>
+              <Link sx={{ color: '#fafafa', fontWeight: '600' }}>Adopciones</Link>
             </NextLink>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }} />

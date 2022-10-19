@@ -1,7 +1,11 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Input, Radio, RadioGroup, TextField, Typography } from "@mui/material"
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { ChangeEvent, FC, useState } from "react"
-import { ConfirmNotificationButtons } from "../../utils";
+import { ChangeEvent, FC, useContext, useState } from "react"
+import { ScrollContext } from "../../context";
+import { dbAdoptions } from "../../database";
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils";
 import styles from './Form.module.css'
 
 // Antes de empezar el cuestionario ¿Está usted interesado en algún perro/gato en particular de la manada MPR? De ser así escriba su nombre aquí. 
@@ -68,6 +72,9 @@ import styles from './Form.module.css'
 
 export const AdoptionForm: FC = () => {
 
+    const { data: session } = useSession();
+    const router = useRouter();
+    const { setIsLoading } = useContext( ScrollContext );
     const [ form, setForm ] = useState({
         particular1: '',
         particular2: '',
@@ -104,52 +111,31 @@ export const AdoptionForm: FC = () => {
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const sendForm = () => {
-        new Promise(( resolve ) => {
-            let key = enqueueSnackbar('¿Quieres enviar el formulario?', {
-                variant: 'info',
-                autoHideDuration: 15000,
-                action: ConfirmNotificationButtons
-            });
-
-            const callback = ( e: any ) => {
-                if ( e.target.matches(`.notification__buttons.accept.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        callback,
-                        accepted: true,
-                    })
-                }
-                
-                if ( e.target.matches(`.notification__buttons.deny.n${ key.toString().replace('.', '') } *`) ) {
-                    resolve({
-                        callback,
-                        accepted: false,
-                    })
-                }
-            };
-
-            document.addEventListener('click', callback);
-        })
-        // @ts-ignore
-        .then(({ callback, accepted }: { callback: any, accepted: boolean }) => {
-            document.removeEventListener('click', callback);
-
-            accepted && enqueueSnackbar('La solicitud de adopción ha sido enviada', {
-                variant: 'success',
-                autoHideDuration: 4000,
-            })
-            
-            accepted || enqueueSnackbar('La solicitud de adopción no fue enviada', {
-                variant: 'warning',
-                autoHideDuration: 6000,
-            })
-        })
-    }
-    
-    const handleSubmit = ( e: any ) => {
+    const handleSubmit = async ( e: any ) => {
         e.preventDefault();
 
-        sendForm();
+        if ( !session || !session?.user ) return router.push('/auth?p=/adoptar');
+
+        let key = enqueueSnackbar('¿Quieres enviar el formulario?', {
+            variant: 'info',
+            autoHideDuration: 10000,
+            action: ConfirmNotificationButtons,
+        });
+
+        const accepted = await PromiseConfirmHelper( key, 10000 );
+
+        if ( !accepted ) return;
+
+        setIsLoading( true );
+        
+        // @ts-ignore
+        const res = await dbAdoptions.createAdoption({ ...form, createdAt: 0, user: session.user || '', _id: '', });
+        
+        enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        
+        setIsLoading( false );
+
+        return;
     }
 
   return (

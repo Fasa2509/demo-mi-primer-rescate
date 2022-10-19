@@ -1,6 +1,18 @@
 .grid__container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
+    grid-template-columns: 1fr;
+    justify-content: center;
     gap: 1rem;
     justify-items: center;
+}
+
+.grid__container > * {
+    max-width: 380px;
+}
+
+@media screen and (min-width: 776px) {
+    .grid__container {
+        grid-template-columns: 1fr 1fr;
+    }
 }

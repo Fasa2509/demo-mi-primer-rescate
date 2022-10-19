@@ -32,7 +32,7 @@
     background-color: #fafafa;
     border-radius: 1.5rem;
     position: relative;
-    animation: modalAppear 500ms cubic-bezier(.19,.87,.43,.98) 0ms 1 normal both;
+    animation: modalAppear 500ms ease-out 0ms 1 normal both;
 }
 
 .modal__title {

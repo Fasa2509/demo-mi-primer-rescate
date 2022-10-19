@@ -8,11 +8,6 @@
     transition: background-color 250ms ease;
 }
 
-/* .nav__transparent {
-    background-color: transparent;
-    top: 0;
-} */
-
 .header {
     display: flex;
     align-items: center;
@@ -24,23 +19,56 @@
     color: #fafafa;
 }
 
-.links > a,
-.links > .buttons {
+.links > a/*,
+.links > .buttons*/ {
+    position: relative;
+    overflow: hidden;
     font-weight: 500;
     font-size: 1.1rem;
-    padding: .25rem .6rem;
-    border-radius: 10rem;
+    padding: .35rem .6rem;
+    /* border-radius: 10rem; */
     transition: color 350ms ease-in-out, background-color 350ms ease-in-out;
 }
 
-.buttons {
+/*.buttons {
     transform: translateY(3px);
-}
+}*/
 
-.links > .active {
+/* .links > .active {
     color: var(--secondary-color-1);
     background-color: #fafafa;
+} */
+
+/* .links > a.active::before {
+    transform: translateY(20%);
+} */
+
+/* .links > a.active::after {
+    transform: translateX(-20%);
+} */
+
+/* .links > a::before,
+.links > a::after {
+    content: '';
+    display: inline-block;
+    background-color: #fafafa;
+    position: absolute;
+    bottom: .25rem;
+    left: .25rem;
+    transition: transform 250ms ease-in-out;
+} */
+
+/* .links > a::before {
+    width: 3px;
+    height: 1.5rem;
+    transform: translateY(120%);
 }
+
+.links > a::after {
+    width: 1.5rem;
+    height: 3px;
+    transform: translateX(-120%);
+} */
 
 .admin__links > a {
     transition: color 250ms ease;
@@ -49,17 +77,6 @@
 .admin__links > .active {
     color: var(--secondary-color-1);
 }
-
-/* .header > a {
-    display: flex;
-    align-items: center;
-    transition: transform 250ms ease;
-} */
-
-/* .button__menu {
-    position: absolute;
-    right: 5vw;
-} */
 
 .shopping__cart {
     position: absolute;
@@ -91,28 +108,36 @@
     width: 18px;
     background-color: #FFF;
     cursor: pointer;
-    transform: rotate(-40deg);
+    transform: rotate(40deg);
     transition: transform 250ms ease;
 }
 
 .wings::after {
     top: 56%;
-    transform: rotate(40deg);
-}
-
-.checkbox:checked + .wings::before {
-    transform: rotate(40deg);
-}
-
-.checkbox:checked + .wings::after {
     transform: rotate(-40deg);
 }
 
+.checkbox:checked + .wings::before {
+    transform: rotate(-40deg);
+}
+
+.checkbox:checked + .wings::after {
+    transform: rotate(40deg);
+}
+
 @media (hover :hover) {
-    .links > a:hover {
+    /* .links > a:hover {
         color: var(--secondary-color-1);
         background-color: #fafafa;
+    } */
+
+    /* .links > a:hover::before {
+        transform: translateY(20%);
     }
+    
+    .links > a:hover::after {
+        transform: translateX(-20%);
+    }*/
 
     .admin__links > a:hover {
         color: var(--secondary-color-1);

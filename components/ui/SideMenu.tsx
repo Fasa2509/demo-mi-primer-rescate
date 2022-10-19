@@ -3,7 +3,7 @@ import NextLink from 'next/link'
 import { useRouter } from "next/router"
 
 import { Box, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
-import { Pets, AddAlert, VolunteerActivism, TrendingUp,  ShoppingBag, AdminPanelSettings, Category, ConfirmationNumber, LoginOutlined, VpnKey, Home, AccountCircle, FilterFrames } from "@mui/icons-material"
+import { Pets, AddAlert, VolunteerActivism, TrendingUp,  ShoppingBag, AdminPanelSettings, Category, ConfirmationNumber, LoginOutlined, VpnKey, Home, AccountCircle, FilterFrames, LocalCafe } from "@mui/icons-material"
 import { useSnackbar } from "notistack"
 
 import { AuthContext, MenuContext } from "../../context"
@@ -180,6 +180,17 @@ export const SideMenu: FC = () => {
                                     <AdminPanelSettings color='secondary' />
                                 </ListItemIcon>
                                 <ListItemText primary={'Usuarios'} />
+                            </ListItem>
+                        </a>
+                    </NextLink>
+                    
+                    <NextLink href={ '/admin/adopciones' }>
+                        <a onClick={ toggleSideMenu }>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <LocalCafe color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Adopciones'} />
                             </ListItem>
                         </a>
                     </NextLink>

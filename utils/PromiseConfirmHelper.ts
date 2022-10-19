@@ -3,11 +3,6 @@ import { SnackbarKey } from "notistack";
 export const PromiseConfirmHelper = ( key: SnackbarKey, duration: number ): Promise<boolean> => {
     
     return new Promise(( resolve, reject ) => {
-        // let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
-        //     variant: 'info',
-        //     autoHideDuration: duration,
-        //     action: ConfirmNotificationButtons,
-        // })
 
         let timer = setTimeout(() => reject(callback), duration);
 

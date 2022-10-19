@@ -55,7 +55,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
 
     if ( user ) return res.status(400).json({ error: true, message: 'El correo ya está en uso' });
 
-    let newUser
+    let newUser;
     try {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
@@ -65,7 +65,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
             name,
             password: hash,
             isSubscribed,
-            role: 'user',
+            role: 'admin',
             isAble: true,
         });
 

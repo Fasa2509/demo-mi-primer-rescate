@@ -28,7 +28,7 @@ export async function middleware( req: NextRequest, ev: NextFetchEvent ) {
 
         if ( session ) {
             const destination = req.nextUrl.searchParams.get('p') || '/';
-            return NextResponse.redirect( `http://localhost:3000${destination}` );
+            return NextResponse.redirect( `https://demo-mi-primer-rescate.vercel.app${destination}` );
         }
     }
 
@@ -43,7 +43,7 @@ export async function middleware( req: NextRequest, ev: NextFetchEvent ) {
         const validRoles = ['superuser', 'admin'];
 
         if ( !session || !validRoles.includes( session.user.role ) ) {
-            return NextResponse.redirect( 'http://localhost:3000/' );
+            return NextResponse.redirect( 'https://demo-mi-primer-rescate.vercel.app/' );
         }
     }
 
@@ -51,7 +51,7 @@ export async function middleware( req: NextRequest, ev: NextFetchEvent ) {
         const session: any = await getToken({ req });
 
         if ( !session ) {
-            return NextResponse.redirect( 'http://localhost:3000/' )
+            return NextResponse.redirect( 'https://demo-mi-primer-rescate.vercel.app/' )
         }
     }
 
