@@ -108,7 +108,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
                     enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
                     
                     const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
-                    enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
+                    enqueueSnackbar(revRes2.message || 'Error', { variant: !revRes2.error ? 'info' : 'error' });
                 }
             }
         } else {

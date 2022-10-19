@@ -15,7 +15,7 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 const revalidatePage = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    if ( !req.query.secret || req.query.secret?.toString() !== process.env.SECRET_REVALIDATE ) return res.status(403).json({ error: true, message: 'No tienes permiso para llamar a esta api' });
+    if ( !req.query.secret || req.query.secret?.toString() !== process.env.NEXT_PUBLIC_SECRET_REVALIDATE ) return res.status(403).json({ error: true, message: 'No tienes permiso para llamar a esta api' });
     if ( !req.query.p ) return res.status(400).json({ error: true, message: 'Debes enviar una página a revalidar' });
 
     try {

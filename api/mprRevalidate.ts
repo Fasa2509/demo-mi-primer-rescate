@@ -8,7 +8,7 @@ export const mprRevalidatePage = async ( pageToRevalidate: string ): Promise<{ e
         };
 
     try {
-        await mprApi.get(`/revalidate?p=${ pageToRevalidate }&secret=${ process.env.SECRET_REVALIDATE }`);
+        await mprApi.get(`/revalidate?p=${ pageToRevalidate }&secret=${ process.env.NEXT_PUBLIC_SECRET_REVALIDATE }`);
         
         return {
             error: false,

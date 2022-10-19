@@ -34,6 +34,7 @@ const updateProducts = async ( req: NextApiRequest, res: NextApiResponse ) => {
             let { _id, ...p } = product;
             return p;
         })
+        
         await Product.insertMany( actualProducts );
         
         await db.disconnect();
