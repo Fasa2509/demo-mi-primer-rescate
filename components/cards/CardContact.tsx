@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useSnackbar } from "notistack"
 import styles from './Card.module.css'
 import { isValidEmail } from "../../utils/validations";
-import { mprApi } from "../../api";
+import { mprApi } from "../../mprApi";
 import { TextField } from "@mui/material";
 
 export const CardContact = () => {

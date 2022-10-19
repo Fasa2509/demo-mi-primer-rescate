@@ -9,14 +9,14 @@ import { MainLayout, ModalWindow, LoginForm, RegisterForm } from '../../componen
 
 const AuthPage: NextPage = () => {
 
-    const [providers, setProviders] = useState<any>({});
+    // const [providers, setProviders] = useState<any>({});
 
-    useEffect(() => {
-      getProviders()
-          .then(prov => {
-              setProviders(prov)
-          })
-    }, [])
+    // useEffect(() => {
+    //   getProviders()
+    //       .then(prov => {
+    //           setProviders(prov)
+    //       })
+    // }, [])
 
     return (
       <MainLayout title='Iniciar sesión' H1='Inicio' pageDescription='Inicia sesión con tu cuenta de MPR o regístrate y ten acceso a poder adoptar o comprar artículos para tu mascota.' pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/'>
@@ -38,7 +38,7 @@ const AuthPage: NextPage = () => {
             <Box display='flex' flexDirection='column' gap='.5rem'>
               <Typography>¡También puedes iniciar sesión con alguna de tus redes!</Typography>
 
-              {
+              {/* {
                 Object.values( providers ).map(( provider: any ) => {
                   if ( provider.id === "credentials" ) return <div style={{ display: 'none' }} key='credentials'></div>
                 
@@ -52,7 +52,7 @@ const AuthPage: NextPage = () => {
                       { provider.name }
                   </Button>
                 })
-              }
+              } */}
             </Box>
           </Box>
           

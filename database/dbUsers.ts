@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { db } from ".";
 import { User } from "../models";
 import { IUser, Role } from "../interfaces";
-import { mprApi } from "../api";
+import { mprApi } from "../mprApi";
 
 export const updateUserRole = async ( userId: string, role: Role ): Promise<{ error: boolean; message: string }> => {
 

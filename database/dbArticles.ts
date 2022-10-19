@@ -1,6 +1,6 @@
 import { db } from ".";
 import axios, { AxiosError } from "axios";
-import { mprApi } from "../api";
+import { mprApi } from "../mprApi";
 import { IArticle, Field } from "../interfaces";
 import { Article } from "../models";
 

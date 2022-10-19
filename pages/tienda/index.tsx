@@ -6,7 +6,7 @@ import { ShoppingBag } from '@mui/icons-material'
 import { useSnackbar } from 'notistack';
 
 import { dbProducts } from '../../database';
-import { mprRevalidatePage } from '../../api';
+import { mprRevalidatePage } from '../../mprApi';
 import { ScrollContext } from '../../context';
 import { ShopLayout, ContainerProductType, ContainerFavProduct } from '../../components'
 import { IProduct, Tags, TagsArray } from '../../interfaces'

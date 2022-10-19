@@ -4,7 +4,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 
 import { dbArticles } from "../../database";
-import { mprRevalidatePage } from '../../api';
+import { mprRevalidatePage } from '../../mprApi';
 import { ArticleField } from "./ArticleField";
 import { ConfirmNotificationButtons, getDistanceToNow, PromiseConfirmHelper } from "../../utils";
 import { IArticle } from "../../interfaces";

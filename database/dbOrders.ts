@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { db } from '.';
-import { mprApi } from '../api';
+import { mprApi } from '../mprApi';
 import { IAddress, ICartProduct, IContact, IOrder, Paid } from '../interfaces';
 import { Order } from '../models';
 

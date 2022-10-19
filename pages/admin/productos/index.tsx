@@ -6,7 +6,7 @@ import { Category } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
 import { dbProducts } from '../../../database';
-import { mprRevalidatePage } from '../../../api';
+import { mprRevalidatePage } from '../../../mprApi';
 import { ScrollContext } from '../../../context';
 import { AdminProductInfo, MainLayout } from '../../../components';
 import { format } from '../../../utils';

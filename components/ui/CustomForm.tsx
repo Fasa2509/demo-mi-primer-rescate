@@ -7,7 +7,7 @@ import { Article } from './Article';
 import { Field, IArticle } from '../../interfaces';
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import styles from './Form.module.css';
-import { mprApi, mprRevalidatePage } from '../../api';
+import { mprApi, mprRevalidatePage } from '../../mprApi';
 import axios from 'axios';
 import { dbArticles } from '../../database';
 

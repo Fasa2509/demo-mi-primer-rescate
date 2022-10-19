@@ -3,7 +3,7 @@ import { useSession, signOut } from 'next-auth/react';
 import Cookies from 'js-cookie';
 import { IUser } from '../../interfaces';
 import { AuthContext, authReducer } from './';
-import { mprApi } from '../../api';
+import { mprApi } from '../../mprApi';
 import axios from 'axios';
 
 export interface AuthState {

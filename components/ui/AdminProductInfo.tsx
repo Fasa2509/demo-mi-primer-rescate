@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import { dbProducts } from '../../database';
 import { ScrollContext } from '../../context';
 import { SliderImages } from '../slider';
-import { mprRevalidatePage } from '../../api';
+import { mprRevalidatePage } from '../../mprApi';
 
 interface Props {
     product: IProduct;
