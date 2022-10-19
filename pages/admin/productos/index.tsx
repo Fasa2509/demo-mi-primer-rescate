@@ -11,6 +11,7 @@ import { ScrollContext } from '../../../context';
 import { AdminProductInfo, MainLayout } from '../../../components';
 import { format } from '../../../utils';
 import { InStockSizes, IProduct, Sizes, Tags } from '../../../interfaces';
+import { getSession } from 'next-auth/react';
 
 const columns: GridColDef[] = [
   {
@@ -252,6 +253,27 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
   let products = await dbProducts.getAllProducts();
 
   if ( !products ) products = [];
+
+  const session = await getSession( ctx );
+
+  const validRoles = ['superuser', 'admin']; 
+
+  // @ts-ignore
+  if ( !session || !session.user || !validRoles.includes( session.user.role ) ) {
+    ctx.req.cookies = {
+      mpr__notification: JSON.stringify({
+        notificationMessage: 'No tiene permiso para ver esta api',
+        notificationVariant: 'error',
+      })
+    }
+
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
 
   return {
     props: {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/react';
 import { ConfirmationNumber } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
@@ -139,6 +140,27 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
     ctx.req.cookies = {
       mpr__notification: JSON.stringify({
         notificationMessage: 'Ocurrió un error obteniendo las órdenes',
+        notificationVariant: 'error',
+      })
+    }
+
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
+  const session = await getSession( ctx );
+
+  const validRoles = ['superuser', 'admin']; 
+
+  // @ts-ignore
+  if ( !session || !session.user || !validRoles.includes( session.user.role ) ) {
+    ctx.req.cookies = {
+      mpr__notification: JSON.stringify({
+        notificationMessage: 'No tiene permiso para ver esta api',
         notificationVariant: 'error',
       })
     }

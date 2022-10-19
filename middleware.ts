@@ -23,37 +23,37 @@ export async function middleware( req: NextRequest, ev: NextFetchEvent ) {
 
     // }
 
-    if ( req.nextUrl.pathname.startsWith('/auth') ) {
-        const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    // if ( req.nextUrl.pathname.startsWith('/auth') ) {
+    //     const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-        if ( session ) {
-            const destination = req.nextUrl.searchParams.get('p') || '/';
-            return NextResponse.redirect( `https://demo-mi-primer-rescate.vercel.app${destination}` );
-        }
-    }
+    //     if ( session ) {
+    //         const destination = req.nextUrl.searchParams.get('p') || '/';
+    //         return NextResponse.redirect( `https://demo-mi-primer-rescate.vercel.app${destination}` );
+    //     }
+    // }
 
-    if ( 
-        req.nextUrl.pathname.startsWith('/admin') ||
-        req.nextUrl.pathname.startsWith('/api/admin') ||
-        req.nextUrl.pathname.startsWith('/api/article') ||
-        req.nextUrl.pathname.startsWith('/api/seed')
-    ) {
-        const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    // if ( 
+    //     req.nextUrl.pathname.startsWith('/admin') ||
+    //     req.nextUrl.pathname.startsWith('/api/admin') ||
+    //     req.nextUrl.pathname.startsWith('/api/article') ||
+    //     req.nextUrl.pathname.startsWith('/api/seed')
+    // ) {
+    //     const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-        const validRoles = ['superuser', 'admin'];
+    //     const validRoles = ['superuser', 'admin'];
 
-        if ( !session || !validRoles.includes( session.user.role ) ) {
-            return NextResponse.redirect( 'https://demo-mi-primer-rescate.vercel.app/' );
-        }
-    }
+    //     if ( !session || !validRoles.includes( session.user.role ) ) {
+    //         return NextResponse.redirect( 'https://demo-mi-primer-rescate.vercel.app/' );
+    //     }
+    // }
 
-    if ( req.nextUrl.pathname.startsWith('/personal') ) {
-        const session: any = await getToken({ req });
+    // if ( req.nextUrl.pathname.startsWith('/personal') ) {
+    //     const session: any = await getToken({ req });
 
-        if ( !session ) {
-            return NextResponse.redirect( 'https://demo-mi-primer-rescate.vercel.app/' )
-        }
-    }
+    //     if ( !session ) {
+    //         return NextResponse.redirect( 'https://demo-mi-primer-rescate.vercel.app/' )
+    //     }
+    // }
 
 
 

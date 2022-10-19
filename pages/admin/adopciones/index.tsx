@@ -7,6 +7,7 @@ import { IAdoption } from "../../../interfaces";
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Grid, Typography } from "@mui/material";
 import { AdminAdoptionInfo } from "../../../components/ui/AdminAdoptionInfo";
+import { getSession } from "next-auth/react";
 
 interface Props {
   adoptions: IAdoption[];
@@ -142,6 +143,27 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
     ctx.req.cookies = {
       mpr__notification: JSON.stringify({
         notificationMessage: 'Ocurrió un error obteniendo las adopciones',
+        notificationVariant: 'error',
+      })
+    }
+
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
+  const session = await getSession( ctx );
+
+  const validRoles = ['superuser', 'admin']; 
+
+  // @ts-ignore
+  if ( !session || !session.user || !validRoles.includes( session.user.role ) ) {
+    ctx.req.cookies = {
+      mpr__notification: JSON.stringify({
+        notificationMessage: 'No tiene permiso para ver esta api',
         notificationVariant: 'error',
       })
     }

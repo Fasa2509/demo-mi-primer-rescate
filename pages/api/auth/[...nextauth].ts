@@ -56,6 +56,10 @@ export const nextAuthOptions: NextAuthOptions = {
     // updateAge: 86400, // cada dia
   },
 
+  jwt: {
+    secret: process.env.JWT_SECRET_SEED,
+  },
+
   callbacks: {
 
     async jwt({ token, account, user }) {
