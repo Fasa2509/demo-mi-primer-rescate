@@ -43,14 +43,14 @@ const PersonalPage: NextPage<Props> = ({ user }) => {
             : <Typography>No estás subscrito a nuestra página :(</Typography>
         }
 
-        <Typography variant='subtitle1' sx={{ mt: 2.5, fontSize: '1.4rem' }}>Tu Información de Contacto</Typography>
+        {/* <Typography variant='subtitle1' sx={{ mt: 2.5, fontSize: '1.4rem' }}>Tu Información de Contacto</Typography>
 
         {
           <>
             <Typography>Vaya, parece que no tienes ninguna información de contacto guardada, ¿quieres guardar una para agilizar futuras compras?</Typography>
             <Button color='secondary'>Contacto</Button>
           </>
-        }
+        } */}
 
         <Typography variant='subtitle1' sx={{ mt: 2.5, fontSize: '1.4rem' }}>Mis Órdenes</Typography>
 
