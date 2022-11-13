@@ -5,7 +5,7 @@ const { Schema, Types, model } = mongoose;
 const adoptionSchema = new Schema({
     particular1: { type: String },
     particular2: { type: String },
-    user: { type: Types.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     contact: {
         type: {
             facebook: { type: String, default: '' },
