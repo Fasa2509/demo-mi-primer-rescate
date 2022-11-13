@@ -180,6 +180,7 @@ const newProductInitialState: IProduct = {
   tags: [],
   sold: 0,
   slug: '/',
+  isAble: true,
 }
 
 const ProductosPage: NextPage<Props> = ({ products }) => {
