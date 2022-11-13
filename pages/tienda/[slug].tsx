@@ -1,6 +1,10 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { ProductInfo, ShopLayout, SliderImages } from '../../components';
+import { Button } from '@mui/material';
+import { useSnackbar } from 'notistack';
+
+import { mprRevalidatePage } from '../../mprApi';
 import { dbProducts } from '../../database';
+import { ProductInfo, ShopLayout, SliderImages } from '../../components';
 import { allProducts, IProduct } from '../../interfaces';
 import styles from '../../styles/Tienda.module.css';
 
@@ -10,16 +14,28 @@ interface Props {
 
 const ProductPage: NextPage<Props> = ({ product }) => {
 
+    const { enqueueSnackbar } = useSnackbar();
+    
+  const revalidate = async () => {
+    if ( process.env.NODE_ENV !== 'production' ) return;
+
+    const resRev = await mprRevalidatePage('/');
+
+    enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
+  }
+  
   return (
     <ShopLayout title={ product.name } pageDescription={ product.name + ' | Tienda' }>
         <section className={ styles.product__container }>
             <div className={ styles.slider__container }>
-                <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 6500 }} layout={ 'responsive' } />
+            <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 6500 }} layout={ 'responsive' } />
             </div>
             <div className={ styles.product__info }>
                 <ProductInfo product={ product } />
             </div>
         </section>
+
+        <Button variant='contained' onClick={ revalidate }>Revalidar esta página</Button>
     </ShopLayout>
   )
 }

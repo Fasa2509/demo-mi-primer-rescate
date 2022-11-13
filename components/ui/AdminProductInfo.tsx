@@ -19,14 +19,7 @@ const newProductInitialState: IProduct = {
     _id: '',
     name: '',
     description: '',
-    images: [
-    //   {
-    //     url: '/perro-1.webp',
-    //     alt: '',
-    //     width: 500,
-    //     height: 500,
-    //   }
-    ],
+    images: [],
     inStock: {
       unique: 0,
       S: 0,
@@ -80,7 +73,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
     }, [thisProduct]);
 
     const handleSubmitProduct = async () => {
-        let key = enqueueSnackbar(`¿Quieres guardar${ method === 'update' ? ' la actualización de' : '' } este producto?`, {
+        let key = enqueueSnackbar(`¿Quieres ${ method === 'update' ? 'actualizar' : 'crear' } este producto?`, {
             variant: 'info',
             action: ConfirmNotificationButtons,
             autoHideDuration: 15000,
@@ -90,12 +83,10 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
 
         if ( !accepted ) return;
 
-        setIsLoading( true );
-
-        if ( form.tags.length === 0 ) {
-            setIsLoading( false );
+        if ( form.tags.length === 0 )
             return enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
-        }
+        
+        setIsLoading( true );
 
         if ( method === 'create' ) {
             const res = await dbProducts.createNewProduct( form, unica );
@@ -122,7 +113,10 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
                     enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
                     
                     const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
-                    enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
+                    enqueueSnackbar(revRes2.message || 'Error', { variant: !revRes2.error ? 'info' : 'error' });
+                    
+                    const revRes3 = await mprRevalidatePage( '/tienda' + form.slug || '' );
+                    enqueueSnackbar(revRes3.message || 'Error', { variant: !revRes3.error ? 'info' : 'error' });
                 }
             }
         }
@@ -465,7 +459,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
             <Button variant='outlined' color='secondary' sx={{ mt: 1.5, fontSize: '1rem' }} onClick={ handleClearProduct }>Vaciar info del producto</Button>
 
             <Button color='secondary' sx={{ mt: 1.5, fontSize: '1rem' }} disabled={ isLoading } onClick={ handleSubmitProduct }>
-                { ( method === 'create' ) ? 'Crear producto' : 'Actualizar del producto' }
+                { ( method === 'create' ) ? 'Crear producto' : 'Actualizar producto' }
             </Button>
 
         </Box>

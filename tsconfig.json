@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "hooks/useModal.js", "components/ui/Example.jsx", "hooks/usePromiseConfirmHelper.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "hooks/useModal.js", "components/ui/Example.jsx"],
   "exclude": ["node_modules"]
 }

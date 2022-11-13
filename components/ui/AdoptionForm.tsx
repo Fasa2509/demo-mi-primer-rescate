@@ -78,6 +78,11 @@ export const AdoptionForm: FC = () => {
     const [ form, setForm ] = useState({
         particular1: '',
         particular2: '',
+        contact: {
+            facebook: '',
+            instagram: '',
+            whatsapp: '',
+        },
         input1: '',
         input2: '',
         input3: true,
@@ -116,6 +121,8 @@ export const AdoptionForm: FC = () => {
 
         if ( !session || !session?.user ) return router.push('/auth?p=/adoptar');
 
+        if ( !form.contact.facebook && !form.contact.instagram && !form.contact.whatsapp ) return enqueueSnackbar('Es necesario al menos un método de contacto', { variant: 'warning' });
+
         let key = enqueueSnackbar('¿Quieres enviar el formulario?', {
             variant: 'info',
             autoHideDuration: 10000,
@@ -129,7 +136,7 @@ export const AdoptionForm: FC = () => {
         setIsLoading( true );
         
         // @ts-ignore
-        const res = await dbAdoptions.createAdoption({ ...form, createdAt: 0, user: session.user || '', _id: '', });
+        const res = await dbAdoptions.createAdoption({ ...form, user: session.user._id, });
         
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
         
@@ -166,6 +173,40 @@ export const AdoptionForm: FC = () => {
                 fullWidth
                 onChange={ ( e ) => setForm({ ...form, particular2: e.target.value }) }
                 />
+        </Box>
+
+        <Box display='flex' flexDirection='column' gap='.5rem'>
+            <Typography>¿Cómo podemos contactarle? Es necesario al menos un método de contacto</Typography>
+            <TextField
+                name='contactfb'
+                value={ form.contact.facebook }
+                label='Facebook'
+                type='text'
+                color='secondary'
+                variant='filled'
+                fullWidth
+                onChange={ ( e ) => setForm({ ...form, contact: { ...form.contact, facebook: e.target.value } }) }
+            />
+            <TextField
+                name='contactig'
+                value={ form.contact.instagram }
+                label='Instagram'
+                type='text'
+                color='secondary'
+                variant='filled'
+                fullWidth
+                onChange={ ( e ) => setForm({ ...form, contact: { ...form.contact, instagram: e.target.value } }) }
+            />
+            <TextField
+                name='contactwa'
+                value={ form.contact.whatsapp }
+                label='Whatsapp'
+                type='text'
+                color='secondary'
+                variant='filled'
+                fullWidth
+                onChange={ ( e ) => setForm({ ...form, contact: { ...form.contact, whatsapp: e.target.value } }) }
+            />
         </Box>
 
         <TextField
@@ -507,7 +548,7 @@ export const AdoptionForm: FC = () => {
             <TextField
                 name='input20'
                 value={ form.input20 }
-                label='20. ¿Cuánto tiempo al día disponen? (Aproximado en horas)'
+                label='20. ¿Cuánto tiempo al día dispone? (Aproximado en horas)'
                 type='number'
                 color='secondary'
                 variant='filled'

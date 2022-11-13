@@ -8,6 +8,7 @@ import { useSnackbar } from "notistack"
 
 import { AuthContext, MenuContext } from "../../context"
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils"
+import { SideMenuButton } from "./SideMenuButton"
 
 export const SideMenu: FC = () => {
 
@@ -42,41 +43,16 @@ export const SideMenu: FC = () => {
     >
         <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: '72px', position: 'relative' }}>
 
-            {/* <div style={{
+            <div style={{
                 width: '100%',
-                height: '45px',
+                height: '80px',
                 backgroundColor: '#2AD8A4',
                 position: 'absolute',
                 top: 0,
                 left: 0,
-            }}></div> */}
+            }}></div>
 
             <List>
-
-                {
-                    isLoggedIn
-                        ? (
-                            <ListItem button onClick={ logOut }>
-                                <ListItemIcon>
-                                    <LoginOutlined color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Cerrar sesión'} />
-                            </ListItem>
-                        ) : (
-                            <NextLink href={ '/auth' }>
-                                <a onClick={ toggleSideMenu }>
-                                    <ListItem button>
-                                        <ListItemIcon>
-                                            <VpnKey color='secondary' />
-                                        </ListItemIcon>
-                                        <ListItemText primary={'Ingresar'} />
-                                    </ListItem>
-                                </a>
-                            </NextLink>
-                        )
-                }
-
-                <Divider />
 
                 <NextLink href={ '/' } scroll={ false }>
                     <a onClick={ toggleSideMenu }>
@@ -89,18 +65,22 @@ export const SideMenu: FC = () => {
                     </a>
                 </NextLink>
 
-                <NextLink href={ '/miprimerrescate' }>
+                {/* <NextLink href={ '/miprimerrescate' }>
                     <a onClick={ toggleSideMenu }>
                         <ListItem button sx={{ backgroundColor: router.asPath === '/miprimerrescate' ? '#eaeaea' : '' }}>
                             <ListItemIcon>
                                 <Pets color='secondary' />
                             </ListItemIcon>
-                            <ListItemText primary={'Proyecto MPR'} />
+                            <ListItemText primary={'Nosotros'} />
                         </ListItem>
                     </a>
-                </NextLink>
+                </NextLink> */}
+                
+                <SideMenuButton text='Nosotros' links={[{ path: '/miprimerrescate', text: 'Path 1' }, { path: '/miprimerrescate', text: 'Path 2' }, { path: '/miprimerrescate', text: 'Path 3' }]}>
+                    <Pets color='secondary' />
+                </SideMenuButton>
 
-                <NextLink href={ '/apoyo' }>
+                {/* <NextLink href={ '/apoyo' }>
                     <a onClick={ toggleSideMenu }>
                         <ListItem button sx={{ backgroundColor: router.asPath === '/apoyo' ? '#eaeaea' : '' }}>
                             <ListItemIcon>
@@ -109,9 +89,13 @@ export const SideMenu: FC = () => {
                             <ListItemText primary={'Apoyo'} />
                         </ListItem>
                     </a>
-                </NextLink>
+                </NextLink> */}
 
-                <NextLink href={ '/adoptar' }>
+                <SideMenuButton text='Apoyo' links={[{ path: '/apoyo', text: 'Path 1' }, { path: '/apoyo', text: 'Path 2' }, { path: '/apoyo', text: 'Path 3' }]}>
+                    <AddAlert color='secondary' />
+                </SideMenuButton>
+
+                {/* <NextLink href={ '/adoptar' }>
                     <a onClick={ toggleSideMenu }>
                         <ListItem button  sx={{ backgroundColor: router.asPath === '/adoptar' ? '#eaeaea' : '' }}>
                             <ListItemIcon>
@@ -120,9 +104,13 @@ export const SideMenu: FC = () => {
                             <ListItemText primary={'Adoptar'} />
                         </ListItem>
                     </a>
-                </NextLink>
+                </NextLink> */}
 
-                <NextLink href={ '/cambios' }>
+                <SideMenuButton text='Adoptar' links={[{ path: '/adoptar/perros', text: 'Perros' }, { path: '/adoptar/gatos', text: 'Gatos' }, { path: '/adoptar/otros', text: 'Otros' }, { path: '/adoptar/formulario', text: 'Formulario' }]}>
+                    <VolunteerActivism color='secondary' />
+                </SideMenuButton>
+
+                {/* <NextLink href={ '/cambios' }>
                     <a onClick={ toggleSideMenu }>
                         <ListItem button sx={{ backgroundColor: router.asPath === '/cambios' ? '#eaeaea' : '' }}>
                             <ListItemIcon>
@@ -131,7 +119,11 @@ export const SideMenu: FC = () => {
                             <ListItemText primary={'Cambios'} />
                         </ListItem>
                     </a>
-                </NextLink>
+                </NextLink> */}
+
+                <SideMenuButton text='Cambios' links={[{ path: '/cambios', text: 'Link 1' }, { path: '/cambios', text: 'Link 2' }, { path: '/cambios', text: 'Link 3' }]}>
+                    <TrendingUp color='secondary' />
+                </SideMenuButton>
 
                 <NextLink href={ '/tienda' }>
                     <a onClick={ toggleSideMenu }>
@@ -197,12 +189,15 @@ export const SideMenu: FC = () => {
                     </>
                 )}
 
-                { isLoggedIn && (
+                
+                <Divider />
+
+                { isLoggedIn ? (
                     <>
                     <Divider />
                     <ListSubheader>Mi Cuenta</ListSubheader>
 
-                    <NextLink href={ '/personal' } scroll={ false }>
+                    <NextLink href={ '/personal' }>
                         <a onClick={ toggleSideMenu }>
                             <ListItem button>
                                 <ListItemIcon>
@@ -213,29 +208,27 @@ export const SideMenu: FC = () => {
                         </a>
                     </NextLink>
 
-                    {/* <NextLink href={ '/' } scroll={ false }>
+                    <ListItem button onClick={ logOut }>
+                        <ListItemIcon>
+                        <LoginOutlined color='secondary' />
+                        </ListItemIcon>
+                        <ListItemText primary={'Cerrar sesión'} />
+                    </ListItem>
+                    </>
+                ) : (
+                    <NextLink href={ '/auth' }>
                         <a onClick={ toggleSideMenu }>
                             <ListItem button>
                                 <ListItemIcon>
-                                    <FilterFrames color='secondary' />
+                                    <VpnKey color='secondary' />
                                 </ListItemIcon>
-                                <ListItemText primary={'Mis Órdenes'} />
+                                <ListItemText primary={'Ingresar'} />
                             </ListItem>
                         </a>
                     </NextLink>
-
-                    <NextLink href={ '/' } scroll={ false }>
-                        <a onClick={ toggleSideMenu }>
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <Pets color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Adopciones'} />
-                            </ListItem>
-                        </a>
-                    </NextLink> */}
-                    </>
-                )}
+                )
+            
+                }
                         
             </List>
         </Box>

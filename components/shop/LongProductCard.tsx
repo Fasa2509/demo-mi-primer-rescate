@@ -16,11 +16,9 @@ export const LongProductCard: FC<Props> = ({ product }) => {
   const [q, setQ] = useState( 0 );
 
   useEffect(() => {
-    let value = 0;
+    // let value = 0;
 
-    Object.values( product.inStock ).forEach(v => {
-      if ( v > 0 ) value += v;
-    })
+    const value = Object.values( product.inStock ).reduce(( prev, quantity) => prev + typeof quantity === 'number' ? quantity : 0, 0);
 
     setQ( value );
     

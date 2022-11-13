@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const { model, Model, Schema } = mongoose;
+const { model, Schema } = mongoose;
 import { IOrder } from '../interfaces';
 
 const orderSchema = new Schema({
@@ -11,12 +11,6 @@ const orderSchema = new Schema({
     orderItems: [{
         _id: { type: String, required: true },
         name: { type: String, required: true },
-        image: {
-            url: { type: String, required: true },
-            alt: { type: String, required: true },
-            width: { type: Number, default: 250, required: true },
-            height: { type: Number, default: 250, required: true },
-        },
         price: { type: Number, required: true },
         discount: { type: Number, default: 0 },
         quantity: { type: Number, required: true },
@@ -28,14 +22,6 @@ const orderSchema = new Schema({
                 message: '{VALUE} no es una talla permitida',
             }
         },
-        tags: [{
-            type: String,
-            required: true,
-            enum: {
-                values: [ 'accesorios', 'consumibles', 'ropa', 'útil' ],
-                message: '{VALUE} no es una etiqueta permitida',
-            }
-        }],
         slug: { type: String, required: true },
     }],
     total: { type: Number, required: true },
@@ -62,6 +48,7 @@ const orderSchema = new Schema({
     },
     contact: {
         type: {
+            name: { type: String, default: '', required: true },
             facebook: { type: String, default: '' },
             instagram: { type: String, default: '' },
             whatsapp: { type: String, default: '' },
@@ -74,7 +61,7 @@ const orderSchema = new Schema({
 mongoose.models = {};
 
 // @ts-ignore
-const Order: Model<IOrder> = mongoose.models.Order || model('Order', orderSchema);
+const Order = model<IOrder>('Order', orderSchema);
 
 // const Order = {}
 

@@ -15,7 +15,7 @@ export const CartProductInfo: FC<Props> = ({ product }) => {
 
     const [ currentValue, setCurrentValue ] = useState( product.quantity );
     const { updateProductQuantity } = useContext( CartContext );
-    let { name, image, price, discount, quantity, size, tags, slug } = product;
+    let { name, image, price, discount, quantity, size, slug } = product;
 
     return (
     <Grid container spacing={ 1 } sx={{ display: 'grid', maxWidth: '100%', gridTemplateColumns: '160px 1fr', padding: '.5rem', borderRadius: '1rem', boxShadow: '4px 4px 3rem -2rem #888', border: 'thin solid #eaeaea' }}>

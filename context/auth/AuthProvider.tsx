@@ -84,6 +84,7 @@ export const AuthProvider: FC<props> = ({ children }) => {
         
         Cookies.remove('mpr__cart');
         Cookies.remove('mpr__extendSession');
+        Cookies.remove('mpr__shopInfo');
         Cookies.remove('token');
 
         signOut();

@@ -1,0 +1,8 @@
+.links__display {
+    box-shadow: 0 1.5rem 1.3rem -2rem inset #929292, 0 -1.5rem 1.3rem -2rem inset #929292;
+    background-color: var(--secondary-color-1);
+    font-weight: 500;
+    font-size: 1.1rem;
+    overflow: hidden;
+    transition: height 450ms ease;
+}

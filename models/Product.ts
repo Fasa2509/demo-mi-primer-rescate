@@ -1,13 +1,6 @@
 import mongoose from 'mongoose';
-const { model, Model, Schema } = mongoose;
+const { model, Schema } = mongoose;
 import { ImageObj, IProduct } from '../interfaces';
-
-// const imageSchema = new Schema({
-//     url: { type: String, required: true },
-//     alt: { type: String, required: true },
-//     width: { type: Number, default: 250, required: true },
-//     height: { type: Number, default: 250, required: true },
-// })
 
 const productSchema = new Schema({
     name: { type: String, required: true },
@@ -49,15 +42,25 @@ const productSchema = new Schema({
         }
     }],
     sold: { type: Number, default: 0 },
-    slug: { type: String, required: true },
+    slug: { type: String, required: true, lowercase: true, },
     isAble: { type: Boolean, default: true },
-})
+});
+
+productSchema.pre('save', function ( next ) {
+    let product = this;
+
+    product.discount = product.discount > 0.5
+        ? product.discount / 100
+        : product.discount
+    
+    next();
+});
 
 // @ts-ignore
 mongoose.models = {};
 
 // @ts-ignore
-const Product: Model<IProduct> = mongoose.models.Product || model('Product', productSchema);
+const Product = model<IProduct>('Product', productSchema);
 
 // const Product = {}
 

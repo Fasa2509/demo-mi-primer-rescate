@@ -1,8 +1,9 @@
 export interface IAdoption {
     _id: string;
-    user: string;
     particular1: string;
     particular2: string;
+    user: string;
+    contact: IContact;
     input1: string;
     input2: string;
     input3: boolean;
@@ -33,4 +34,10 @@ export interface IAdoption {
     input27: boolean;
     input28: string;
     createdAt: number;
+}
+
+export interface IContact {
+    facebook?: string;
+    instagram?: string;
+    whatsapp?: string;
 }

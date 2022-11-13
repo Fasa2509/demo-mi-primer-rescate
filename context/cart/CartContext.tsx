@@ -6,10 +6,6 @@ interface ContextProps {
     // props
     cart: ICartProduct[];
     numberOfItems: number;
-    shippingAddress?: {
-        address: string;
-        maps: string;
-    };
 
     // methods
     updateProductQuantity: (p: ICartProduct) => void;

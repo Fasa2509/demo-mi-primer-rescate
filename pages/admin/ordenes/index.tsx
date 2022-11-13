@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/react';
+import { unstable_getServerSession } from 'next-auth/next';
 import { ConfirmationNumber } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
+import { nextAuthOptions } from '../../api/auth/[...nextauth]';
 import { MainLayout, OrderInfo } from '../../../components';
-import { Box, Chip, Grid, Link, Typography } from '@mui/material';
+import { Box, Chip, Grid, Typography } from '@mui/material';
 import { dbOrders } from '../../../database';
-import { IAddress, ICartProduct, IContact, IOrder, IOrderInfo, Paid } from '../../../interfaces';
+import { IOrder, IOrderInfo } from '../../../interfaces';
 import { format } from '../../../utils';
 
 interface Props {
@@ -152,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
     }
   }
 
-  const session = await getSession( ctx );
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin']; 
 

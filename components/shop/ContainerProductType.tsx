@@ -19,7 +19,7 @@ export const ContainerProductType: FC<Props> = ({ type, products, className = ''
         <section className={ styles.products__type__container + ' ' + className }>
             <p className={ styles.subtitle }>{ formatText( type ) }</p>
                 {
-                    products.map( (product) => <LongProductCard key={ product.name } product={ product } />)
+                    products.slice(0, 5).map( (product) => <LongProductCard key={ product.name } product={ product } />)
                 }
             {   more &&
                 <NextLink href={ `/tienda/categoria?tipo=${ type }` } passHref>

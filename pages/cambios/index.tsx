@@ -1,10 +1,12 @@
 import { NextPage } from 'next'
 import { TrendingUp } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
-import { ChangeCard, ContentSlider, MainLayout, ModalWindow } from '../../components'
+import { ChangeCard, MainLayout, ModalWindow } from '../../components'
 import { ImageObj } from '../../interfaces';
 import styles from '../../styles/Cambios.module.css'
+import { mprRevalidatePage } from '../../mprApi';
 
 type Case = {
   name: string;
@@ -105,6 +107,16 @@ const initialChanges: Case[] = [
 
 const CambiosPage: NextPage = () => {
 
+  const { enqueueSnackbar } = useSnackbar();
+  
+  const revalidate = async () => {
+    if ( process.env.NODE_ENV !== 'production' ) return;
+
+    const resRev = await mprRevalidatePage('/cambios');
+
+    enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
+  }
+  
   return (
     <MainLayout title={ 'Cambios de nuestros amigos' } H1={ 'Antes y después' } pageDescription={ 'Aquí podrás ver el antes y después de nuestros amigos peludos. Algunos han pasado por mucho, pero con amor, esfuerzo y trabajo, han recuperado una vida digna.' } titleIcon={ <TrendingUp color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda'>
         
@@ -116,9 +128,7 @@ const CambiosPage: NextPage = () => {
           {
             initialChanges.map(( caso ) => <ChangeCard key={ caso.name } name={ caso.name } text={ caso.text } images={ caso.images } />)
           }
-        </section>
-
-        
+        </section>        
 
       <Box display='flex'>
         <Typography sx={{ alignSelf: 'center' }}>¿Has adoptado una mascota recientemente? Cuéntanos tu experiencia</Typography>
@@ -128,6 +138,8 @@ const CambiosPage: NextPage = () => {
           <Typography>Laborum laborum labore tempor eu voluptate dolore elit. Cupidatat labore quis enim magna minim nostrud. Mollit commodo ad do anim reprehenderit Lorem ex.</Typography>
         </ModalWindow>
       </Box>
+
+      <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
 
     </MainLayout>
   )

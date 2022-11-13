@@ -6,8 +6,10 @@ import { Adoption } from "../models";
 
 export const createAdoption = async ( form: IAdoption ): Promise<{ error: boolean; message: string; }> => {
 
-    if ( !form.user ) return { error: true, message: 'Es necesario haber iniciado sesión' };
+    if ( !form.user ) return { error: true, message: 'Es necesario iniciar sesión' };
 
+    if ( !form.contact.facebook && !form.contact.instagram && !form.contact.whatsapp ) return { error: true, message: 'Es necesario al menos un método de contacto' };
+    
     const { _id, ...actualForm } = form;
 
     try {
@@ -42,7 +44,7 @@ export const getAllAdoptions = async () => {
         
         await db.disconnect();
         
-        return JSON.parse( JSON.stringify( adoptions ) );
+        return JSON.parse( JSON.stringify( adoptions.sort((a: IAdoption, b: IAdoption) => b.createdAt - a.createdAt) ) );
     } catch( error: any ) {
         console.log( error );
         await db.disconnect();

@@ -48,7 +48,7 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
 
         <Box display='flex' justifyContent='space-between'>
           <Typography className={ styles.title }>{ title }</Typography>
-          { session && (session.user!.role === 'admin' || session.user!.role === 'superuser') && removable && <Button color='error' onClick={ deleteArticle }>Eliminar</Button> }
+          { session && (session.user!.role === 'admin' || session.user!.role === 'superuser') && removable && <Button color='error' sx={{ alignSelf: 'center' }} onClick={ deleteArticle }>Eliminar</Button> }
         </Box>
         
         {

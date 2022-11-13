@@ -62,7 +62,7 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
                     unique: -1,
                 },
             price,
-            discount: discount / 100,
+            discount: discount > 1 ? discount / 100 : discount,
             tags,
             slug,
         });
@@ -86,10 +86,14 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
     const { name = '', description = '', images = [], price = 0, discount = 0, inStock, tags = [], unique: unica = undefined } = req.body;
     const { unique = 0, S = 0, M = 0, L = 0, XL = 0, XXL = 0, XXXL = 0 } = inStock;
 
-    if ( !id || !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
+    if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
-    if ( !name || !description || images.length < 1 || images.length > 4 || price === 0 || discount > 50 || discount < 0 || tags.length === 0 || tags.length > 4 || unica === undefined ) return res.status(400).json({ error: true, message: 'La información no es válida' });
+    if ( !name || !description || price === 0 || discount > 50 || discount < 0 || unica === undefined ) return res.status(400).json({ error: true, message: 'La información no es válida' });
     
+    if ( tags.length === 0 || tags.length > 4 ) return res.status(400).json({ error: true, message: 'Se necesita al menos una etiqueta' });
+
+    if ( images.length < 2 || images.length > 4 ) return res.status(400).json({ error: true, message: 'Mínimo 2 imágenes y máximo 4' });
+
     let { unique: u, ...tallas } = inStock;
     // if ( unica && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
     
@@ -99,6 +103,8 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
         if ( unica ) {
             const product = await Product.findById( id );
 
+            if ( !product ) return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+            
             if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
             if ( product.inStock.unique === -1 && inStock.unique >= 0 ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
             
@@ -120,7 +126,8 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
             await product.save();
         } else {
             const product = await Product.findById( id );
-
+            if ( !product ) return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+            
             if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
             if ( product.inStock.unique === -1 && inStock.unique >= 0 ) return res.status(400).json({ error: true, message: 'Error en la info de las tallasssss' });
 
@@ -158,14 +165,18 @@ const removeProduct = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     try {
         await db.connect();
-
+        
         const product = await Product.findById( id );
+        
+        if ( !product ) return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+
+        // @ts-ignore
         product.isAble = false;
         await product.save();
-
+        
         await db.disconnect();
 
-        return res.status(200).json({ error: false, message: 'El product fue eliminado' });
+        return res.status(200).json({ error: false, message: 'El producto fue eliminado' });
     } catch( error ) {
         console.log( error );
         await db.disconnect();

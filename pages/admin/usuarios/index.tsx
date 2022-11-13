@@ -1,16 +1,18 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { AdminPanelSettings } from '@mui/icons-material';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { unstable_getServerSession } from 'next-auth/next';
+import { Session } from 'next-auth';
 
+import { nextAuthOptions } from '../../api/auth/[...nextauth]';
 import { dbUsers } from '../../../database';
 import { MainLayout } from '../../../components';
 import { IUser, Role } from '../../../interfaces';
 import { useSnackbar } from 'notistack';
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../../utils';
 import { ScrollContext } from '../../../context';
-import { getSession } from 'next-auth/react';
 
 const columns: GridColDef[] = [
   {
@@ -47,6 +49,7 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     // @ts-ignore
     renderCell: ({ row }: GridValueGetterParams) => {
+      if ( row.thisUserId === row.id ) return <></>
       return (
         <Box display='flex' gap='.5rem' sx={{ overflowX: 'auto' }}>
           <Button color='warning' variant='outlined' onClick={ () => row.updateUser( row.id, 'user' ) }>User</Button>
@@ -73,9 +76,10 @@ const columns: GridColDef[] = [
 
 interface Props {
   users: IUser[];
+  session: Session;
 }
 
-const UsuariosPage: NextPage<Props> = ({ users }) => {
+const UsuariosPage: NextPage<Props> = ({ users, session }) => {
 
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
@@ -122,6 +126,8 @@ const UsuariosPage: NextPage<Props> = ({ users }) => {
 
   const rows = users.map(( user ) => ({
     id: user._id,
+    // @ts-ignore
+    thisUserId: session.user._id,
     name: user.name,
     email: user.email,
     role: user.role,
@@ -173,7 +179,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
     }
   }
 
-  const session = await getSession( ctx );
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin']; 
 
@@ -197,6 +203,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
   return {
     props: {
       users,
+      session,
     }
   }
 }

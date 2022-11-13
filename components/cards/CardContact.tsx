@@ -28,7 +28,7 @@ export const CardContact = () => {
     <div className={ styles.card }>
         <p className={ styles.subtitle }>Mantente informado</p>
 
-        <p>Mantente al día sobre nuestro proyecto!</p>
+        <p>¡Mantente al día sobre nuestro proyecto!</p>
 
         <TextField placeholder="Escribe tu correo" variant="filled" color='secondary' fullWidth onChange={ ({ target }) => setEmail( target.value ) } />
 

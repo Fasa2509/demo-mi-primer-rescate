@@ -93,4 +93,4 @@ export const nextAuthOptions: NextAuthOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
 }
 
-export default NextAuth(nextAuthOptions);
+export default NextAuth( nextAuthOptions );

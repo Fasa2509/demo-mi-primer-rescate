@@ -2,7 +2,7 @@
     --phrases__height: 450px;
     min-width: 300px;
     margin: 0 auto;
-    background-color: #fbfbfb;
+    /* background-color: #fbfbfb; */
     min-height: 100vh;
     padding: .5rem 1.5rem 3rem;
 }

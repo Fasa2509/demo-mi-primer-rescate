@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { isBefore } from 'date-fns';
 
@@ -11,7 +11,7 @@ import { mprApi, mprRevalidatePage } from '../../mprApi';
 import axios from 'axios';
 import { dbArticles } from '../../database';
 
-export const CustomForm = () => {
+export const CustomForm: FC = () => {
 
     const { enqueueSnackbar } = useSnackbar();
 

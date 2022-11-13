@@ -1,9 +1,9 @@
 import { FC, useContext } from 'react';
 import { useRouter } from "next/router"; 
-import { PetsOutlined } from "@mui/icons-material";
-import styles from './Title.module.css'
-import { ScrollContext } from "../../context";
 import Link from 'next/link';
+import { PetsOutlined } from "@mui/icons-material";
+import { ScrollContext } from "../../context";
+import styles from './Title.module.css'
 
 interface Props {
     title: string;

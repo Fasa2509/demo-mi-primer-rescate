@@ -7,10 +7,6 @@ import { ICartProduct, Sizes } from '../../interfaces';
 export interface CartState {
     cart: ICartProduct[];
     numberOfItems: number;
-    shippingAddress: {
-        address: string;
-        maps: string;
-    };
 }
 
 
@@ -22,10 +18,6 @@ interface Props {
 export const CART_INITIAL_STATE: CartState = {
     cart: [],
     numberOfItems: 0,
-    shippingAddress: {
-        address: '',
-        maps: '',
-    }
 }
 
 

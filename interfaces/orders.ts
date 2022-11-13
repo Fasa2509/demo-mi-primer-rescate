@@ -1,6 +1,7 @@
 import { ICartProduct } from ".";
 
 export interface IOrder {
+
     _id            : string;
     user           : string;
     orderItems     : ICartProduct[];
@@ -9,6 +10,7 @@ export interface IOrder {
     shippingAddress: IAddress;
     contact        : IContact;
     createdAt      : number;
+    
 }
 
 export interface IAddress {

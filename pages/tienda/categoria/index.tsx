@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { Box, Button, Typography } from "@mui/material";
 import { ShoppingBag } from "@mui/icons-material";
+import { useSnackbar } from "notistack";
 
+import { mprRevalidatePage } from "../../../mprApi";
 import { dbProducts } from "../../../database";
 import { ContainerProductType, ShopLayout } from "../../../components";
 import { formatText } from "../../../utils";
@@ -18,6 +20,7 @@ const TypePage: NextPage<Props> = ({ products }) => {
 
     const router = useRouter();
     const [productType, setProductType] = useState<Tags>('accesorios');
+    const { enqueueSnackbar } = useSnackbar();
     
     useEffect(() => {
         if ( Object.keys( router.query ).length > 0 && Object.keys( router.query )[0] !== 'tipo' ) router.push('/tienda');
@@ -29,10 +32,18 @@ const TypePage: NextPage<Props> = ({ products }) => {
         setProductType( router.query.tipo.toString() as Tags )
     }, [ router.query ])
 
-    const consumibles = useMemo(() => products.filter(p => p.tags.includes('consumibles')), [products]);
-    const accesorios = useMemo(() => products.filter(p => p.tags.includes('accesorios')), [products]);
-    const ropa = useMemo(() => products.filter(p => p.tags.includes('ropa')), [products]);
-    const util = useMemo(() => products.filter(p => p.tags.includes('útil')), [products]);
+    const revalidate = async () => {
+        if ( process.env.NODE_ENV !== 'production' ) return;
+    
+        const resRev = await mprRevalidatePage('/tienda/categoria');
+    
+        enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
+    }
+    
+    // const consumibles = useMemo(() => products.filter(p => p.tags.includes('consumibles')), [products]);
+    // const accesorios = useMemo(() => products.filter(p => p.tags.includes('accesorios')), [products]);
+    // const ropa = useMemo(() => products.filter(p => p.tags.includes('ropa')), [products]);
+    // const util = useMemo(() => products.filter(p => p.tags.includes('útil')), [products]);
 
   return (
     <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/tienda' }>
@@ -70,6 +81,8 @@ const TypePage: NextPage<Props> = ({ products }) => {
         } */}
 
         <ContainerProductType type={ productType } products={ products.filter(p => p.tags.includes( productType )) } />
+        
+        <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
 
     </ShopLayout>
   )

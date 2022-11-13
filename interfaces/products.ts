@@ -34,21 +34,27 @@ export type InStockSizes = {
   XXXL?: number;
 }
 
+export interface ISold {
+  _id: string;
+  productId: string;
+  soldUnits: number;
+}
+
 export const initialFavProducts: IProduct[] = [
     {
       _id: 'abcd1',
       images: [
         {
-          url: '/square-dog.jpg',
-          alt: 'Perro cuadrado',
-          width: 500,
-          height: 500,
-        },
-        {
           url: '/perro-1.webp',
           alt: 'Perro 1',
           width: 300,
           height: 300,
+        },
+        {
+          url: '/square-dog.jpg',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
         },
         {
           url: '/perro-2.webp',
@@ -72,6 +78,12 @@ export const initialFavProducts: IProduct[] = [
       _id: 'abcd2',
       images: [
         {
+          url: '/perro-2.webp',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
+        },
+        {
           url: '/square-dog.jpg',
           alt: 'Perro cuadrado',
           width: 500,
@@ -82,12 +94,6 @@ export const initialFavProducts: IProduct[] = [
           alt: 'Perro 1',
           width: 300,
           height: 300,
-        },
-        {
-          url: '/perro-2.webp',
-          alt: 'Perro 2',
-          width: 250,
-          height: 250,
         },
       ],
       name: 'Recipiente (estrellado)',
@@ -111,16 +117,16 @@ export const initialFavProducts: IProduct[] = [
           height: 500,
         },
         {
-          url: '/perro-1.webp',
-          alt: 'Perro 1',
-          width: 300,
-          height: 300,
-        },
-        {
           url: '/perro-2.webp',
           alt: 'Perro 2',
           width: 250,
           height: 250,
+        },
+        {
+          url: '/perro-1.webp',
+          alt: 'Perro 1',
+          width: 300,
+          height: 300,
         },
       ],
       name: 'Saco de perrarina XXXXX (20Kg)',
@@ -132,7 +138,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles'],
       sold: 0,
-      slug: '/perrarina_XXXXX_20kg',
+      slug: '/perrarina_xxxxx_20kg',
     },
     {
       _id: 'abcd4',
@@ -142,12 +148,6 @@ export const initialFavProducts: IProduct[] = [
           alt: 'Perro cuadrado',
           width: 500,
           height: 500,
-        },
-        {
-          url: '/perro-1.webp',
-          alt: 'Perro 1',
-          width: 300,
-          height: 300,
         },
         {
           url: '/perro-2.webp',
@@ -165,7 +165,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles'],
       sold: 0,
-      slug: '/vitamina_YYY'  
+      slug: '/vitamina_yyy'  
     },
 ]
   
@@ -173,12 +173,6 @@ export const initialProducts: IProduct[] = [
     {
       _id: 'abcd5',
       images: [
-        {
-          url: '/square-dog.jpg',
-          alt: 'Perro cuadrado',
-          width: 500,
-          height: 500,
-        },
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
@@ -224,6 +218,12 @@ export const initialProducts: IProduct[] = [
           width: 250,
           height: 250,
         },
+        {
+          url: '/Logo-Redes.png',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
+        },
       ],
       name: 'Ex est laboris ullamco tipce',
       description: 'Et duis  occaecat. Ipsum sit velit reprehenderit irure Lorem cillum nisi aliqua reprehenderit do anim laborum cupidatat. Aliqua nulla Lorem magna ut sit pariatur ex consectetur nostrud.',
@@ -243,10 +243,10 @@ export const initialProducts: IProduct[] = [
       _id: 'abcd7',
       images: [
         {
-          url: '/square-dog.jpg',
-          alt: 'Perro cuadrado',
-          width: 500,
-          height: 500,
+          url: '/Logo-Redes.png',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
         },
         {
           url: '/perro-1.webp',
@@ -256,6 +256,12 @@ export const initialProducts: IProduct[] = [
         },
         {
           url: '/perro-2.webp',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
+        },
+        {
+          url: '/Logo-MPR.png',
           alt: 'Perro 2',
           width: 250,
           height: 250,
@@ -276,10 +282,10 @@ export const initialProducts: IProduct[] = [
       _id: 'abcd8',
       images: [
         {
-          url: '/square-dog.jpg',
-          alt: 'Perro cuadrado',
-          width: 500,
-          height: 500,
+          url: '/Logo-MPR.png',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
         },
         {
           url: '/perro-1.webp',
@@ -316,12 +322,6 @@ export const initialProducts: IProduct[] = [
           alt: 'Perro cuadrado',
           width: 500,
           height: 500,
-        },
-        {
-          url: '/perro-1.webp',
-          alt: 'Perro 1',
-          width: 300,
-          height: 300,
         },
         {
           url: '/perro-2.webp',
@@ -388,10 +388,10 @@ export const initialProducts: IProduct[] = [
       _id: 'abcd11',
       images: [
         {
-          url: '/square-dog.jpg',
-          alt: 'Perro cuadrado',
-          width: 500,
-          height: 500,
+          url: '/Logo-Redes.png',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
         },
         {
           url: '/perro-1.webp',
@@ -437,7 +437,7 @@ export const initialProducts: IProduct[] = [
           height: 300,
         },
         {
-          url: '/perro-2.webp',
+          url: '/Logo-Redes.png',
           alt: 'Perro 2',
           width: 250,
           height: 250,
@@ -462,19 +462,19 @@ export const initialProducts: IProduct[] = [
       _id: 'abcd13',
       images: [
         {
+          url: '/perro-2.webp',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
+        },
+        {
           url: '/square-dog.jpg',
           alt: 'Perro cuadrado',
           width: 500,
           height: 500,
         },
         {
-          url: '/perro-1.webp',
-          alt: 'Perro 1',
-          width: 300,
-          height: 300,
-        },
-        {
-          url: '/perro-2.webp',
+          url: '/Logo-MPR.png',
           alt: 'Perro 2',
           width: 250,
           height: 250,

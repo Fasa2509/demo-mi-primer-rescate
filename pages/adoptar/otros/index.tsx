@@ -1,9 +1,11 @@
-import { NextPage } from 'next'
-import { Typography } from '@mui/material'
-import { VolunteerActivism } from '@mui/icons-material'
+import { NextPage } from 'next';
+import { VolunteerActivism } from '@mui/icons-material';
+import { Button, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
-import { AdoptionForm, ContentSlider, MainLayout, Pet, PetCard } from '../../components'
-import styles from '../../styles/Adoptar.module.css'
+import { mprRevalidatePage } from '../../../mprApi';
+import { MainLayout, Pet, PetCard } from '../../../components';
+import styles from '../../../styles/Adoptar.module.css';
 
 const pets: Pet[] = [
   {
@@ -41,48 +43,30 @@ const pets: Pet[] = [
 
 const AdoptarPage: NextPage = () => {
 
+  const { enqueueSnackbar } = useSnackbar();
+
+  const revalidate = async () => {
+    if ( process.env.NODE_ENV !== 'production' ) return;
+
+    const resRev = await mprRevalidatePage('/adoptar/otros');
+
+    enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
+  }
+
   return (
-    <MainLayout title={ 'Adopción' } H1={ 'Adopta' } pageDescription={ 'Proceso de adopción de nuestros amigos.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/cambios'>
+    <MainLayout title={ 'Adopta una mascota' } H1={ 'Adopta una mascota' } pageDescription={ 'Proceso de adopción de nuestros animalitos' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/formulario'>
       
-        <Typography>Página de adopción</Typography>
+        <Typography>Las mascotas de <b>Mi Primer Rescate</b> tienen algo en común, ¡ninguna te dejará indiferente!. Si quieres una mascota, definitivamente estás en el lugar indicado.</Typography>
 
-        {/* <p>¿Quieres adoptar una mascota? ¡Pues estás en el sitio indicado!</p>
+        <div className={ styles.grid__container }>
+            {
+                pets.map(( pet, index ) => (
+                    <PetCard key={ pet.name + index } pet={ pet } />
+                ))
+            }
+        </div>
 
-        <p>¡En <b>Mi Primer Rescate</b> contamos con una gran cantidad de peludos donde seguramente encontrarás al indicado para ti!</p>
-        
-        <ContentSlider title='Nuestros perritos' style={{ backgroundImage: 'url(/background-blob-scatter.svg), url(/wave-haikei-1.svg)', backgroundSize: 'contain', backgroundPosition: 'top left, bottom left', backgroundRepeat: 'repeat, no-repeat' }}>
-          <div className={ styles.grid__container }>
-            {
-              pets.map( pet => (
-                <PetCard key={ pet.name } pet={ pet } />
-              ))
-            }
-          </div>
-        </ContentSlider>
-
-        <ContentSlider title='Nuestros gatitos' style={{ backgroundImage: 'url(/background-blob-scatter.svg), url(/wave-haikei-1.svg)', backgroundSize: 'contain', backgroundPosition: 'top left, bottom left', backgroundRepeat: 'repeat, no-repeat' }}>
-          <div className={ styles.grid__container }>
-            {
-              pets.map( pet => (
-                <PetCard key={ pet.name } pet={ pet } />
-              ))
-            }
-          </div>
-        </ContentSlider>
-        
-        <ContentSlider title='Otros animalitos 🐾' style={{ backgroundImage: 'url(/background-blob-scatter.svg), url(/wave-haikei-1.svg)', backgroundSize: 'contain', backgroundPosition: 'top left, bottom left', backgroundRepeat: 'repeat, no-repeat' }}>
-          <div className={ styles.grid__container }>
-            {
-              pets.map( pet => (
-                <PetCard key={ pet.name } pet={ pet } />
-              ))
-            }
-          </div>
-        </ContentSlider>
-        
-        <ContentSlider title='Proceso de Adopción' style={{ backgroundImage: 'none', paddingBottom: '1rem' }}>
-          <AdoptionForm />
-        </ContentSlider> */}
+        <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
 
     </MainLayout>
   )

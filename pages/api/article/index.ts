@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '../../../database';
-import { IArticle } from '../../../interfaces';
 import { Article } from '../../../models';
 
 type Data =
@@ -9,7 +8,10 @@ type Data =
 export default function handler (req: NextApiRequest, res: NextApiResponse<Data>) {
     
     switch( req.method ) {
-        case 'POST':
+        case 'GET':
+            return getMoreArticles( req, res );
+        
+            case 'POST':
             return createArticle( req, res );
 
         default:
@@ -37,4 +39,26 @@ const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
         await db.disconnect();
         return res.status(400).json({ error: true, message: 'Ocurrió un error en la DB' });
     }
+}
+
+const getMoreArticles = async ( req: NextApiRequest, res: NextApiResponse) => {
+
+    let { seconds = 0 } = req.query;
+
+    seconds = Number(seconds.toString());
+
+    try {
+        await db.connect();
+
+        const articles = await Article.find({ createdAt: { $lt: seconds } }).sort({ createdAt: -1 }).limit( 5 );
+
+        await db.disconnect();
+
+        return res.status(200).json( articles );
+    } catch( error ) {
+        console.log( error );
+        await db.disconnect();
+        return res.status(400).json({ error: true, message: 'Ocurrió un error en la DB' });
+    }
+
 }

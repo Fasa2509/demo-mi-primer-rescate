@@ -5,7 +5,9 @@
 }
 
 .articles__container {
-    background-image: url(/background-blob-scatter.svg);
+    display: flex;
+    flex-direction: column;
+    /* background-image: url(/background-blob-scatter.svg); */
     background-size: contain;
     background-repeat: repeat-y;
 }

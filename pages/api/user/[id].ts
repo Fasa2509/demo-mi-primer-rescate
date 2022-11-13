@@ -1,9 +1,9 @@
-import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { db } from '../../../database';
-import { User } from '../../../models';
 import { unstable_getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
+import { isValidObjectId } from 'mongoose';
+import { db } from '../../../database';
+import { User } from '../../../models';
 
 type Data =
 | { error: boolean; message: string }

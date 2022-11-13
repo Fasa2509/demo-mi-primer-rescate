@@ -15,7 +15,7 @@ import { Product } from "../models";
 
 export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promise<{ error: boolean; message: string; }> => {
 
-    let { name = '', description = '', images = [], price = 0, discount, inStock, tags = [], slug = '' } = form;
+    let { name = '', description = '', images = [], price = 0, discount = 0, inStock, tags = [], slug = '' } = form;
     
     if ( !name || !description || images.length < 2 || images.length > 4 || price === 0 || tags.length === 0 ) return { error: true, message: 'La información no es válida' };
 
@@ -85,7 +85,7 @@ export const updateProductById = async ( id: string, payload: IProduct, unique: 
 
         return res
             ? res.data
-            : { error: true, message: 'Error en la petición' }
+            : { error: true, message: 'Error en la petición' };
     } catch( error ) {
         console.log( error );
 

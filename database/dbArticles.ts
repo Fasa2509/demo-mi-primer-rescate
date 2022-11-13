@@ -9,7 +9,7 @@ export const getAllArticles = async (): Promise<IArticle[] | null> => {
     try {
         await db.connect();
         
-        const allArticles: any[] = await Article.find();
+        const allArticles: any[] = await Article.find().sort({ createdAt: -1 }).limit( 10 );
 
         await db.disconnect();
 
@@ -21,10 +21,24 @@ export const getAllArticles = async (): Promise<IArticle[] | null> => {
 
 }
 
+export const getMoreArticles = async ( seconds: number ): Promise<IArticle[] | null> => {
+
+    if ( !seconds || typeof seconds !== 'number' ) return null;
+
+    try {
+        const { data } = await mprApi.get('/article?seconds=' + seconds);
+
+        return JSON.parse( JSON.stringify( data ));
+    } catch( error ) {
+        console.log( error );
+        return null;
+    }
+
+}
+
 export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<{ error: boolean; message: string }> => {
 
     try {
-
         let actualFields = fields.map((field) => {
             if ( field.type === 'link' ) return field;
             if ( field.type === 'imagen' ) return { ...field, content: '_', content_: '_' }
@@ -50,7 +64,7 @@ export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<
             message: 'Ocurrió un error guardando el artículo',
         };
     }
-    
+
 }
 
 export const removeArticle = async ( id: string ): Promise<{ error: boolean; message: string }> => {

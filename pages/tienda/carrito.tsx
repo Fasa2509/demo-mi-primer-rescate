@@ -1,14 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, CardContent, Checkbox, Chip, Divider, Grid, TextField, Typography } from '@mui/material';
-import { AddShoppingCart, Check, Close, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
+import { Box, Button, Card, CardContent, Checkbox, Divider, TextField, Typography } from '@mui/material';
+import { AddShoppingCart, Check, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
-import { AuthContext, CartContext, ScrollContext } from '../../context';
-import { CartProductInfo, DirectionForm, ShopLayout } from '../../components';
-import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
+import { mprRevalidatePage } from '../../mprApi';
 import { dbOrders } from '../../database';
+import { AuthContext, CartContext, ScrollContext } from '../../context';
+import { CartProductInfo, ShopLayout } from '../../components';
+import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
 import { IAddress, IContact } from '../../interfaces';
 
 const CarritoPage: NextPage = () => {
@@ -50,17 +51,16 @@ const CarritoPage: NextPage = () => {
       return;
     }
 
+    if ( direction.address.length < 5 ) {
+      return enqueueSnackbar('Necesitamos una dirección de entrega', { variant: 'warning' });
+    }
+
     if ( Object.values( direction.maps ).filter(m => m).length !== 2 ) {
       return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
     }
 
-    if ( contact.name.length < 3 ) {
+    if ( contact.name.length < 2 ) {
       return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
-    }
-
-    // if ( Object.values( direction ).filter(d => d).length < 2 ) {
-    if ( direction.address.length < 5 ) {
-      return enqueueSnackbar('Necesitamos una dirección de entrega', { variant: 'warning' });
     }
     
     if ( Object.values( contact ).filter(c => c).length < 1 ) {
@@ -87,20 +87,23 @@ const CarritoPage: NextPage = () => {
   }
 
   const handleLocation = () => {
+
+    setIsLoading( true );
+    
+    setDirection(({ ...direction, maps: { latitude: null, longitude: null } }));
     
     const success: PositionCallback = function( position ) {
-      console.log(position);
+      setIsLoading( false );
       setDirectionError('');
 
-      const { coords } = position;
-      const { latitude, longitude, accuracy } = coords;
+      const { latitude, longitude, accuracy } = position.coords;
 
-      if ( accuracy > 70 ) {
-        setDirectionError('La precisión de tu ubicación fue baja. Por favor vuelve a intentarlo.');
+      if ( accuracy > 55 ) {
+        setDirectionError('La precisión fue baja. Por favor inténtalo de nuevo');
         setTimeout(() => setDirectionError(''), 15000);
         return;
       }
-
+      
       setDirection({
         ...direction,
         maps: {
@@ -111,11 +114,12 @@ const CarritoPage: NextPage = () => {
     }
     
     const error: PositionErrorCallback = function(err) {
+      setIsLoading( false );
       console.log(err);
       setDirectionError('Ocurrió un error con tu ubicación. Por favor vuelve a intentarlo.');
       setTimeout(() => setDirectionError(''), 15000);
     }
-
+    
     const options: PositionOptions = {
       enableHighAccuracy: true,
       timeout: 15000,
@@ -123,7 +127,17 @@ const CarritoPage: NextPage = () => {
     }
 
     navigator.geolocation.getCurrentPosition(success, error, options);
+
   }
+  
+  const revalidate = async () => {
+    if ( process.env.NODE_ENV !== 'production' ) return;
+
+    const resRev = await mprRevalidatePage('/tienda/categoria');
+
+    enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
+  }
+
 
   return (
     <ShopLayout title={ 'Carrito de compras' } H1={ 'Tienda' } pageDescription={ 'Carrito de compras, lista de productos' } nextPage={ '/tienda' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> }>
@@ -140,9 +154,9 @@ const CarritoPage: NextPage = () => {
                     <Button
                       variant='outlined'
                       color='secondary'
-                      sx={{ fontSize: '1rem' }}
+                      sx={{ fontSize: '1rem', alignSelf: 'stretch' }}
                       onClick={ cleaningCart }>
-                      Limpiar carrito
+                      Vaciar carrito
                     </Button>
                   )
                 : <Typography>No tienes nada en el carrito <RemoveShoppingCart sx={{ transform: { xs: 'translateY(4px)', sm: 'translateY(6px)', md: 'translateY(8px)' } }} color='secondary' /></Typography>
@@ -199,7 +213,7 @@ const CarritoPage: NextPage = () => {
                   </Box>
 
                   <Box sx={{ mb: 1 }} display='flex' flexDirection='column'>
-                      <Button color='secondary' sx={{ py: 1, fontSize: '1rem' }} onClick={ handleLocation }>Obtener ubicación en Maps</Button>
+                      <Button color='secondary' disabled={ isLoading } sx={{ py: 1, fontSize: '1rem' }} onClick={ handleLocation }>Obtener ubicación en Maps</Button>
                       { Object.values( direction.maps ).filter(m => m).length === 2 &&
                         <Box display='flex' gap='.5rem' className='fadeIn' sx={{ maxWidth: 'max(250px, 20rem)', borderRadius: '10rem', mt: 1, padding: '.4rem 1rem .4rem .5rem', fontWeight: '600', backgroundColor: 'var(--success-color)' }}>
                           <Check color='info' />
@@ -277,7 +291,7 @@ const CarritoPage: NextPage = () => {
                       checked={ checkboxInfo }
                       onChange={ ({ target }) => setCheckboxInfo( target.checked ) }
                     />
-                    <Typography sx={{ cursor: 'pointer' }} onClick={ () => setCheckboxInfo( !checkboxInfo ) }>Guardar información</Typography>
+                    <Typography sx={{ cursor: 'pointer', flexGrow: 1 }} onClick={ () => setCheckboxInfo( !checkboxInfo ) }>Guardar información</Typography>
                   </Box>
 
                   <Divider sx={{ my: 1 }} />
@@ -296,6 +310,7 @@ const CarritoPage: NextPage = () => {
           </Box>
           
         </Box>
+        <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
     </ShopLayout>
   )
 }

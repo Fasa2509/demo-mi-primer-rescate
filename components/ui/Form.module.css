@@ -81,19 +81,16 @@
 /* Adoption Form */
 
 .adoption__form {
-    /* display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem; */
+    box-shadow: /*-.5rem .5rem 1.5rem -1rem*/ 0 0 1.5rem -1rem #929292;
+    margin-top: 1.2rem;
+    background-color: #fff;
+    border-radius: 1.5rem;
+    padding: 1.2rem;
     max-width: 900px;
-    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 1.8rem;
 }
-
-/* .adoption__form > * {
-    margin-bottom: 1rem;
-} */
 
 @media screen and (min-width: 770px) {
     .field input {

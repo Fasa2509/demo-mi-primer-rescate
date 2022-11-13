@@ -73,7 +73,7 @@ export const getAllOrders = async (): Promise<IOrder[] | null> => {
 
         await db.disconnect();
 
-        return JSON.parse( JSON.stringify(orders.sort((a: IOrder, b: IOrder) => b.createdAt - a.createdAt)) );
+        return JSON.parse( JSON.stringify( orders.sort((a: IOrder, b: IOrder) => b.createdAt - a.createdAt) ) );
     } catch( error ) {
         console.log( error );
         return null;

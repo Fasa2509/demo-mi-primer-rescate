@@ -22,6 +22,8 @@ body {
 body {
   overflow-x: hidden;
   background-color: #fafafa;
+  background-image: url(/background-blob-scatter.svg);
+  background-repeat: repeat;
 }
 
 * {

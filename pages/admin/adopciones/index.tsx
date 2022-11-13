@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
+import { unstable_getServerSession } from "next-auth/next";
 import { LocalCafe } from "@mui/icons-material"
+import { nextAuthOptions } from "../../api/auth/[...nextauth]";
 import { dbAdoptions } from "../../../database";
 import { MainLayout, OrderInfo } from "../../../components";
 import { IAdoption } from "../../../interfaces";
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Grid, Typography } from "@mui/material";
 import { AdminAdoptionInfo } from "../../../components/ui/AdminAdoptionInfo";
-import { getSession } from "next-auth/react";
 
 interface Props {
   adoptions: IAdoption[];
@@ -54,9 +55,11 @@ const columns: GridColDef[] = [
     headerName: 'Ver info',
     renderCell: ({ row }: GridRenderCellParams) => {
       return <Button color='secondary' onClick={ () => row.setAdoption( row.adoption ) }>Ver info</Button>
-    }
+    },
+    sortable: false,
+    disableColumnMenu: true,
   },
-  { field: 'createdAt', headerName: 'Creada el', width: 150 },
+  { field: 'createdAt', headerName: 'Creada el', width: 150, disableColumnMenu: true },
 ]
 
 const adoptionInitialState: IAdoption = {
@@ -64,6 +67,11 @@ const adoptionInitialState: IAdoption = {
   user: '',
   particular1: '',
   particular2: '',
+  contact: {
+    facebook: '',
+    instagram: '',
+    whatsapp: '',
+  },
   input1: '',
   input2: '',
   input3: true,
@@ -100,8 +108,6 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions }) => {
 
   const [adoption, setAdoption] = useState( adoptionInitialState );
 
-  
-
   const rows = adoptions.map(adoption => ({
     id: adoption._id,
     user: adoption.user,
@@ -126,7 +132,7 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions }) => {
                 />
               </Grid>
             </Grid>
-          : <Typography variant='h2'>Ocurrió un error buscando las órdenes en la base de datos.</Typography>
+          : <Typography variant='h2'>No se encontraron órdenes en la base de datos.</Typography>
       }
 
       <AdminAdoptionInfo adoption={ adoption } />
@@ -155,7 +161,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
     }
   }
 
-  const session = await getSession( ctx );
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin']; 
 

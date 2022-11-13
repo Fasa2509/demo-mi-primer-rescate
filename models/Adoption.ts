@@ -1,10 +1,18 @@
 import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
+import { IAdoption } from '../interfaces';
+const { Schema, Types, model } = mongoose;
 
 const adoptionSchema = new Schema({
-    user: { type: String },
     particular1: { type: String },
     particular2: { type: String },
+    user: { type: Types.ObjectId, ref: 'User' },
+    contact: {
+        type: {
+            facebook: { type: String, default: '' },
+            instagram: { type: String, default: '' },
+            whatsapp: { type: String, default: '' },
+        },
+    },
     input1: { type: String },
     input2: { type: String },
     input3: { type: Boolean },
@@ -41,6 +49,6 @@ const adoptionSchema = new Schema({
 mongoose.models = {};
 
 // @ts-ignore
-const Adoption = model.adoption || model('Adoption', adoptionSchema);
+const Adoption = model.adoption || model<IAdoption>('Adoption', adoptionSchema);
 
 export default Adoption;

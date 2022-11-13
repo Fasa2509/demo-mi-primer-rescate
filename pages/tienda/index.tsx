@@ -22,7 +22,15 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
   const session: any = thisSession;
   const { enqueueSnackbar } = useSnackbar();
   const { setIsLoading } = useContext( ScrollContext );
+  
+  const revalidate = async () => {
+    if ( process.env.NODE_ENV !== 'production' ) return;
 
+    const resRev = await mprRevalidatePage('/tienda');
+
+    enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
+  }
+  
   const [formTags, setFormTags] = useState({
     tags: 'todos',
     discount: 0,
@@ -48,6 +56,7 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
         if ( form === 'slug' ) {
           const revRes2 = await mprRevalidatePage( '/tienda' + formSlug.slug.startsWith('/') ? formSlug.slug : `/${ formSlug.slug }` );
           enqueueSnackbar(revRes2.message || 'Error revalidando el producto', { variant: !revRes2.error ? 'info' : 'error' });
+          setIsLoading( false );
           return;
         }
         
@@ -58,12 +67,12 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
           const slugsToRevalidate = products.filter(p => p.tags.includes(formTags.tags as Tags)).map(p => p.slug);
           slugsToRevalidate.forEach(s => mprRevalidatePage( '/tienda' + s.startsWith('/') ? s : `/${ s }` ));
         }
-
+        
+        setIsLoading( false );
         return;
       }
     }
     
-    setIsLoading( false );
   }
  
   return (
@@ -155,13 +164,15 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
                     if ( Number( e.target.value ) > 50 || Number( e.target.value ) < 0 ) return;
                     setFormSlug({ ...formSlug, discount: Number(e.target.value) });
                   }}
-              />
+                  />
 
               <Button color='info' sx={{ backgroundColor: 'var(--secondary-color-1)' }} onClick={ () => handleDiscount('slug') }>Aplicar</Button>
             </Box>
           </Box>
         }
         </>
+
+      <Button variant='contained' onClick={ revalidate }>Revalidar esta página</Button>
         
     </ShopLayout>
   )

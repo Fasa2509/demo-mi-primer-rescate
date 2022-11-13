@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import { dbOrders } from "../../database";
 import { ScrollContext } from "../../context";
 import { IOrder, IOrderInfo, Paid } from "../../interfaces";
-import { ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils";
+import { format, ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils";
 
 interface Props {
     info: IOrderInfo;
@@ -51,15 +51,15 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
     return (
         <Box display='flex' flexDirection='column' gap='1rem' sx={{ border: '2px solid #eaeaea', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
            
-            <Box display='flex' flexDirection='column' gap='.4rem'>
-                <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Nombre de contacto:</Typography>
+            <Typography>Orden creada el { createdAt }</Typography>
+
+            <Box display='flex' flexDirection='column'>
+                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Nombre de contacto:</Typography>
                 <Typography sx={{ fontSize: '1.1rem' }}>{ contact.name }</Typography>
             </Box>
 
-            <Typography>Orden creada el { createdAt }</Typography>
-
-            <Box display='flex' flexDirection='column' gap='.4rem'>
-                <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Método de contacto:</Typography>
+            <Box display='flex' flexDirection='column'>
+                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Método de contacto:</Typography>
                 <Box display='flex' flexWrap='wrap' gap='1.2rem' sx={{ fontSize: '1.1rem' }}>
                     {
                         Object.entries( contact ).filter(c => c[1] && c[0] !== '_id' && c[0] !== 'name').map(c => <Typography key={ c[0] }>{ c[0] }: { c[1] }</Typography>)
@@ -67,13 +67,13 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
                 </Box>
             </Box>
 
-            <Box display='flex' flexDirection='column' gap='.4rem'>
-                <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Productos de la Orden:</Typography>
+            <Box display='flex' flexDirection='column'>
+                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Productos de la Orden:</Typography>
                 <Box display='flex' flexDirection='column' gap='.3rem' sx={{ fontSize: '1.1rem' }}>
                     {
                         products.map(( product, index: number ) => (
                             <Box key={ index }>
-                                <Typography>{ product.name }{ product.size !== 'unique' && ` (${ product.size })` } ={ '>' } { product.quantity } { product.quantity === 1 ? 'unidad' : 'unidades' }</Typography>
+                                <Typography>{ product.name }{ product.size !== 'unique' && ` (${ product.size })` } ={ '>' } { product.quantity } { product.quantity === 1 ? 'unidad' : 'unidades' } x { product.discount > 0 ? format( product.price * ( 1 - product.discount ) ) : format( product.price ) } = { product.discount > 0 ? format( product.price * (1 - product.discount) * product.quantity ) : format( product.price * product.quantity ) }</Typography>
                             </Box>
                         ))
                     }
@@ -104,13 +104,13 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
                 </Box>
             </Box>
 
-            <Box display='flex' flexDirection='column' gap='.4rem'>
-                <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Total:</Typography>
+            <Box display='flex' flexDirection='column'>
+                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Total:</Typography>
                 <Typography>{ total }</Typography>
             </Box>
 
-            <Box display='flex' flexDirection='column' gap='.4rem'>
-                <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Dirección:</Typography>
+            <Box display='flex' flexDirection='column'>
+                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Dirección:</Typography>
                 <Box display='flex' flexDirection='column' gap='.3rem'>
                     <Typography>{ shippingAddress.address }</Typography>
                     { shippingAddress.maps.latitude && shippingAddress.maps.longitude &&
