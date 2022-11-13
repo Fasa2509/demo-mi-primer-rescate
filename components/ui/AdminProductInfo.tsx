@@ -34,6 +34,7 @@ const newProductInitialState: IProduct = {
     tags: [],
     sold: 0,
     slug: '',
+    isAble: true,
 }
 
 export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, method, setMethod }) => {
@@ -66,6 +67,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
             tags: thisProduct.tags,
             slug: thisProduct.slug,
             sold: thisProduct.sold,
+            isAble: true,
         })
         setUnica( thisProduct.inStock.unique > -1 );
         

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { db } from ".";
 import { mprApi } from "../mprApi";
-import { InStockSizes, IProduct, Tags } from "../interfaces";
+import { IProduct } from "../interfaces";
 import { Product } from "../models";
 
 // interface PayloadUpdate {
