@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 
-import { AdoptionForm, ContentSlider, MainLayout, ModalWindow, Pet, PetCard } from '../../../components';
+import { AdoptionForm, MainLayout } from '../../../components';
 import styles from '../../../styles/Adoptar.module.css';
 
 const AdoptarPage: NextPage = () => {

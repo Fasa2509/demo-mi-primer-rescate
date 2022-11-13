@@ -1,6 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '../../../database';
+import { Paid } from '../../../interfaces';
 import { Order } from '../../../models';
 
 type Data =
@@ -28,7 +29,13 @@ const updateOrderPaid = async ( req: NextApiRequest, res: NextApiResponse ) => {
         await db.connect();
 
         const order = await Order.findById( id );
-        order.isPaid = status;
+
+        if ( !order ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No se encontró orden con ese id' });
+        }
+
+        order.isPaid = status.toString() as Paid;
         await order.save();
 
         await db.disconnect();

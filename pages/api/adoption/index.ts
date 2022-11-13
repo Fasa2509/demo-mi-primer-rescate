@@ -19,9 +19,6 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 const createAdoption = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    // const { form } = req.body;
-    // console.log( req.body );
-
     try {
         await db.connect();
 

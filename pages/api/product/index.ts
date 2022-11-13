@@ -103,7 +103,10 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
         if ( unica ) {
             const product = await Product.findById( id );
 
-            if ( !product ) return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+            if ( !product ) {
+                await db.disconnect();
+                return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+            }
             
             if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
             if ( product.inStock.unique === -1 && inStock.unique >= 0 ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
@@ -126,7 +129,10 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
             await product.save();
         } else {
             const product = await Product.findById( id );
-            if ( !product ) return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+            if ( !product ) {
+                await db.disconnect();
+                return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+            }
             
             if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
             if ( product.inStock.unique === -1 && inStock.unique >= 0 ) return res.status(400).json({ error: true, message: 'Error en la info de las tallasssss' });
@@ -168,7 +174,10 @@ const removeProduct = async ( req: NextApiRequest, res: NextApiResponse ) => {
         
         const product = await Product.findById( id );
         
-        if ( !product ) return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+        if ( !product ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+        }
 
         // @ts-ignore
         product.isAble = false;

@@ -28,7 +28,10 @@ const getUserByEmail = async ( req: NextApiRequest, res: NextApiResponse ) => {
         
         const user = await User.findOne({ email: req.body.email });
         
-        if ( !user ) return res.status(400).json({ error: true, message: 'No existe un usuario con ese correo' })
+        if ( !user ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No existe un usuario con ese correo' });
+        }
 
         user.isSubscribed = true;
 

@@ -37,20 +37,20 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
         await db.connect()
     
-        user = await User.findOne({ email })
+        user = await User.findOne({ email });
     
     } catch( error ) {
         console.log(error);
         await db.disconnect();
-        return res.status(400).json({ error: true, message: 'Ocurrió un error iniciando sesión' })
+        return res.status(400).json({ error: true, message: 'Ocurrió un error iniciando sesión' });
     }
     await db.disconnect()
 
-    if ( !user ) return res.status(400).json({ error: true, message: 'Correo o contraseña inválidos' })
+    if ( !user ) return res.status(400).json({ error: true, message: 'Correo o contraseña inválidos' });
 
-    const match = await bcrypt.compare( password, user.password );
+    const match = await bcrypt.compare( password, user.password || '' );
 
-    if ( !match ) return res.status(400).json({ error: true, message: 'Correo o contraseña inválidos' })
+    if ( !match ) return res.status(400).json({ error: true, message: 'Correo o contraseña inválidos' });
 
     const { role, name, _id } = user;
 

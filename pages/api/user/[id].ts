@@ -4,6 +4,7 @@ import { nextAuthOptions } from '../auth/[...nextauth]';
 import { isValidObjectId } from 'mongoose';
 import { db } from '../../../database';
 import { User } from '../../../models';
+import { Role } from '../../../interfaces';
 
 type Data =
 | { error: boolean; message: string }
@@ -42,7 +43,13 @@ const updateUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
         await db.connect();
         
         const user = await User.findById( id );
-        user.role = role;
+
+        if ( !user ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No hay usuario con ese id' });
+        }
+
+        user.role = role.toString() as Role;
         await user.save();
         
         await db.disconnect();
@@ -71,6 +78,13 @@ const deleteUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
         await db.connect();
 
         const user = await User.findById( id );
+
+        if ( !user ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No hay usuario con ese id' });
+        }
+
+        // @ts-ignore
         user.isAble = false;
         await user.save();
 
