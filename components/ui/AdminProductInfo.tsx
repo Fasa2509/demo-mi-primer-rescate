@@ -109,14 +109,23 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
 
             if ( !res.error ) {
                 if ( process.env.NODE_ENV === 'production' ) {
-                    const revRes = await mprRevalidatePage( '/tienda' );
-                    enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
+                    const revalidationResponses = await Promise.all([
+                        mprRevalidatePage( '/tienda' ),
+                        mprRevalidatePage( '/tienda/carrito' ),
+                        mprRevalidatePage( '/tienda/categoria' ),
+                        mprRevalidatePage( '/tienda' + form.slug || '' ),
+                    ]);
+
+                    revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' }))
+
+                    // const revRes = await mprRevalidatePage( '/tienda' );
+                    // enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
                     
-                    const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
-                    enqueueSnackbar(revRes2.message || 'Error', { variant: !revRes2.error ? 'info' : 'error' });
+                    // const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
+                    // enqueueSnackbar(revRes2.message || 'Error', { variant: !revRes2.error ? 'info' : 'error' });
                     
-                    const revRes3 = await mprRevalidatePage( '/tienda' + form.slug || '' );
-                    enqueueSnackbar(revRes3.message || 'Error', { variant: !revRes3.error ? 'info' : 'error' });
+                    // const revRes3 = await mprRevalidatePage( '/tienda' + form.slug || '' );
+                    // enqueueSnackbar(revRes3.message || 'Error', { variant: !revRes3.error ? 'info' : 'error' });
                 }
             }
         }

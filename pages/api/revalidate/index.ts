@@ -21,7 +21,7 @@ const revalidatePage = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     try {
         await res.revalidate( p );
-        return res.status(200).json({ error: false, message: `La página ${ p } fue revalidada` });
+        return res.status(200).json({ error: false, message: `Revalidación exitosa ${ p }` });
     } catch( error ) {
         console.log( error );
         return res.status(500).json({ error: true, message: `Error revalidando ${ p }` });

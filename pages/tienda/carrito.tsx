@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
-import { NextPage } from 'next';
+import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { Box, Button, Card, CardContent, Checkbox, Divider, TextField, Typography } from '@mui/material';
 import { AddShoppingCart, Check, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
 import { mprRevalidatePage } from '../../mprApi';
-import { dbOrders } from '../../database';
+import { dbOrders, dbProducts } from '../../database';
 import { AuthContext, CartContext, ScrollContext } from '../../context';
 import { CartProductInfo, ShopLayout } from '../../components';
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
@@ -63,13 +63,13 @@ const CarritoPage: NextPage = () => {
       return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
     }
     
-    if ( Object.values( contact ).filter(c => c).length < 1 ) {
+    if ( Object.values( contact ).filter(c => c).length < 2 ) {
       return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
     }
 
     setIsLoading( true );
     
-    const total = cart.reduce(( prev, { quantity, price, discount } ) => prev + quantity * ( discount || price ), 0)
+    const total = cart.reduce(( prev, { quantity, price, discount } ) => prev + quantity * ( price * (1 - discount) ), 0);
 
     const res = await dbOrders.createNewOrder( user._id, cart, total, direction, contact );
 
@@ -315,6 +315,22 @@ const CarritoPage: NextPage = () => {
         <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
     </ShopLayout>
   )
+};
+
+export const getStaticProps: GetStaticProps = async ( ctx ) => {
+
+  const products = await dbProducts.getAllProducts();
+
+  if ( !products ) {
+    throw new Error("Failed to fetch products, check server's logs");
+  }
+
+  return {
+    props: {
+      products,
+    },
+    revalidate: 86400 // 24h
+  }
 }
 
 export default CarritoPage;

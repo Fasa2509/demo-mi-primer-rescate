@@ -20,7 +20,7 @@ export const mprRevalidatePage = async ( pageToRevalidate: string ): Promise<{ e
             return {
                 error: true,
                 // @ts-ignore
-                message: error.response ? error.response.data.message : 'Error revalidando la página ' + pageToRevalidate,
+                message: error.response ? error.response.data.message || 'Error revalidando ' + pageToRevalidate : 'Error revalidando la página ' + pageToRevalidate,
             }
         }
 

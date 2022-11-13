@@ -30,7 +30,8 @@ export const WelcomePath = () => {
                 Quiénes somos y qué hacemos <PetsOutlined sx={{ fontSize: '3rem', transform: 'translateY(.8rem)' }} />
             </p>
         </div>
-        <div className={ styles.background }></div>
+
+        {/* <div className={ styles.background }></div> */}
 
         <div className={ styles.content__container }>
             <div className={ styles.content__1 + ' observe' }>

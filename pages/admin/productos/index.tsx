@@ -240,7 +240,7 @@ const ProductosPage: NextPage<Props> = ({ products }) => {
                 />
               </Grid>
             </Grid>
-          : <Typography variant='h2'>Ocurrió un error buscando los productos en la base de datos.</Typography>
+          : <Typography variant='h2'>No se encontraron productos en la base de datos.</Typography>
       }
 
       <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } products={ products } />

@@ -1,7 +1,7 @@
 .container {
     position: relative;
     margin: 0;
-    padding: 2rem 0;
+    padding: 2rem 0 0;
     background-color: #fafafa;
 }
 
@@ -42,6 +42,7 @@
 .content__container {
     display: flex;
     flex-direction: column;
+    background-image: url(/trace-background.jpg);
 }
 
 .content__1,
@@ -49,7 +50,7 @@
 .content__3 {
     color: #f1f1f1;
     font-weight: 600;
-    margin: 5rem 0;
+    margin: 5.05rem 0;
     padding: .8rem 1rem;
     min-width: 200px;
     width: 80%;

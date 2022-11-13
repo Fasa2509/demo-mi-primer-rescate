@@ -38,9 +38,9 @@ const PersonalPage: NextPage<Props> = ({ user }) => {
         <Typography sx={{ my: 1.5 }}>Te uniste a la manada el { new Date( user.createdAt ).toLocaleDateString() }</Typography>
 
         {
-          ( !user.isSubscribed )
+          ( user.isSubscribed )
             ? <Typography>¡Estás subscrit@ a <span style={{ textDecoration: 'underline', fontWeight: '600' }}>Mi Primer Rescate</span>!</Typography>
-            : <Typography>No estás subscrito a nuestra página :(</Typography>
+            : <Typography>No estás subscrito a nuestra página :{'('}</Typography>
         }
 
         {/* <Typography variant='subtitle1' sx={{ mt: 2.5, fontSize: '1.4rem' }}>Tu Información de Contacto</Typography>

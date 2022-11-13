@@ -160,13 +160,16 @@ const UsuariosPage: NextPage<Props> = ({ users, session }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
-
-  const users = await dbUsers.getAllUsers();
   
-  if ( !users ) {
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+
+  const validRoles = ['superuser', 'admin'];
+
+  // @ts-ignore
+  if ( !session || !session.user || !validRoles.includes( session.user.role ) ) {
     ctx.req.cookies = {
       mpr__notification: JSON.stringify({
-        notificationMessage: 'Ocurrió un error obteniendo los usuarios',
+        notificationMessage: 'No tiene permiso para ver esta api',
         notificationVariant: 'error',
       })
     }
@@ -179,15 +182,12 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
     }
   }
 
-  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const users = await dbUsers.getAllUsers();
 
-  const validRoles = ['superuser', 'admin']; 
-
-  // @ts-ignore
-  if ( !session || !session.user || !validRoles.includes( session.user.role ) ) {
+  if ( !users ) {
     ctx.req.cookies = {
       mpr__notification: JSON.stringify({
-        notificationMessage: 'No tiene permiso para ver esta api',
+        notificationMessage: 'Ocurrió un error obteniendo los usuarios',
         notificationVariant: 'error',
       })
     }

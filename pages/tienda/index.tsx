@@ -11,6 +11,8 @@ import { ScrollContext } from '../../context';
 import { ShopLayout, ContainerProductType, ContainerFavProduct } from '../../components'
 import { IProduct, Tags, TagsArray } from '../../interfaces'
 import styles from '../../styles/Tienda.module.css'
+import { resolve } from 'node:path/win32';
+import { resolve6 } from 'node:dns/promises';
 
 interface Props {
   products: IProduct[];
@@ -22,14 +24,6 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
   const session: any = thisSession;
   const { enqueueSnackbar } = useSnackbar();
   const { setIsLoading } = useContext( ScrollContext );
-  
-  const revalidate = async () => {
-    if ( process.env.NODE_ENV !== 'production' ) return;
-
-    const resRev = await mprRevalidatePage('/tienda');
-
-    enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
-  }
   
   const [formTags, setFormTags] = useState({
     tags: 'todos',
@@ -48,31 +42,54 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
     
     enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
     
-    if ( !res.error ) {
-      if ( process.env.NODE_ENV === 'production' ) {
-        const revRes = await mprRevalidatePage( '/tienda' );
-        enqueueSnackbar(revRes.message || 'Error revalidando tienda', { variant: !revRes.error ? 'info' : 'error' });
-        
-        if ( form === 'slug' ) {
-          const revRes2 = await mprRevalidatePage( '/tienda' + formSlug.slug.startsWith('/') ? formSlug.slug : `/${ formSlug.slug }` );
-          enqueueSnackbar(revRes2.message || 'Error revalidando el producto', { variant: !revRes2.error ? 'info' : 'error' });
-          setIsLoading( false );
-          return;
-        }
-        
-        if ( formTags.tags === 'todos' ) {
-          const slugsToRevalidate = products.map(p => p.slug);
-          slugsToRevalidate.forEach(s => mprRevalidatePage( '/tienda' + s.startsWith('/') ? s : `/${ s }` ));
-        } else {
-          const slugsToRevalidate = products.filter(p => p.tags.includes(formTags.tags as Tags)).map(p => p.slug);
-          slugsToRevalidate.forEach(s => mprRevalidatePage( '/tienda' + s.startsWith('/') ? s : `/${ s }` ));
-        }
-        
+    if ( res.error ) {
+      setIsLoading( false );
+      return;
+    }
+
+    if ( process.env.NODE_ENV === 'production' ) {
+      const revalidationResponses = await Promise.all([
+        mprRevalidatePage('/tienda'),
+        mprRevalidatePage('/tienda/categoria'),
+        mprRevalidatePage('/tienda/carrito'),
+      ]);
+
+      revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error revalidando', { variant: !res.error ? 'info' : 'error' }));
+      
+      if ( form === 'slug' ) {
+        const revRes2 = await mprRevalidatePage( '/tienda' + formSlug.slug.startsWith('/') ? formSlug.slug : `/${ formSlug.slug }` );
+        enqueueSnackbar(revRes2.message || 'Error revalidando el producto', { variant: !revRes2.error ? 'info' : 'error' });
         setIsLoading( false );
         return;
+      };
+      
+      if ( formTags.tags === 'todos' ) {
+        const slugsToRevalidate = products.map(p => p.slug);
+        // slugsToRevalidate.forEach(s => mprRevalidatePage( '/tienda' + s.startsWith('/') ? s : `/${ s }` ));
+        const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( s )) );
+
+        revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: !res.error ? 'info' : 'error' }));
+      } else {
+        const slugsToRevalidate = products.filter(p => p.tags.includes(formTags.tags as Tags)).map(p => p.slug);
+        // slugsToRevalidate.forEach(s => mprRevalidatePage( '/tienda' + s.startsWith('/') ? s : `/${ s }` ));
+        const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( s )) );
+
+        revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: !res.error ? 'info' : 'error' }));
       }
-    }
-    
+      
+      setIsLoading( false );
+      return;
+    };
+
+    setIsLoading( false );
+  }
+  
+  const revalidate = async () => {
+    if ( process.env.NODE_ENV !== 'production' ) return;
+
+    const resRev = await mprRevalidatePage('/tienda');
+
+    enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
   }
  
   return (

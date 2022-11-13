@@ -80,7 +80,8 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     return {
         props: {
             product,
-        }
+        },
+        revalidate: 86400 // 24h
     }
 }
 

@@ -28,7 +28,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
 
   let finalTitle = `${ title } | MPR`;
   const { data: session, status } = useSession();
-  const { passedElements, isLoading } = useContext( ScrollContext );
+  const { passedElements } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
 
   const handleClick = () => {

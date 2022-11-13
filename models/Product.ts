@@ -32,7 +32,7 @@ const productSchema = new Schema({
         required: true,
     },
     price: { type: Number, required: true },
-    discount: { type: Number, default: 0 },
+    discount: { type: Number, default: 0, min: 0, max: 0.5 },
     tags: [{
         type: String,
         enum: {
@@ -44,16 +44,6 @@ const productSchema = new Schema({
     sold: { type: Number, default: 0 },
     slug: { type: String, required: true, lowercase: true, },
     isAble: { type: Boolean, default: true },
-});
-
-productSchema.pre('save', function ( next ) {
-    let product = this;
-
-    product.discount = product.discount > 0.5
-        ? product.discount / 100
-        : product.discount
-    
-    next();
 });
 
 // @ts-ignore

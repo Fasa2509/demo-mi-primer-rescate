@@ -81,7 +81,7 @@ export const getAllUsers = async (): Promise<IUser[] | null> => {
 
         await db.disconnect();
 
-        return JSON.parse( JSON.stringify(users) );
+        return JSON.parse( JSON.stringify( users.sort((a: IUser, b: IUser) => b.createdAt - a.createdAt) ) );
     } catch( error ) {
         console.log( error );
         await db.disconnect();

@@ -13,6 +13,7 @@ export interface IProduct {
     tags: Tags[];
     sold: number;
     slug: string;
+    isAble: boolean;
   
 }
 
@@ -73,6 +74,7 @@ export const initialFavProducts: IProduct[] = [
       tags: ['accesorios', 'útil'],
       sold: 0,
       slug: '/capucha_perro_grande',
+      isAble: true,
     },
     {
       _id: 'abcd2',
@@ -106,6 +108,7 @@ export const initialFavProducts: IProduct[] = [
       tags: ['útil'],
       sold: 0,
       slug: '/recipiente_estrellado',
+      isAble: true,
     },
     {
       _id: 'abcd3',
@@ -139,6 +142,7 @@ export const initialFavProducts: IProduct[] = [
       tags: ['consumibles'],
       sold: 0,
       slug: '/perrarina_xxxxx_20kg',
+      isAble: true,
     },
     {
       _id: 'abcd4',
@@ -165,7 +169,8 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles'],
       sold: 0,
-      slug: '/vitamina_yyy'  
+      slug: '/vitamina_yyy',
+      isAble: true,
     },
 ]
   
@@ -196,6 +201,7 @@ export const initialProducts: IProduct[] = [
       tags: ['consumibles', 'accesorios', 'útil'],
       sold: 0,
       slug: '/producto_1',
+      isAble: true,
     },
     {
       _id: 'abcd6',
@@ -238,6 +244,7 @@ export const initialProducts: IProduct[] = [
       tags: ['ropa', 'útil'],
       sold: 0,
       slug: '/producto_2',
+      isAble: true,
     },
     {
       _id: 'abcd7',
@@ -277,6 +284,7 @@ export const initialProducts: IProduct[] = [
       tags: ['accesorios'],
       sold: 0,
       slug: '/producto_3',
+      isAble: true,
     },
     {
       _id: 'abcd8',
@@ -313,6 +321,7 @@ export const initialProducts: IProduct[] = [
       tags: ['ropa'],
       sold: 0,
       slug: '/gorra_o_chapa',
+      isAble: true,
     },
     {
       _id: 'abcd9',
@@ -346,6 +355,7 @@ export const initialProducts: IProduct[] = [
       tags: ['ropa'],
       sold: 0,
       slug: '/producto_5',
+      isAble: true,
     },
     {
       _id: 'abcd10',
@@ -383,6 +393,7 @@ export const initialProducts: IProduct[] = [
       tags: ['ropa'],
       sold: 0,
       slug: '/camisa_patita_de_perro',
+      isAble: true,
     },
     {
       _id: 'abcd11',
@@ -420,6 +431,7 @@ export const initialProducts: IProduct[] = [
       tags: ['ropa'],
       sold: 0,
       slug: '/camisa_pata_de_gato',
+      isAble: true,
     },
     {
       _id: 'abcd12',
@@ -457,6 +469,7 @@ export const initialProducts: IProduct[] = [
       tags: ['ropa'],
       sold: 0,
       slug: '/pantalon_rasgado',
+      isAble: true,
     },
     {
       _id: 'abcd13',
@@ -495,6 +508,7 @@ export const initialProducts: IProduct[] = [
       tags: ['ropa'],
       sold: 0,
       slug: '/camiseta_deportiva_patitas',
+      isAble: true,
     },
 ]
 
