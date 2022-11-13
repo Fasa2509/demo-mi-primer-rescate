@@ -172,7 +172,7 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
         }
         </>
 
-      <Button variant='contained' onClick={ revalidate }>Revalidar esta página</Button>
+      <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
         
     </ShopLayout>
   )

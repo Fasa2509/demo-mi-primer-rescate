@@ -149,7 +149,7 @@ export const AdoptionForm: FC = () => {
   return (
     <form onSubmit={ handleSubmit } className={ styles.adoption__form }>
         <Box>
-            <Typography>Antes de empezar el cuestionario ¿Está usted interesado en algún perro/gato en particular de la manada MPR? De ser así escriba su nombre aquí.</Typography>
+            <Typography>Antes de empezar el cuestionario, ¿está usted interesad@ en algún perro/gato en particular de la manada MPR? De ser así escriba su nombre aquí.</Typography>
             <TextField
                 name='particular1'
                 value={ form.particular1 }

@@ -188,7 +188,9 @@ const CarritoPage: NextPage = () => {
                     <Typography sx={{ fontSize: '1.3rem', fontWeight: '700' }}>Total</Typography>
                     <Typography>
                       { ( cart.length > 0 )
-                          ? format( cart.reduce(( prev, { quantity, price, discount } ) => prev + quantity * ( discount || price ), 0))
+                          ? format(
+                            cart.reduce(( prev, { quantity, price, discount } ) => prev + quantity * ( price * ( 1 - discount ) ), 0)
+                          )
                           : format( 0 )
                       }
                     </Typography>
@@ -310,7 +312,7 @@ const CarritoPage: NextPage = () => {
           </Box>
           
         </Box>
-        <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
+        <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
     </ShopLayout>
   )
 }

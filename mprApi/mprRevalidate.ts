@@ -26,7 +26,7 @@ export const mprRevalidatePage = async ( pageToRevalidate: string ): Promise<{ e
 
         return {
             error: true,
-            message: 'Error',
+            message: 'Error revalidando la página ' + pageToRevalidate,
         };
     }
 

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { isBefore } from 'date-fns';
 
@@ -10,11 +10,12 @@ import styles from './Form.module.css';
 import { mprApi, mprRevalidatePage } from '../../mprApi';
 import axios from 'axios';
 import { dbArticles } from '../../database';
+import { ScrollContext } from '../../context';
 
 export const CustomForm: FC = () => {
 
     const { enqueueSnackbar } = useSnackbar();
-
+    const { setIsLoading } = useContext( ScrollContext );
     const [title, setTitle] = useState( '' );
     const [currentField, setCurrentField] = useState<Field>({ type: 'texto', content: '', content_: '', images: [] });
     const [fields, setFields] = useState<Array<Field>>([]);
@@ -83,6 +84,8 @@ export const CustomForm: FC = () => {
 
             if ( !confirm ) return;
 
+            setIsLoading( true );
+
             const res = await dbArticles.saveNewArticle( title, fields );
             enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' });
             
@@ -92,6 +95,8 @@ export const CustomForm: FC = () => {
                     enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });                    
                 }
             }
+
+            setIsLoading( false );
 
             return;
     }

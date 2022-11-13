@@ -82,7 +82,7 @@ const TypePage: NextPage<Props> = ({ products }) => {
 
         <ContainerProductType type={ productType } products={ products.filter(p => p.tags.includes( productType )) } />
         
-        <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
+        <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
 
     </ShopLayout>
   )

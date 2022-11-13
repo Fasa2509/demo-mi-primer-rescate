@@ -73,7 +73,9 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
                     {
                         products.map(( product, index: number ) => (
                             <Box key={ index }>
-                                <Typography>{ product.name }{ product.size !== 'unique' && ` (${ product.size })` } ={ '>' } { product.quantity } { product.quantity === 1 ? 'unidad' : 'unidades' } x { product.discount > 0 ? format( product.price * ( 1 - product.discount ) ) : format( product.price ) } = { product.discount > 0 ? format( product.price * (1 - product.discount) * product.quantity ) : format( product.price * product.quantity ) }</Typography>
+                                <Typography>
+                                    { product.name }{ product.size !== 'unique' && ` (${ product.size })` } ={ '>' } { product.quantity } { product.quantity === 1 ? 'unidad' : 'unidades' } x { product.discount > 0 ? format( product.price * ( 1 - product.discount ) ) : format( product.price ) } = { product.discount > 0 ? format( product.price * (1 - product.discount) * product.quantity ) : format( product.price * product.quantity ) }
+                                </Typography>
                             </Box>
                         ))
                     }

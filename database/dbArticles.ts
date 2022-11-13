@@ -9,9 +9,11 @@ export const getAllArticles = async (): Promise<IArticle[] | null> => {
     try {
         await db.connect();
         
-        const allArticles: any[] = await Article.find().sort({ createdAt: -1 }).limit( 10 );
+        const allArticles: IArticle[] = await Article.find().sort({ createdAt: -1 }).limit( 10 );
 
         await db.disconnect();
+
+        if ( !allArticles ) return null;
 
         return allArticles.sort((a, b) => b.createdAt - a.createdAt);
     } catch( error ) {
@@ -27,6 +29,8 @@ export const getMoreArticles = async ( seconds: number ): Promise<IArticle[] | n
 
     try {
         const { data } = await mprApi.get('/article?seconds=' + seconds);
+
+        if ( !data ) return null;
 
         return JSON.parse( JSON.stringify( data ));
     } catch( error ) {

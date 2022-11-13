@@ -139,7 +139,7 @@ const CambiosPage: NextPage = () => {
         </ModalWindow>
       </Box>
 
-      <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
+      <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
 
     </MainLayout>
   )

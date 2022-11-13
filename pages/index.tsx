@@ -60,7 +60,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
         <Link color='secondary' alignSelf='flex-end' underline='hover' sx={{ cursor: 'pointer' }} onClick={ requestArticles }>Cargar más...</Link>
       </section>
 
-      <Button variant='contained' color='secondary' onClick={ revalidate }>Revalidar esta página</Button>
+      <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
 
     </MainIndexLayout>
   )
