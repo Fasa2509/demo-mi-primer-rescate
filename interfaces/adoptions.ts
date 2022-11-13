@@ -3,7 +3,7 @@ export interface IAdoption {
     particular1: string;
     particular2: string;
     user: string;
-    contact: IContact;
+    contact: IContactAdoption;
     input1: string;
     input2: string;
     input3: boolean;
@@ -36,7 +36,7 @@ export interface IAdoption {
     createdAt: number;
 }
 
-export interface IContact {
+export interface IContactAdoption {
     facebook?: string;
     instagram?: string;
     whatsapp?: string;

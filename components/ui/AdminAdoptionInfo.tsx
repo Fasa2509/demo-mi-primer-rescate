@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { IAdoption } from '../../interfaces';
 
 interface Props {
