@@ -48,7 +48,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
     if ( !products ) throw new Error('No se encontraron productos');
 
-    const productSlugs = products.map(( product ) => product.slug.substring(1));
+    const productSlugs = products.map(( product ) => product.slug.substring(1).toLocaleLowerCase());
 
     return {
         paths: productSlugs.map(( slug ) => ({
@@ -66,7 +66,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
     if ( !slug ) throw new Error('Falta el slug del producto');
 
-    const product = await dbProducts.getProductBySlug( '/' + slug );
+    const product = await dbProducts.getProductBySlug( '/' + slug.toLocaleLowerCase() );
 
     if ( !product ) {
         return {
