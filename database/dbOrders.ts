@@ -4,12 +4,32 @@ import { Order } from '../models';
 import { mprApi } from '../mprApi';
 import { IAddress, ICartProduct, IContact, IOrder, Paid } from '../interfaces';
 
+export const getUserOrders = async ( userId: string ): Promise<IOrder[]> => {
+
+    if ( !userId ) return [];
+
+    try {
+        await db.connect();
+        
+        const orders = await Order.find({ user: userId });
+
+        await db.disconnect();
+
+        return JSON.parse( JSON.stringify( orders.sort((a: IOrder, b: IOrder) => b.createdAt - a.createdAt) ) );
+    } catch( error ) {
+        console.log( error );
+
+        return [];
+    }
+
+}
+
 export const updatePaidOrder = async ( orderId: string = '', orderStatus: Paid = 'pending' ): Promise<{ error: boolean; message: string }> => {
 
     if ( !orderId ) return { error: true, message: 'Falta info de la orden' };
 
     try {
-        const { data } = await mprApi.put( `/order/${orderId}?status=${ orderStatus }` );
+        const { data } = await mprApi.put( `/order/${ orderId }?status=${ orderStatus }` );
 
         return data;
     } catch( error ) {
@@ -19,7 +39,7 @@ export const updatePaidOrder = async ( orderId: string = '', orderStatus: Paid =
             return {
                 error: true,
                 // @ts-ignore
-                message: error.response ? error.response.data.message : 'Ocurrió un error actualizando la orden',
+                message: error.response ? error.response.data.message : 'Ocurrió un error actualizando la órden',
             }
         }
 
@@ -31,21 +51,28 @@ export const updatePaidOrder = async ( orderId: string = '', orderStatus: Paid =
 
 }
 
-export const createNewOrder = async ( userId: string, cart: ICartProduct[], total: number, shippingAddress: IAddress, contact: IContact ): Promise<{ error: boolean; message: string; }> => {
+export const createNewOrder = async ({ userId, cart, shippingAddress, contact }: {  userId: string, cart: ICartProduct[], shippingAddress: IAddress, contact: IContact  }): Promise<{ error: boolean; message: string; }> => {
     
-    if ( !userId || cart.length < 1 || total === 0 || shippingAddress.address.length < 5  || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(c => c).length < 1 ) return { error: true, message: 'Falta información de la orden' };
-    
-    if ( total < cart.reduce(( prev, { quantity, price, discount } ) => prev + quantity * ( price * ( 1 - discount ) ), 0) - 0.1 )
-        return { error: true, message: 'Error creando la orden' };
+    if ( !userId || cart.length < 1 || shippingAddress.address.length < 4  || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(c => c).length < 1 ) return { error: true, message: 'Falta información de la orden' };
+
+    const totalUSD = cart.reduce((prev, { quantity, price, discount }) => prev + quantity * price * (1 - discount), 0).toFixed(2);
+    const totalBs = (cart.reduce((prev, { quantity, price, discount }) => prev + quantity * price * (1 - discount), 0) * 10.27).toFixed(2);
+
+    const now = (() => Date.now())();
 
     try {
         const { data } = await mprApi.post('/order', {
             user: userId,
             orderItems: cart.map(({ _id, name, price, discount, quantity, size, slug }) => ({ _id, name, price, discount, quantity, size, slug })),
-            total,
-            isPaid: 'pending',
             shippingAddress,
             contact,
+            transaction: {
+                method: now % 2 === 0 ? 'Paypal' : 'Pago móvil',
+                status: 'pending',
+                transactionId: '123ABC',
+                totalUSD,
+                totalBs,
+            }
         });
 
         return data;
@@ -56,7 +83,7 @@ export const createNewOrder = async ( userId: string, cart: ICartProduct[], tota
             return {
                 error: true,
                 // @ts-ignore
-                message: error.response ? error.response.data.message : 'Ocurrió un error creando la orden',
+                message: error.response ? error.response.data.message : 'Ocurrió un error creando la órden',
             }
         }
 

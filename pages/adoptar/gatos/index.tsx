@@ -1,54 +1,32 @@
-import { NextPage } from 'next';
+import { useContext } from 'react';
+import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
 import { Button, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
+import { dbPets } from '../../../database';
+import { AuthContext, ScrollContext } from '../../../context';
 import { mprRevalidatePage } from '../../../mprApi';
-import { MainLayout, Pet, PetCard } from '../../../components';
+import { MainLayout, PetCard } from '../../../components';
+import { IPet } from '../../../interfaces';
 import styles from '../../../styles/Adoptar.module.css';
 
-const pets: Pet[] = [
-  {
-    name: 'Susy',
-    story: 'Excepteur sint velit exercitation in sit esse consequat reprehenderit sint exercitation adipisicing laboris dolore tempor. Ex amet amet nulla consequat. Quis deserunt et nulla culpa qui cupidatat ex ad. Sit ad pariatur reprehenderit cupidatat fugiat consectetur. Labore dolor consequat laboris exercitation do duis. Labore duis irure magna in reprehenderit cillum. Enim amet elit velit aute irure enim reprehenderit laborum nisi ullamco occaecat Lorem excepteur minim.',
-    image: '/square-dog.jpg',
-  },
-  {
-    name: 'Pirata',
-    story: 'Laboris aute aliqua aliqua laborum magna consectetur sunt. Qui eiusmod amet sunt occaecat culpa qui fugiat anim. Mollit anim sint reprehenderit laboris non enim dolor. Aute quis quis elit irure elit laborum eu ipsum consectetur. Nulla ea anim dolor labore officia.',
-    image: '/square-dog.jpg',
-  },
-  {
-    name: 'Paco',
-    story: 'Ullamco ut Lorem non exercitation reprehenderit nisi adipisicing velit eiusmod reprehenderit nulla cillum eu aliquip. Pariatur quis sint voluptate voluptate veniam laborum cupidatat velit amet sunt nulla eiusmod. Enim veniam Lorem irure do duis proident aliquip ad reprehenderit amet cupidatat consectetur. Aute deserunt anim excepteur fugiat ut elit. Occaecat culpa et cillum excepteur incididunt. Culpa magna consectetur ea dolor. Elit excepteur et excepteur duis.',
-    image: '/square-dog.jpg',
-  },
-  {
-    name: 'Lizz',
-    story: 'Exercitation amet velit cillum dolor ex esse mollit. Ex qui ad laboris adipisicing dolor minim. Non ullamco in velit exercitation aute aute deserunt proident. Eu aute commodo do laboris commodo consequat aliqua non dolore laborum cupidatat reprehenderit et id.',
-    image: '/square-dog.jpg',
-  },
-  {
-    name: 'Benny',
-    story: 'Laboris nulla pariatur enim culpa irure consequat deserunt occaecat adipisicing do laboris dolor enim. Do consectetur sit voluptate ex amet anim sunt reprehenderit anim id fugiat. Dolore ex ad quis sunt quis culpa cillum. Velit consectetur sint irure id. Excepteur quis pariatur irure duis excepteur labore.',
-    image: '/square-dog.jpg',
-  },
-  {
-    name: 'Zico',
-    story: 'Incididunt esse et ea reprehenderit commodo in elit sint. Amet magna sit anim cupidatat eu. Voluptate excepteur id culpa excepteur labore voluptate minim dolor occaecat nulla. Dolor labore enim incididunt non est velit reprehenderit commodo magna laborum.',
-    image: '/square-dog.jpg',
-  },
-]
+interface Props {
+  pets: IPet[];
+}
 
+const AdoptarPage: NextPage<Props> = ({ pets }) => {
 
-const AdoptarPage: NextPage = () => {
-
+  const { user } = useContext( AuthContext );
+  const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
 
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
 
+    setIsLoading( true );
     const resRev = await mprRevalidatePage('/adoptar/gatos');
+    setIsLoading( false );
 
     enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
   }
@@ -56,7 +34,7 @@ const AdoptarPage: NextPage = () => {
   return (
     <MainLayout title={ 'Adopta un gatito' } H1={ 'Adopta un gatito' } pageDescription={ 'Proceso de adopción de nuestros animalitos' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/otros'>
       
-        <Typography>¡Los gatitos de <b>Mi Primer Rescate</b> no son como otros! Ell@s están preparados para cualquier muestra de afecto, entrenados para hacerte reír y son expertos en ser consentidos, ¡no te quedes sin el tuyo!.</Typography>
+        <p>¡Los gatitos de <b>Mi Primer Rescate</b> no son como otros! Ell@s están preparados para cualquier muestra de afecto, entrenados para hacerte reír y son expertos en ser consentidos, ¡no te quedes sin el tuyo!.</p>
 
         <div className={ styles.grid__container }>
             {
@@ -66,10 +44,27 @@ const AdoptarPage: NextPage = () => {
             }
         </div>
 
-        <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+        <>
+          { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
+            <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+          }
+        </>
 
     </MainLayout>
   )
+}
+
+export const getStaticProps: GetStaticProps = async ( ctx ) => {
+
+  const pets = await dbPets.getAllTypePets( 'gato' );
+
+  if ( !pets ) throw new Error('Ocurrió un error buscando las mascotas en la DB');
+
+  return {
+    props: {
+      pets
+    }
+  }
 }
 
 export default AdoptarPage;

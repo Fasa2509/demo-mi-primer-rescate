@@ -1,29 +1,26 @@
-import { FC } from "react";
-import { Card, CardMedia } from "@mui/material";
-import { ModalWindow } from "../ui";
-
-export interface Pet {
-    name: string;
-    story: string;
-    image: string;
-}
+import { FC } from 'react';
+import { Card, CardMedia, Typography } from '@mui/material';
+import { ModalWindow } from '../ui';
+import { IPet } from '../../interfaces';
+import { MyImage } from './MyImage';
 
 export interface Props {
-    pet: Pet;
+    pet: IPet;
 }
 
 export const PetCard: FC<Props> = ({ pet }) => {
   return (
-        <Card sx={{ position: 'relative' }}>
+        <Card sx={{ position: 'relative', height: 'auto' }}>
             <CardMedia
                 component='img'
                 className='fadeIn'
-                image={ pet.image }
+                image={ pet.images[0] }
                 alt={ pet.name }
             />
+            {/* <MyImage src={ pet.images[0] } alt={ pet.name } width={ 500 } height={ 500 } /> */}
 
             <ModalWindow title={ pet.name } buttonTxt={ pet.name } buttonStyle={{ position: 'absolute', right: '.5rem', bottom: '.7rem', borderRadius: '10rem' }}>
-                <p>{ pet.story }</p>
+                <Typography>{ pet.description }</Typography>
             </ModalWindow>
         </Card>
   )

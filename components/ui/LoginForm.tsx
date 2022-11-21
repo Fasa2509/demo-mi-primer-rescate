@@ -16,7 +16,7 @@ type FormData = {
 
 export const LoginForm = () => {
   
-    const { query } = useRouter();
+    const { query, asPath } = useRouter();
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const { loginUser } = useContext( AuthContext );
     const { isLoading, setIsLoading } = useContext( ScrollContext );
@@ -35,7 +35,7 @@ export const LoginForm = () => {
       }
       
       Cookies.set('mpr__extendSession', 'true');
-      let destination = query.p?.toString() || '/';
+      let destination = !query.p ? '/' : query.p.toString().match(/auth/) ? '/' : query.p.toString();
       await signIn('credentials', { email, password, callbackUrl: destination });
       setIsLoading( false );
   }

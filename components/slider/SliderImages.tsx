@@ -2,6 +2,7 @@ import { FC } from "react";
 import Image from "next/image";
 import { ImageObj } from "../../interfaces";
 import Carousel from "react-material-ui-carousel";
+import { MyImage } from "../cards";
 
 interface Props {
     images: ImageObj[];
@@ -13,6 +14,7 @@ interface Props {
       autoPlay?: boolean;
       fullHeightHover?: boolean;
       interval?: number;
+      duration?: number;
     };
     layout?: 'intrinsic' | 'responsive';
 }
@@ -21,11 +23,12 @@ export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic' 
 
   return (
     <div>
-      <Carousel indicators={ options ? options.indicators : true } animation={ options ? options.animation || 'fade' : 'fade' } navButtonsAlwaysVisible={ options ? options.navButtonsAlwaysVisible : false } autoPlay={ options ? options.autoPlay : true } fullHeightHover={ options ? options.fullHeightHover : false } interval={ options ? options.interval || 6000 : 6000 }>
+      <Carousel indicators={ options ? options.indicators : true } animation={ options ? options.animation || 'fade' : 'fade' } navButtonsAlwaysVisible={ options ? options.navButtonsAlwaysVisible : false } autoPlay={ options ? options.autoPlay : true } fullHeightHover={ options ? options.fullHeightHover : false } interval={ options ? options.interval || 8000 : 8000 } duration={ options ? options.duration || 800 : 250 }>
         {
           images.map((fadeImage, index) => (
             <div style={{ display: layout !== 'responsive' ? 'flex' : 'block', justifyContent: 'center', alignItems: 'center' }} key={index}>
-              <Image src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } />
+              {/* <Image src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } /> */}
+              <MyImage src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } />  
             </div>
         ))}
       </Carousel>

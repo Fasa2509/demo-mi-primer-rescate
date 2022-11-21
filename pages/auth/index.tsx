@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import { getProviders, signIn, useSession } from 'next-auth/react';
 import { Box, Button, Card, Typography } from '@mui/material';
 import { Home } from '@mui/icons-material';
 
 import { MainLayout, ModalWindow, LoginForm, RegisterForm } from '../../components';
+import { unstable_getServerSession } from 'next-auth';
+import { nextAuthOptions } from '../api/auth/[...nextauth]';
 
 const AuthPage: NextPage = () => {
 
@@ -59,6 +61,26 @@ const AuthPage: NextPage = () => {
         </Card>
       </MainLayout>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
+
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+
+  if ( session ) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {
+
+    }
+  }
 }
 
 export default AuthPage;

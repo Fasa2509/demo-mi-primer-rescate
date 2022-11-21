@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from "next/router";
 import NextLink from "next/link";
@@ -6,8 +6,9 @@ import { Box, Button, Typography } from "@mui/material";
 import { ShoppingBag } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 
-import { mprRevalidatePage } from "../../../mprApi";
 import { dbProducts } from "../../../database";
+import { mprRevalidatePage } from "../../../mprApi";
+import { AuthContext, ScrollContext } from '../../../context';
 import { ContainerProductType, ShopLayout } from "../../../components";
 import { formatText } from "../../../utils";
 import { IProduct, Tags, TagsArray } from "../../../interfaces";
@@ -18,6 +19,8 @@ interface Props {
 
 const TypePage: NextPage<Props> = ({ products }) => {
 
+    const { user } = useContext( AuthContext );
+    const { setIsLoading } = useContext( ScrollContext );
     const router = useRouter();
     const [productType, setProductType] = useState<Tags>('accesorios');
     const { enqueueSnackbar } = useSnackbar();
@@ -35,24 +38,21 @@ const TypePage: NextPage<Props> = ({ products }) => {
     const revalidate = async () => {
         if ( process.env.NODE_ENV !== 'production' ) return;
     
+        setIsLoading( true );
         const resRev = await mprRevalidatePage('/tienda/categoria');
+        setIsLoading( false );
     
         enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
     }
-    
-    // const consumibles = useMemo(() => products.filter(p => p.tags.includes('consumibles')), [products]);
-    // const accesorios = useMemo(() => products.filter(p => p.tags.includes('accesorios')), [products]);
-    // const ropa = useMemo(() => products.filter(p => p.tags.includes('ropa')), [products]);
-    // const util = useMemo(() => products.filter(p => p.tags.includes('útil')), [products]);
 
   return (
     <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/tienda' }>
 
-        <Typography>¿Buscas un tipo de producto en particular? Aquí lo encontrarás</Typography>
+        <Typography>¿Buscas un tipo de producto en particular? Aquí lo encontrarás.</Typography>
 
         <Box className='fadeIn' display='flex' justifyContent='space-evenly' sx={{ my: 2 }}>
             {
-                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` }><Button variant='outlined' color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
+                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` }><Button color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
             }
         </Box>
 
@@ -82,7 +82,11 @@ const TypePage: NextPage<Props> = ({ products }) => {
 
         <ContainerProductType type={ productType } products={ products.filter(p => p.tags.includes( productType )) } />
         
-        <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+        <>
+          { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
+            <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+          }
+        </>
 
     </ShopLayout>
   )

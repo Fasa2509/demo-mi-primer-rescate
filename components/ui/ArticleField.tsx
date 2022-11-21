@@ -6,6 +6,7 @@ import { SliderImages } from "../slider";
 import { Countdown } from "./Countdown";
 import { getParagraphs } from "../../utils";
 import styles from "./Article.module.css";
+import { MyImage } from "../cards";
 
 interface Props {
     field: Field;
@@ -32,7 +33,7 @@ export const ArticleField: FC<Props> = ({ field, selector }) => {
                     {
                         ( field.images?.length === 1 )
                             ? (
-                                <Image src={ field.images[0].url } alt={ field.images[0].alt } width={ field.images[0].width } height={ field.images[0].height } />
+                                <MyImage src={ field.images[0].url } alt={ field.images[0].alt } width={ field.images[0].width } height={ field.images[0].height } />
                             ) : (
                                 <SliderImages images={ field.images as ImageObj[] } options={{ autoPlay: false }} />
                             )

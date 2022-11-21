@@ -1,11 +1,13 @@
+import { useContext } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import { mprRevalidatePage } from '../../mprApi';
 import { dbProducts } from '../../database';
+import { AuthContext, ScrollContext } from '../../context';
+import { mprRevalidatePage } from '../../mprApi';
 import { ProductInfo, ShopLayout, SliderImages } from '../../components';
-import { allProducts, IProduct } from '../../interfaces';
+import { IProduct } from '../../interfaces';
 import styles from '../../styles/Tienda.module.css';
 
 interface Props {
@@ -14,28 +16,37 @@ interface Props {
 
 const ProductPage: NextPage<Props> = ({ product }) => {
 
-    const { enqueueSnackbar } = useSnackbar();
+  const { user } = useContext( AuthContext );
+  const { setIsLoading } = useContext( ScrollContext );
+  const { enqueueSnackbar } = useSnackbar();
     
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
 
-    const resRev = await mprRevalidatePage('/');
+    setIsLoading( true );
+    const resRev = await mprRevalidatePage('/tienda' + product.slug);
+    setIsLoading( false );
 
     enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
   }
-  
+
   return (
     <ShopLayout title={ product.name } pageDescription={ product.name + ' | Tienda' }>
         <section className={ styles.product__container }>
             <div className={ styles.slider__container }>
-            <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 6500 }} layout={ 'responsive' } />
+            <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 8000, duration: 650 }} layout={ 'responsive' } />
             </div>
             <div className={ styles.product__info }>
                 <ProductInfo product={ product } />
             </div>
         </section>
 
-        <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+        <>
+          { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
+            <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+          }
+        </>
+
     </ShopLayout>
   )
 }

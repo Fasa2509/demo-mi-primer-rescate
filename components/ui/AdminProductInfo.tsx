@@ -1,6 +1,6 @@
 import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react'
-import { Box, Button, Checkbox, FormControl, InputLabel, Link, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { IProduct, Sizes, SizesArray, Tags, TagsArray } from '../../interfaces'
+import { Box, Button, Checkbox, Chip, Link, MenuItem, TextField, Typography } from '@mui/material';
+import { IProduct, Tags, TagsArray } from '../../interfaces'
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
 import { useSnackbar } from 'notistack';
 import { dbProducts } from '../../database';
@@ -45,6 +45,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
     const [image, setImage] = useState({ url: '', alt: '', width: 450, height: 450, });
     const [unica, setUnica] = useState( true );
     const [tag, setTag] = useState('');
+    const [revalidatePage, setRevalidatePage] = useState( false );
     const { price, discount, inStock, sold } = thisProduct;
 
     useEffect(() => {
@@ -75,6 +76,12 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
     }, [thisProduct]);
 
     const handleSubmitProduct = async () => {
+        if ( !form.name || !form.description || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
+            return enqueueSnackbar('La información del producto está incompleta', { variant: 'warning' });
+            
+        if ( form.tags.length === 0 )
+            return enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
+            
         let key = enqueueSnackbar(`¿Quieres ${ method === 'update' ? 'actualizar' : 'crear' } este producto?`, {
             variant: 'info',
             action: ConfirmNotificationButtons,
@@ -84,9 +91,6 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
         const accepted = await PromiseConfirmHelper(key, 15000);
 
         if ( !accepted ) return;
-
-        if ( form.tags.length === 0 )
-            return enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
         
         setIsLoading( true );
 
@@ -96,12 +100,13 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
             enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
 
             if ( !res.error ) {
-                if ( process.env.NODE_ENV === 'production' ) {
-                    const revRes = await mprRevalidatePage( '/tienda' );
-                    enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
+                if ( process.env.NODE_ENV === 'production' && revalidatePage ) {
+                    const revalidations = await Promise.all([
+                        mprRevalidatePage( '/tienda' ),
+                        mprRevalidatePage( '/tienda/categoria' )
+                    ]);
                     
-                    const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
-                    enqueueSnackbar(revRes2.message || 'Error', { variant: !revRes2.error ? 'info' : 'error' });
+                    revalidations.forEach(res => enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' }));
                 }
             }
         } else {
@@ -110,24 +115,15 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
             enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
 
             if ( !res.error ) {
-                if ( process.env.NODE_ENV === 'production' ) {
+                if ( process.env.NODE_ENV === 'production' && revalidatePage ) {
                     const revalidationResponses = await Promise.all([
                         mprRevalidatePage( '/tienda' ),
-                        mprRevalidatePage( '/tienda/carrito' ),
+                        // mprRevalidatePage( '/tienda/carrito' ),
                         mprRevalidatePage( '/tienda/categoria' ),
-                        mprRevalidatePage( '/tienda' + form.slug || '' ),
+                        mprRevalidatePage( '/tienda' + form.slug.startsWith('/') ? form.slug : `/${ form.slug }` ),
                     ]);
 
                     revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' }))
-
-                    // const revRes = await mprRevalidatePage( '/tienda' );
-                    // enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
-                    
-                    // const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
-                    // enqueueSnackbar(revRes2.message || 'Error', { variant: !revRes2.error ? 'info' : 'error' });
-                    
-                    // const revRes3 = await mprRevalidatePage( '/tienda' + form.slug || '' );
-                    // enqueueSnackbar(revRes3.message || 'Error', { variant: !revRes3.error ? 'info' : 'error' });
                 }
             }
         }
@@ -153,27 +149,33 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
     }
 
     const handleAddTag = () => {
-        if ( form.tags.includes( tag as Tags ) ) return setTag('');
-            if ( tag === 'util' ) {
-                setTag('');
-                if ( form.tags.includes( 'útil' ) ) return setTag('');
-                setForm({...form, tags: [...form.tags, 'útil' ]});
-                return;
-            }
-            if ( !TagsArray.includes( tag as Tags ) ) return enqueueSnackbar('Esa etiqueta no es válida', { variant: 'warning' });
-            setForm({...form, tags: [...form.tags, tag as Tags]});
+        if ( form.tags.includes( tag.toLocaleLowerCase() as Tags ) ) return setTag('');
+
+        if ( tag.toLocaleLowerCase() === 'util' ) {
             setTag('');
+            if ( form.tags.includes( 'útil' ) ) return setTag('');
+            setForm({...form, tags: [...form.tags, 'útil' ]});
             return;
+        }
+
+        if ( !TagsArray.includes( tag.toLocaleLowerCase() as Tags ) ) return enqueueSnackbar('Esa etiqueta no es válida', { variant: 'warning' });
+        setForm({...form, tags: [...form.tags, tag.toLocaleLowerCase() as Tags]});
+        setTag('');
+        return;
     }
 
-    const removeTag = ({ target }: { target: HTMLSpanElement }) => {
-        setForm({ ...form, tags: form.tags.filter(t => t !== target.textContent?.replace('#', '')) });
+    const removeTag = ( tag: string ) => {
+        setForm({ ...form, tags: form.tags.filter(t => t !== tag )});
     }
 
     const handleAddOrRemoveImage = ( action: 'add' | 'remove' ) => {
+        if ( !image.url || !image.alt ) return enqueueSnackbar('Falta información de la imagen', { variant: 'warning' });
+
+        if ( image.width < 50 || image.height < 50 ) return enqueueSnackbar('Las dimensiones de la imagen no son válidas', { variant: 'warning' });
+
         if ( action === 'add' ) {
             if ( form.images.length >= 4 ) return enqueueSnackbar('Ya hay muchas imágenes', { variant: 'warning' });
-            setForm({...form, images: [...form.images, { ...image }]});
+            setForm({...form, images: [...form.images, { ...image, url: image.url.startsWith('/') ? image.url : `/${ image.url }` }]});
             setImage({ ...image, url: '', alt: '', });
         }
 
@@ -186,7 +188,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
     }
 
   return (
-    <Box display='flex' flexDirection='column' gap='.8rem' className='fadeIn' sx={{ border: '2px solid #eaeaea', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
+    <Box display='flex' flexDirection='column' gap='.8rem' className='fadeIn' sx={{ padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem', boxShadow: '0 0 1.1rem -.8rem #555' }}>
 
         <Typography sx={{ fontSize: '1.5rem', fontWeight: '600', color: '#333' }}>{ method === 'create' ? 'Crear Producto' : 'Actualizar Producto' }</Typography>
 
@@ -245,12 +247,14 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
                     <Typography>/square-dog.jpg</Typography>
                     <Typography>/perro-1.webp</Typography>
                     <Typography>/perro-2.webp</Typography>
+                    <Typography>/gato-1.webp</Typography>
+                    <Typography>/gato-2.jpg</Typography>
                 </Box>
                 <Typography>¡Copia la dirrección y agrégala!</Typography>
             </Box>
 
             { form.images.length > 0 &&
-                <SliderImages images={ form.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 6500, autoPlay: false }} />
+                <SliderImages images={ form.images } options={{ indicators: false, animation: 'slide', navButtonsAlwaysVisible: true, interval: 6500, autoPlay: false }} />
             }
 
             <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: '.5rem' }}>
@@ -446,12 +450,29 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
 
             <Box display='flex' flexDirection='column'>
                 <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Etiquetas:</Typography>
-                <Typography>Toca una para descartarla</Typography>
-                <Box display='flex' flexWrap='wrap' gap='.5rem' sx={{ fontSize: '1rem', color: '#666' }}>
-                    {
-                        form.tags.map(( tag ) => <span key={ tag } style={{ cursor: 'pointer' }} onClick={ removeTag as any }>#{ tag }</span>)
-                    }
-                </Box>
+
+                <Box sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '.5rem',
+                            listStyle: 'none',
+                            p: 0,
+                            m: 0,
+                        }}
+                        component="ul">
+                            {
+                                form.tags.map(( tag, index ) => (
+                                    <Chip
+                                        key={ tag }
+                                        label={ tag }
+                                        onDelete={ () => removeTag( tag ) }
+                                        color='secondary'
+                                        size='medium'
+                                        sx={{ fontSize: '.9rem' }}
+                                    />
+                                )
+                            )}
+                        </Box>
 
                 <Box display='flex' gap='.5rem' sx={{ mt: 1.5 }}>
                     <TextField
@@ -469,7 +490,16 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
 
             <Button variant='outlined' color='secondary' sx={{ mt: 1.5, fontSize: '1rem' }} onClick={ handleClearProduct }>Vaciar info del producto</Button>
 
-            <Button color='secondary' sx={{ mt: 1.5, fontSize: '1rem' }} disabled={ isLoading } onClick={ handleSubmitProduct }>
+            <Box display='flex' alignItems='center' sx={{ mb: -2 }}>
+                <Checkbox
+                    color='secondary'
+                    checked={ revalidatePage }
+                    onChange={ ({ target }) => setRevalidatePage( target.checked ) }
+                />
+              <Typography sx={{ cursor: 'pointer' }} onClick={ () => setRevalidatePage( !revalidatePage ) }>Revalidar páginas</Typography>
+            </Box>
+
+            <Button color='secondary' sx={{ fontSize: '1rem' }} disabled={ isLoading } onClick={ handleSubmitProduct }>
                 { ( method === 'create' ) ? 'Crear producto' : 'Actualizar producto' }
             </Button>
 

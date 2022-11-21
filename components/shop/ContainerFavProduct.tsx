@@ -12,7 +12,7 @@ interface Props {
 export const ContainerFavProduct: FC<Props> = ({ products }) => {
     return (
         <section className={ styles.most__sold__container }>
-            <p className={ styles.title }>
+            <p className={ styles.most__sold__title }>
                 ¡Lo más vendido la última semana!
                 <Star />
             </p>

@@ -65,7 +65,7 @@ export const ProductInfo: FC<Props> = ({ product }) => {
                 </Box>
 
                 {
-                    unique === -1 &&
+                    unique === -1 && sizes.length > 0 &&
                     <SizeSelector inStock={ inStock } selectedSize={ currentSize } setSelectedSize={ setCurrentSize } />
                 }
 

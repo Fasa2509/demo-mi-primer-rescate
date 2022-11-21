@@ -12,15 +12,16 @@ interface Props {
   children: JSX.Element;
   text: string;
   links: link[];
+  active: boolean;
 }
 
-export const SideMenuButton: FC<Props> = ({ children, text, links }) => {
+export const SideMenuButton: FC<Props> = ({ children, text, links, active }) => {
 
   const [display, setDisplay] = useState( false );
 
   return (
     <Box>
-      <ListItem button onClick={ () => setDisplay( !display ) }>
+      <ListItem button sx={{ backgroundColor: active ? '#f1f1f1' : '#fff' }} onClick={ () => setDisplay( !display ) }>
           <ListItemIcon>
               { children }
           </ListItemIcon>

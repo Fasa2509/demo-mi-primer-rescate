@@ -5,12 +5,37 @@ export interface IOrder {
     _id            : string;
     user           : string;
     orderItems     : IOrderProduct[];
-    total          : number;
-    isPaid         : Paid;
     shippingAddress: IAddress;
     contact        : IContact;
+    transaction    : ITransaction;
     createdAt      : number;
     
+}
+
+export type Paid = 'send' | 'paid' | 'notpaid' | 'pending';
+
+export const SpanishOrderStatus = {
+    send: 'Enviada',
+    paid: 'Pagada',
+    notpaid: 'No pagada',
+    pending: 'Pendiente',
+};
+
+export const StatusColors = {
+    send: 'secondary',
+    paid: 'success',
+    pending: 'warning',
+    notpaid: 'error',
+};
+
+export type TMethod = 'Pago móvil' | 'Paypal';
+
+export interface ITransaction {
+    status: Paid;
+    transactionId: string;
+    method: TMethod;
+    totalUSD: number;
+    totalBs: number;
 }
 
 export interface IOrderProduct {
@@ -40,16 +65,15 @@ export interface IContact {
     whatsapp? : string;
 }
 
-export interface IOrderInfo {
+// export interface IOrderInfo {
 
-    orderId        : string;
-    products       : IOrderProduct[];
-    total          : number;
-    isPaid         : Paid;
-    shippingAddress: IAddress;
-    contact        : IContact;
-    createdAt      : string;
+//     orderId        : string;
+//     products       : IOrderProduct[];
+//     total          : number;
+//     isPaid         : Paid;
+//     shippingAddress: IAddress;
+//     contact        : IContact;
+//     transactionId  : string;
+//     createdAt      : string;
 
-}
-
-export type Paid = 'paid' | 'notpaid' | 'pending';
+// }

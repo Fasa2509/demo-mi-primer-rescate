@@ -2,7 +2,8 @@ import axios from "axios";
 import { db } from ".";
 import { mprApi } from "../mprApi";
 import { IProduct } from "../interfaces";
-import { Product } from "../models";
+import { Dolar, Product } from "../models";
+import { Sizes } from '../interfaces/products';
 
 // interface PayloadUpdate {
 //     name: string;
@@ -12,6 +13,89 @@ import { Product } from "../models";
 //     inStock: InStockSizes;
 //     tags: Tags[];
 // }
+
+export const backGetDolarPrice = async (): Promise< Number | null> => {
+
+    try {
+        await db.connect();
+        
+        let dolarPrice = await Dolar.findOne({ price: { $gt: 0 }});
+        
+        await db.disconnect();
+        
+        return dolarPrice ? dolarPrice.price : 10;
+    } catch( error ) {
+        console.log( error );
+        return null;
+    }
+
+}
+
+export const frontGetDolarPrice = async (): Promise< number | null> => {
+
+    try {
+        let { data } = await mprApi.get('/product/existency');
+
+        return data.price;
+    } catch( error ) {
+        console.log( error );
+        return null;
+    }
+
+}
+
+export const updateDolarPrice = async ( price: number ): Promise<{ error: boolean; message: string; }> => {
+
+    if ( price === 0 ) return { error: true, message: 'El precio no es válido' };
+
+    try {
+        let { data } = await mprApi.put('/product/existency', { price: price.toFixed(2) });
+
+        return data;
+    } catch( error ) {
+        console.log( error );
+
+        if ( axios.isAxiosError( error ) ) {
+            return error.response?.data as { error: boolean; message: string; };
+        }
+
+        return {
+            error: true,
+            message: 'Error actualizando valor',
+        };
+    }
+
+}
+
+export const checkProductsExistency = async ( productsToCheck: Array<{ _id: string; name: string; quantity: number; size: Sizes; }> ): Promise<{ error: boolean; message: string; payload: string[]; }> => {
+
+    if ( !(productsToCheck instanceof Array) || productsToCheck.length < 1 ) return { error: true, message: '', payload: ['El carrito está vacío'] }
+
+    try {
+        let { data } = await mprApi.post('/product/existency', {
+            productsToCheck
+        });
+
+        return data;
+    } catch( error ) {
+        console.log( error );
+
+        if ( axios.isAxiosError( error ) ) {
+            return {
+                error: true,
+                message: '',
+                // @ts-ignore
+                payload: error.response ? error.response.data.payload || ['Error'] : ['Error en la petición'],
+            }
+        }
+
+        return {
+            error: true,
+            message: '',
+            payload: ['Error'],
+        };
+    }
+}
 
 export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promise<{ error: boolean; message: string; }> => {
 

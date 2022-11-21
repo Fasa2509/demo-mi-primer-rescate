@@ -1,13 +1,21 @@
 /* All cards */
 
 .card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     max-width: 380px;
     min-height: 160px;
     background-color: #FFF;
-    color: #666;
-    border: 2px solid #666;
+    color: #444;
+    box-shadow: 0 0 1.2rem -.2rem #333;
     border-radius: .5rem;
     padding: .8rem;
+    transition: transform 300ms ease;
+}
+
+.card > * {
+    margin: 0;
 }
 
 .card__goal {
@@ -25,6 +33,10 @@
     .card__goal:hover {
         transform: scale(1.1);
     }
+
+    .card:hover {
+        transform: translateY(-.3rem);
+    }
 }
 
 .card__number {
@@ -34,23 +46,15 @@
 }
 
 .card__text {
+    color: #555;
+    line-height: 1.5;
     display: flex;
     align-items: center;
-    padding: 1rem;
+    padding: .8rem;
     flex-grow: 1;
 }
 
 .social__container {
     display: flex;
     justify-content: space-evenly;
-}
-
-.card p {
-    margin: .5rem 0;
-}
-
-p.subtitle {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0;
 }

@@ -191,7 +191,7 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
               )
               : (
                 <NextLink href={ `/auth?p=${ router.asPath }` } passHref>
-                  <Link color='info' className={ `fadeIn ${ styles.link } ${ router.asPath === '/auth' ? styles.active : '' }` }>Entrar</Link>
+                  <Link color='info' className={ `fadeIn ${ styles.link } ${ router.asPath.startsWith('/auth') ? styles.active : '' }` }>Entrar</Link>
                 </NextLink>
               )
           }
@@ -230,7 +230,7 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
       
     </nav>
   )
-}
+};
 
 // export const Header: FC<Props> = ({ index = false, shop = false }) => {
 

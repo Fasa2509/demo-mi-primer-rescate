@@ -1,21 +1,15 @@
 import mongoose from 'mongoose';
 const { model, Schema } = mongoose;
-import {  } from '../interfaces';
+import { ISold } from '../interfaces';
 
 const soldSchema = new Schema({
-    productId: { type: Schema.Types.ObjectId, ref: 'Product' },
+    productId: { type: Schema.Types.ObjectId, ref: 'Product', inmutable: true },
     soldUnits: { type: Number, default: 0 },
     updatedAt: { type: Number, default: () => Date.now() },
 });
 
-// soldSchema.pre('save', function( next ) {
-//     const sold = this;
-
-//     sold.updatedAt = (() => Date.now())();
-// })
-
 // @ts-ignore
 mongoose.models = {};
 
-const Sold = model('Sold', soldSchema);
+const Sold = model<ISold>('Sold', soldSchema);
 export default Sold;

@@ -1,9 +1,10 @@
-import { useState } from "react"
-import { useSnackbar } from "notistack"
-import styles from './Card.module.css'
-import { isValidEmail } from "../../utils/validations";
+import { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import { TextField, Typography } from "@mui/material";
+
 import { mprApi } from "../../mprApi";
-import { TextField } from "@mui/material";
+import { validations } from "../../utils";
+import styles from './Card.module.css'
 
 export const CardContact = () => {
 
@@ -12,7 +13,7 @@ export const CardContact = () => {
     
     const handleClick = async () => {
         
-        if ( !isValidEmail( email ) ) return enqueueSnackbar('El correo no es válido', { variant: 'error' });
+        if ( !validations.isValidEmail( email ) ) return enqueueSnackbar('El correo no es válido', { variant: 'error' });
         
         try {
             const res = await mprApi.post('/contact', { email });
@@ -26,13 +27,13 @@ export const CardContact = () => {
     
     return (
     <div className={ styles.card }>
-        <p className={ styles.subtitle }>Mantente informado</p>
+        <Typography sx={{ fontSize: '1.15rem', fontWeight: '600' }}>Mantente informado</Typography>
 
-        <p>¡Mantente al día sobre nuestro proyecto!</p>
+        <Typography>¡Sigue al día sobre nuestro proyecto!</Typography>
 
-        <TextField placeholder="Escribe tu correo" variant="filled" color='secondary' fullWidth onChange={ ({ target }) => setEmail( target.value ) } />
+        <TextField label='Correo electrónico' placeholder="Escribe tu correo" variant="filled" color='secondary' fullWidth onChange={ ({ target }) => setEmail( target.value ) } />
 
-        <button style={{ marginBottom: 0, marginTop: '.8rem' }} className='button button--full' onClick={ handleClick }>¡Suscríbete!</button>
+        <button style={{ marginBottom: 0, marginTop: '.8rem' }} className='button' onClick={ handleClick }>¡Suscríbete!</button>
     </div>
   )
 }

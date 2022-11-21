@@ -1,24 +1,26 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { useSession } from 'next-auth/react';
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { ShoppingBag } from '@mui/icons-material'
 import { useSnackbar } from 'notistack';
+import { isMonday, isToday } from 'date-fns';
 
-import { dbProducts } from '../../database';
-import { mprRevalidatePage } from '../../mprApi';
+import { dbProducts, dbSolds } from '../../database';
 import { ScrollContext } from '../../context';
+import { mprRevalidatePage } from '../../mprApi';
 import { ShopLayout, ContainerProductType, ContainerFavProduct } from '../../components'
 import { IProduct, Tags, TagsArray } from '../../interfaces'
-import styles from '../../styles/Tienda.module.css'
-import { resolve } from 'node:path/win32';
-import { resolve6 } from 'node:dns/promises';
+import styles from '../../styles/Tienda.module.css';
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 
 interface Props {
   products: IProduct[];
+  mostSoldProducts: IProduct[];
+  dolar: number;
 }
 
-const TiendaPage: NextPage<Props> = ({ products }) => {
+const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
 
   const { data: thisSession } = useSession();
   const session: any = thisSession;
@@ -35,7 +37,22 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
     discount: 0,
   });
 
+  const [revalidatePage, setRevalidatePage] = useState( false );
+  const [dolarPrice, setDolarPrice] = useState( 0 );
+
   const handleDiscount = async ( form: 'tags' | 'slug' ) => {
+    if ( form === 'slug' && !formSlug.slug ) return enqueueSnackbar('Agrega un url', { variant: 'warning' });
+
+    let key = enqueueSnackbar('¿Quieres aplicar el descuento?', {
+      variant: 'info',
+      action: ConfirmNotificationButtons,
+      autoHideDuration: 15000,
+    });
+
+    const accepted = await PromiseConfirmHelper(key, 15000);
+
+    if ( !accepted ) return;
+
     setIsLoading( true );
     
     const res = await dbProducts.discountProducts( form, form === 'tags' ? formTags.discount : formSlug.discount, form === 'tags' ? formTags.tags : formSlug.slug );
@@ -44,14 +61,15 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
     
     if ( res.error ) {
       setIsLoading( false );
+      enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
       return;
-    }
+    };
 
-    if ( process.env.NODE_ENV === 'production' ) {
+    if ( process.env.NODE_ENV === 'production' && revalidatePage ) {
       const revalidationResponses = await Promise.all([
         mprRevalidatePage('/tienda'),
         mprRevalidatePage('/tienda/categoria'),
-        mprRevalidatePage('/tienda/carrito'),
+        // mprRevalidatePage('/tienda/carrito'),
       ]);
 
       revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error revalidando', { variant: !res.error ? 'info' : 'error' }));
@@ -64,30 +82,46 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
       };
       
       if ( formTags.tags === 'todos' ) {
-        const slugsToRevalidate = products.map(p => p.slug);
-        // slugsToRevalidate.forEach(s => mprRevalidatePage( '/tienda' + s.startsWith('/') ? s : `/${ s }` ));
-        const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( s )) );
+        const slugsToRevalidate = products.map(p => p.slug.startsWith('/') ? p.slug : `/${ p.slug }`);
+        const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( '/tienda' + s )) );
 
-        revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: !res.error ? 'info' : 'error' }));
+        revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: 'error' }));
       } else {
-        const slugsToRevalidate = products.filter(p => p.tags.includes(formTags.tags as Tags)).map(p => p.slug);
-        // slugsToRevalidate.forEach(s => mprRevalidatePage( '/tienda' + s.startsWith('/') ? s : `/${ s }` ));
-        const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( s )) );
+        const slugsToRevalidate = products.filter(p => p.tags.includes(formTags.tags as Tags)).map(p => p.slug.startsWith('/') ? p.slug : `/${ p.slug }`);
+        const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( '/tienda' + s )) );
 
-        revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: !res.error ? 'info' : 'error' }));
+        revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: 'error' }));
       }
-      
-      setIsLoading( false );
-      return;
     };
 
     setIsLoading( false );
+    return;
+  }
+
+  const handleUpdateDolar = async () => {
+    if ( dolarPrice === 0 ) return enqueueSnackbar('El valor no es válido', { variant: 'warning' });
+
+    let key = enqueueSnackbar('¿Quieres actualizar el valor del dólar?', {
+        variant: 'info',
+        action: ConfirmNotificationButtons,
+        autoHideDuration: 15000,
+    });
+
+    const accepted = await PromiseConfirmHelper(key, 15000);
+
+    if ( !accepted ) return;
+
+    const res = await dbProducts.updateDolarPrice( dolarPrice );
+
+    enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
   }
   
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
 
+    setIsLoading( true );
     const resRev = await mprRevalidatePage('/tienda');
+    setIsLoading( false );
 
     enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
   }
@@ -95,7 +129,11 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
   return (
     <ShopLayout title={ 'Tienda Virtual' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' } main>
         
-        <ContainerFavProduct products={ products.sort((a, b) => b.sold - a.sold).slice(0, 4) } />
+        <Box display='flex' sx={{ mb: 1 }}>
+          <Typography sx={{ fontSize: '1.2rem', fontWeight: '500', padding: '.4rem 1rem .5rem', borderRadius: '.3rem', color: '#fbfbfb', backgroundColor: 'var(--secondary-color-2)', position: 'relative', boxShadow: '-.4rem .4rem .6rem -.5rem #444' }}>La tasa de hoy es Bs. { dolar } x 1$</Typography>
+        </Box>
+        
+        <ContainerFavProduct products={ mostSoldProducts } />
 
         <Typography>¡Bienvenido a nuestra tienda online!</Typography>
 
@@ -105,13 +143,34 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
 
         <>
           {
-            TagsArray.map((tag: Tags) => <ContainerProductType key={ tag } type={ tag } products={ products.filter(p => p.tags.includes( tag )) } more />)
+            TagsArray.map((tag: Tags) => <ContainerProductType key={ tag } type={ tag } products={ products.filter(p => p.tags.includes( tag )) } more limit />)
           }
         </>
 
         <>
         { session && session.user && ( session.user.role === 'superuser' || session.user.role === 'admin' ) &&
-          <Box display='flex' flexDirection='column' gap='1rem' sx={{ padding: '1.5rem', backgroundColor: '#fff', borderRadius: '1.2rem', border: '2px solid #eaeaea' }}>
+          <>
+          <Box display='flex' flexDirection='column' gap='1rem' sx={{ padding: '1.5rem', backgroundColor: '#fff', borderRadius: '1.2rem', boxShadow: '0 0 1rem -.6rem #444' }}>
+              
+            <Box>
+              <Typography sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Cambiar cotización del dólar</Typography>
+              <Box display='flex' gap='.5rem'>
+                <TextField
+                  name='dolar'
+                  value={ dolarPrice }
+                  label='Valor del dólar'
+                  type='number'
+                  color='secondary'
+                  variant='filled'
+                  onChange={ ( e ) => {
+                    if ( isNaN(Number( e.target.value )) ) return;
+                    setDolarPrice( Number( e.target.value ) );
+                  }}
+                />
+                <Button color='secondary' onClick={ handleUpdateDolar }>Aplicar</Button>
+              </Box>
+            </Box>
+
             <Box>
               <Typography sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Aplicar descuento a varios productos</Typography>
             </Box>
@@ -185,11 +244,19 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
 
               <Button color='info' sx={{ backgroundColor: 'var(--secondary-color-1)' }} onClick={ () => handleDiscount('slug') }>Aplicar</Button>
             </Box>
+            <Box display='flex' alignItems='center'>
+              <Checkbox
+                  color='secondary'
+                  checked={ revalidatePage }
+                  onChange={ ({ target }) => setRevalidatePage( target.checked ) }
+                />
+              <Typography sx={{ cursor: 'pointer' }} onClick={ () => setRevalidatePage( !revalidatePage ) }>Revalidar página</Typography>
+            </Box>
           </Box>
+          <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+          </>
         }
         </>
-
-      <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
         
     </ShopLayout>
   )
@@ -197,14 +264,49 @@ const TiendaPage: NextPage<Props> = ({ products }) => {
 
 export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
+    const dolar = await dbProducts.backGetDolarPrice();
+
+    if ( !dolar )
+      throw new Error('Ocurrió un error obteniendo el valor del dólar de la DB');
+
     const products = await dbProducts.getAllProducts();
 
     if ( !products )
         throw new Error('Ocurrió un error obteniendo los productos de la DB');
+        
+    const solds = await dbSolds.getSoldProducts();
+        
+    if ( !solds )
+        throw new Error('Ocurrió un error obteniendo los productos vendidos de la DB');
+
+    const mostSoldProducts = products.map(( product ) => {
+      const soldProduct = solds.find(( sold ) => sold.productId.toString() === product._id.toString()) || { soldUnits: 0 };
+
+      return {
+        ...product,
+        sold: product.sold - soldProduct.soldUnits,
+      }
+    }).sort((a: IProduct, b: IProduct) => b.sold - a.sold).slice(0, 4);
+
+    if ( isMonday( (() => Date.now())() ) ) {
+      // @ts-ignore
+      const notAllUpdatedToday = solds.filter(s => !isToday( s.updatedAt )).length > 0;
+      
+      if ( notAllUpdatedToday ) {
+        const updatedAt = (() => Date.now())();
+        const updatedSoldProducts = products.map(( product ) => ({ _id: '', productId: product._id, soldUnits: product.sold, updatedAt }));
+      
+        const res = await dbSolds.updateSoldProducts( updatedSoldProducts );
+  
+        console.log( res ? 'Productos vendidos actualizados' : 'No se actualizaron los productos vendidos' );
+      }
+    }
 
     return {
       props: {
+        mostSoldProducts,
         products,
+        dolar,
       },
       revalidate: 86400, // cada 24h
     }

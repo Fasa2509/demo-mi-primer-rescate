@@ -27,7 +27,11 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
     
     const moreArticles = await dbArticles.getMoreArticles( articles.at(-1)?.createdAt || 0 );
     
-    if ( moreArticles ) setArticles([ ...articles, ...moreArticles ]);
+    if ( ( moreArticles instanceof Array && moreArticles.length > 0 ) ) {
+      setArticles([ ...articles, ...moreArticles ])
+    } else {
+      enqueueSnackbar('No se encontraron más artículos', { variant: 'info' });
+    }
 
     setIsLoading( false );
   }
@@ -35,7 +39,9 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
 
+    setIsLoading( true );
     const resRev = await mprRevalidatePage('/');
+    setIsLoading( false );
 
     enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
   }
@@ -57,10 +63,14 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
           ))
         }
 
-        <Link color='secondary' alignSelf='flex-end' underline='hover' sx={{ cursor: 'pointer' }} onClick={ requestArticles }>Cargar más...</Link>
+        <Link className={ styles.load__articles } color='secondary' alignSelf='flex-end' onClick={ requestArticles }>Cargar más...</Link>
       </section>
 
-      <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+      <>
+          { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
+            <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+          }
+        </>
 
     </MainIndexLayout>
   )

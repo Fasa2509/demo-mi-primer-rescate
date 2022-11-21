@@ -47,7 +47,7 @@ export const WelcomePath = () => {
                 <p><span className={ styles.underline }>Proteger</span> y ayudar a los animales que así lo necesiten</p>
                 <p><span className={ styles.underline }>Disminuir</span> la sobrepoblación de los peludos en la calle</p>
                 <p><span className={ styles.underline }>Acobijar</span> a las mascotas abandonadas y en situación de calle</p>
-                <p><span className={ styles.underline }>Marcar</span> una pauta de respeto y concientización en todo el país, especialmente donde realizamos la labor (Carabobo/ Venezuela) y a donde podamos llegar al rededor del mundo</p>
+                <p><span className={ styles.underline }>Marcar</span> una pauta de respeto y concientización en todo el país, especialmente donde realizamos la labor (Carabobo/Venezuela) y a donde podamos llegar al rededor del mundo</p>
             </div>
         </div>
     </section>

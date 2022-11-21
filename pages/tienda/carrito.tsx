@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { NextPage, GetStaticProps } from 'next';
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Box, Button, Card, CardContent, Checkbox, Divider, TextField, Typography } from '@mui/material';
 import { AddShoppingCart, Check, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
@@ -10,9 +10,14 @@ import { dbOrders, dbProducts } from '../../database';
 import { AuthContext, CartContext, ScrollContext } from '../../context';
 import { CartProductInfo, ShopLayout } from '../../components';
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
-import { IAddress, IContact } from '../../interfaces';
+import { IAddress, IContact, IProduct } from '../../interfaces';
+import haversine from 'haversine-distance';
 
-const CarritoPage: NextPage = () => {
+interface Props {
+  allProducts: IProduct[];
+}
+
+const CarritoPage: NextPage<Props> = ({ allProducts }) => {
 
   const router = useRouter();
   const { user } = useContext( AuthContext );
@@ -23,6 +28,7 @@ const CarritoPage: NextPage = () => {
   const [direction, setDirection] = useState<IAddress>({ address: '', maps: { latitude: null, longitude: null } });
   const [directionError, setDirectionError] = useState('');
   const [checkboxInfo, setCheckboxInfo] = useState( false );
+  const [existencyChecked, setExistencyChecked] = useState( false );
 
   useEffect(() => {
     let shopInfo = JSON.parse( window.localStorage.getItem('mpr__shopInfo') || '{ "any": "" }' );
@@ -31,6 +37,13 @@ const CarritoPage: NextPage = () => {
     setContact( shopInfo.contact );
     setDirection( shopInfo.direction );
   }, [])
+
+  useEffect(() => {
+    if ( existencyChecked ) {
+      console.log( 'Si chequeo la existencia' );
+      setTimeout(() => setExistencyChecked( false ), 60000);
+    }
+  }, [existencyChecked])
 
   const cleaningCart = async () => {
       let key = enqueueSnackbar('¿Quieres vaciar el carrito?', {
@@ -59,19 +72,17 @@ const CarritoPage: NextPage = () => {
       return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
     }
 
-    if ( contact.name.length < 2 ) {
+    if ( contact.name.trim().length < 2 ) {
       return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
     }
     
-    if ( Object.values( contact ).filter(c => c).length < 2 ) {
+    if ( Object.values( contact ).filter(c => c.trim()).length < 2 ) {
       return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
     }
 
     setIsLoading( true );
     
-    const total = cart.reduce(( prev, { quantity, price, discount } ) => prev + quantity * ( price * (1 - discount) ), 0);
-
-    const res = await dbOrders.createNewOrder( user._id, cart, total, direction, contact );
+    const res = await dbOrders.createNewOrder({ userId: user._id, cart, shippingAddress: direction, contact });
 
     if ( res.error ) {
       enqueueSnackbar(res.message, { variant: 'error' });
@@ -84,6 +95,18 @@ const CarritoPage: NextPage = () => {
     enqueueSnackbar(res.message, { variant: 'success' });
     setIsLoading( false );
     return;
+  }
+
+  const handleCheckExistency = async () => {
+    setIsLoading( true );
+
+    const res = await dbProducts.checkProductsExistency( cart.map(({ _id, name, quantity, size }) => ({ _id, name, quantity, size })) );
+
+    if ( res.error && res.payload.length > 0 ) res.payload.forEach(( message ) => enqueueSnackbar(message, { variant: !res.error ? 'success' : 'error', autoHideDuration: 12000 }));
+    !res.error && res.message && enqueueSnackbar(res.message, { variant: 'success' });
+    !res.error && res.message && setExistencyChecked( true );
+
+    setIsLoading( false );
   }
 
   const handleLocation = () => {
@@ -99,8 +122,19 @@ const CarritoPage: NextPage = () => {
       const { latitude, longitude, accuracy } = position.coords;
 
       if ( accuracy > 55 ) {
-        setDirectionError('La precisión fue baja. Por favor inténtalo de nuevo');
+        setDirectionError('La precisión fue baja. Por favor inténtalo de nuevo.');
         setTimeout(() => setDirectionError(''), 15000);
+        return;
+      }
+      
+      const distance = haversine(
+        { longitude: Number(process.env.NEXT_PUBLIC_MPR_LONGITUDE || 0), latitude: Number(process.env.NEXT_PUBLIC_MPR_LATITUDE  || 0)},
+        { longitude, latitude },
+      );
+
+      if ( distance > 11000 ) {
+        setDirectionError('Vaya, parece que estás muy lejos. No llegamos hasta tu ubicación.');
+        setTimeout(() => setDirectionError(''), 20000);
         return;
       }
       
@@ -133,7 +167,9 @@ const CarritoPage: NextPage = () => {
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
 
-    const resRev = await mprRevalidatePage('/tienda/categoria');
+    setIsLoading( true );
+    const resRev = await mprRevalidatePage('/tienda/carrito');
+    setIsLoading( false );
 
     enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
   }
@@ -298,10 +334,26 @@ const CarritoPage: NextPage = () => {
 
                   <Divider sx={{ my: 1 }} />
 
+                  <Box display='flex' alignItems='center' sx={{ maxWidth: '300px' }}>
+                    <Typography>Antes de hacer una compra, pulse aquí para verificar la existencia en stock de los productos.</Typography>
+                  </Box>
+
                   <Button
                     color='secondary'
                     fullWidth
-                    disabled={ cart.length < 1 || isLoading }
+                    sx={{ fontSize: '1rem' }}
+                    disabled={ existencyChecked || cart.length < 1 }
+                    onClick={ handleCheckExistency }
+                  >
+                    Verificar existencias
+                  </Button>
+
+                  <Divider sx={{ my: 1 }} />
+
+                  <Button
+                    color='secondary'
+                    fullWidth
+                    disabled={ cart.length < 1 || isLoading || !existencyChecked }
                     sx={{ fontSize: '1rem' }}
                     onClick={ handleCheckout }
                   >
@@ -312,25 +364,31 @@ const CarritoPage: NextPage = () => {
           </Box>
           
         </Box>
-        <Button variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+        
+        <>
+          { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
+            <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+          }
+        </>
+
     </ShopLayout>
   )
 };
 
-export const getStaticProps: GetStaticProps = async ( ctx ) => {
+// export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
-  const products = await dbProducts.getAllProducts();
+//   const products = await dbProducts.getAllProducts();
 
-  if ( !products ) {
-    throw new Error("Failed to fetch products, check server's logs");
-  }
+//   if ( !products ) {
+//     throw new Error("Failed to fetch products, check server's logs");
+//   }
 
-  return {
-    props: {
-      products,
-    },
-    revalidate: 86400 // 24h
-  }
-}
+//   return {
+//     props: {
+//       products,
+//     },
+//     revalidate: 86400 // 24h
+//   }
+// }
 
 export default CarritoPage;

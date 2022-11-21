@@ -20,8 +20,11 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 const getUserByEmail = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    if ( !req.body.email ) return res.status(400).json({ error: true, message: 'Falta el email' });
-    if ( !isValidEmail( req.body.email ) ) return res.status(400).json({ error: true, message: 'El correo no es válido' })
+    const { email = '', subscribe = 'true' } = req.body;
+
+    if ( !email ) return res.status(400).json({ error: true, message: 'Falta el email' });
+    
+    if ( !isValidEmail( email ) ) return res.status(400).json({ error: true, message: 'El correo no es válido' })
     
     try {
         await db.connect();
@@ -33,13 +36,13 @@ const getUserByEmail = async ( req: NextApiRequest, res: NextApiResponse ) => {
             return res.status(400).json({ error: true, message: 'No existe un usuario con ese correo' });
         }
 
-        user.isSubscribed = true;
+        user.isSubscribed = subscribe === 'true';
 
         await user.save();
         
         await db.disconnect();
 
-        return res.status(200).json({ error: false, message: '¡Ahora estás subscrit@ a MPR!' });
+        return res.status(200).json({ error: false, message: subscribe === 'true' ? '¡Ahora estás suscrit@ a MPR!' : 'Ya no estás suscrit@ a MPR' });
     } catch( error ) {
         console.log( error );
         await db.disconnect();

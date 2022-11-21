@@ -76,7 +76,7 @@ export const SideMenu: FC = () => {
                     </a>
                 </NextLink> */}
                 
-                <SideMenuButton text='Nosotros' links={[{ path: '/miprimerrescate', text: 'Path 1' }, { path: '/miprimerrescate', text: 'Path 2' }, { path: '/miprimerrescate', text: 'Path 3' }]}>
+                <SideMenuButton active={ router.asPath.startsWith('/miprimerrescate') } text='Nosotros' links={[{ path: '/miprimerrescate', text: 'Path 1' }, { path: '/miprimerrescate', text: 'Path 2' }, { path: '/miprimerrescate', text: 'Path 3' }]}>
                     <Pets color='secondary' />
                 </SideMenuButton>
 
@@ -91,7 +91,7 @@ export const SideMenu: FC = () => {
                     </a>
                 </NextLink> */}
 
-                <SideMenuButton text='Apoyo' links={[{ path: '/apoyo', text: 'Path 1' }, { path: '/apoyo', text: 'Path 2' }, { path: '/apoyo', text: 'Path 3' }]}>
+                <SideMenuButton active={ router.asPath.startsWith('/apoyo') } text='Apoyo' links={[{ path: '/apoyo', text: 'Path 1' }, { path: '/apoyo', text: 'Path 2' }, { path: '/apoyo', text: 'Path 3' }]}>
                     <AddAlert color='secondary' />
                 </SideMenuButton>
 
@@ -106,7 +106,7 @@ export const SideMenu: FC = () => {
                     </a>
                 </NextLink> */}
 
-                <SideMenuButton text='Adoptar' links={[{ path: '/adoptar/perros', text: 'Perros' }, { path: '/adoptar/gatos', text: 'Gatos' }, { path: '/adoptar/otros', text: 'Otros' }, { path: '/adoptar/formulario', text: 'Formulario' }]}>
+                <SideMenuButton active={ router.asPath.startsWith('/adoptar') } text='Adoptar' links={[{ path: '/adoptar/perros', text: 'Perros' }, { path: '/adoptar/gatos', text: 'Gatos' }, { path: '/adoptar/otros', text: 'Otros' }, { path: '/adoptar/formulario', text: 'Formulario' }]}>
                     <VolunteerActivism color='secondary' />
                 </SideMenuButton>
 
@@ -121,7 +121,7 @@ export const SideMenu: FC = () => {
                     </a>
                 </NextLink> */}
 
-                <SideMenuButton text='Cambios' links={[{ path: '/cambios', text: 'Link 1' }, { path: '/cambios', text: 'Link 2' }, { path: '/cambios', text: 'Link 3' }]}>
+                <SideMenuButton active={ router.asPath.startsWith('/cambios') } text='Cambios' links={[{ path: '/cambios', text: 'Link 1' }, { path: '/cambios', text: 'Link 2' }, { path: '/cambios', text: 'Link 3' }]}>
                     <TrendingUp color='secondary' />
                 </SideMenuButton>
 
@@ -216,13 +216,13 @@ export const SideMenu: FC = () => {
                     </ListItem>
                     </>
                 ) : (
-                    <NextLink href={ '/auth' }>
+                    <NextLink href={ '/auth?p=' + router.asPath }>
                         <a onClick={ toggleSideMenu }>
                             <ListItem button>
                                 <ListItemIcon>
                                     <VpnKey color='secondary' />
                                 </ListItemIcon>
-                                <ListItemText primary={'Ingresar'} />
+                                <ListItemText primary={'Entrar'} />
                             </ListItem>
                         </a>
                     </NextLink>

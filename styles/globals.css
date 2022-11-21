@@ -23,6 +23,7 @@ body {
   overflow-x: hidden;
   background-color: #fafafa;
   background-image: url(/background-blob-scatter.svg);
+  background-size: cover;
   background-repeat: repeat;
 }
 

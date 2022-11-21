@@ -24,15 +24,6 @@ const orderSchema = new Schema({
         },
         slug: { type: String, required: true },
     }],
-    total: { type: Number, required: true },
-    isPaid: {
-        type: String,
-        enum: {
-            values: [ 'paid', 'notpaid', 'pending' ],
-            message: '{VALUE} no es un valor permitido',
-        },
-        default: 'pending',
-    },
     shippingAddress: {
         type: {
             address: { type: String, required: true },
@@ -45,6 +36,29 @@ const orderSchema = new Schema({
             },
         },
         required: true,
+    },
+    transaction: {
+        type: {
+            status: {
+                type: String,
+                enum: {
+                    values: ['send', 'paid', 'notpaid', 'pending'],
+                    message: '{VALUE} no es un valor permitido',
+                },
+                default: 'pending',
+            },
+            transactionId: { type: String, required: true },
+            method: {
+                type: String,
+                enum: {
+                    values: ['Pago móvil', 'Paypal'],
+                    message: '{VALUE} no es un valor permitido'
+                },
+                required: true,
+            },
+            totalUSD: { type: Number, required: true },
+            totalBs: { type: Number, required: true },
+        }
     },
     contact: {
         type: {

@@ -1,29 +1,33 @@
-import { FC } from "react"
-import NextLink from "next/link"
+import { FC } from 'react';
+import NextLink from 'next/link';
+import { Link } from '@mui/material';
 
-import { LongProductCard } from "./";
-import { IProduct } from "../../interfaces"
-import styles from "./ContainerProduct.module.css"
-import { formatText } from "../../utils";
+import { LongProductCard } from '.';
+import { formatText } from '../../utils';
+import { IProduct } from '../../interfaces';
+import styles from './ContainerProduct.module.css';
 
 interface Props {
     type: string;
     products: IProduct[];
     className?: string;
     more?: boolean;
+    limit?: boolean;
 }
 
-export const ContainerProductType: FC<Props> = ({ type, products, className = '', more = false }) => {
+export const ContainerProductType: FC<Props> = ({ type, products, className = '', more = false, limit = false }) => {
 
   return (
         <section className={ styles.products__type__container + ' ' + className }>
-            <p className={ styles.subtitle }>{ formatText( type ) }</p>
+            <p className={ styles.products__type__title }>{ formatText( type ) }</p>
                 {
-                    products.slice(0, 5).map( (product) => <LongProductCard key={ product.name } product={ product } />)
+                    ( limit )
+                        ? products.slice(0, 6).map( (product) => <LongProductCard key={ product.name } product={ product } />)
+                        : products.map( (product) => <LongProductCard key={ product.name } product={ product } />)
                 }
-            {   more &&
+            { more &&
                 <NextLink href={ `/tienda/categoria?tipo=${ type }` } passHref>
-                    <a className={ styles.products__link }>Explorar más...</a>
+                    <Link className={ styles.products__link } color='secondary' alignSelf='flex-end'>Cargar más...</Link>
                 </NextLink>
             }
         </section>

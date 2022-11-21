@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 import { ConfirmationNumber } from '@mui/icons-material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { nextAuthOptions } from '../../api/auth/[...nextauth]';
 import { MainLayout, OrderInfo } from '../../../components';
-import { Box, Chip, Grid, Typography } from '@mui/material';
+import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { dbOrders } from '../../../database';
-import { IOrder, IOrderInfo } from '../../../interfaces';
+import { IOrder, SpanishOrderStatus, StatusColors } from '../../../interfaces';
 import { format } from '../../../utils';
 
 interface Props {
@@ -18,9 +18,8 @@ interface Props {
 const columns: GridColDef[] = [
   {
     field: 'id',
-    headerName: 'ID de Orden',
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
+    headerName: 'ID de Órden',
+    renderCell: ({ row }: GridRenderCellParams) => {
       return <Typography sx={{ overflowX: 'auto' }}>{ row.id }</Typography>
     },
     width: 120
@@ -28,8 +27,7 @@ const columns: GridColDef[] = [
   {
     field: 'user',
     headerName: 'ID del Usuario',
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
+    renderCell: ({ row }: GridRenderCellParams) => {
       return <Typography sx={{ overflowX: 'auto' }}>{ row.user }</Typography>
     },
     sortable: false,
@@ -37,12 +35,21 @@ const columns: GridColDef[] = [
     width: 120
   },
   {
+    field: 'transaction',
+    headerName: 'ID de la Transacción',
+    renderCell: ({ row }: GridRenderCellParams) => {
+      return <Typography sx={{ overflowX: 'auto' }}>{ row.transaction.transactionId }</Typography>
+    },
+    sortable: false,
+    disableColumnMenu: true,
+    width: 120
+  },
+  {
     field: 'seeOrder',
-    headerName: 'Info Orden',
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
+    headerName: 'Info Órden',
+    renderCell: ({ row }: GridRenderCellParams) => {
       return (
-        <Typography sx={{ color: '#666', textDecoration: 'underline', cursor: 'pointer' }} onClick={ () => row.setOrder({ orderId: row.id, products: row.orderItems, isPaid: row.isPaid, total: row.total, shippingAddress: row.shippingAddress, contact: row.contact, createdAt: row.createdAt }) }>Ver Orden</Typography>
+        <Button color='secondary' onClick={ () => row.setOrder( row.order ) }>Ver órden</Button>
       )
     },
     sortable: false,
@@ -50,15 +57,17 @@ const columns: GridColDef[] = [
     width: 120
   },
   {
-    field: 'isPaid',
-    headerName: 'Pagada',
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
+    field: 'status',
+    headerName: 'Estado',
+    renderCell: ({ row }: GridRenderCellParams) => {
       return (
         <Box>
           <Chip
-            color={ ( row.isPaid ) === 'paid' ? 'success' : ( row.isPaid === 'notpaid' ) ? 'error' : 'warning' }
-            label={ ( row.isPaid ) === 'paid' ? 'Pagada' : ( row.isPaid === 'notpaid' ) ? 'No pagada' : 'Pendiente' }
+            // @ts-ignore
+            color={ StatusColors[ row.transaction.status ] }
+            // @ts-ignore
+            label={ SpanishOrderStatus[ row.transaction.status ] }
+            sx={{ fontWeight: 500, color: '#fff' }}
             variant='filled'
           />
         </Box>
@@ -67,7 +76,16 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     width: 120
   },
-  { field: 'total', headerName: 'Total', width: 210 },
+  {
+    field: 'total',
+    headerName: 'Total',
+    renderCell: ({ row }: GridRenderCellParams) => {
+      return (
+        <Typography>{ format( row.total ) }</Typography>
+      )
+    },
+    width: 100
+  },
   { field: 'createdAt', headerName: 'Fecha de creación', disableColumnMenu: true, width: 200 },
 ]
 
@@ -75,11 +93,10 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
 
   const [thisOrders, setThisOrders] = useState( orders );
 
-  const [orderInfo, setOrderInfo] = useState<IOrderInfo>({
-    orderId: '',
-    products: [],
-    total: 0,
-    isPaid: 'notpaid',
+  const [orderInfo, setOrderInfo] = useState<IOrder>({
+    _id: '',
+    user: '',
+    orderItems: [],
     shippingAddress: {
       address: '',
       maps: {
@@ -93,21 +110,28 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
       instagram: '',
       whatsapp: '',
     },
-    createdAt: '',
+    transaction: {
+      status: 'notpaid',
+      transactionId: '',
+      method: 'Pago móvil',
+      totalUSD: 0,
+      totalBs: 0,
+    },
+    createdAt: Date.now(),
   });
 
   const rows = thisOrders.map(order => ({
     setOrder: setOrderInfo,
     id: order._id,
     user: order.user,
-    seeOrder: '',
-    isPaid: order.isPaid,
-    total: `${ format( order.total ) } = Bs. ${ (order.total * 8.23).toFixed(2) }`,
+    order,
     orderItems: order.orderItems,
     shippingAddress: order.shippingAddress,
     contact: order.contact,
+    transaction: order.transaction,
+    total: order.transaction.totalUSD,
     createdAt: new Date( order.createdAt ).toLocaleString(),
-  }))
+  }));
 
   return (
     <MainLayout title='Órdenes' pageDescription='Información de las órdenes' titleIcon={ <ConfirmationNumber color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
@@ -137,7 +161,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
   const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
-  const validRoles = ['superuser', 'admin']; 
+  const validRoles = ['superuser', 'admin'];
 
   // @ts-ignore
   if ( !session || !session.user || !validRoles.includes( session.user.role ) ) {

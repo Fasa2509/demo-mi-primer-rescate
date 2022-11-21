@@ -1,12 +1,24 @@
-.changes__section {
+/* .changes__section {
     display: grid;
     justify-items: center;
     grid-template-columns: 1fr;
     gap: 1.8rem;
     margin: 1.5rem 0;
+} */
+
+.changes__section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
 }
 
-@media screen and (min-width: 576px) {
+.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* @media screen and (min-width: 576px) {
     .changes__section {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
@@ -16,4 +28,4 @@
     .changes__section {
         grid-template-columns: 1fr 1fr;
     }
-}
+} */

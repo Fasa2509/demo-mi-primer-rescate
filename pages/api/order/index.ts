@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { isValidObjectId } from 'mongoose';
 import { db } from '../../../database';
 import { Order, Product } from '../../../models';
-import { InStockSizes, IOrder, IOrderProduct, IProduct } from '../../../interfaces';
+import { IOrder, IOrderProduct } from '../../../interfaces';
 
 type Data =
 | { error: boolean; message: string; }
@@ -14,17 +14,23 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
             return saveOrder( req, res );
 
         default:
-            return res.status(400).json({ error: true, message: 'BAD REQUEST' })
+            return res.status(400).json({ error: true, message: 'BAD REQUEST' });
     }
     
 }
 
 const saveOrder = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    const { user = '', orderItems = [], total = 0, shippingAddress = { address: '', maps: { latitud: null, longitude: null, } }, contact = { facebook: '', instagram: '', google: '' } } = req.body;
+    const { user = '', orderItems = [], shippingAddress = { address: '', maps: { latitud: null, longitude: null, } }, contact = { name: '', facebook: '', instagram: '', whatsapp: '' }, transaction } = req.body;
 
-    if ( !user || !isValidObjectId( user ) || orderItems.length < 1 || total === 0 || shippingAddress.address.length < 5 || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(d => d).length < 1 )
-        return res.status(400).json({ error: true, message: 'Faltan datos de la orden' });
+    if ( !user || !isValidObjectId( user ) || orderItems.length < 1 || shippingAddress.address.length < 5 || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(d => d).length < 1 )
+        return res.status(400).json({ error: true, message: 'Faltan datos de la órden' });
+        
+    if ( !contact.name || Object.values( contact ).filter(c => typeof c === 'string' && c.length > 0).length < 2 ) 
+        return res.status(400).json({ error: true, message: 'La información de la órden es incorrecta' });
+        
+    if ( !transaction || !( transaction instanceof Object ) || !transaction.method || !transaction.status || !transaction.transactionId || !transaction.totalUSD || !transaction.totalBs )
+        return res.status(400).json({ error: true, message: 'Información de la órden no es correcta' });
 
     try {
         await db.connect();
@@ -33,14 +39,14 @@ const saveOrder = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
         const products = await Product.find({ _id: { $in: orderItemsId } });
 
-        if ( !products ) return res.status(400).json({ error: true, message: 'Ocurrió un error buscando los productos' });
+        if ( !products || products.length < 1 ) return res.status(400).json({ error: true, message: 'No se encontraron productos' });
 
         for ( let p of orderItems ) {
             const productInDb = products.find(( item ) => item._id.toString() === p._id );
 
             if ( !productInDb ) {
                 await db.disconnect();
-                return res.status(400).json({ error: true, message: 'Ocurrió un error buscando los productos' });
+                return res.status(400).json({ error: true, message: 'No se encontró uno de los productos' });
             }
             
             // @ts-ignore
@@ -52,7 +58,7 @@ const saveOrder = async ( req: NextApiRequest, res: NextApiResponse ) => {
             }
         }
 
-        products.forEach(async ( p, index ) => {
+        products.forEach(async ( p ) => {
             const productsInOrder: IOrderProduct[] = orderItems.filter(( item: IOrderProduct ) => item._id === p._id.toString());
 
             let unitsSold = 0;
@@ -70,9 +76,9 @@ const saveOrder = async ( req: NextApiRequest, res: NextApiResponse ) => {
         const newOrder = new Order({
             user,
             orderItems,
-            total,
             shippingAddress,
             contact,
+            transaction,
         });
         
         await newOrder.save();

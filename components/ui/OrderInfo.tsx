@@ -1,26 +1,27 @@
 import { Dispatch, FC, SetStateAction, useContext, useState } from "react";
 import { Box, Button, Chip, Link, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
+import { format as formatDate } from 'date-fns';
 
 import { dbOrders } from "../../database";
 import { ScrollContext } from "../../context";
-import { IOrder, IOrderInfo, Paid } from "../../interfaces";
-import { format, ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils";
+import { IOrder, Paid, SpanishOrderStatus, StatusColors } from "../../interfaces";
+import { format, ConfirmNotificationButtons, PromiseConfirmHelper, formatText } from "../../utils";
 
 interface Props {
-    info: IOrderInfo;
+    info: IOrder;
     orders: IOrder[];
     setOrders: Dispatch<SetStateAction<IOrder[]>>;
 }
 
 export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
 
-    const { orderId, products, isPaid, total, shippingAddress, contact, createdAt } = info;
+    const { _id: orderId, orderItems, transaction, user, shippingAddress, contact, createdAt } = info;
     const { setIsLoading } = useContext( ScrollContext );
     const { enqueueSnackbar } = useSnackbar();
 
     const updatePaidOrder = async ( orderStatus: Paid ) => {
-            let key = enqueueSnackbar(`¿Segur@ que quieres marcarla como ${ orderStatus === 'paid' ? 'Pagada' : orderStatus === 'notpaid' ? 'No Pagada' : 'Pendiente' }?`, {
+            let key = enqueueSnackbar(`¿Segur@ que quieres marcarla como ${ SpanishOrderStatus[orderStatus] }?`, {
                 variant: 'info',
                 autoHideDuration: 10000,
                 action: ConfirmNotificationButtons,
@@ -38,10 +39,10 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
 
             if ( !res.error ) {
                 setOrders( orders.map(order => {
-                    if ( order._id === orderId ) return { ...order, isPaid: orderStatus };
+                    if ( order._id === orderId ) return { ...order, transaction: { ...order.transaction, status: orderStatus } };
                     return order;
-                }))
-                info.isPaid = orderStatus;
+                }));
+                info.transaction.status = orderStatus;
             }
 
             setIsLoading( false );
@@ -49,9 +50,19 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
     }
   
     return (
-        <Box display='flex' flexDirection='column' gap='1rem' sx={{ border: '2px solid #eaeaea', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
+        <Box display='flex' flexDirection='column' gap='1rem' sx={{ boxShadow: '0 0 1rem -.7rem #333', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
            
-            <Typography>Orden creada el { createdAt }</Typography>
+            <Typography>Órden creada el { !orderId ? '00/00/00 00:00:00am' : formatDate( createdAt, 'dd/MM/yyyy hh:mm:ssaa' ).toLowerCase() }</Typography>
+
+            <Box display='flex' flexDirection='column'>
+                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>ID del Usuario:</Typography>
+                <Typography sx={{ fontSize: '1.1rem' }}>{ user }</Typography>
+            </Box>
+
+            <Box display='flex' flexDirection='column'>
+                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>ID de la transacción:</Typography>
+                <Typography sx={{ fontSize: '1.1rem' }}>{ transaction.transactionId }</Typography>
+            </Box>
 
             <Box display='flex' flexDirection='column'>
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Nombre de contacto:</Typography>
@@ -62,7 +73,7 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Método de contacto:</Typography>
                 <Box display='flex' flexWrap='wrap' gap='1.2rem' sx={{ fontSize: '1.1rem' }}>
                     {
-                        Object.entries( contact ).filter(c => c[1] && c[0] !== '_id' && c[0] !== 'name').map(c => <Typography key={ c[0] }>{ c[0] }: { c[1] }</Typography>)
+                        Object.entries( contact ).filter(c => c[1] && c[0] !== '_id' && c[0] !== 'name').map(c => <Typography key={ c[0] }>{ formatText( c[0] ) }: { c[1] }</Typography>)
                     }
                 </Box>
             </Box>
@@ -71,10 +82,10 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Productos de la Orden:</Typography>
                 <Box display='flex' flexDirection='column' gap='.3rem' sx={{ fontSize: '1.1rem' }}>
                     {
-                        products.map(( product, index: number ) => (
+                        orderItems.map(( product, index: number ) => (
                             <Box key={ index }>
                                 <Typography>
-                                    { product.name }{ product.size !== 'unique' && ` (${ product.size })` } ={ '>' } { product.quantity } { product.quantity === 1 ? 'unidad' : 'unidades' } x { product.discount > 0 ? format( product.price * ( 1 - product.discount ) ) : format( product.price ) } = { product.discount > 0 ? format( product.price * (1 - product.discount) * product.quantity ) : format( product.price * product.quantity ) }
+                                    { product.name }{ product.size !== 'unique' && ` (${ product.size })` } ={ '>' } { product.quantity } { product.quantity === 1 ? 'unidad' : 'unidades' } x { format( product.price * ( 1 - product.discount ) ) } = { format( product.price * (1 - product.discount) * product.quantity ) }
                                 </Typography>
                             </Box>
                         ))
@@ -85,21 +96,26 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
             <Box display='flex' justifyContent='space-between' gap='1rem' sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
                 <Box>
                     <Chip
-                        color={ ( isPaid ) === 'paid' ? 'success' : ( isPaid === 'notpaid' ) ? 'error' : 'warning' }
-                        label={ ( isPaid ) === 'paid' ? 'Pagada' : ( isPaid === 'notpaid' ) ? 'No pagada' : 'Pendiente' }
+                        // @ts-ignore
+                        color={ StatusColors[transaction.status] }
+                        label={ SpanishOrderStatus[transaction.status] }
                         variant='filled'
-                        />
+                        sx={{ color: '#fafafa' }}
+                    />
                 </Box>
                 <Box display='flex' gap='.5rem' flexWrap='wrap'>
                     <Typography>Marcar como</Typography>
-                    <Box display='flex' gap='.5rem'>
-                        <Button color='success' variant='outlined' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('paid') }>
+                    <Box display='flex' gap='.5rem' flexWrap='wrap'>
+                        <Button color='secondary' sx={{ fontWeight: 'bold', color: '#fafafa' }} onClick={ () => updatePaidOrder('send') }>
+                            Enviada
+                        </Button>
+                        <Button color='success' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('paid') }>
                             Pagada
                         </Button>
-                        <Button color='warning' variant='outlined' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('pending') }>
+                        <Button color='warning' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('pending') }>
                             Pendiente
                         </Button>
-                        <Button color='error' variant='outlined' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('notpaid') }>
+                        <Button color='error' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('notpaid') }>
                             No Pagada
                         </Button>
                     </Box>
@@ -108,7 +124,8 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
 
             <Box display='flex' flexDirection='column'>
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Total:</Typography>
-                <Typography>{ total }</Typography>
+                <Typography>{ format( transaction.totalUSD ) }</Typography>
+                <Typography>Bs. { ( transaction.totalBs ) }</Typography>
             </Box>
 
             <Box display='flex' flexDirection='column'>

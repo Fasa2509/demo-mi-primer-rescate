@@ -163,7 +163,7 @@ export const AdoptionForm: FC = () => {
         </Box>
 
         <Box>
-            <Typography>Si este ya fue adoptado, ¿estaría interesado en adoptar otro?</Typography>
+            <Typography>Si este ya fue adoptado, ¿estaría interesad@ en adoptar otro?</Typography>
             <TextField
                 name='particular2'
                 value={ form.particular2 }

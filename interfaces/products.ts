@@ -3,17 +3,17 @@ import { ImageObj } from './articles'
 
 export interface IProduct {
   
-    _id: string;
-    name: string;
+    _id        : string;
+    name       : string;
     description: string;
-    images: ImageObj[];
-    inStock: InStockSizes;
-    price: number;
-    discount: number;
-    tags: Tags[];
-    sold: number;
-    slug: string;
-    isAble: boolean;
+    images     : ImageObj[];
+    inStock    : InStockSizes;
+    price      : number;
+    discount   : number;
+    tags       : Tags[];
+    sold       : number;
+    slug       : string;
+    isAble     : boolean;
   
 }
 
@@ -35,11 +35,11 @@ export type InStockSizes = {
   XXXL?: number;
 }
 
-export interface ISold {
-  _id: string;
-  productId: string;
-  soldUnits: number;
-}
+// export interface ISold {
+//   _id: string;
+//   productId: string;
+//   soldUnits: number;
+// }
 
 export const initialFavProducts: IProduct[] = [
     {
@@ -114,7 +114,7 @@ export const initialFavProducts: IProduct[] = [
       _id: 'abcd3',
       images: [
         {
-          url: '/square-dog.jpg',
+          url: '/gato-2.jpg',
           alt: 'Perro cuadrado',
           width: 500,
           height: 500,
@@ -130,6 +130,12 @@ export const initialFavProducts: IProduct[] = [
           alt: 'Perro 1',
           width: 300,
           height: 300,
+        },
+        {
+          url: '/gato-1.webp',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
         },
       ],
       name: 'Saco de perrarina XXXXX (20Kg)',
@@ -148,7 +154,7 @@ export const initialFavProducts: IProduct[] = [
       _id: 'abcd4',
       images: [
         {
-          url: '/square-dog.jpg',
+          url: '/gato-1.webp',
           alt: 'Perro cuadrado',
           width: 500,
           height: 500,
@@ -170,6 +176,102 @@ export const initialFavProducts: IProduct[] = [
       tags: ['consumibles'],
       sold: 0,
       slug: '/vitamina_yyy',
+      isAble: true,
+    },
+    {
+      _id: 'abcde5',
+      images: [
+        {
+          url: '/gato-2.jpg',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
+        },
+        {
+          url: '/perro-1.webp',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
+        },
+      ],
+      name: 'Suplemento Vitamínico',
+      description: 'Vitamina para reforzar las defensas de tu mascota y fomentar su crecimiento',
+      price: 3,
+      discount: 0,
+      inStock: {
+        unique: 15
+      },
+      tags: ['consumibles', 'útil'],
+      sold: 0,
+      slug: '/suplemento_vitaminico',
+      isAble: true,
+    },
+    {
+      _id: 'abcde6',
+      images: [
+        {
+          url: '/gato-1.webp',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
+        },
+        {
+          url: '/gato-2.jpg',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
+        },
+        {
+          url: '/Logo-Redes.png',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
+        },
+      ],
+      name: 'Hueso de Gomita',
+      description: 'Hueso de gomita para que tu mascota se distraiga',
+      price: 7,
+      discount: 0.1,
+      inStock: {
+        unique: 6
+      },
+      tags: ['consumibles', 'accesorios'],
+      sold: 0,
+      slug: '/hueso_de_gomita',
+      isAble: true,
+    },
+    {
+      _id: 'abcde7',
+      images: [
+        {
+          url: '/square-dog.jpg',
+          alt: 'Perro 2',
+          width: 250,
+          height: 250,
+        },
+        {
+          url: '/gato-2.jpg',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
+        },
+        {
+          url: '/Logo-Redes.png',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
+        },
+      ],
+      name: 'Arete para Gato',
+      description: 'Arete para que tu mascota luzca original',
+      price: 5,
+      discount: 0.15,
+      inStock: {
+        unique: 6
+      },
+      tags: ['accesorios'],
+      sold: 0,
+      slug: '/arete_para_gato',
       isAble: true,
     },
 ]
@@ -327,6 +429,12 @@ export const initialProducts: IProduct[] = [
       _id: 'abcd9',
       images: [
         {
+          url: '/gato-2.jpg',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
+        },
+        {
           url: '/square-dog.jpg',
           alt: 'Perro cuadrado',
           width: 500,
@@ -361,16 +469,16 @@ export const initialProducts: IProduct[] = [
       _id: 'abcd10',
       images: [
         {
-          url: '/square-dog.jpg',
+          url: '/gato-2.jpg',
           alt: 'Perro cuadrado',
           width: 500,
           height: 500,
         },
         {
-          url: '/perro-1.webp',
-          alt: 'Perro 1',
-          width: 300,
-          height: 300,
+          url: '/square-dog.jpg',
+          alt: 'Perro cuadrado',
+          width: 500,
+          height: 500,
         },
         {
           url: '/perro-2.webp',
@@ -399,7 +507,7 @@ export const initialProducts: IProduct[] = [
       _id: 'abcd11',
       images: [
         {
-          url: '/Logo-Redes.png',
+          url: '/gato-1.webp',
           alt: 'Perro 2',
           width: 250,
           height: 250,
@@ -411,7 +519,7 @@ export const initialProducts: IProduct[] = [
           height: 300,
         },
         {
-          url: '/perro-2.webp',
+          url: '/gato-2.jpg',
           alt: 'Perro 2',
           width: 250,
           height: 250,

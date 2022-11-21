@@ -1,8 +1,9 @@
 import { FC, useState, useEffect } from 'react';
-import Image from 'next/image'
-import NextLink from 'next/link'
+import Image from 'next/image';
+import NextLink from 'next/link';
 import { Box, Typography, Chip } from '@mui/material';
 
+import { MyImage } from '../cards';
 import { format } from '../../utils';
 import { IProduct } from '../../interfaces';
 import styles from './ProductCard.module.css'
@@ -29,13 +30,15 @@ export const LongProductCard: FC<Props> = ({ product }) => {
     <NextLink href={ '/tienda' + product.slug } prefetch={ false }>
       <div className={ styles.product__long }>
         <div className={ styles.product__long__image }>
-          <Image src={ product.images[0].url } alt={ product.name } width={ 1 } height={ 1 } layout='responsive' />
+          <Box sx={{ position: 'relative', height: { xs: '145px', sm: '200px' } }}>
+              <MyImage src={ product.images[0].url } alt={ product.name } width={ 1 } height={ 1 } layout='responsive' />
+          </Box>
           { q <= 10 &&
             <Chip
               color='warning'
               label='Quedan pocos'
               variant='outlined'
-              sx={{ position: 'absolute', zIndex: 99, bottom: '.5rem', right: '.5rem' }}
+              sx={{ position: 'absolute', zIndex: 99, bottom: '.5rem', right: '.5rem', fontSize: '14px' }}
             />
           }
         </div>
@@ -45,7 +48,14 @@ export const LongProductCard: FC<Props> = ({ product }) => {
             <p className={ styles.product__price } style={ product.discount > 0 && product.discount <= 0.5 ? { fontSize: '1.1rem', color: '#666', textDecoration: 'line-through' } : {}}>{ format( product.price ) }</p>
             { product.discount > 0 && product.discount <= 0.5 && <p className={ styles.product__discount }>{ format( product.price - product.discount * product.price ) }</p> }
           </Box>
-          <div className={ styles.product__long__description }>{ product.description }</div>
+          <p className={ styles.product__long__description }>{ product.description }</p>
+          <Box className={ styles.product__long__tags } sx={{ display: { xs: 'flex', sm: 'none' } }}>
+            <Box display='flex' flexWrap='wrap' justifyContent='flex-end' gap='0 .5rem'>
+            {
+              product.tags.map(( tag ) => <span key={ tag }>#{ tag }</span>)
+            }
+            </Box>
+          </Box>
         </div>
       </div>
     </NextLink>

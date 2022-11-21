@@ -76,10 +76,10 @@ const columns: GridColDef[] = [
 
 interface Props {
   users: IUser[];
-  session: Session;
+  adminId: Session;
 }
 
-const UsuariosPage: NextPage<Props> = ({ users, session }) => {
+const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
 
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
@@ -127,7 +127,7 @@ const UsuariosPage: NextPage<Props> = ({ users, session }) => {
   const rows = users.map(( user ) => ({
     id: user._id,
     // @ts-ignore
-    thisUserId: session.user._id,
+    thisUserId: adminId,
     name: user.name,
     email: user.email,
     role: user.role,
@@ -203,7 +203,8 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
   return {
     props: {
       users,
-      session,
+      // @ts-ignore
+      adminId: session.user._id,
     }
   }
 }

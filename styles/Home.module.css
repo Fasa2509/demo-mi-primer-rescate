@@ -8,8 +8,26 @@
     display: flex;
     flex-direction: column;
     /* background-image: url(/background-blob-scatter.svg); */
-    background-size: contain;
-    background-repeat: repeat-y;
+    /* background-size: contain; */
+    /* background-repeat: repeat-y; */
+}
+
+.load__articles {
+    background-color: var(--secondary-color-1);
+    padding: .3rem .8rem;
+    color: #fff;
+    font-weight: 600;
+    border: thin solid var(--secondary-color-1);
+    border-radius: 5rem;
+    cursor: pointer;
+    transition: background-color 450ms ease, color 450ms ease;
+}
+
+@media (hover: hover) {
+    .load__articles:hover {
+        background-color: #fff;
+        color: var(--secondary-color-1);
+    }
 }
 
 @media screen and (min-width: 576px) {
