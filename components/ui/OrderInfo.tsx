@@ -50,7 +50,7 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
     }
   
     return (
-        <Box display='flex' flexDirection='column' gap='1rem' sx={{ boxShadow: '0 0 1rem -.7rem #333', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
+        <Box className='fadeIn' display='flex' flexDirection='column' gap='1rem' sx={{ boxShadow: '0 0 1rem -.7rem #333', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
            
             <Typography>Órden creada el { !orderId ? '00/00/00 00:00:00am' : formatDate( createdAt, 'dd/MM/yyyy hh:mm:ssaa' ).toLowerCase() }</Typography>
 

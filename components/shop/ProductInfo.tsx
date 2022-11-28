@@ -60,9 +60,11 @@ export const ProductInfo: FC<Props> = ({ product }) => {
 
                 <Typography className={ styles.description }>{ description }</Typography>
 
-                <Box display='flex' gap='1rem' alignItems='center'>
-                    <Typography>Tienes</Typography><ItemCounter quantity={ currentValue } updateQuantity={ setCurrentValue } maxValue={ unique !== -1 ? unique : product.inStock[currentSize] || 9 } />
-                </Box>
+                { sizes.length > 0 &&
+                    <Box display='flex' gap='1rem' alignItems='center'>
+                        <Typography>Tienes</Typography><ItemCounter quantity={ currentValue } updateQuantity={ setCurrentValue } maxValue={ unique !== -1 ? unique : product.inStock[currentSize] || 9 } />
+                    </Box>
+                }
 
                 {
                     unique === -1 && sizes.length > 0 &&
@@ -70,7 +72,7 @@ export const ProductInfo: FC<Props> = ({ product }) => {
                 }
 
                 {
-                    unique <= 0 && sizes.length === 0 &&
+                    sizes.length === 0 &&
                     <Typography>¡Vaya! Parece que no tenemos este producto.</Typography>
                 }
 

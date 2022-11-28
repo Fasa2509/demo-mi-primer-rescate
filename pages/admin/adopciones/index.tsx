@@ -122,7 +122,7 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions }) => {
 
       {
         adoptions.length > 0
-          ? <Grid container className='fadeIn'>
+          ? <Grid container className='fadeIn' sx={{ backgroundColor: '#fafafa', borderRadius: '4px' }}>
               <Grid item xs={ 12 } sx={{ height: 660, width: '100%' }}>
                 <DataGrid
                     rows={ rows }
@@ -135,7 +135,9 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions }) => {
           : <Typography variant='h2'>No se encontraron adopciones en la base de datos.</Typography>
       }
 
-      <AdminAdoptionInfo adoption={ adoption } />
+      <>
+      { adoption._id && <AdminAdoptionInfo adoption={ adoption } /> }
+      </>
 
     </MainLayout>
   )

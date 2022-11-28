@@ -1,48 +1,91 @@
 import { FC, useEffect, useReducer } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { Session } from 'next-auth';
+import { useSession, signOut, getSession } from 'next-auth/react';
+import { useSnackbar } from 'notistack';
+import { isBefore, isToday, isTomorrow } from 'date-fns';
 import Cookies from 'js-cookie';
-import { IUser } from '../../interfaces';
-import { AuthContext, authReducer } from './';
+
 import { mprApi } from '../../mprApi';
-import axios from 'axios';
+import { IUser } from '../../interfaces';
+import { ConfirmNotificationButtons, PromiseConfirmHelper, validations } from '../../utils';
+
+import { AuthContext, authReducer } from './';
 
 export interface AuthState {
     isLoggedIn: boolean;
     user?: IUser;
+    expires?: number;
 }
 
 
 interface props {
-    children: JSX.Element
+    children: JSX.Element;
 }
 
 
 const AUTH_INITIAL_STATE: AuthState = {
     isLoggedIn: false,
     user: undefined,
+    expires: undefined,
 }
 
 
 export const AuthProvider: FC<props> = ({ children }) => {
 
+    const { enqueueSnackbar } = useSnackbar();
     const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
     const session = useSession();
 
     useEffect(() => {
-        if ( session.status === 'authenticated' ) {
-            dispatch({ type: 'Auth - Login', payload: session.data.user as IUser })
+        ( session.status === 'authenticated' ) && dispatch({ type: 'Auth - Login', payload: session.data });
+    }, [session.status, session.data]);
+
+    useEffect(() => {
+        if ( session.data && session.data.expires ) {
+          if ( Cookies.get('mpr__extendSession') === 'true' && ( isToday( new Date( session.data.expires ) ) || isTomorrow( new Date( session.data.expires ) ) )) {
+            (async () => {
+    
+              let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
+                variant: 'info',
+                autoHideDuration: 15000,
+                action: ConfirmNotificationButtons,
+              })
+    
+              const confirm = await PromiseConfirmHelper( key, 15000 );
+           
+              if ( !confirm ) {
+                Cookies.set('mpr__extendSession', 'false');
+                return;
+              }
+    
+              const resession = await getSession();
+
+              console.log({ resession });
+              console.log({ session });
+
+              resession && resession.user && dispatch({ type: 'Auth - Login', payload: resession as Session });
+    
+            })();
+          }
+
         }
-    }, [session.status, session.data])
+        let now = (() => Date.now())();
+        state.expires && isBefore( state.expires, now ) && dispatch({ type: 'Auth - Logout' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session.data]);
 
     const loginUser = async ( email: string, password: string ): Promise<{ error: boolean, message: string }> => {
         try {
+            if ( !validations.isValidEmail( email ) /*|| !validations.isValidPassword( password )*/ )
+                return { error: true, message: 'La información no es válida' };
+
             const { data } = await mprApi.post('/user/login', { email, password });
 
             const { token, user } = data;
 
             Cookies.set('token', token);
 
-            dispatch({ type: 'Auth - Login', payload: user })
+            dispatch({ type: 'Auth - Login', payload: user });
             return {
                 error: false,
                 message: ''
@@ -59,22 +102,18 @@ export const AuthProvider: FC<props> = ({ children }) => {
         try {
             const { data } = await mprApi.post('/user/register', { name, email, password, isSubscribed });
 
-            const { token, user } = data;
+            // const { user } = data;
 
-            Cookies.set('token', token);
+            // Cookies.set('token', token);
 
-            dispatch({ type: 'Auth - Login', payload: user });
+            // dispatch({ type: 'Auth - Login', payload: user });
 
-            return {
-                error: false,
-                message: '',
-                // message: `Bienvenid@ ${ user.name.split(' ')[0] }`,
-            }
+            return data;
         } catch( error: any ) {
             // if ( axios.isAxiosError( error ) ) return { error: true, message: 'Error de axios' };
             return {
                 error: true,
-                message: error.response.data.message || 'Ocurrió un error',
+                message: error.response ? error.response.data.message || 'Ocurrió un error' : 'Ocurrió un error',
             }
         }
     }
@@ -82,10 +121,11 @@ export const AuthProvider: FC<props> = ({ children }) => {
     const logoutUser = () => {
         if ( session.status !== 'authenticated' ) return;
         
+        window.localStorage.removeItem('mpr__shopInfo');
         Cookies.remove('mpr__cart');
         Cookies.remove('mpr__extendSession');
-        window.localStorage.removeItem('mpr__shopInfo');
         Cookies.remove('token');
+        dispatch({ type: 'Auth - Logout' });
 
         signOut();
     }

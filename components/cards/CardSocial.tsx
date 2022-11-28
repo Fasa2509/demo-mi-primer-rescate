@@ -9,7 +9,7 @@ export const CardSocial = () => {
     <div className={ styles.card }>
         <Typography sx={{ fontSize: '1.15rem', fontWeight: '600' }}>¡Encuéntranos aquí!</Typography>
 
-        <Typography>Mantente al tanto de nuestro proyecto, síguenos por aquí</Typography>
+        <p>Mantente al tanto de nuestro proyecto, síguenos por aquí</p>
 
         <div className={ styles.social__container }>
 

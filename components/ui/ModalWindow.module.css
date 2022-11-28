@@ -11,7 +11,7 @@
 }
 
 .modal__window__animation {
-    animation: modalOpacity 500ms cubic-bezier(.19,.87,.43,.98) 0ms 1 normal both;
+    animation: modalOpacity 500ms ease 0ms 1 normal both;
 }
 
 @keyframes modalOpacity {
@@ -32,7 +32,7 @@
     background-color: #fafafa;
     border-radius: 1.5rem;
     position: relative;
-    animation: modalAppear 500ms ease-out 0ms 1 normal both;
+    animation: modalAppear 650ms cubic-bezier(.21,.09,.19,1.03) 0ms 1 normal both;
 }
 
 .modal__title {
@@ -56,7 +56,7 @@
     top: .8rem;
     right: 1rem;
     cursor: pointer;
-    transition: transform 100ms ease;
+    transition: transform 200ms ease;
 }
 
 .modal__close:active {

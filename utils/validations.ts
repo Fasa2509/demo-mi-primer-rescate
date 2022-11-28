@@ -14,4 +14,9 @@ export const isEmail = ( email: string ): string | undefined => {
     ? undefined
     : 'El correo no parece ser válido';
 }
+
+export const isValidPassword = ( password: string ): boolean => {
   
+  return new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})").test( password );
+
+}

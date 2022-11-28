@@ -1,15 +1,10 @@
-import { FC, useContext, useEffect } from 'react';
+import { FC, useContext } from 'react';
 import Head from "next/head";
-import { useSession, getSession } from 'next-auth/react';
-import { useSnackbar } from 'notistack';
-import Cookies from 'js-cookie';
-import { isToday, isTomorrow } from 'date-fns';
 
 import { ScrollContext } from "../../context";
 import { Footer, Header, SideMenu, Title } from "../ui";
 import { Loader } from "./Loader";
-import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
-import styles from './MainLayout.module.css'
+import styles from './MainLayout.module.css';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -21,13 +16,11 @@ interface Props {
   nextPage: string;
 }
 
-export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage, titleIcon, nextPage }) => {
+export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage = '/Logo-Redes.png', titleIcon, nextPage }) => {
 
   let finalTitle = `${ title } | MPR`;
 
-  const { data: session, status } = useSession();
-  const { passedElements, isLoading } = useContext( ScrollContext );
-  const { enqueueSnackbar } = useSnackbar();
+  const { passedElements } = useContext( ScrollContext );
 
   const handleClick = () => {
     window.scrollTo({
@@ -35,32 +28,6 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
       top: 0,
     })
   }
-
-  useEffect(() => {
-    console.log(session)
-    if ( session ) {
-      if ( Cookies.get('mpr__extendSession') === 'true' && isToday( new Date(session.expires) ) || isTomorrow( new Date(session.expires) )) {
-          (async () => {
-            let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
-              variant: 'info',
-              autoHideDuration: 15000,
-              action: ConfirmNotificationButtons,
-            })
-            
-            const confirm = await PromiseConfirmHelper( key, 15000 );
-
-            if ( !confirm ) {
-              Cookies.set('mpr__extendSession', 'false');
-              return;
-            }
-
-            getSession();
-            
-            return;
-          })();
-      }
-    }
-}, [session, status, enqueueSnackbar])
 
   return (
     <>
@@ -71,7 +38,7 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
         <meta name="og:title" content={ title } />
         <meta name="og:description" content={ pageDescription } />
 
-        <meta name="og:image" content={ pageImage ? `https://demo-mi-primer-rescate.vercel.app/${ pageImage }` : 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
+        <meta name="og:image" content={ pageImage ? `https://demo-mi-primer-rescate.vercel.app${ pageImage }` : 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
       </Head>
 
       <Header index={ false } shop={ false } />

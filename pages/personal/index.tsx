@@ -22,7 +22,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const unsubscribe = async () => {
-    let key = enqueueSnackbar('¿Quieres dejar de recibir notifiaciones en tu correo?', {
+    let key = enqueueSnackbar('¿Quieres dejar de recibir notificaciones en tu correo?', {
       variant: 'info',
       autoHideDuration: 10000,
       action: ConfirmNotificationButtons,
@@ -138,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   if ( !session ) return {
       redirect: {
-        destination: '/',
+        destination: '/auth?p=/personal',
         permanent: false,
       }
   }
@@ -152,12 +152,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       }
     }
   
-  const orders = await dbOrders.getUserOrders( session.user._id );
+  // const orders = await dbOrders.getUserOrders( session.user._id );
 
   return {
     props: {
-      user,
-      orders,
+      user: user,
+      orders: user.orders,
     }
   }
 }

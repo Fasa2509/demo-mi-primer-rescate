@@ -8,7 +8,7 @@ interface Props {
 export const SliderHero: FC<Props> = ({ children }) => {
   return (
     <section id='hero-welcome' style={{ width: '100%' }}>
-        <Carousel indicators={ false } autoPlay interval={ 6500 }>
+        <Carousel indicators={ false } autoPlay duration={ 650 } interval={ 10000 }>
             { children }
         </Carousel>
     </section>

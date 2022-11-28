@@ -40,11 +40,11 @@ export const getAllAdoptions = async () => {
     try {
         await db.connect();
         
-        const adoptions = await Adoption.find();
+        const adoptions = await Adoption.find().sort({ createdAt: -1 }).limit( 150 );
         
         await db.disconnect();
         
-        return JSON.parse( JSON.stringify( adoptions.sort((a: IAdoption, b: IAdoption) => b.createdAt - a.createdAt) ) );
+        return JSON.parse( JSON.stringify( adoptions ) );
     } catch( error: any ) {
         console.log( error );
         await db.disconnect();

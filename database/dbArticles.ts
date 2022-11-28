@@ -15,7 +15,7 @@ export const getAllArticles = async (): Promise<IArticle[] | null> => {
 
         if ( !allArticles ) return null;
 
-        return allArticles.sort((a, b) => b.createdAt - a.createdAt);
+        return JSON.parse( JSON.stringify( allArticles ) );
     } catch( error ) {
         console.log( error );
         return null;

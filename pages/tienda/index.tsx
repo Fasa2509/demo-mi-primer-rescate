@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { Box, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
@@ -7,12 +7,12 @@ import { useSnackbar } from 'notistack';
 import { isMonday, isToday } from 'date-fns';
 
 import { dbProducts, dbSolds } from '../../database';
-import { ScrollContext } from '../../context';
+import { CartContext, ScrollContext } from '../../context';
 import { mprRevalidatePage } from '../../mprApi';
+import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import { ShopLayout, ContainerProductType, ContainerFavProduct } from '../../components'
 import { IProduct, Tags, TagsArray } from '../../interfaces'
 import styles from '../../styles/Tienda.module.css';
-import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 
 interface Props {
   products: IProduct[];
@@ -26,6 +26,7 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
   const session: any = thisSession;
   const { enqueueSnackbar } = useSnackbar();
   const { setIsLoading } = useContext( ScrollContext );
+  const { updateProductsInCart } = useContext( CartContext );
   
   const [formTags, setFormTags] = useState({
     tags: 'todos',
@@ -40,8 +41,14 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
   const [revalidatePage, setRevalidatePage] = useState( false );
   const [dolarPrice, setDolarPrice] = useState( 0 );
 
+  useEffect(() => {
+    console.log('Tienda renderizada');
+    updateProductsInCart( products );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleDiscount = async ( form: 'tags' | 'slug' ) => {
-    if ( form === 'slug' && !formSlug.slug ) return enqueueSnackbar('Agrega un url', { variant: 'warning' });
+    if ( form === 'slug' && !formSlug.slug || formSlug.slug === '/' ) return enqueueSnackbar('Agrega un url', { variant: 'warning' });
 
     let key = enqueueSnackbar('¿Quieres aplicar el descuento?', {
       variant: 'info',
@@ -308,7 +315,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
         products,
         dolar,
       },
-      revalidate: 86400, // cada 24h
+      revalidate: 3600 * 24, // cada 6h
     }
 }
 

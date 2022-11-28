@@ -149,17 +149,17 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
     }
 
     const handleAddTag = () => {
-        if ( form.tags.includes( tag.toLocaleLowerCase() as Tags ) ) return setTag('');
+        if ( form.tags.includes( tag.toLocaleLowerCase().trim() as Tags ) ) return setTag('');
 
-        if ( tag.toLocaleLowerCase() === 'util' ) {
+        if ( tag.toLocaleLowerCase().trim() === 'util' ) {
             setTag('');
             if ( form.tags.includes( 'útil' ) ) return setTag('');
             setForm({...form, tags: [...form.tags, 'útil' ]});
             return;
         }
 
-        if ( !TagsArray.includes( tag.toLocaleLowerCase() as Tags ) ) return enqueueSnackbar('Esa etiqueta no es válida', { variant: 'warning' });
-        setForm({...form, tags: [...form.tags, tag.toLocaleLowerCase() as Tags]});
+        if ( !TagsArray.includes( tag.toLocaleLowerCase().trim() as Tags ) ) return enqueueSnackbar('Esa etiqueta no es válida', { variant: 'warning' });
+        setForm({...form, tags: [...form.tags, tag.toLocaleLowerCase().trim() as Tags]});
         setTag('');
         return;
     }
@@ -169,12 +169,13 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
     }
 
     const handleAddOrRemoveImage = ( action: 'add' | 'remove' ) => {
-        if ( !image.url || !image.alt ) return enqueueSnackbar('Falta información de la imagen', { variant: 'warning' });
-
-        if ( image.width < 50 || image.height < 50 ) return enqueueSnackbar('Las dimensiones de la imagen no son válidas', { variant: 'warning' });
-
+        
         if ( action === 'add' ) {
+            if ( !image.url || !image.alt ) return enqueueSnackbar('Falta información de la imagen', { variant: 'warning' });
+            if ( image.width < 50 || image.height < 50 ) return enqueueSnackbar('Las dimensiones de la imagen no son válidas', { variant: 'warning' });
+            
             if ( form.images.length >= 4 ) return enqueueSnackbar('Ya hay muchas imágenes', { variant: 'warning' });
+            
             setForm({...form, images: [...form.images, { ...image, url: image.url.startsWith('/') ? image.url : `/${ image.url }` }]});
             setImage({ ...image, url: '', alt: '', });
         }

@@ -56,7 +56,7 @@ export const SideMenu: FC = () => {
 
                 <NextLink href={ '/' } scroll={ false }>
                     <a onClick={ toggleSideMenu }>
-                        <ListItem button sx={{ backgroundColor: router.asPath === '/' ? '#eaeaea' : '' }}>
+                        <ListItem button sx={{ backgroundColor: router.asPath === '/' ? '#eee' : '#fff' }}>
                             <ListItemIcon>
                                 <Home color='secondary' />
                             </ListItemIcon>
@@ -127,7 +127,7 @@ export const SideMenu: FC = () => {
 
                 <NextLink href={ '/tienda' }>
                     <a onClick={ toggleSideMenu }>
-                        <ListItem button  sx={{ backgroundColor: router.asPath === '/tienda' ? '#eaeaea' : '' }}>
+                        <ListItem button sx={{ backgroundColor: router.asPath.startsWith('/tienda') ? '#eee' : '#fff' }}>
                             <ListItemIcon>
                                 <ShoppingBag color='secondary' />
                             </ListItemIcon>
@@ -145,7 +145,7 @@ export const SideMenu: FC = () => {
 
                     <NextLink href={ '/admin/productos' }>
                         <a onClick={ toggleSideMenu }>
-                            <ListItem button>
+                            <ListItem button sx={{ backgroundColor: router.asPath.startsWith('/admin/productos') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
                                     <Category color='secondary' />
                                 </ListItemIcon>
@@ -156,7 +156,7 @@ export const SideMenu: FC = () => {
 
                     <NextLink href={ '/admin/ordenes' }>
                         <a onClick={ toggleSideMenu }>
-                            <ListItem button>
+                            <ListItem button sx={{ backgroundColor: router.asPath.startsWith('/admin/ordenes') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
                                     <ConfirmationNumber color='secondary' />
                                 </ListItemIcon>
@@ -167,7 +167,7 @@ export const SideMenu: FC = () => {
                     
                     <NextLink href={ '/admin/usuarios' }>
                         <a onClick={ toggleSideMenu }>
-                            <ListItem button>
+                            <ListItem button sx={{ backgroundColor: router.asPath.startsWith('/admin/usuarios') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
                                     <AdminPanelSettings color='secondary' />
                                 </ListItemIcon>
@@ -178,7 +178,7 @@ export const SideMenu: FC = () => {
                     
                     <NextLink href={ '/admin/adopciones' }>
                         <a onClick={ toggleSideMenu }>
-                            <ListItem button>
+                            <ListItem button sx={{ backgroundColor: router.asPath.startsWith('/admin/adopciones') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
                                     <LocalCafe color='secondary' />
                                 </ListItemIcon>
@@ -199,7 +199,7 @@ export const SideMenu: FC = () => {
 
                     <NextLink href={ '/personal' }>
                         <a onClick={ toggleSideMenu }>
-                            <ListItem button>
+                            <ListItem button sx={{ backgroundColor: router.asPath.startsWith('/personal') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
                                     <AccountCircle color='secondary' />
                                 </ListItemIcon>
@@ -210,7 +210,7 @@ export const SideMenu: FC = () => {
 
                     <ListItem button onClick={ logOut }>
                         <ListItemIcon>
-                        <LoginOutlined color='secondary' />
+                            <LoginOutlined color='secondary' />
                         </ListItemIcon>
                         <ListItemText primary={'Cerrar sesión'} />
                     </ListItem>

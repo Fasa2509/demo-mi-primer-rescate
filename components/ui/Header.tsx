@@ -19,10 +19,8 @@ interface Props {
 export const Header: FC<Props> = ({ index = false, shop = false }) => {
 
   const router = useRouter();
-  const { data } = useSession();
-  let session: any = data;
   const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
-  const { logoutUser } = useContext( AuthContext );
+  const { user, logoutUser } = useContext( AuthContext );
   const { numberOfItems } = useContext( CartContext );
   const { enqueueSnackbar } = useSnackbar();
   const [linksActive, setLinksActive] = useState( false );
@@ -175,10 +173,10 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
             <Link></Link>
           </NextLink> */}
           {
-            ( session )
+            ( user )
               ? (
                 <Box className={ styles.link__hover }>
-                    <Typography color='info' className={ `fadeIn ${ styles.link } ${ router.asPath.startsWith('/personal') ? styles.active : '' }` }>Personal</Typography>
+                  <Typography color='info' className={ `fadeIn ${ styles.link } ${ router.asPath.startsWith('/personal') ? styles.active : '' }` }>Personal</Typography>
 
                   <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
                     <NextLink href='/personal' passHref>
@@ -206,22 +204,22 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
         </Box>
       </header>
 
-      { session && session.user && ( session.user.role === 'superuser' || session.user.role === 'admin' ) &&
+      { user && ( user.role === 'superuser' || user.role === 'admin' ) &&
         <Box sx={{ transform: !linksActive ? 'translateX(0%)' : 'translateX(88%)', transition: 'transform 500ms ease', filter: 'drop-shadow(0 3px 3px #003021)', display: { xs: 'none', md: 'flex' }, position: 'absolute', right: 0, backgroundColor: '#B74FD1', padding: '.5rem 1.5rem .5rem .5rem', borderStartStartRadius: '10rem', borderEndStartRadius: '10rem' }}>
           <input type='checkbox' className={ styles.checkbox } onClick={ () => setLinksActive( !linksActive ) } />
           <Box className={ styles.wings } />
           <Box className={ styles.admin__links } sx={{ display: { xs: 'none', md: 'flex' }, gap: '.5rem' }}>
             <NextLink href='/admin/usuarios' passHref>
-              <Link sx={{ color: '#fafafa', fontWeight: '600' }}>Usuarios</Link>
+              <Link className={ router.asPath.startsWith('/admin/usuarios') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Usuarios</Link>
             </NextLink>
             <NextLink href='/admin/ordenes' passHref>
-              <Link sx={{ color: '#fafafa', fontWeight: '600' }}>Órdenes</Link>
+              <Link className={ router.asPath.startsWith('/admin/ordenes') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Órdenes</Link>
             </NextLink>
             <NextLink href='/admin/productos' passHref>
-              <Link sx={{ color: '#fafafa', fontWeight: '600' }}>Productos</Link>
+              <Link className={ router.asPath.startsWith('/admin/productos') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Productos</Link>
             </NextLink>
             <NextLink href='/admin/adopciones' passHref>
-              <Link sx={{ color: '#fafafa', fontWeight: '600' }}>Adopciones</Link>
+              <Link className={ router.asPath.startsWith('/admin/adopciones') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Adopciones</Link>
             </NextLink>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }} />

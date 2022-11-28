@@ -13,6 +13,15 @@
     box-shadow: 0 0 2.5em -1.5em #666;
 }
 
+.form * {
+    margin: 0;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
 .form button {
     align-self: center;
 }
@@ -91,6 +100,9 @@
     flex-direction: column;
     gap: 1.8rem;
 }
+
+/* PetForm */
+
 
 @media screen and (min-width: 770px) {
     .field input {

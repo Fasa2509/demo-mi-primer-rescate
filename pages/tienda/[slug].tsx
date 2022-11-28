@@ -31,7 +31,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
   }
 
   return (
-    <ShopLayout title={ product.name } pageDescription={ product.name + ' | Tienda' }>
+    <ShopLayout title={ product.name } pageDescription={ product.name + ' | Tienda' } pageImage={ product.images[0].url }>
         <section className={ styles.product__container }>
             <div className={ styles.slider__container }>
             <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 8000, duration: 650 }} layout={ 'responsive' } />
@@ -92,7 +92,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
         props: {
             product,
         },
-        revalidate: 86400 // 24h
+        revalidate: 3600 * 12 // 24h
     }
 }
 

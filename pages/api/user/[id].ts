@@ -12,11 +12,11 @@ type Data =
 export default function handler (req: NextApiRequest, res: NextApiResponse<Data>) {
 
     switch( req.method ) {
-        case 'DELETE':
-            return deleteUser( req, res );
-            
         case 'PUT':
             return updateUser( req, res );
+            
+        case 'DELETE':
+            return deleteUser( req, res );
 
         default:
             return res.status(400).json({ error: true, message: 'BAD REQUEST' })
@@ -65,9 +65,12 @@ const updateUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
 const deleteUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    const { id = '' } = req.query;
+    const { id = '', enable } = req.query;
 
-    if ( !id || !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' })
+    const validEnables = ['true', 'false'];
+
+    if ( typeof enable === 'undefined' || !validEnables.includes( enable?.toString() ) ) return res.status(400).json({ error: true, message: 'La habilitación no es válida' });
+    if ( !id || !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
     try {
         const session = await unstable_getServerSession( req, res, nextAuthOptions );
@@ -85,12 +88,12 @@ const deleteUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
         }
 
         // @ts-ignore
-        user.isAble = false;
+        user.isAble = Boolean( enable );
         await user.save();
 
         await db.disconnect();
 
-        return res.status(200).json({ error: false, message: 'El usuario fue eliminado' });
+        return res.status(200).json({ error: false, message: `El usuario fue ${ enable ? 'habilitado' : 'eliminado' }` });
     } catch( error ) {
         console.log( error );
         await db.disconnect();

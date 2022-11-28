@@ -8,7 +8,7 @@ export const CardShop = () => {
     <div className={ styles.card }>
         <Typography sx={{ fontSize: '1.15rem', fontWeight: '600' }}>¿Buscas consentir a tus peludos?</Typography>
 
-        <Typography>Visita nuestra <Link href={ '/tienda' }><a style={{ textDecoration: 'underline', fontWeight: 'bold' }}>tienda</a></Link> y encuentra geniales artículos para los consentidos de la casa</Typography>
+        <p>Visita nuestra <Link href={ '/tienda' }><a style={{ textDecoration: 'underline', fontWeight: 'bold' }}>tienda</a></Link> y encuentra geniales artículos para los consentidos de la casa</p>
 
         <div>
           <PetsOutlined />

@@ -23,6 +23,7 @@ export const LoginForm = () => {
     const [anError, setAnError] = useState({ error: false, message: '' });
 
     const onLoginForm = async ( { email, password }: FormData ) => {
+      setAnError({ error: false, message: '' });
       setIsLoading( true );
       
       const { error, message } = await loginUser( email, password );
@@ -30,12 +31,12 @@ export const LoginForm = () => {
       if ( error ) {
         setIsLoading( false );
         setAnError({ error, message });
-        setTimeout(() => setAnError({ error: false, message: '' }), 5000);
+        setTimeout(() => setAnError({ error: false, message: '' }), 15000);
         return;
       }
       
       Cookies.set('mpr__extendSession', 'true');
-      let destination = !query.p ? '/' : query.p.toString().match(/auth/) ? '/' : query.p.toString();
+      let destination = !query.p ? '/' : query.p.toString().match(/auth/i) ? '/' : query.p.toString();
       await signIn('credentials', { email, password, callbackUrl: destination });
       setIsLoading( false );
   }
@@ -48,14 +49,16 @@ export const LoginForm = () => {
                 <Typography sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} variant='h2'>Iniciar sesión</Typography>
               </Box>
 
-              <Box sx={{ display: anError.error ? 'block' : 'none', mb: 2 }}>
-                  <Chip
-                      label={ anError.message || 'Ocurrió un error' }
-                      color='error'
-                      icon={ <ErrorOutline /> }
-                      className='fadeIn'
-                  />
-              </Box>
+              { anError.message &&
+                <Box sx={{ mb: 1 }}>
+                    <Chip
+                        label={ anError.message || 'Ocurrió un error' }
+                        color='error'
+                        icon={ <ErrorOutline /> }
+                        className='fadeIn'
+                    />
+                </Box>
+              }
 
               <Box display='flex' flexDirection='column' gap='.5rem'>
                 <TextField
@@ -83,7 +86,8 @@ export const LoginForm = () => {
                   {
                       ...register('password', {
                           required: 'Este campo es requerido',
-                          minLength: { value: 4, message: 'La contraseña debe contener al menos 4 caracteres'}
+                          minLength: { value: 4, message: 'La clave debe contener al menos 8 caracteres' },
+                          // validate: ( val ) => new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_@#\$%\^&\*])(?=.{8,})").test( val ) ? undefined : 'La clave debe contener minúsculas, mayúsculas y un caracter especial'
                       })
                   }
                   error={ !!errors.password }

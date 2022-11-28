@@ -1,17 +1,12 @@
-import { FC, useContext, useEffect } from 'react';
+import { FC, useContext } from 'react';
 import Head from "next/head";
 import Image from "next/image"
-import { useSession, getSession } from "next-auth/react";
 import Carousel from "react-material-ui-carousel";
-import Cookies from 'js-cookie';
 
 import { Footer, Header, SideMenu, Title, WelcomePath } from "../ui";
 import { SliderHero } from "../slider";
 import { ScrollContext } from "../../context";
 import { Loader } from "./Loader";
-import { isToday, isTomorrow } from 'date-fns';
-import { useSnackbar } from 'notistack';
-import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import styles from './MainLayout.module.css'
 
 interface Props {
@@ -19,17 +14,15 @@ interface Props {
   title: string;
   H1?: string;
   pageDescription: string;
-  pageImage: string;
+  // pageImage: string;
   titleIcon: JSX.Element;
   nextPage?: string;
 }
 
-export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage, titleIcon, nextPage = '/miprimerrescate' }) => {
+export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription,/* pageImage, */titleIcon, nextPage = '/miprimerrescate' }) => {
 
   let finalTitle = `${ title } | MPR`;
-  const { data: session, status } = useSession();
   const { passedElements } = useContext( ScrollContext );
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleClick = () => {
     window.scrollTo({
@@ -38,47 +31,21 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
     })
   }
 
-  useEffect(() => {
-        console.log(session)
-        if ( session ) {
-          if ( Cookies.get('mpr__extendSession') === 'true' && isToday( new Date(session.expires) ) || isTomorrow( new Date(session.expires) )) {
-            (async () => {
-              let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
-                  variant: 'info',
-                  autoHideDuration: 15000,
-                  action: ConfirmNotificationButtons,
-              })
-
-                const confirm = await PromiseConfirmHelper( key, 15000 );
-                
-                if ( !confirm ) {
-                  Cookies.set('mpr__extendSession', 'false');
-                  return;
-                }
-
-                getSession();
-    
-                return;
-              })();
-            }
-          }
-  }, [session, status, enqueueSnackbar])
-
   return (
     <>
       <Head>
         <title>{ finalTitle }</title>
 
         <meta property="description" content={ pageDescription } />
+        {/* <meta property="og:description" content={ pageDescription } />
         <meta property="og:title" content={ title } />
-        <meta property="og:description" content={ pageDescription } />
+        <meta property="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } /> */}
 
-        <meta property="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
 
         <meta name="og:title" content={ title } />
         <meta name="og:description" content={ pageDescription } />
-
         <meta name="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
+
       </Head>
 
       <Header index />

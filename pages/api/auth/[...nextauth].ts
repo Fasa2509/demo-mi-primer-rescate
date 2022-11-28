@@ -51,7 +51,7 @@ export const nextAuthOptions: NextAuthOptions = {
   },
 
   session: {
-    maxAge: 604800, // 7d
+    maxAge: 86400 * 7, // 7d
     strategy: 'jwt',
     // updateAge: 86400, // cada dia
   },
@@ -69,11 +69,11 @@ export const nextAuthOptions: NextAuthOptions = {
         switch( account.type ) {
           case 'credentials':
             token.user = user
-            break
+            break;
 
           case 'oauth':
             token.user = await dbUsers.oAuthToDbUser( user?.email || '', user?.name || '' )
-            break
+            break;
         }
       }
 

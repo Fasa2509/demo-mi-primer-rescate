@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ICartProduct, Sizes } from "../../interfaces";
+import { ICartProduct, IProduct, Sizes } from "../../interfaces";
 
 
 interface ContextProps {
@@ -9,6 +9,7 @@ interface ContextProps {
 
     // methods
     updateProductQuantity: (p: ICartProduct) => void;
+    updateProductsInCart: (p: IProduct[]) => void;
     getProductQuantity: ( productId: string, productSize: Sizes ) => number;
     clearCart: () => void;
     removeProductFromCart: (p: ICartProduct) => void;

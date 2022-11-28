@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { AdminPanelSettings } from '@mui/icons-material';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { unstable_getServerSession } from 'next-auth/next';
 import { Session } from 'next-auth';
 
@@ -21,8 +21,7 @@ const columns: GridColDef[] = [
     sortable: false,
     disableColumnMenu: true,
     description: 'Visita la página del usuario',
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
+    renderCell: ({ row }: GridRenderCellParams) => {
       return <Typography sx={{ overflowX: 'auto' }}>{ row.id }</Typography>
     },
     width: 130
@@ -32,9 +31,8 @@ const columns: GridColDef[] = [
   { field: 'role', headerName: 'Rol', width: 100 },
   {
     field: 'isSubscribed',
-    headerName: 'Subscrito',
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
+    headerName: 'Suscrito',
+    renderCell: ({ row }: GridRenderCellParams) => {
       return <p>{ row.isSubscribed ? 'Sí' : 'No' }</p>
     },
     align: 'center',
@@ -47,29 +45,38 @@ const columns: GridColDef[] = [
     headerName: 'Acciones',
     sortable: false,
     disableColumnMenu: true,
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
+    renderCell: ({ row }: GridRenderCellParams) => {
       if ( row.thisUserId === row.id ) return <></>
       return (
         <Box display='flex' gap='.5rem' sx={{ overflowX: 'auto' }}>
-          <Button color='warning' variant='outlined' onClick={ () => row.updateUser( row.id, 'user' ) }>User</Button>
-          <Button color='warning' variant='outlined' onClick={ () => row.updateUser( row.id, 'superuser' ) }>Superuser</Button>
-          <Button color='warning' variant='outlined' onClick={ () => row.updateUser( row.id, 'admin' ) }>Admin</Button>
+          <Button color='warning' variant='outlined' disabled={ row.role === 'user' } onClick={ () => row.updateUser( row.id, 'user' ) }>User</Button>
+          <Button color='warning' variant='outlined' disabled={ row.role === 'superuser' } onClick={ () => row.updateUser( row.id, 'superuser' ) }>Superuser</Button>
+          <Button color='warning' variant='outlined' disabled={ row.role === 'admin' } onClick={ () => row.updateUser( row.id, 'admin' ) }>Admin</Button>
         </Box>
       )
     },
     width: 240
   },
   {
-    field: 'deleteUser',
+    field: 'isEnable',
+    headerName: 'Habilitado',
+    disableColumnMenu: true,
+    align: 'center',
+    renderCell: ({ row }: GridRenderCellParams) => {
+      return (
+        <p>{ row.isEnable ? 'Sí' : 'No' }</p>
+      )
+    }
+  },
+  {
+    field: 'enableUser',
     headerName: 'Eliminar',
     sortable: false,
     disableColumnMenu: true,
-    // @ts-ignore
-    renderCell: ({ row }: GridValueGetterParams) => {
-      return (
-        <Button color='error' onClick={ () => row.deleteUser( row.id ) }>Eliminar</Button>
-      )
+    renderCell: ({ row }: GridRenderCellParams) => {
+        return row.thisUserId !== row.id
+        ? <Button color={ row.isEnable ? 'error' : 'success' } onClick={ () => row.enableUser( row.id, !row.isEnable ) }>{ row.isEnable ? 'Eliminar' : 'Habilitar' }</Button>
+        : <></>
     }
   }
 ]
@@ -104,8 +111,8 @@ const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
       enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
   }
   
-  const deleteUser = async ( userId: string ) => {
-      let key = enqueueSnackbar('¿Segur@ que quieres eliminar este usuario?', {
+  const enableUser = async ( userId: string, enable: boolean ) => {
+      let key = enqueueSnackbar(`¿Segur@ que quieres ${ enable ? 'habilitar' : 'eliminar' } este usuario?`, {
           variant: 'info',
           autoHideDuration: 10000,
           action: ConfirmNotificationButtons,
@@ -117,7 +124,7 @@ const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
 
       setIsLoading( true );
 
-      const res = await dbUsers.deleteUserById( userId );
+      const res = await dbUsers.deleteUserById( userId, enable );
 
       setIsLoading( false );
         
@@ -126,14 +133,14 @@ const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
 
   const rows = users.map(( user ) => ({
     id: user._id,
-    // @ts-ignore
     thisUserId: adminId,
     name: user.name,
     email: user.email,
     role: user.role,
     isSubscribed: user.isSubscribed,
     createdAt: new Date( user.createdAt ).toLocaleDateString(),
-    deleteUser,
+    isEnable: user.isAble,
+    enableUser,
     updateUser,
   }))
 
@@ -142,7 +149,7 @@ const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
 
       {
         users.length > 0
-          ? <Grid container className='fadeIn'>
+          ? <Grid container className='fadeIn' sx={{ backgroundColor: '#fafafa', borderRadius: '4px' }}>
               <Grid item xs={ 12 } sx={{ height: 660, width: '100%' }}>
                 <DataGrid
                     rows={ rows }

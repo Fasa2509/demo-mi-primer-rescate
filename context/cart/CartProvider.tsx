@@ -1,7 +1,7 @@
 import { FC, useEffect, useReducer } from 'react';
 import Cookies from 'js-cookie';
 import { CartContext, cartReducer } from './';
-import { ICartProduct, Sizes } from '../../interfaces';
+import { ICartProduct, IProduct, Sizes } from '../../interfaces';
 
 
 export interface CartState {
@@ -29,7 +29,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
         const cookieProducts = Cookies.get('mpr__cart') ? JSON.parse( Cookies.get('mpr__cart')! ) : [];
         
         dispatch({ type: 'Cart - Load Cart From Cookies', payload: cookieProducts });
-    }, [])
+    }, []);
 
     useEffect(() => {
         if ( state.cart.length > 0 ) Cookies.set('mpr__cart', JSON.stringify( state.cart ));
@@ -54,7 +54,10 @@ export const CartProvider: FC<Props> = ({ children }) => {
     }
 
     const removeProductFromCart = ( product: ICartProduct ) =>
-        dispatch({ type: 'Cart - Remove Product From Cart', payload: product })
+        dispatch({ type: 'Cart - Remove Product From Cart', payload: product });
+
+    const updateProductsInCart = ( products: IProduct[] ) =>
+        dispatch({ type: 'Cart - Update Cart Products', payload: products });
 
     return (
         <CartContext.Provider value={{
@@ -63,6 +66,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
 
             // methods
             updateProductQuantity,
+            updateProductsInCart,
             getProductQuantity,
             clearCart,
             removeProductFromCart

@@ -1,8 +1,8 @@
-import { FC } from "react";
-import { useSession } from "next-auth/react";
+import { FC, useContext } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 
+import { ScrollContext } from "../../context";
 import { dbArticles } from "../../database";
 import { mprRevalidatePage } from '../../mprApi';
 import { ArticleField } from "./ArticleField";
@@ -12,8 +12,7 @@ import styles from './Article.module.css'
 
 export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ article, removable }) => {
 
-  const { data } = useSession();
-  const session: any = data;
+  const { setIsLoading } = useContext( ScrollContext );
   const { title, fields, createdAt } = article;
   const { enqueueSnackbar } = useSnackbar();
 
@@ -24,12 +23,13 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
         variant: 'warning',
         autoHideDuration: 15000,
         action: ConfirmNotificationButtons,
-    })
+    });
 
     const confirm = await PromiseConfirmHelper( key, 15000 );
 
     if ( !confirm ) return;
     
+    setIsLoading( true );
     const res = await dbArticles.removeArticle( article._id );
     enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' });
     
@@ -40,6 +40,7 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
         enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
       };
     }
+    setIsLoading( false );
     return;
   }
 
@@ -48,7 +49,7 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
 
         <Box display='flex' justifyContent='space-between'>
           <Typography className={ styles.title }>{ title }</Typography>
-          { session && (session.user!.role === 'admin' || session.user!.role === 'superuser') && removable && <Button color='error' sx={{ alignSelf: 'center' }} onClick={ deleteArticle }>Eliminar</Button> }
+          { removable && <Button color='error' sx={{ alignSelf: 'center' }} onClick={ deleteArticle }>Eliminar</Button> }
         </Box>
         
         {

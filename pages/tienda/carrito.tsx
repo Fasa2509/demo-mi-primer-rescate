@@ -38,13 +38,6 @@ const CarritoPage: NextPage<Props> = ({ allProducts }) => {
     setDirection( shopInfo.direction );
   }, [])
 
-  useEffect(() => {
-    if ( existencyChecked ) {
-      console.log( 'Si chequeo la existencia' );
-      setTimeout(() => setExistencyChecked( false ), 60000);
-    }
-  }, [existencyChecked])
-
   const cleaningCart = async () => {
       let key = enqueueSnackbar('¿Quieres vaciar el carrito?', {
         variant: 'info',
@@ -64,7 +57,7 @@ const CarritoPage: NextPage<Props> = ({ allProducts }) => {
       return;
     }
 
-    if ( direction.address.length < 5 ) {
+    if ( direction.address.trim().length < 5 ) {
       return enqueueSnackbar('Necesitamos una dirección de entrega', { variant: 'warning' });
     }
 
@@ -92,6 +85,7 @@ const CarritoPage: NextPage<Props> = ({ allProducts }) => {
 
     if ( checkboxInfo ) window.localStorage.setItem('mpr__shopInfo', JSON.stringify({ direction, contact }));
     
+    setExistencyChecked( false );
     enqueueSnackbar(res.message, { variant: 'success' });
     setIsLoading( false );
     return;
@@ -107,6 +101,8 @@ const CarritoPage: NextPage<Props> = ({ allProducts }) => {
     !res.error && res.message && setExistencyChecked( true );
 
     setIsLoading( false );
+
+    const existencyTO = setTimeout(() => setExistencyChecked( false ), 120000);
   }
 
   const handleLocation = () => {

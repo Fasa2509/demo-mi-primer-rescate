@@ -15,6 +15,7 @@ const userSchema = new Schema({
         default: 'user',
         required: true,
     },
+    orders: [{ type: Schema.Types.ObjectId, ref: 'Order', required: true }],
     isSubscribed: { type: Boolean, default: false },
     isAble: { type: Boolean, default: true },
     createdAt: { type: Number, default: () => Date.now() },

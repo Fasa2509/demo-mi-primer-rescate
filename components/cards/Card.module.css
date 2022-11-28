@@ -58,3 +58,18 @@
     display: flex;
     justify-content: space-evenly;
 }
+
+/* Pet Card */
+
+.pet__container {
+    position: relative;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    background-color: #fafafa;
+    box-shadow: 0 0 1.2rem -.8rem #444;
+    display: flex;
+}
+
+.pet__container p {
+    margin: 0;
+}

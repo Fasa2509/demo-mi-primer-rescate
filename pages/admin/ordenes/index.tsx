@@ -138,7 +138,7 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
 
       {
         orders.length > 0
-          ? <Grid container className='fadeIn'>
+          ? <Grid container className='fadeIn' sx={{ backgroundColor: '#fafafa', borderRadius: '4px' }}>
               <Grid item xs={ 12 } sx={{ height: 660, width: '100%' }}>
                 <DataGrid
                     rows={ rows }
@@ -151,7 +151,9 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
           : <Typography variant='h2'>No se encontraron órdenes en la base de datos.</Typography>
       }
 
-      <OrderInfo info={ orderInfo } orders={ thisOrders } setOrders={ setThisOrders } />
+      <>
+      { orderInfo._id && <OrderInfo info={ orderInfo } orders={ thisOrders } setOrders={ setThisOrders } /> }
+      </>
 
     </MainLayout>
   )

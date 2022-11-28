@@ -4,8 +4,10 @@ export interface IUser {
     email: string;
     password?: string;
     role: Role;
-
+    orders: string[];
     isSubscribed: boolean;
+    isAble: boolean;
+
     createdAt: number;
 }
 

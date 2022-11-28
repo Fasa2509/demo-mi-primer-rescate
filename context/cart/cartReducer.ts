@@ -1,9 +1,10 @@
 import { CartState } from '.';
-import { ICartProduct } from '../../interfaces';
+import { ICartProduct, IProduct } from '../../interfaces';
 
 type CartActionType =
 | { type: 'Cart - Load Cart From Cookies', payload: ICartProduct[] }
 | { type: 'Cart - Update Product in Cart', payload: ICartProduct }
+| { type: 'Cart - Update Cart Products', payload: IProduct[] }
 | { type: 'Cart - Clear Cart' }
 | { type: 'Cart - Remove Product From Cart', payload: ICartProduct }
 | { type: 'NumberOfItems - Update' }
@@ -39,6 +40,20 @@ export const cartReducer = ( state: CartState, action: CartActionType ): CartSta
                     ...state,
                     cart: [...state.cart, action.payload]
                 }
+
+        case 'Cart - Update Cart Products':
+            return {
+                ...state,
+                // @ts-ignore
+                cart: state.cart.map(( product ) => {
+                    const productInData = action.payload.find(( p ) => p._id === product._id);
+
+                    return productInData
+                        ? { ...product, quantity: product.quantity > productInData.inStock[product.size]! ? productInData.inStock[product.size] : product.quantity, price: productInData.price, discount: productInData.discount, maxQuantity: productInData.inStock[product.size] || 9 }
+                        : product
+                // @ts-ignore 
+                }).filter(( product ) => product.quantity > 0)
+            }
 
         case 'Cart - Clear Cart':
             return {

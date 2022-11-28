@@ -1,6 +1,8 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import NextLink from 'next/link';
-import { Box, Button, Link, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Link, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+
+import { MenuContext } from '../../context';
 import styles from './SideMenu.module.css';
 
 interface link {
@@ -18,10 +20,11 @@ interface Props {
 export const SideMenuButton: FC<Props> = ({ children, text, links, active }) => {
 
   const [display, setDisplay] = useState( false );
+  const { toggleSideMenu } = useContext( MenuContext );
 
   return (
     <Box>
-      <ListItem button sx={{ backgroundColor: active ? '#f1f1f1' : '#fff' }} onClick={ () => setDisplay( !display ) }>
+      <ListItem button sx={{ backgroundColor: active ? '#eee' : '#fff' }} onClick={ () => setDisplay( !display ) }>
           <ListItemIcon>
               { children }
           </ListItemIcon>
@@ -31,7 +34,7 @@ export const SideMenuButton: FC<Props> = ({ children, text, links, active }) => 
         {
           links.map(( link, index ) =>
             <NextLink key={ link.path + index } href={ link.path } passHref>
-                <Link sx={{ height: '2.8rem', color: '#333', display: 'flex', alignItems: 'center', pl: 3 }}>
+                <Link sx={{ height: '2.8rem', color: '#333', display: 'flex', alignItems: 'center', pl: 3 }} onClick={ toggleSideMenu }>
                   { link.text }
                 </Link>
             </NextLink>

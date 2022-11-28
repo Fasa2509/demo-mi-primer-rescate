@@ -1,9 +1,11 @@
+import { isValidObjectId } from "mongoose";
 import axios from "axios";
 import bcrypt from 'bcryptjs';
 import { db } from ".";
 import { User } from "../models";
 import { IUser, Role } from "../interfaces";
 import { mprApi } from "../mprApi";
+import { validations } from "../utils";
 
 export const updateUserRole = async ( userId: string, role: Role ): Promise<{ error: boolean; message: string }> => {
 
@@ -30,10 +32,10 @@ export const updateUserRole = async ( userId: string, role: Role ): Promise<{ er
 
 }
 
-export const deleteUserById = async ( userId: string ): Promise<{ error: boolean; message: string }> => {
+export const deleteUserById = async ( userId: string, enable: boolean ): Promise<{ error: boolean; message: string }> => {
 
     try {
-        const { data } = await mprApi.delete(`/user/${ userId }`);
+        const { data } = await mprApi.delete(`/user/${ userId }?enable=${ String( enable ) }`);
 
         return data;
     } catch( error ) {
@@ -55,18 +57,78 @@ export const deleteUserById = async ( userId: string ): Promise<{ error: boolean
 
 }
 
+export const updateUserPassword = async ( userId: string, userPassword: string ): Promise<{ error: boolean; message: string; }> => {
+    
+    if ( !userId /*|| !validations.isValidPassword( userPassword ) */ )
+        return { error: true, message: 'La información no es válida' };
+
+    try {
+        const { data } = await mprApi.put('/user/login', { id: userId, newPassword: userPassword });
+
+        return data;
+    } catch( error ) {
+        console.log( error );
+
+        if ( axios.isAxiosError( error ) ) {
+            return {
+                error: true,
+                // @ts-ignore
+                message: error.response ? error.response.data.message : 'Ocurrió un error buscando el usuario',
+            }
+        }
+
+        return {
+            error: true,
+            message: 'Error',
+        };
+    }
+
+}
+
+export const sendMailPassword = async ( userEmail: string ): Promise<{ error: boolean; message: string; }> => {
+    
+    if ( !validations.isValidEmail( userEmail ) ) return { error: true, message: 'El correo no es válido' };
+
+    try {
+        const { data } = await mprApi.get(`/user/login?email=${ userEmail }`);
+
+        return data;
+    } catch( error ) {
+        console.log( error );
+
+        if ( axios.isAxiosError( error ) ) {
+            return {
+                error: true,
+                // @ts-ignore
+                message: error.response ? error.response.data.message : 'Ocurrió un error buscando el usuario',
+            }
+        }
+
+        return {
+            error: true,
+            message: 'Error',
+        };
+    }
+
+}
+
 export const getUserById = async ( userId: string ): Promise<IUser | null> => {
 
     try {
+        if ( !isValidObjectId( userId ) ) return null;
+
         await db.connect();
 
-        const user = await User.findById( userId );
+        const user = await User.findById( userId ).populate('orders');
 
         await db.disconnect();
+
+        if ( !user ) return null;
 
         return JSON.parse( JSON.stringify( user ) );
     } catch( error ) {
         console.log( error );
+        await db.disconnect();
         return null;
     }
 
@@ -77,7 +139,7 @@ export const getAllUsers = async (): Promise<IUser[] | null> => {
     try {
         await db.connect();
         
-        const users = await User.find({ isAble: true });
+        const users = await User.find().lean();
 
         await db.disconnect();
 
@@ -94,7 +156,7 @@ export const CheckUserEmailPassword = async ( email: string, password: string ) 
 
     await db.connect();
     
-    const user = await User.findOne({ email }).lean();
+    const user = await User.findOne({ email: email.toLowerCase(), isAble: true }).lean();
 
     await db.disconnect();
 
@@ -120,7 +182,7 @@ export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => 
 
     await db.connect();
 
-    const user = await User.findOne({ email: oAuthEmail, isAble: true });
+    const user = await User.findOne({ email: oAuthEmail, isAble: true }).lean();
 
     if ( user ) {
         await db.disconnect();
@@ -128,7 +190,7 @@ export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => 
         return { _id, name, email, role };
     }
 
-    const newUser = new User({ email: oAuthEmail, name: oAuthName, password: '@', role: 'user' });
+    const newUser = new User({ email: oAuthEmail, name: oAuthName, password: '@', role: 'user', isAble: true });
 
     await newUser.save();
 

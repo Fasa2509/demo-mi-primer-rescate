@@ -100,11 +100,11 @@ export const getAllOrders = async (): Promise<IOrder[] | null> => {
     try {
         await db.connect();
 
-        const orders: IOrder[] = await Order.find();
+        const orders: IOrder[] = await Order.find().sort({ createdAt: -1 }).limit( 100 );
 
         await db.disconnect();
 
-        return JSON.parse( JSON.stringify( orders.sort((a: IOrder, b: IOrder) => b.createdAt - a.createdAt) ) );
+        return JSON.parse( JSON.stringify( orders ) );
     } catch( error ) {
         console.log( error );
         return null;

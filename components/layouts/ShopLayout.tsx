@@ -1,18 +1,10 @@
-import { FC, useContext, useEffect } from 'react';
+import { FC, useContext } from 'react';
 import Head from "next/head";
-import { getSession, useSession } from 'next-auth/react';
-import { useSnackbar } from 'notistack';
-import { isToday, isTomorrow } from 'date-fns';
-import Cookies from 'js-cookie';
 
 import { Footer, Header, SideMenu, Title } from "../ui";
 import { ScrollContext } from "../../context";
 import { Loader } from "./Loader";
-import { ContainerFavProduct } from "../shop";
-import { initialFavProducts } from '../../interfaces'
-import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import styles from './ShopLayout.module.css'
-import { Box } from '@mui/material';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -29,9 +21,7 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
 
   let finalTitle = `${ title } | MPR`;
 
-  const { data: session, status } = useSession();
-  const { passedElements, isLoading } = useContext( ScrollContext );
-  const { enqueueSnackbar } = useSnackbar();
+  const { passedElements } = useContext( ScrollContext );
 
   const handleClick = () => {
     window.scrollTo({
@@ -39,32 +29,6 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
       top: 0,
     })
   }
-
-  useEffect(() => {
-    console.log(session)
-    if ( session ) {
-      if ( Cookies.get('mpr__extendSession') === 'true' && ( isToday( new Date(session.expires) ) || isTomorrow( new Date(session.expires) ) )) {
-        (async () => {
-
-          let key = enqueueSnackbar('Tu sesión está a punto de expirar, ¿quieres extenderla?', {
-            variant: 'info',
-            autoHideDuration: 10000,
-            action: ConfirmNotificationButtons,
-          })
-
-          const confirm = await PromiseConfirmHelper( key, 10000 );
-       
-          if ( !confirm ) {
-            Cookies.set('mpr__extendSession', 'false');
-            return;
-          }
-
-          getSession();
-
-        })();
-      }
-    }
-}, [session, status, enqueueSnackbar])
 
   return (
     <>
@@ -75,7 +39,7 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
         <meta name="og:title" content={ title } />
         <meta name="og:description" content={ pageDescription } />
 
-        <meta name="og:image" content={ pageImage ? `http://localhost:3000/${ pageImage }` : 'http://localhost:3000/Logo-MPR.png' } />
+        <meta name="og:image" content={ pageImage ? `https://demo-mi-primer-rescate.vercel.app${ pageImage }` : 'https://demo-mi-primer-rescate.vercel.app/Logo-MPR.png' } />
       </Head>
 
       <Header shop />

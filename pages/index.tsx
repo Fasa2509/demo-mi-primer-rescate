@@ -47,19 +47,18 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
   }
 
   return (
-    <MainIndexLayout title={ 'Mi Primer Rescate' } H1={ 'Mi Primer Rescate' } pageDescription={ 'Esta es la página oficial de @miprimerrescate, fundación dedicada al rescate y cuidado de animales y personas en situación de calle.' } pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> }>
+    <MainIndexLayout title={ 'Mi Primer Rescate' } H1={ 'Mi Primer Rescate' } pageDescription={ 'Esta es la página oficial de @miprimerrescate, fundación dedicada al rescate y cuidado de animales y personas en situación de calle.' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> }>
       
-      { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') )
-        ? <CustomForm />
-        : <></>
-      }
+      <>
+      { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <CustomForm /> }
+      </>
 
       <p className={ styles.subtitle }>¿Qué estamos haciendo ahora?</p>
 
       <section className={ styles.articles__container }>
         {
           articles.map(( article ) => (
-            <Article key={ article._id } article={ article } removable={ true } />
+            <Article key={ article._id } article={ article } removable={ user && ( user.role === 'superuser' || user.role === 'admin' )  } />
           ))
         }
 
@@ -70,7 +69,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
             <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
           }
-        </>
+      </>
 
     </MainIndexLayout>
   )

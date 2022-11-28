@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import { dbPets } from '../../../database';
 import { AuthContext, ScrollContext } from '../../../context';
 import { mprRevalidatePage } from '../../../mprApi';
-import { MainLayout, PetCard } from '../../../components';
+import { MainLayout, PetCard, PetForm } from '../../../components';
 import { IPet } from '../../../interfaces';
 import styles from '../../../styles/Adoptar.module.css';
 
@@ -39,14 +39,17 @@ const AdoptarPage: NextPage<Props> = ({ pets }) => {
         <div className={ styles.grid__container }>
             {
                 pets.map(( pet, index ) => (
-                    <PetCard key={ pet.name + index } pet={ pet } />
+                    <PetCard key={ pet.name + index } pet={ pet } removable={ user ? user.role === 'admin' || user.role === 'superuser' : false } />
                 ))
             }
         </div>
 
         <>
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
-            <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+            <>
+              <PetForm pet='gato' />
+              <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
+            </>
           }
         </>
 
@@ -63,7 +66,8 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
   return {
     props: {
       pets
-    }
+    },
+    revalidate: 3600 * 24 * 7,
   }
 }
 
