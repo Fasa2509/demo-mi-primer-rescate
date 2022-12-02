@@ -79,6 +79,13 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
     const product = await dbProducts.getProductBySlug( '/' + slug );
 
+    if ( product === false ) {
+        return {
+            notFound: true,
+            revalidate: 3600 * 24,
+        }
+    }
+
     if ( !product ) {
         return {
             redirect: {

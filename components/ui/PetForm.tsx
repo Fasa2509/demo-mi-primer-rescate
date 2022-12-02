@@ -27,7 +27,7 @@ export const PetForm: FC<Props> = ({ pet }) => {
         if ( !user ) return enqueueSnackbar('Inicia sesión primero', { variant: 'warning' });
 
         setIsLoading( true );
-        const res = await dbPets.createNewPet({ ...form, type: pet, userId: user._id });
+        const res = await dbPets.createNewPet({ ...form, images: [form.images.startsWith('/') ? form.images : `/${ form.images }`], type: pet });
         setIsLoading( false );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });

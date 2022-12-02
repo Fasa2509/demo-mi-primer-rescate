@@ -5,7 +5,7 @@ import { nextAuthOptions } from '../auth/[...nextauth]';
 
 import { db } from '../../../database';
 import { PetType, PetTypeArray } from '../../../interfaces';
-import { Pet } from '../../../models';
+import { Pet, User } from '../../../models';
 
 type Data =
 | { error: boolean; message: string; };
@@ -13,11 +13,14 @@ type Data =
 export default function handler (req: NextApiRequest, res: NextApiResponse<Data>) {
 
     switch( req.method ) {
+        case 'GET':
+            return getMorePets( req, res );
+
         case 'POST':
             return createNewPet( req, res );
 
         case 'DELETE':
-            return removePet( req, res );
+            return updatePetAbility( req, res );
 
         default:
             return res.status(200).json({ error: true, message: 'BAD REQUEST!' });
@@ -25,21 +28,54 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 }
 
+const getMorePets = async ( req: NextApiRequest, res: NextApiResponse ) => {
+
+    let { date = 0, admin = '', type = '' } = req.query;
+
+    if ( !PetTypeArray.includes( type as PetType ) )
+        return res.status(400).json({ error: true, message: 'La información de la mascota no es válida' });
+
+    if ( !date || isNaN( Number(date) ) || Number( date ) < 1662023660970 )
+        return res.status(400).json({ error: true, message: 'La fecha no es válida' });
+
+    // @ts-ignore
+    admin = admin === 'true';
+
+    try {
+        await db.connect();
+        
+        const pets = await Pet
+            .find({ type, isAble: true, isAdminPet: admin, createdAt: { $lt: Number( date ) } })
+            .sort({ createdAt: -1 })
+            .limit( 6 );
+
+        await db.disconnect();
+
+        return res.status(200).json( pets );
+    } catch( error ) {
+        console.log( error );
+        await db.disconnect();
+        return res.status(400).json({ error: true, message: 'Ocurrió un error buscando más mascotas' });
+    }
+
+}
+
+
 const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    const { type = '', userId = '', name = '', images = [], description = '' } = req.body as { type: string; userId: string; name: string; images: string[]; description: string };
+    const { type = '', name = '', images = [], description = '' } = req.body as { type: string; name: string; images: string[]; description: string };
 
     const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
-    if ( !isValidObjectId( userId ) || !session || !session.user )
-        return res.status(400).json({ error: true, message: 'La información del usuario no es válida' });
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
 
     if ( !PetTypeArray.includes( type as PetType ) || !name.trim() || !description.trim() )
         return res.status(400).json({ error: true, message: 'La información de la mascota no es válida' });
 
-    if ( type === 'cambios' || type === 'experiencias' && images.length < 2 || images.length > 4 )
+    if ( (type === 'cambios' || type === 'experiencias') && (images.length < 2 || images.length > 4) )
         return res.status(400).json({ error: true, message: 'La cantidad de imágenes no es válida' });
-        
+
     if ( (type === 'perro' || type === 'gato' || type === 'otro') && images.length !== 1 )
         return res.status(400).json({ error: true, message: 'La cantidad de imágenes no es válida' });
 
@@ -47,8 +83,19 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
         await db.connect();
 
         // @ts-ignore
-        const newPet = new Pet({ type, userId, name, images, description, isAdminPet: session.user.role === 'admin' || session.user.role === 'superuser' });
+        const newPet = new Pet({ type, userId: session.user._id, name, images, description, isAdminPet: session.user.role === 'admin' || session.user.role === 'superuser' });
         await newPet.save();
+        
+        // @ts-ignore
+        const user = await User.findById( session.user._id );
+
+        if ( !user ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No se guardó la mascota correctamente' });
+        }
+
+        user.pets = [...user?.pets, newPet._id];
+        await user.save();
 
         await db.disconnect();
 
@@ -61,11 +108,17 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
 }
 
-const removePet = async ( req: NextApiRequest, res: NextApiResponse ) => {
+
+const updatePetAbility = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     const { id = '' } = req.query;
     
     if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id de la mascota no es válido' });
+
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'No tienes permiso para eliminar esa mascota' });
 
     try {
         await db.connect();
@@ -76,12 +129,20 @@ const removePet = async ( req: NextApiRequest, res: NextApiResponse ) => {
             return res.status(400).json({ error: true, message: 'No se encontró la mascota' });
         }
 
-        pet.isAble = false;
+        const adminRoles = ['admin', 'superuser'];
+
+        // @ts-ignore
+        if ( pet.userId.toString() !== session.user._id && !adminRoles.includes( session.user.role ) ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No se encontró la mascota' });
+        }
+
+        pet.isAble = !pet.isAble;
         await pet.save();
 
         await db.disconnect();
 
-        return res.status(200).json({ error: false, message: 'La mascota fue eliminada' });
+        return res.status(200).json({ error: false, message: `La mascota ${ pet.isAble ? 'ahora' : 'ya no' } es pública` });
     } catch( error ) {
         console.log( error );
         await db.disconnect();

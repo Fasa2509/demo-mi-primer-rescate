@@ -39,7 +39,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     if ( name.length < 2 )
         return res.status(400).json({ error: true, message: 'El nombre debe tener al menos 2 caracteres' });
     
-    if ( !(new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})").test( password )) )
+    if ( !validations.isValidPassword( password ) )
         return res.status(400).json({ error: true, message: 'La contraseña debe cumplir con los requisitos' });
 
     if ( !validations.isValidEmail( email ) )
@@ -115,6 +115,6 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
         //     name,
         // }
         error: false,
-        message: 'Enviamos un mail a la dirección registrada, por favor verifica tu cuenta'
+        message: 'Enviamos un mail a la dirección registrada, por favor verifica tu cuenta',
     })
 }

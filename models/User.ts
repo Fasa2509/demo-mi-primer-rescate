@@ -15,9 +15,10 @@ const userSchema = new Schema({
         default: 'user',
         required: true,
     },
-    orders: [{ type: Schema.Types.ObjectId, ref: 'Order', required: true }],
     isSubscribed: { type: Boolean, default: false },
     isAble: { type: Boolean, default: true },
+    orders: [{ type: Schema.Types.ObjectId, ref: 'Order', required: true }],
+    pets: [{ type: Schema.Types.ObjectId, ref: 'Pet', required: true }],
     createdAt: { type: Number, default: () => Date.now() },
 })
 

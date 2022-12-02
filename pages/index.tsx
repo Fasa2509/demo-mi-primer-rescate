@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import type { GetStaticProps, NextPage } from 'next'
-import { Button, Link } from '@mui/material';
+import { Box, Button, Link } from '@mui/material';
 import { Home } from '@mui/icons-material';
 
 import { mprRevalidatePage } from '../mprApi';
@@ -53,6 +53,25 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
       { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <CustomForm /> }
       </>
 
+      <Box display='flex' flexWrap='wrap' gap='2rem' justifyContent='space-between' sx={{ my: 3 }}>
+        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
+          <p className={ styles.cards__title }>Ayúdanos</p>
+          <p className={ styles.cards__content }>Los animales nos esperan</p>
+        </Box>
+        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
+          <p className={ styles.cards__title }>Participa en la fundación</p>
+          <p className={ styles.cards__content }>Asiste a nuestros eventos</p>
+        </Box>
+        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
+          <p className={ styles.cards__title }>Dona</p>
+          <p className={ styles.cards__content }>Tu aporte nos ayuda a seguir</p>
+        </Box>
+        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
+          <p className={ styles.cards__title }>Cuida a tus mascotas</p>
+          <p className={ styles.cards__content }>Trátalas con el amor que ellas te dan</p>
+        </Box>
+      </Box>
+
       <p className={ styles.subtitle }>¿Qué estamos haciendo ahora?</p>
 
       <section className={ styles.articles__container }>
@@ -62,7 +81,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
           ))
         }
 
-        <Link className={ styles.load__articles } color='secondary' alignSelf='flex-end' onClick={ requestArticles }>Cargar más...</Link>
+        <Link className={ styles.load__articles } color='secondary' alignSelf='flex-end' onClick={ requestArticles }>Ver más</Link>
       </section>
 
       <>

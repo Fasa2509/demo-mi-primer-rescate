@@ -205,7 +205,7 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
       </header>
 
       { user && ( user.role === 'superuser' || user.role === 'admin' ) &&
-        <Box sx={{ transform: !linksActive ? 'translateX(0%)' : 'translateX(88%)', transition: 'transform 500ms ease', filter: 'drop-shadow(0 3px 3px #003021)', display: { xs: 'none', md: 'flex' }, position: 'absolute', right: 0, backgroundColor: '#B74FD1', padding: '.5rem 1.5rem .5rem .5rem', borderStartStartRadius: '10rem', borderEndStartRadius: '10rem' }}>
+        <Box sx={{ transform: !linksActive ? 'translateX(0%)' : 'translateX(90%)', transition: 'transform 500ms ease', filter: 'drop-shadow(0 3px 3px #003021)', display: { xs: 'none', md: 'flex' }, position: 'absolute', right: 0, backgroundColor: '#B74FD1', padding: '.5rem 1.5rem .5rem .5rem', borderStartStartRadius: '10rem', borderEndStartRadius: '10rem' }}>
           <input type='checkbox' className={ styles.checkbox } onClick={ () => setLinksActive( !linksActive ) } />
           <Box className={ styles.wings } />
           <Box className={ styles.admin__links } sx={{ display: { xs: 'none', md: 'flex' }, gap: '.5rem' }}>
@@ -220,6 +220,9 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
             </NextLink>
             <NextLink href='/admin/adopciones' passHref>
               <Link className={ router.asPath.startsWith('/admin/adopciones') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Adopciones</Link>
+            </NextLink>
+            <NextLink href='/admin/mascotas' passHref>
+              <Link className={ router.asPath.startsWith('/admin/mascotas') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Mascotas</Link>
             </NextLink>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }} />

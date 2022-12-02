@@ -6,7 +6,7 @@ import { dbPets } from '../../database';
 import { ModalWindow } from '../ui';
 import { MyImage } from './MyImage';
 import { IPet } from '../../interfaces';
-import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
+import { ConfirmNotificationButtons, getParagraphs, PromiseConfirmHelper } from '../../utils';
 import styles from './Card.module.css';
 
 export interface Props {
@@ -38,11 +38,13 @@ export const PetCard: FC<Props> = ({ pet, removable, setIsLoading }) => {
     }
 
   return (
-        <div className={ styles.pet__container }>
+        <div className={ `${ styles.pet__container } fadeIn` }>
             <MyImage src={ pet.images[0] } alt={ pet.name } width={ 500 } height={ 500 } />
 
             <ModalWindow title={ pet.name } buttonTxt={ pet.name } buttonStyle={{ position: 'absolute', right: '.5rem', bottom: '.7rem', borderRadius: '10rem' }}>
-                <p>{ pet.description }</p>
+                {
+                    getParagraphs( pet.description ).map(( paragraph, index ) => <p key={ index }>{ paragraph }</p>)
+                }
             </ModalWindow>
 
             { removable && <Button className='fadeIn' color='error' sx={{ position: 'absolute', top: '.7rem', right: '.5rem', borderRadius: '3rem' }} onClick={ handleDeletePet }>Eliminar</Button> }

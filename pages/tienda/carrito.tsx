@@ -13,11 +13,11 @@ import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../
 import { IAddress, IContact, IProduct } from '../../interfaces';
 import haversine from 'haversine-distance';
 
-interface Props {
-  allProducts: IProduct[];
-}
+// interface Props {
+//   allProducts: IProduct[];
+// }
 
-const CarritoPage: NextPage<Props> = ({ allProducts }) => {
+const CarritoPage: NextPage = () => {
 
   const router = useRouter();
   const { user } = useContext( AuthContext );
@@ -36,7 +36,7 @@ const CarritoPage: NextPage<Props> = ({ allProducts }) => {
 
     setContact( shopInfo.contact );
     setDirection( shopInfo.direction );
-  }, [])
+  }, []);
 
   const cleaningCart = async () => {
       let key = enqueueSnackbar('¿Quieres vaciar el carrito?', {
@@ -361,11 +361,11 @@ const CarritoPage: NextPage<Props> = ({ allProducts }) => {
           
         </Box>
         
-        <>
+        {/* <>
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
             <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
           }
-        </>
+        </> */}
 
     </ShopLayout>
   )

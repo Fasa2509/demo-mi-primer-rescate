@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
-import { Box, Button, CardContent, Chip, TextField, Typography } from "@mui/material"
-import { AccountCircle, ErrorOutline } from "@mui/icons-material"
+import { Box, Button, CardContent, Chip, TextField, Typography } from "@mui/material";
+import { AccountCircle, ErrorOutline } from "@mui/icons-material";
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 
@@ -16,7 +16,7 @@ type FormData = {
 
 export const LoginForm = () => {
   
-    const { query, asPath } = useRouter();
+    const { query } = useRouter();
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const { loginUser } = useContext( AuthContext );
     const { isLoading, setIsLoading } = useContext( ScrollContext );
@@ -31,7 +31,7 @@ export const LoginForm = () => {
       if ( error ) {
         setIsLoading( false );
         setAnError({ error, message });
-        setTimeout(() => setAnError({ error: false, message: '' }), 15000);
+        setTimeout(() => setAnError({ error: false, message: '' }), 12000);
         return;
       }
       
@@ -87,7 +87,7 @@ export const LoginForm = () => {
                       ...register('password', {
                           required: 'Este campo es requerido',
                           minLength: { value: 4, message: 'La clave debe contener al menos 8 caracteres' },
-                          // validate: ( val ) => new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_@#\$%\^&\*])(?=.{8,})").test( val ) ? undefined : 'La clave debe contener minúsculas, mayúsculas y un caracter especial'
+                          validate: validations.isPassword
                       })
                   }
                   error={ !!errors.password }

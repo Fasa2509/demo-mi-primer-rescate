@@ -5,13 +5,13 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Category } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { unstable_getServerSession } from 'next-auth/next';
-
 import { nextAuthOptions } from '../../api/auth/[...nextauth]';
+
 import { dbProducts } from '../../../database';
 import { mprRevalidatePage } from '../../../mprApi';
 import { ScrollContext } from '../../../context';
 import { AdminProductInfo, MainLayout } from '../../../components';
-import { format } from '../../../utils';
+import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../../utils';
 import { IProduct } from '../../../interfaces';
 
 const columns: GridColDef[] = [
@@ -144,14 +144,13 @@ const columns: GridColDef[] = [
     width: 90,
   },
   {
-    field: 'deleteProduct',
-    headerName: 'Eliminar',
-    sortable: false,
+    field: 'switchProductAbility',
+    headerName: 'Habilitado',
     disableColumnMenu: true,
     // @ts-ignore
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <Button color='error' onClick={ () => row.deleteProduct( row.id ) }>Eliminar</Button>
+        <Button color={ row.isAble ? 'error' : 'success' } onClick={ () => row.switchProductAbility( row.id, row.name, row.isAble ) }>{ row.isAble ? 'Eliminar' : 'Habilitar' }</Button>
       )
     }
   }
@@ -183,29 +182,44 @@ const newProductInitialState: IProduct = {
   isAble: true,
 }
 
-const ProductosPage: NextPage<Props> = ({ products }) => {
+const ProductosPage: NextPage<Props> = ({ products: P }) => {
 
+  const [products, setProducts] = useState( P );
   const [newProduct, setNewProduct] = useState( newProductInitialState );
   const [method, setMethod] = useState<'create' | 'update'>('create');
   const { enqueueSnackbar } = useSnackbar();
   const { setIsLoading } = useContext( ScrollContext );
   
-  const deleteProduct = async ( id: string ) => {
+  const switchProductAbility = async ( id: string, name: string, isAble: boolean, ) => {
+    let key = enqueueSnackbar(`¿Quieres ${ isAble ? 'eliminar' : 'habilitar' } ${ name }?`, {
+      variant: isAble ? 'warning' : 'info',
+      autoHideDuration: 10000,
+      action: ConfirmNotificationButtons,
+    });
+
+    let accepted = await PromiseConfirmHelper(key, 10000);
+
+    if ( !accepted ) return;
+
     setIsLoading( true );
-
-    const res = await dbProducts.deleteProductById( id );
-
+    
+    const res = await dbProducts.switchProductAbilityById( id );
+    
     enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error' });
-
+    
     if ( !res.error ) {
+      setProducts( products.map(( p ) => p._id === id ? { ...p, isAble: !isAble } : p) );
       if ( process.env.NODE_ENV === 'production' ) {
-          const revRes = await mprRevalidatePage( '/tienda' );
-          enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });                    
-          
-          const revRes2 = await mprRevalidatePage( '/tienda/categoria' );
-          enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });                    
-      }
+          const responses = await Promise.all([
+            mprRevalidatePage( '/tienda' ),
+            mprRevalidatePage( '/tienda/categoria' )
+          ]);
+
+          responses.forEach(( r ) => enqueueSnackbar(r.message || 'Error', { variant: !r.error ? 'info' : 'error' }) );
+        }
     }
+    
+    setIsLoading( false );
   }
 
   const rows = products.map(product => ({
@@ -223,7 +237,8 @@ const ProductosPage: NextPage<Props> = ({ products }) => {
       setMethod( 'update' );
       setNewProduct(p);
     },
-    deleteProduct,
+    isAble: product.isAble,
+    switchProductAbility,
   }))
 
   return (

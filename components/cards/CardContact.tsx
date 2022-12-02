@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { useSnackbar } from 'notistack';
-import { TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
-import { AuthContext } from '../../context';
+import { AuthContext, ScrollContext } from '../../context';
 import { mprApi } from "../../mprApi";
 import { validations } from "../../utils";
 import styles from './Card.module.css'
@@ -10,6 +10,7 @@ import styles from './Card.module.css'
 export const CardContact = () => {
 
     const { user } = useContext( AuthContext );
+    const { setIsLoading } = useContext( ScrollContext );
     const { enqueueSnackbar } = useSnackbar();
     
     const handleClick = async () => {
@@ -17,10 +18,13 @@ export const CardContact = () => {
         if ( !validations.isValidEmail( user ? user.email : '' ) ) return enqueueSnackbar('El correo no es válido', { variant: 'error' });
         
         try {
-            const res = await mprApi.post('/contact', { email: user?.email });
-
-            enqueueSnackbar(res.data.message, { variant: 'success' });
+            setIsLoading( true );
+            const { data } = await mprApi.post('/contact', { email: user?.email });
+            setIsLoading( false );
+            
+            enqueueSnackbar(data.message, { variant: !data.error ? 'success' : 'error' });
         } catch( error ) {
+            setIsLoading( false );
             // @ts-ignore
             enqueueSnackbar(error.response ? error.response.data.message || 'Ocurrió un error' : 'Ocurrió un error', { variant: 'error' });
         }

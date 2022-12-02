@@ -76,8 +76,8 @@ export const AuthProvider: FC<props> = ({ children }) => {
 
     const loginUser = async ( email: string, password: string ): Promise<{ error: boolean, message: string }> => {
         try {
-            if ( !validations.isValidEmail( email ) /*|| !validations.isValidPassword( password )*/ )
-                return { error: true, message: 'La información no es válida' };
+            if ( !validations.isValidEmail( email ) || !validations.isValidPassword( password ) )
+                return { error: true, message: 'La información del usuario no es válida' };
 
             const { data } = await mprApi.post('/user/login', { email, password });
 
@@ -100,6 +100,9 @@ export const AuthProvider: FC<props> = ({ children }) => {
 
     const registerUser = async ( name: string, email: string, password: string, isSubscribed: boolean ): Promise<{ error: boolean, message: string }> => {
         try {
+            if ( !validations.isValidEmail( email ) || !validations.isValidPassword( password ) )
+                return { error: true, message: 'La información no es válida' };
+
             const { data } = await mprApi.post('/user/register', { name, email, password, isSubscribed });
 
             // const { user } = data;

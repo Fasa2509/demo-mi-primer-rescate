@@ -1,6 +1,7 @@
-import { isValidObjectId } from "mongoose";
 import axios from "axios";
 import bcrypt from 'bcryptjs';
+import { isValidObjectId } from "mongoose";
+
 import { db } from ".";
 import { User } from "../models";
 import { IUser, Role } from "../interfaces";
@@ -59,7 +60,7 @@ export const deleteUserById = async ( userId: string, enable: boolean ): Promise
 
 export const updateUserPassword = async ( userId: string, userPassword: string ): Promise<{ error: boolean; message: string; }> => {
     
-    if ( !userId /*|| !validations.isValidPassword( userPassword ) */ )
+    if ( !userId || !validations.isValidPassword( userPassword ) )
         return { error: true, message: 'La información no es válida' };
 
     try {
@@ -119,7 +120,7 @@ export const getUserById = async ( userId: string ): Promise<IUser | null> => {
 
         await db.connect();
 
-        const user = await User.findById( userId ).populate('orders');
+        const user = await User.findById( userId ).populate('orders').populate('pets');
 
         await db.disconnect();
 
@@ -190,7 +191,7 @@ export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => 
         return { _id, name, email, role };
     }
 
-    const newUser = new User({ email: oAuthEmail, name: oAuthName, password: '@', role: 'user', isAble: true });
+    const newUser = new User({ email: oAuthEmail, name: oAuthName, password: '@', role: 'user', isAble: true, isSubscribed: true });
 
     await newUser.save();
 

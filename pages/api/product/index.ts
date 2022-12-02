@@ -19,7 +19,7 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
             return updateProductInfo( req, res );
                 
         case 'DELETE':
-            return removeProduct( req, res );
+            return switchProductAbility( req, res );
 
         default:
             return res.status(400).json({ error: true, message: 'BAD REQUEST' });
@@ -163,11 +163,11 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
 
 }
 
-const removeProduct = async ( req: NextApiRequest, res: NextApiResponse ) => {
+const switchProductAbility = async ( req: NextApiRequest, res: NextApiResponse ) => {
     
     const { id = '' } = req.query;
 
-    if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' })
+    if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
     try {
         await db.connect();
@@ -179,13 +179,12 @@ const removeProduct = async ( req: NextApiRequest, res: NextApiResponse ) => {
             return res.status(400).json({ error: true, message: 'No existe product con ese id' });
         }
 
-        // @ts-ignore
-        product.isAble = false;
+        product.isAble = !product.isAble;
         await product.save();
         
         await db.disconnect();
 
-        return res.status(200).json({ error: false, message: 'El producto fue eliminado' });
+        return res.status(200).json({ error: false, message: `El producto fue ${ product.isAble ? 'habilitado' : 'eliminado' }` });
     } catch( error ) {
         console.log( error );
         await db.disconnect();

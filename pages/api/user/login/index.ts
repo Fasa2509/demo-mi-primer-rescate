@@ -40,7 +40,7 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     const { email = '', password = '' } = req.body;
 
-    if ( !validations.isValidEmail( email ) /*|| !(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_@#\$%\^&\*])(?=.{8,})").test( password )) */ )
+    if ( !validations.isValidEmail( email ) || !validations.isValidPassword( password ) )
         return res.status(400).json({ error: true, message: 'El correo o la contraseña no son válidos' });
 
     let user
@@ -135,8 +135,8 @@ const changeUserPassword = async ( req: NextApiRequest, res: NextApiResponse ) =
     if ( !isValidObjectId( id ) )
         return res.status(400).json({ error: true, message: 'La información suministrada no es válida' });
         
-    // if ( !validations.isValidPassword( newPassword ) )
-    //     return res.status(400).json({ error: true, message: 'La nueva clave no es válida' });
+    if ( !validations.isValidPassword( newPassword ) )
+        return res.status(400).json({ error: true, message: 'La nueva clave no es válida' });
 
     try {
         await db.connect();

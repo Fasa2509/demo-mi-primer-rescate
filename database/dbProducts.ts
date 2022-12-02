@@ -218,7 +218,7 @@ export const discountProducts = async ( form: 'tags' | 'slug', discount: number,
 
 }
 
-export const deleteProductById = async ( id: string ) => {
+export const switchProductAbilityById = async ( id: string ) => {
 
     try {
         const { data } = await mprApi.delete(`/product?id=${ id }`);
@@ -243,14 +243,16 @@ export const deleteProductById = async ( id: string ) => {
 
 }
 
-export const getProductBySlug = async ( slug: string ): Promise<IProduct | null> => {
+export const getProductBySlug = async ( slug: string ): Promise<IProduct | null | false> => {
 
     try {
         await db.connect();
 
-        const product = await Product.findOne({ slug });
+        const product = await Product.findOne({ slug, isAble: true });
 
         await db.disconnect();
+
+        if ( !product ) return false;
 
         return JSON.parse( JSON.stringify( product ) );
     } catch( error ) {
@@ -265,7 +267,7 @@ export const getAllProducts = async (): Promise<IProduct[] | null> => {
     try {
         await db.connect();
         
-        const products = await Product.find({ isAble: true });
+        const products = await Product.find();
 
         await db.disconnect();
 

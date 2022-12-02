@@ -13,11 +13,12 @@ class MyDocument extends Document {
                 <Head>
 
                     <meta name='Keywords' content='mascotas, animales, adopcion, adoptar, perros' />
-                    <meta name='og:locale' content='es_mx' />
+                    <meta name='og:locale' content='es_ve' />
                     
                 </Head>
                 <body>
                     <Main />
+                    <div id='portal'></div>
                     <NextScript />
                 </body>
             </Html>

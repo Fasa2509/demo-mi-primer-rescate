@@ -39,6 +39,7 @@ const AuthPage: NextPage = () => {
         setAnError( res );
         setIsLoading( false );
         setTimeout(() => setAnError({ error: false, message: '' }), 15000);
+        return;
       }
       
       setIsLoading( false );
@@ -75,7 +76,7 @@ const AuthPage: NextPage = () => {
                   }
 
                   { aSuccess &&
-                      <Box display='flex' gap='.5rem' sx={{ backgroundColor: 'rgb(7, 179, 7)', color: '#fafafa', borderRadius: '1rem', padding: '.5rem' }}>
+                      <Box display='flex' gap='.5rem' sx={{ maxWidth: 'max-content', backgroundColor: 'rgb(7, 179, 7)', color: '#fafafa', borderRadius: '1rem', padding: '.5rem .8rem .5rem .5rem' }}>
                           <Check color='info' sx={{ alignSelf: 'center' }} />
                           <Typography color='success' className='fadeIn'>{ aSuccess }</Typography>
                       </Box>

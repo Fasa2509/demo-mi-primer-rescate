@@ -18,8 +18,11 @@
     overflow: hidden;
     font-size: 1rem;
     padding: .7rem 1rem .7rem .7rem;
-    box-shadow: 0 0 1rem -.7rem #444;
+    box-shadow: 0 0 1.1rem -.9rem #333;
     text-align: justify;
+}
+
+.card__appear {
     opacity: 0;
     transform: translateX(-2rem);
     transition: transform 800ms ease, opacity 800ms ease;
@@ -28,6 +31,11 @@
 .card__container p {
     margin: 0;
     padding-bottom: .4rem;
+}
+
+.pet__name {
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 @media (min-width: 992px) {

@@ -108,9 +108,6 @@ const saveOrder = async ( req: NextApiRequest, res: NextApiResponse ) => {
               user: process.env.MAILER__USER,
               pass: process.env.MAILER__PASS,
             },
-            tls: {
-                rejectUnauthorized: false
-            }
         });
 
         let info = await transporter.sendMail({

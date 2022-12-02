@@ -17,6 +17,7 @@ const petSchema = new Schema({
     images: [{ type: String, required: true }],
     isAble: { type: Boolean, default: true },
     isAdminPet: { type: Boolean, default: false },
+    createdAt: { type: Number, default: () => Date.now() },
 });
 
 // @ts-ignore

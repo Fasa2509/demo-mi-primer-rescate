@@ -1,4 +1,4 @@
-export const getParagraphs = ( content:string ): string[] => content.split('\n').filter(text => text)
+export const getParagraphs = ( content:string ): string[] => content.split('\n').filter(text => text);
 
 export const formatText = ( txt: string ): string => {
     const text = txt.toLocaleLowerCase().split('');
@@ -10,4 +10,4 @@ export const formatText = ( txt: string ): string => {
     });
 
     return tx.join('');
-}
+};

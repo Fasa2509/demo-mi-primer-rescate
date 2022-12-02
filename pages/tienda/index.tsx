@@ -235,19 +235,19 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
               />
 
               <TextField
-                  name='discount'
-                  value={ formSlug.discount }
-                  label='Descuento a aplicar (%)'
-                  type='number'
-                  color='secondary'
-                  variant='filled'
-                  fullWidth
-                  onChange={ ( e ) => {
-                    if ( isNaN(Number( e.target.value )) ) return;
-                    if ( Number( e.target.value ) > 50 || Number( e.target.value ) < 0 ) return;
-                    setFormSlug({ ...formSlug, discount: Number(e.target.value) });
-                  }}
-                  />
+                name='discount'
+                value={ formSlug.discount }
+                label='Descuento a aplicar (%)'
+                type='number'
+                color='secondary'
+                variant='filled'
+                fullWidth
+                onChange={ ( e ) => {
+                  if ( isNaN(Number( e.target.value )) ) return;
+                  if ( Number( e.target.value ) > 50 || Number( e.target.value ) < 0 ) return;
+                  setFormSlug({ ...formSlug, discount: Number(e.target.value) });
+                }}
+              />
 
               <Button color='info' sx={{ backgroundColor: 'var(--secondary-color-1)' }} onClick={ () => handleDiscount('slug') }>Aplicar</Button>
             </Box>

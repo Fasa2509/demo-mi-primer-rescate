@@ -1,25 +1,22 @@
 import { useContext, useState } from 'react';
-import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Checkbox, Chip, TextField, Typography } from '@mui/material';
 import { Check, ErrorOutline } from '@mui/icons-material';
-import Cookies from 'js-cookie';
 
 import { AuthContext, ScrollContext } from '../../context';
 import { validations } from '../../utils';
 
 
 type FormData = {
-    name    : string;
-    email   : string;
-    password: string;
+    name     : string;
+    email    : string;
+    password : string;
+    password2: string;
 }
 
 
 export const RegisterForm = () => {
 
-    const { query } = useRouter();
     const { registerUser } = useContext( AuthContext );
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const { isLoading, setIsLoading } = useContext( ScrollContext );
@@ -27,9 +24,16 @@ export const RegisterForm = () => {
     const [anError, setAnError] = useState({ error: false, message: '' });
     const [aSuccess, setASuccess] = useState('');
 
-    const onRegisterForm = async ( { name, email, password }: FormData ) => {
+    const onRegisterForm = async ( { name, email, password, password2 }: FormData ) => {
         setASuccess('');
         setAnError({ error: false, message: '' });
+
+        if ( password !== password2 ) {
+            setAnError({ error: true, message: 'Las contraseñas deben ser iguales' });
+            setTimeout(() => setAnError({ error: false, message: ''}), 10000);
+            return;
+        }
+
         setIsLoading( true );
         
         const { error, message } = await registerUser( name, email, password, checked );
@@ -38,16 +42,11 @@ export const RegisterForm = () => {
 
         if ( error ) {
             setAnError({ error, message });
-            setTimeout(() => setAnError({ error: false, message: '' }), 15000);
+            setTimeout(() => setAnError({ error: false, message: '' }), 10000);
             return;
         }
 
         setASuccess( message );
-        
-        // Cookies.set('mpr__extendSession', 'true');
-        // let destination = query.p?.toString() || '/';
-        // await signIn('credentials', { email, password, callbackUrl: destination });
-        // setIsLoading( false );
     }
 
   return (
@@ -118,11 +117,30 @@ export const RegisterForm = () => {
                                 ...register('password', {
                                     required: 'Este campo es requerido',
                                     minLength: { value: 8, message: 'La clave debe contener al menos 8 caracteres' },
-                                    validate: ( val ) => new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_@#\$%\^&\*])(?=.{8,})").test( val ) ? undefined : 'La clave debe contener minúsculas, mayúsculas y un caracter especial'
+                                    validate: validations.isPassword
                                 })
                             }
                             error={ !!errors.password }
                             helperText={ errors.password?.message }
+                        />
+                    </Box>
+
+                    <Box>
+                        <TextField
+                            label='Contraseña 2'
+                            type='password'
+                            variant='filled'
+                            color='secondary'
+                            fullWidth
+                            {
+                                ...register('password2', {
+                                    required: 'Este campo es requerido',
+                                    minLength: { value: 8, message: 'La clave debe contener al menos 8 caracteres' },
+                                    validate: validations.isPassword
+                                })
+                            }
+                            error={ !!errors.password2 }
+                            helperText={ errors.password2?.message }
                         />
                     </Box>
 

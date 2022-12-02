@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Link, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbPets } from '../../../database';
@@ -15,11 +15,30 @@ interface Props {
   pets: IPet[];
 }
 
-const AdoptarPage: NextPage<Props> = ({ pets }) => {
+const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
 
   const { user } = useContext( AuthContext );
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
+  const [pets, setPets] = useState( Pets );
+
+  const requestPets = async () => {
+    setIsLoading( true );
+
+    let date = pets.at(-1) ? pets.at(-1)!.createdAt : 0;
+
+    if ( date === 0 ) return enqueueSnackbar('No se encontraron más máscotas', { variant: 'info' });
+
+    const morePets = await dbPets.getMorePets( date, 'otro', true );
+    
+    if ( ( morePets instanceof Array && morePets.length > 0 ) ) {
+      setPets([...pets, ...morePets]);
+    } else {
+      enqueueSnackbar('No se encontraron más máscotas', { variant: 'info' });
+    }
+
+    setIsLoading( false );
+  }
 
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
@@ -43,6 +62,10 @@ const AdoptarPage: NextPage<Props> = ({ pets }) => {
                 ))
             }
         </div>
+
+        <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
+          <Link className={ styles.load__pets } color='secondary' alignSelf='flex-end' onClick={ requestPets }>Ver más</Link>
+        </Box>
 
         <>
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
