@@ -1,11 +1,9 @@
-import { createContext } from 'react';
+import { createContext, Dispatch, SetStateAction } from 'react';
 
 
 interface ContextProps {
     isMenuOpen: boolean;
     toggleSideMenu: () => void;
-    confirmation: boolean | null;
-    setConfirmation: ( c: boolean ) => void;
 }
 
 

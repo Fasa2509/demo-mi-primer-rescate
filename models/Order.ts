@@ -47,7 +47,7 @@ const orderSchema = new Schema({
                 },
                 default: 'pending',
             },
-            transactionId: { type: String, required: true },
+            transactionId: { type: String },
             method: {
                 type: String,
                 enum: {
@@ -56,7 +56,9 @@ const orderSchema = new Schema({
                 },
                 required: true,
             },
+            phone: { type: String, default: '' },
             totalUSD: { type: Number, required: true },
+            paidUSD: { type: Number },
             totalBs: { type: Number, required: true },
         }
     },

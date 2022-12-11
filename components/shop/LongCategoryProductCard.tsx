@@ -10,9 +10,10 @@ import styles from './ProductCard.module.css'
 
 interface Props {
     product: IProduct;
+    cat: string;
 }
 
-export const LongProductCard: FC<Props> = ({ product }) => {
+export const LongCategoryProductCard: FC<Props> = ({ product, cat }) => {
 
   const [q, setQ] = useState( 0 );
 
@@ -24,8 +25,8 @@ export const LongProductCard: FC<Props> = ({ product }) => {
 
   return (
     <NextLink href={{
-      pathname: '/tienda',
-      query: { product: product.slug.replace('/', '') }
+      pathname: '/tienda/categoria',
+      query: { tipo: cat, product: product.slug.replace('/', '') }
     }} scroll={ false } prefetch={ false } shallow>
       <div className={ styles.product__long }>
         <div className={ styles.product__long__image }>

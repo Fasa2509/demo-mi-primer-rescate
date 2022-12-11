@@ -31,11 +31,15 @@ export const StatusColors = {
 export type TMethod = 'Pago móvil' | 'Paypal';
 
 export interface ITransaction {
-    status: Paid;
+
+    status       : Paid;
     transactionId: string;
-    method: TMethod;
-    totalUSD: number;
-    totalBs: number;
+    method       : TMethod;
+    phone        : string;
+    totalUSD     : number;
+    paidUSD      : number;
+    totalBs      : number;
+
 }
 
 export interface IOrderProduct {

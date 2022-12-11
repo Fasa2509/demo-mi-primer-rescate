@@ -1,25 +1,24 @@
 import { FC, useContext } from 'react';
-import Head from "next/head";
-import Image from "next/image"
-import Carousel from "react-material-ui-carousel";
+import Head from 'next/head';
+import Image from 'next/image';
+import Carousel from 'react-material-ui-carousel';
 
-import { Footer, Header, SideMenu, Title, WelcomePath } from "../ui";
-import { SliderHero } from "../slider";
-import { ScrollContext } from "../../context";
-import { Loader } from "./Loader";
-import styles from './MainLayout.module.css'
+import { Footer, Header, SideMenu, Title, WelcomePath } from '../ui';
+import { SliderHero } from '../slider';
+import { ScrollContext } from '../../context';
+import { Loader } from './Loader';
+import styles from './MainLayout.module.css';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
   title: string;
   H1?: string;
   pageDescription: string;
-  // pageImage: string;
   titleIcon: JSX.Element;
   nextPage?: string;
 }
 
-export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription,/* pageImage, */titleIcon, nextPage = '/miprimerrescate' }) => {
+export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription, titleIcon, nextPage = '/miprimerrescate' }) => {
 
   let finalTitle = `${ title } | MPR`;
   const { passedElements } = useContext( ScrollContext );
@@ -36,12 +35,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       <Head>
         <title>{ finalTitle }</title>
 
-        <meta property="description" content={ pageDescription } />
-        {/* <meta property="og:description" content={ pageDescription } />
-        <meta property="og:title" content={ title } />
-        <meta property="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } /> */}
-
-
+        <meta name="description" content={ pageDescription } />
         <meta name="og:title" content={ title } />
         <meta name="og:description" content={ pageDescription } />
         <meta name="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
@@ -92,12 +86,9 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       </div>
       
       <main className={ styles.main__container }>
-        {/* <h1 className={ styles.title }>{ H1 || title }</h1> */}
         <Title title={ H1 || title } nextPage={ nextPage }>
           { titleIcon }
         </Title>
-
-        {/* <Divider sx={{ margin: '.4rem 0 .7rem' }} /> */}
 
         { children }
       </main>

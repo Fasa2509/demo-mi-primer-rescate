@@ -51,14 +51,9 @@ export const updatePaidOrder = async ( orderId: string = '', orderStatus: Paid =
 
 }
 
-export const createNewOrder = async ({ userId, cart, shippingAddress, contact }: {  userId: string, cart: ICartProduct[], shippingAddress: IAddress, contact: IContact  }): Promise<{ error: boolean; message: string; }> => {
+export const createNewOrder = async ({ userId, cart, shippingAddress, contact, transaction }: { userId: string, cart: ICartProduct[], shippingAddress: IAddress, contact: IContact, transaction: { transactionId: string; method: string; phone: string; } }): Promise<{ error: boolean; message: string; }> => {
     
     if ( !userId || cart.length < 1 || shippingAddress.address.length < 4  || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(c => c).length < 1 ) return { error: true, message: 'Falta información de la orden' };
-
-    const totalUSD = cart.reduce((prev, { quantity, price, discount }) => prev + quantity * price * (1 - discount), 0).toFixed(2);
-    const totalBs = (cart.reduce((prev, { quantity, price, discount }) => prev + quantity * price * (1 - discount), 0) * 10.27).toFixed(2);
-
-    const now = (() => Date.now())();
 
     try {
         const { data } = await mprApi.post('/order', {
@@ -66,13 +61,7 @@ export const createNewOrder = async ({ userId, cart, shippingAddress, contact }:
             orderItems: cart.map(({ _id, name, price, discount, quantity, size, slug }) => ({ _id, name, price, discount, quantity, size, slug })),
             shippingAddress,
             contact,
-            transaction: {
-                method: now % 2 === 0 ? 'Paypal' : 'Pago móvil',
-                status: 'pending',
-                transactionId: '123ABC',
-                totalUSD,
-                totalBs,
-            }
+            transaction,
         });
 
         return data;

@@ -16,7 +16,7 @@ interface Props {
   nextPage: string;
 }
 
-export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage = '/Logo-Redes.png', titleIcon, nextPage }) => {
+export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage = '/Logo-MPR.png', titleIcon, nextPage }) => {
 
   let finalTitle = `${ title } | MPR`;
 
@@ -37,8 +37,8 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
         <meta name="description" content={ pageDescription } />
         <meta name="og:title" content={ title } />
         <meta name="og:description" content={ pageDescription } />
+        <meta name="og:image" content={ `https://demo-mi-primer-rescate.vercel.app${ pageImage ? pageImage : '/Logo-MPR.png' }` } />
 
-        <meta name="og:image" content={ pageImage ? `https://demo-mi-primer-rescate.vercel.app${ pageImage }` : 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
       </Head>
 
       <Header index={ false } shop={ false } />
@@ -48,12 +48,9 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
       <Loader />
       
       <main className={ styles.main__container }>
-        {/* <h1 className={ styles.title }>{ H1 || title }</h1> */}
         <Title title={ H1 || title } nextPage={ nextPage }>
           { titleIcon }
         </Title>
-
-        {/* <Divider sx={{ margin: '.4rem 0 .7rem' }} /> */}
 
         { children }
       </main>

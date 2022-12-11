@@ -60,7 +60,7 @@ const AuthPage: NextPage = () => {
                 <LoginForm />
               </ModalWindow>
 
-              <ModalWindow title='Recuperar contraseña' buttonTxt='¿Olvidaste tu contraseña?' buttonStyle={{ alignSelf: 'flex-end', padding: '0', margin: '0', fontSize: '.9rem', color: 'var(--secondary-color-1)', backgroundColor: '#fff', fontWeight: '400',  }}>
+              <ModalWindow title='Recuperar contraseña' buttonTxt='¿Olvidaste tu contraseña?' buttonStyle={{ alignSelf: 'flex-end', padding: '0', margin: '.1rem 0 .4rem', fontSize: '.9rem', color: 'var(--secondary-color-1)', backgroundColor: '#fff', fontWeight: '400',  }}>
                 <Box display='flex' flexDirection='column' gap='.5rem'>
                   <p style={{ margin: 0 }}>Enviaremos un mail a tu correo electrónico</p>
 

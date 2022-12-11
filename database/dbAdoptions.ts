@@ -8,7 +8,8 @@ export const createAdoption = async ( form: IAdoption ): Promise<{ error: boolea
 
     if ( !form.user ) return { error: true, message: 'Es necesario iniciar sesión' };
 
-    if ( !form.contact.facebook && !form.contact.instagram && !form.contact.whatsapp ) return { error: true, message: 'Es necesario al menos un método de contacto' };
+    if ( !form.contact.facebook && !form.contact.instagram && !form.contact.whatsapp )
+        return { error: true, message: 'Es necesario al menos un método de contacto' };
     
     const { _id, ...actualForm } = form;
 

@@ -21,42 +21,37 @@ export const RegisterForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const { isLoading, setIsLoading } = useContext( ScrollContext );
     const [checked, setChecked] = useState(false);
-    const [anError, setAnError] = useState({ error: false, message: '' });
-    const [aSuccess, setASuccess] = useState('');
+    const [aResponse, setAResponse] = useState({ error: false, message: '' });
+    const [displayInfo, setDisplayInfo] = useState( false );
 
     const onRegisterForm = async ( { name, email, password, password2 }: FormData ) => {
-        setASuccess('');
-        setAnError({ error: false, message: '' });
+        setAResponse({ error: false, message: '' });
 
         if ( password !== password2 ) {
-            setAnError({ error: true, message: 'Las contraseñas deben ser iguales' });
-            setTimeout(() => setAnError({ error: false, message: ''}), 10000);
+            setAResponse({ error: true, message: 'Las contraseñas deben ser iguales' });
+            setTimeout(() => setAResponse({ error: false, message: ''}), 10000);
             return;
         }
 
         setIsLoading( true );
         
-        const { error, message } = await registerUser( name, email, password, checked );
+        const res = await registerUser( name, email, password, checked );
         
         setIsLoading( false );
 
-        if ( error ) {
-            setAnError({ error, message });
-            setTimeout(() => setAnError({ error: false, message: '' }), 10000);
-            return;
-        }
+        setAResponse( res );
 
-        setASuccess( message );
+        if ( res.error ) return setTimeout(() => setAResponse({ error: false, message: '' }), 12000);
     }
 
   return (
     <form style={{ width: '100%', padding: 0 }} onSubmit={ handleSubmit(onRegisterForm) } noValidate>
             <Box display='flex' flexDirection='column' gap='.5rem'>
 
-                    { anError.message &&
+                    { aResponse.error &&
                         <Box>
                             <Chip
-                                label={ anError.message || 'Ocurrió un error' }
+                                label={ aResponse.message || 'Ocurrió un error' }
                                 color='error'
                                 icon={ <ErrorOutline /> }
                                 className='fadeIn'
@@ -64,10 +59,10 @@ export const RegisterForm = () => {
                         </Box>
                     }
 
-                    { aSuccess &&
+                    { !aResponse.error && aResponse.message &&
                         <Box display='flex' gap='.5rem' sx={{ backgroundColor: 'rgb(7, 179, 7)', color: '#fafafa', borderRadius: '1rem', padding: '.5rem' }}>
                             <Check color='info' sx={{ alignSelf: 'center' }} />
-                            <Typography color='success' className='fadeIn'>{ aSuccess }</Typography>
+                            <Typography color='success' className='fadeIn'>{ aResponse.message }</Typography>
                         </Box>
                     }
                     

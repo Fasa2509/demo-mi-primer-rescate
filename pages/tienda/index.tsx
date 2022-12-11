@@ -10,7 +10,7 @@ import { dbProducts, dbSolds } from '../../database';
 import { CartContext, ScrollContext } from '../../context';
 import { mprRevalidatePage } from '../../mprApi';
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
-import { ShopLayout, ContainerProductType, ContainerFavProduct } from '../../components'
+import { ShopLayout, ContainerProductType, ContainerFavProduct, ModalFull } from '../../components'
 import { IProduct, Tags, TagsArray } from '../../interfaces'
 import styles from '../../styles/Tienda.module.css';
 
@@ -27,7 +27,12 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { setIsLoading } = useContext( ScrollContext );
   const { updateProductsInCart } = useContext( CartContext );
-  
+
+  useEffect(() => {
+    updateProductsInCart( products );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [formTags, setFormTags] = useState({
     tags: 'todos',
     discount: 0,
@@ -40,12 +45,6 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
 
   const [revalidatePage, setRevalidatePage] = useState( false );
   const [dolarPrice, setDolarPrice] = useState( 0 );
-
-  useEffect(() => {
-    console.log('Tienda renderizada');
-    updateProductsInCart( products );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleDiscount = async ( form: 'tags' | 'slug' ) => {
     if ( form === 'slug' && !formSlug.slug || formSlug.slug === '/' ) return enqueueSnackbar('Agrega un url', { variant: 'warning' });
@@ -136,6 +135,8 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
   return (
     <ShopLayout title={ 'Tienda Virtual' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' } main>
         
+        <ModalFull products={ products } />
+
         <Box display='flex' sx={{ mb: 1 }}>
           <Typography sx={{ fontSize: '1.2rem', fontWeight: '500', padding: '.4rem 1rem .5rem', borderRadius: '.3rem', color: '#fbfbfb', backgroundColor: 'var(--secondary-color-2)', position: 'relative', boxShadow: '-.4rem .4rem .6rem -.5rem #444' }}>La tasa de hoy es Bs. { dolar } x 1$</Typography>
         </Box>
@@ -150,7 +151,7 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
 
         <>
           {
-            TagsArray.map((tag: Tags) => <ContainerProductType key={ tag } type={ tag } products={ products.filter(p => p.tags.includes( tag )) } more limit />)
+            TagsArray.map((tag: Tags) => <ContainerProductType key={ tag } type={ tag } products={ products.filter(p => p.tags.includes( tag )) } />)
           }
         </>
 

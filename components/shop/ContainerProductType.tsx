@@ -15,21 +15,17 @@ interface Props {
     limit?: boolean;
 }
 
-export const ContainerProductType: FC<Props> = ({ type, products, className = '', more = false, limit = false }) => {
+export const ContainerProductType: FC<Props> = ({ type, products }) => {
 
   return (
-        <section className={ styles.products__type__container + ' ' + className }>
+        <section className={ styles.products__type__container }>
             <p className={ styles.products__type__title }>{ formatText( type ) }</p>
                 {
-                    ( limit )
-                        ? products.slice(0, 6).map( (product) => <LongProductCard key={ product.name } product={ product } />)
-                        : products.map( (product) => <LongProductCard key={ product.name } product={ product } />)
+                    products.slice(0, 6).map((product) => <LongProductCard key={ product.name } product={ product } />)
                 }
-            { more &&
                 <NextLink href={ `/tienda/categoria?tipo=${ type }` } passHref>
-                    <Link className={ styles.products__link } color='secondary' alignSelf='flex-end'>Cargar más...</Link>
+                    <Link className={ styles.products__link } color='secondary' alignSelf='flex-end'>Ver más</Link>
                 </NextLink>
-            }
         </section>
     )
 }

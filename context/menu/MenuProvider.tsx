@@ -3,7 +3,6 @@ import { MenuContext } from './';
 
 export interface MenuState {
     isMenuOpen: boolean;
-    confirmation: boolean | null;
 }
 
 
@@ -15,7 +14,6 @@ interface props {
 export const MenuProvider: FC<props> = ({ children }) => {
 
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>( false );
-    const [confirmation, setConfirmation] = useState<boolean | null>( null );
 
     const toggleSideMenu = () => setIsMenuOpen( !isMenuOpen );
 
@@ -23,8 +21,6 @@ export const MenuProvider: FC<props> = ({ children }) => {
         <MenuContext.Provider value={{
             isMenuOpen,
             toggleSideMenu,
-            confirmation,
-            setConfirmation,
         }}>
             { children }
         </MenuContext.Provider>

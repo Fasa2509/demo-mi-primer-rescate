@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import type { GetStaticProps, NextPage } from 'next'
-import { Box, Button, Link } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { Home } from '@mui/icons-material';
 
 import { mprRevalidatePage } from '../mprApi';
@@ -53,7 +53,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
       { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <CustomForm /> }
       </>
 
-      <Box display='flex' flexWrap='wrap' gap='2rem' justifyContent='space-between' sx={{ my: 3 }}>
+      <Box display='flex' flexWrap='wrap' gap='2rem' justifyContent='center' sx={{ my: 4 }}>
         <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
           <p className={ styles.cards__title }>Ayúdanos</p>
           <p className={ styles.cards__content }>Los animales nos esperan</p>
@@ -81,7 +81,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
           ))
         }
 
-        <Link className={ styles.load__articles } color='secondary' alignSelf='flex-end' onClick={ requestArticles }>Ver más</Link>
+        <Button className={ styles.load__articles } color='secondary' onClick={ requestArticles }>Ver más</Button>
       </section>
 
       <>

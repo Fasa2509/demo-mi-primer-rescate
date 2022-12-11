@@ -17,12 +17,12 @@ export const isEmail = ( email: string ): string | undefined => {
 
 export const isValidPassword = ( password: string ): boolean => {
   
-  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.*[_!@#\$%\^&\*])(?=.{8,})/.test( password );
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.*[().,_!@#\$%\^&\*])(?=.{8,})/.test( password );
 
 }
 
 export const isPassword = ( password: string ): string | undefined => {
   return isValidPassword(password) 
     ? undefined
-    : 'La contraseña no parece ser válida';
+    : 'Debe contener mayúsculas, minúsculas, números y caracteres especiales';
 }

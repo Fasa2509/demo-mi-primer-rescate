@@ -88,7 +88,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
             subject: "MPR - Activar Cuenta ✔", // Subject line
             html: `
             <h1>Mi Primer Rescate</h1>
-            <p>¡Gracias por unirte a nuestra fundación! 🥳🐶🐱</p>
+            <p>¡Gracias por unirte a la manada! 🥳🐶🐱</p>
             <br />
             <p>Por favor haz click en el siguiente enlace para activar tu cuenta de MPR.</p>
             <br />

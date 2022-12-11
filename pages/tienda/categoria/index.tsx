@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from "next/router";
 import NextLink from "next/link";
@@ -9,7 +9,7 @@ import { useSnackbar } from "notistack";
 import { dbProducts } from "../../../database";
 import { mprRevalidatePage } from "../../../mprApi";
 import { AuthContext, ScrollContext } from '../../../context';
-import { ContainerProductType, ShopLayout } from "../../../components";
+import { ContainerProductCategory, ModalFull, ShopLayout } from "../../../components";
 import { formatText } from "../../../utils";
 import { IProduct, Tags, TagsArray } from "../../../interfaces";
 
@@ -17,23 +17,35 @@ interface Props {
     products: IProduct[];
 }
 
+type CategoryKey = 'útil' | 'consumibles' | 'ropa' | 'accesorios';
+
 const TypePage: NextPage<Props> = ({ products }) => {
 
+    const router = useRouter();
+    const { enqueueSnackbar } = useSnackbar();
     const { user } = useContext( AuthContext );
     const { setIsLoading } = useContext( ScrollContext );
-    const router = useRouter();
     const [productType, setProductType] = useState<Tags>('accesorios');
-    const { enqueueSnackbar } = useSnackbar();
-    
-    useEffect(() => {
-        if ( Object.keys( router.query ).length > 0 && Object.keys( router.query )[0] !== 'tipo' ) router.push('/tienda');
-        if ( Object.keys( router.query ).length > 1 ) router.push('/tienda');
-    }, [ router ])
 
     useEffect(() => {
-        if ( !router.query.tipo || !TagsArray.includes( router.query.tipo.toString() as Tags ) ) return;
-        setProductType( router.query.tipo.toString() as Tags )
-    }, [ router.query ])
+        if ( !router.query.tipo || !TagsArray.includes( router.query.tipo.toString() as Tags ) ) {
+            router.push(router.pathname + '?tipo=accesorios', undefined, { shallow: true });
+            return;
+        }
+        setProductType( router.query.tipo.toString() as Tags );
+    }, [ router ]);
+
+    const util = useMemo(() => products.filter(( p ) => p.tags.includes( 'útil' )), [products]);
+    const accesorios = useMemo(() => products.filter(( p ) => p.tags.includes( 'accesorios' )), [products]);
+    const ropa = useMemo(() => products.filter(( p ) => p.tags.includes( 'ropa' )), [products]);
+    const consumibles = useMemo(() => products.filter(( p ) => p.tags.includes( 'consumibles' )), [products]);
+
+    const cats: { útil: IProduct[]; accesorios: IProduct[]; ropa: IProduct[]; consumibles: IProduct[] } = useMemo(() => ({
+        útil: util,
+        accesorios,
+        ropa,
+        consumibles,
+    }), [util, accesorios, ropa, consumibles]);
 
     const revalidate = async () => {
         if ( process.env.NODE_ENV !== 'production' ) return;
@@ -48,39 +60,18 @@ const TypePage: NextPage<Props> = ({ products }) => {
   return (
     <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/tienda' }>
 
+        <ModalFull products={ products } />
+
         <Typography>¿Buscas un tipo de producto en particular? Aquí lo encontrarás.</Typography>
+        <Typography>Filtra tus productos por categoría.</Typography>
 
         <Box className='fadeIn' display='flex' justifyContent='space-evenly' sx={{ my: 2 }}>
             {
-                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` }><Button color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
+                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` } shallow><Button color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
             }
         </Box>
 
-        {/* {
-            (router.query.tipo && router.query.tipo === 'consumibles')
-            ? <ContainerProductType className='fadeIn' type="Consumibles" products={ consumibles } />
-            : <></>    
-        }
-
-        {
-            (router.query.tipo && router.query.tipo === 'accesorios')
-            ? <ContainerProductType className='fadeIn' type="Accesorios" products={ accesorios } />
-            : <></>    
-        }
-
-        {
-            (router.query.tipo && router.query.tipo === 'ropa')
-            ? <ContainerProductType className='fadeIn' type="Ropa" products={ ropa } />
-            : <></>    
-        }
-
-        {
-            (router.query.tipo && router.query.tipo === 'útil')
-            ? <ContainerProductType className='fadeIn' type="Útil" products={ util } />
-            : <></>    
-        } */}
-
-        <ContainerProductType type={ productType } products={ products.filter(p => p.tags.includes( productType )) } />
+        <ContainerProductCategory type={ productType } products={ cats[router.query.tipo as CategoryKey || 'accesorios'] } />
         
         <>
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&

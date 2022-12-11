@@ -41,6 +41,10 @@ body {
   background-color: var(--secondary-color-1);
 }
 
+.p {
+  margin: 0;
+}
+
 h1, h2, h3, p, hr {
   margin: 1rem 0;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
@@ -84,7 +84,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
           ( user.isSubscribed )
             ? <Box>
                 <Typography>¡Estás suscrit@ a <span style={{ textDecoration: 'underline', fontWeight: '600' }}>Mi Primer Rescate</span>! Recibirás información exclusiva de nuestra fundación en tu correo electrónico.</Typography>
-                <Typography>¿Ya no quieres recibir información? Pulsa <span onClick={ unsubscribe } style={{ cursor: 'pointer', color: 'var(--secondary-color-2)' }}>aquí</span>.</Typography>
+                <Typography>¿Ya no quieres recibir información? Pulsa <Button sx={{ backgroundColor: 'var(--secondary-color-2)', fontSize: '.9rem', padding: '.1rem' }} onClick={ unsubscribe }>aquí</Button></Typography>
               </Box>
             : <Typography>No estás suscrit@ a nuestra página :{'('}</Typography>
         }
@@ -133,6 +133,8 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
                   <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>ID de la Órden: { order._id }</Typography>
                   
                   <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>ID de la Transacción: { order.transaction.transactionId }</Typography>
+
+                  <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>Método: { order.transaction.method }{ order.transaction.method === 'Pago móvil' ? `, ${ order.transaction.phone }` : '' }</Typography>
 
                   <Typography>Esta órden fue creada el { formatDate( order.createdAt, 'dd/MM/yyyy hh:mm:ssaa' ).toLowerCase() }</Typography>
 
@@ -212,7 +214,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     props: {
       user: user,
       orders: user.orders,
-      pets: user.pets,
+      // @ts-ignore
+      pets: user.pets.filter(( p ) => !p.isAdminPet),
     }
   }
 }

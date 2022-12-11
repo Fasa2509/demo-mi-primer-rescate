@@ -86,6 +86,7 @@ const columns: GridColDef[] = [
     },
     width: 100
   },
+  { field: 'method', headerName: 'Método', disableColumnMenu: true },
   { field: 'createdAt', headerName: 'Fecha de creación', disableColumnMenu: true, width: 200 },
 ]
 
@@ -116,6 +117,8 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
       method: 'Pago móvil',
       totalUSD: 0,
       totalBs: 0,
+      paidUSD: 0,
+      phone: '',
     },
     createdAt: Date.now(),
   });
@@ -129,6 +132,7 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
     shippingAddress: order.shippingAddress,
     contact: order.contact,
     transaction: order.transaction,
+    method: order.transaction.method,
     total: order.transaction.totalUSD,
     createdAt: new Date( order.createdAt ).toLocaleString(),
   }));

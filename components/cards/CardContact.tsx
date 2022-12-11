@@ -15,7 +15,8 @@ export const CardContact = () => {
     
     const handleClick = async () => {
         
-        if ( !validations.isValidEmail( user ? user.email : '' ) ) return enqueueSnackbar('El correo no es válido', { variant: 'error' });
+        if ( !user ) return enqueueSnackbar('Inicia sesión para suscribirte a MPR', { variant: 'warning' });
+        if ( !validations.isValidEmail( user.email ) ) return enqueueSnackbar('El correo no es válido', { variant: 'warning' });
         
         try {
             setIsLoading( true );

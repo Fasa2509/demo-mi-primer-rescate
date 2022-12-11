@@ -1,0 +1,130 @@
+.modal__window {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    transform: translateX(-110%);
+    transition: transform 800ms cubic-bezier(.21,.09,.19,1.03);
+}
+
+.modal__container {
+    overflow-y: auto;
+    width: 98vw;
+    height: 98vh;
+    background-color: #fafafa;
+    border-radius: 1.2rem;
+    border: 2px solid #eaeaea;
+}
+
+
+.modal__close {
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: transform 200ms ease;
+}
+
+.modal__close:active {
+    transform: scale(.75);
+}
+
+.modal__close::before,
+.modal__close::after {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 4px;
+    background-color: #66666699;
+    border-radius: 1rem;
+    position: absolute;
+    transform: rotate(45deg);
+}
+
+.modal__close::after {
+    transform: rotate(-45deg);
+}
+
+.modal__header {
+    display: flex;
+    width: 95%;
+    margin: .5rem auto 0;
+    align-items: center;
+}
+
+
+.product__name {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    flex-grow: 1;
+}
+
+.slider__container {
+    display: block;
+    overflow: hidden;
+    align-self: flex-start;
+    border-radius: 1rem;
+    box-shadow: 0 0 .5rem 0 rgba(6, 37, 0, 0.8);
+    width: 100%;
+    max-width: 490px;
+    margin: 0 auto;
+}
+
+.product__container {
+    padding: 0 1.2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+}
+
+.product__price {
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
+.product__discount {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.tags__container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.1rem;
+    gap: .5rem;
+    flex-wrap: wrap;
+    font-size: .9rem;
+    font-weight: 600;
+    color: #8a8a8a;
+}
+
+.modal__active {
+    transform: translateX(0);
+}
+
+@media screen and (min-width: 992px ) {
+    .modal__container {
+        width: 85vw;
+        height: 95vh;
+    }
+
+    .product__container {
+        padding: 0 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .modal__container {
+        border-width: 3px;
+    }
+}

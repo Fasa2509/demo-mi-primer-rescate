@@ -59,6 +59,9 @@ export const CartProvider: FC<Props> = ({ children }) => {
     const updateProductsInCart = ( products: IProduct[] ) =>
         dispatch({ type: 'Cart - Update Cart Products', payload: products });
 
+    const getTotal = (): number =>
+        Number( state.cart.reduce((acc, { quantity, price, discount }) => acc += quantity * price * (1 - discount), 0).toFixed( 2 ) );
+
     return (
         <CartContext.Provider value={{
             // props
@@ -68,6 +71,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
             updateProductQuantity,
             updateProductsInCart,
             getProductQuantity,
+            getTotal,
             clearCart,
             removeProductFromCart
         }}>

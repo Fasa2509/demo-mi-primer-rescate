@@ -1,6 +1,6 @@
 /* BigProductCard */
 
-.product {
+.big__product {
     position: relative;
     cursor: pointer;
     display: flex;
@@ -13,34 +13,55 @@
     transition: transform 350ms ease, box-shadow 350ms ease;
 }
 
-.product__image {
+/* .big__product__image {
     border-radius: 8px;
     overflow: hidden;
+} */
+
+.big__product__info {
+    cursor: pointer;
 }
 
-.product__name {
-    font-weight: 700;
+.big__product__image {
+    position: relative;
+    background-color: #fafafa;
+    width: 75%;
+    margin: 0 auto;
+    border-radius: .7rem;
+    box-shadow: 0 0 1.2rem -.6rem #444;
+    overflow: hidden;
+    transition: transform 500ms ease, box-shadow 500ms ease;
 }
 
-.product__price {
-    /* color: #666; */
-    margin: 0;
-    font-weight: 500;
-    font-size: 1.15rem;
-}
-
-.product__discount {
+/* .big__product__name {
     margin: 0;
     font-weight: 600;
-    font-size: 1.25rem;
+} */
+
+.big__product__price {
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.2rem;
 }
 
-.product span {
+.big__product__price__d {
+    font-size: 1.1rem;
+    color: #666;
+    text-decoration: line-through;
+}
+
+.big__product__discount {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+/* .big__span {
     font-size: 0.9em;
     font-weight: 400;
-}
+} */
 
-.product__description {
+.big__product__description {
     font-size: 0.8em;
     margin-top: .5em;
 }
@@ -92,6 +113,12 @@
     flex-direction: column;
 }
 
+.product__price,
+.product__discount {
+    margin: 0;
+    font-weight: 600;
+}
+
 .product__long__description {
     display: none;
     margin: 0;
@@ -119,11 +146,17 @@
         text-decoration: initial;
     }
 
-    .product:hover {
+    /* .big__product:hover {
         transform: translateY(-.4rem);
         box-shadow: 0 0 1rem -.5rem #606060;
-    }
+    } */
     
+    .big__product__info:hover .big__product__image,
+    .big__product__image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 1rem -.3rem #222;
+    }
+
     .product__long:hover {
         transform: scale(1.02);
         box-shadow: 0 0 .8rem -.4rem #606060;    
@@ -150,5 +183,25 @@
 
     .product__long__description {
         display: flex;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .big__product__price {
+        margin: 0;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+    
+    .big__product__price__d {
+        font-size: .95rem;
+        color: #666;
+        text-decoration: line-through;
+    }
+    
+    .big__product__discount {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.05rem;
     }
 }
