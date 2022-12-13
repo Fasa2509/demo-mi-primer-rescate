@@ -1,9 +1,8 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, lazy, Suspense } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { useSession } from 'next-auth/react';
-import { Badge, Box, Button, Link, Typography } from '@mui/material';
-import { ShoppingCart } from '@mui/icons-material';
+import { Badge, Box, Link, Typography } from '@mui/material';
+import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import { useSnackbar } from 'notistack';
 
 import { LinkLogo } from './LinkLogo';
@@ -11,19 +10,19 @@ import { AuthContext, CartContext, MenuContext } from '../../context';
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 import styles from './Header.module.css';
 
+const AdminLinks = lazy(() => import('../../components/layouts/AdminLinks'));
+
 interface Props {
-  index?: boolean;
   shop?: boolean;
 }
 
-export const Header: FC<Props> = ({ index = false, shop = false }) => {
+export const Header: FC<Props> = ({ shop = false }) => {
 
   const router = useRouter();
   const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
   const { user, logoutUser } = useContext( AuthContext );
   const { numberOfItems } = useContext( CartContext );
   const { enqueueSnackbar } = useSnackbar();
-  const [linksActive, setLinksActive] = useState( false );
 
   const logOut = async ( e: any ) => {
     e.preventDefault();
@@ -59,14 +58,7 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
         <LinkLogo shop={ shop } />
 
         <Box className={ styles.links } sx={{ display: { xs: 'none', md: 'flex', gap: '.6rem' } }}>
-          {/* <NextLink href='/' passHref>
-            <Link className={ styles.link__hover } color='info'>
-              Inicio
-            </Link>
-          </NextLink>
-          <Box className={ styles.link__display }>
-            
-          </Box> */}
+
           <Box className={ styles.link__hover }>
             <NextLink href='/miprimerrescate' passHref>
               <Link color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/miprimerrescate') ? styles.active : '' }` }>Nosotros</Link>
@@ -101,10 +93,6 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
             </Box>
           </Box>
 
-          {/* <NextLink href='/apoyo' passHref>
-            <Link></Link>
-          </NextLink> */}
-
           <Box display='flex' flexDirection='column' className={ styles.link__hover }>
             <Typography color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/adoptar') ? styles.active : '' }` }>Adoptar</Typography>
             
@@ -124,10 +112,6 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
             </Box>
           </Box>
 
-          {/* <NextLink href='/adoptar' passHref>
-            <Link></Link>
-          </NextLink> */}
-
           <Box className={ styles.link__hover }>
             <Typography color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/cambios') ? styles.active : '' }` }>Cambios</Typography>
             
@@ -143,10 +127,6 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
               </NextLink>
             </Box>
           </Box>
-
-          {/* <NextLink href='/cambios' passHref>
-            <Link></Link>
-          </NextLink> */}
 
           <Box className={ styles.link__hover }>
             <NextLink href='/tienda' passHref>
@@ -169,9 +149,6 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
             </Box>
           </Box>
 
-          {/* <NextLink href='/tienda' passHref>
-            <Link></Link>
-          </NextLink> */}
           {
             ( user )
               ? (
@@ -205,59 +182,11 @@ export const Header: FC<Props> = ({ index = false, shop = false }) => {
       </header>
 
       { user && ( user.role === 'superuser' || user.role === 'admin' ) &&
-        <Box sx={{ transform: !linksActive ? 'translateX(0%)' : 'translateX(90%)', transition: 'transform 500ms ease', filter: 'drop-shadow(0 3px 3px #003021)', display: { xs: 'none', md: 'flex' }, position: 'absolute', right: 0, backgroundColor: '#B74FD1', padding: '.5rem 1.5rem .5rem .5rem', borderStartStartRadius: '10rem', borderEndStartRadius: '10rem' }}>
-          <input type='checkbox' className={ styles.checkbox } onClick={ () => setLinksActive( !linksActive ) } />
-          <Box className={ styles.wings } />
-          <Box className={ styles.admin__links } sx={{ display: { xs: 'none', md: 'flex' }, gap: '.5rem' }}>
-            <NextLink href='/admin/usuarios' passHref>
-              <Link className={ router.asPath.startsWith('/admin/usuarios') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Usuarios</Link>
-            </NextLink>
-            <NextLink href='/admin/ordenes' passHref>
-              <Link className={ router.asPath.startsWith('/admin/ordenes') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Órdenes</Link>
-            </NextLink>
-            <NextLink href='/admin/productos' passHref>
-              <Link className={ router.asPath.startsWith('/admin/productos') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Productos</Link>
-            </NextLink>
-            <NextLink href='/admin/adopciones' passHref>
-              <Link className={ router.asPath.startsWith('/admin/adopciones') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Adopciones</Link>
-            </NextLink>
-            <NextLink href='/admin/mascotas' passHref>
-              <Link className={ router.asPath.startsWith('/admin/mascotas') ? styles.active : '' } sx={{ color: '#fafafa', fontWeight: '600' }}>Mascotas</Link>
-            </NextLink>
-          </Box>
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }} />
-        </Box>
+        <Suspense fallback={ <></> }>
+          <AdminLinks />
+        </Suspense>
       }
       
     </nav>
   )
 };
-
-// export const Header: FC<Props> = ({ index = false, shop = false }) => {
-
-//   const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
-//   const { passedElements } = useContext( ScrollContext );
-//   const { numberOfItems } = useContext( CartContext );
-
-//   return (
-//     <nav className={ `${ styles.nav }${ index ? ( !passedElements.includes('#hero-welcome') ? ` ${ styles.nav__transparent }` : '' ) : '' }` }>
-//       <header className={ styles.header }>
-//         { shop &&
-//           <NextLink href='/tienda/carrito' passHref>
-//               <Link className={ styles.shopping__cart + ' fadeIn' }>
-//                 <Badge sx={{ transform: numberOfItems ? 'translateY(4px)' : 'none', transition: 'transform 100ms ease' }} badgeContent={ numberOfItems > 9 ? '+9' : numberOfItems } color='info'>
-//                   <ShoppingCart color='info' sx={{ fontSize: '1.7rem' }} />
-//                 </Badge>
-//               </Link>
-//           </NextLink>
-//         }
-//         <LinkLogo />
-//         <button className={ `hamburger hamburger--squeeze ${ isMenuOpen ? 'is-active' : '' } ${ styles.button__menu }` } type="button" onClick={ toggleSideMenu }>
-//           <span className="hamburger-box">
-//             <span className="hamburger-inner"></span>
-//           </span>
-//         </button>
-//       </header>
-//     </nav>
-//   )
-// }

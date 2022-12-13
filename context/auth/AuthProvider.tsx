@@ -60,9 +60,6 @@ export const AuthProvider: FC<props> = ({ children }) => {
     
               const resession = await getSession();
 
-              console.log({ resession });
-              console.log({ session });
-
               resession && resession.user && dispatch({ type: 'Auth - Login', payload: resession as Session });
     
             })();
@@ -105,15 +102,8 @@ export const AuthProvider: FC<props> = ({ children }) => {
 
             const { data } = await mprApi.post('/user/register', { name, email, password, isSubscribed });
 
-            // const { user } = data;
-
-            // Cookies.set('token', token);
-
-            // dispatch({ type: 'Auth - Login', payload: user });
-
             return data;
         } catch( error: any ) {
-            // if ( axios.isAxiosError( error ) ) return { error: true, message: 'Error de axios' };
             return {
                 error: true,
                 message: error.response ? error.response.data.message || 'Ocurrió un error' : 'Ocurrió un error',

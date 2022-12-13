@@ -3,7 +3,6 @@ import { VolunteerActivism } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 
 import { AdoptionForm, MainLayout } from '../../../components';
-import styles from '../../../styles/Adoptar.module.css';
 
 const AdoptarPage: NextPage = () => {
   

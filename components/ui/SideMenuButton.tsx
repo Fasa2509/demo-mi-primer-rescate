@@ -1,6 +1,6 @@
 import { FC, useContext, useState } from 'react';
 import NextLink from 'next/link';
-import { Box, Link, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Link, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 import { MenuContext } from '../../context';
 import styles from './SideMenu.module.css';
@@ -24,12 +24,12 @@ export const SideMenuButton: FC<Props> = ({ children, text, links, active }) => 
 
   return (
     <Box>
-      <ListItem button sx={{ backgroundColor: active ? '#eee' : '#fff' }} onClick={ () => setDisplay( !display ) }>
+      <ListItemButton sx={{ backgroundColor: active ? '#eee' : '#fff' }} onClick={ () => setDisplay( !display ) }>
           <ListItemIcon>
               { children }
           </ListItemIcon>
           <ListItemText primary={ text } />
-      </ListItem>
+      </ListItemButton>
       <Box className={ styles.links__display } display='flex' flexDirection='column' justifyContent='center' sx={{ height: display ? `${ 2.8 * links.length }rem` : 0 }}>
         {
           links.map(( link, index ) =>

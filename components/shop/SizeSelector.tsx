@@ -18,9 +18,7 @@ export const SizeSelector: FC<Props> = ({ inStock, selectedSize, setSelectedSize
     <Box display='flex' gap='.5rem' flexWrap='wrap'>
         {
             sizes.map( size => (
-                // ( size === 'unique' )
-                    // ? <div key={ size } style={{ display: 'none' }}></div>
-                    /*: */<Button
+                    <Button
                         key={ size }
                         size='small'
                         color={ selectedSize === size ? 'secondary' : 'info' }

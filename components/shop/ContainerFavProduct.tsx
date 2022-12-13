@@ -1,9 +1,9 @@
-import { FC } from 'react'
+import { FC } from 'react';
+import { Star } from '@mui/icons-material';
 
-import { Star } from '@mui/icons-material'
 import { BigProductCard } from './';
-import { IProduct } from '../../interfaces'
-import styles from './ContainerProduct.module.css'
+import { IProduct } from '../../interfaces';
+import styles from './ContainerProduct.module.css';
 
 interface Props {
     products: IProduct[];

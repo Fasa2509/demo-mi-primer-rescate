@@ -78,7 +78,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
           <Typography>{ user.email }</Typography>
         </Box>
         
-        <Typography sx={{ my: 1.5 }}>Te uniste a la manada el { formatDate( new Date( user.createdAt ), 'dd/MM/yyyy' ) }</Typography>
+        <Typography sx={{ my: 1.5 }}>Te uniste a la manada el { formatDate( user.createdAt, 'dd/MM/yyyy' ) }</Typography>
 
         {
           ( user.isSubscribed )

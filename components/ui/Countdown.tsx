@@ -44,7 +44,7 @@ export const Countdown: FC<Props> = ({ end, selector }) => {
                             y: 1,
                         }
                     })
-                }, 2500)
+                }, 2000)
             }
         } else {
             let clockInterval = setInterval(() => {
@@ -64,7 +64,7 @@ export const Countdown: FC<Props> = ({ end, selector }) => {
             }, 1000)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
   return (
     <div className={ styles.countdown }>{ time }</div>

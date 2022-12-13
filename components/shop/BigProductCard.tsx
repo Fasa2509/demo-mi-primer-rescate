@@ -11,7 +11,6 @@ interface Props {
     product: IProduct;
 }
 
-
 export const BigProductCard: FC<Props> = ({ product }) => {
   return (
     <NextLink href={{

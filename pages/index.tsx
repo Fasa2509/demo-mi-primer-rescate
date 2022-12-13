@@ -1,15 +1,20 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, lazy, Suspense } from 'react';
 import type { GetStaticProps, NextPage } from 'next'
-import { Box, Button } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import { Home } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 
 import { mprRevalidatePage } from '../mprApi';
-import { Article, CustomForm, MainIndexLayout } from '../components';
+import { Article, MainIndexLayout } from '../components';
 import { IArticle } from '../interfaces';
 import { AuthContext, ScrollContext } from '../context';
 import { dbArticles } from '../database';
 import styles from '../styles/Home.module.css';
-import { useSnackbar } from 'notistack';
+
+const CustomForm = lazy(() =>
+  import('../components/ui/CustomForm')
+    .then(({ CustomForm }) => ({ default: CustomForm }))
+);
 
 interface Props {
   articles: IArticle[];
@@ -50,11 +55,11 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
     <MainIndexLayout title={ 'Mi Primer Rescate' } H1={ 'Mi Primer Rescate' } pageDescription={ 'Esta es la página oficial de @miprimerrescate, fundación dedicada al rescate y cuidado de animales y personas en situación de calle.' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> }>
       
       <>
-      { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <CustomForm /> }
+      { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <Suspense fallback={ <p>Cargando...</p> }><CustomForm /></Suspense> }
       </>
 
       <Box display='flex' flexWrap='wrap' gap='2rem' justifyContent='center' sx={{ my: 4 }}>
-        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
+        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
           <p className={ styles.cards__title }>Ayúdanos</p>
           <p className={ styles.cards__content }>Los animales nos esperan</p>
         </Box>
@@ -62,11 +67,11 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
           <p className={ styles.cards__title }>Participa en la fundación</p>
           <p className={ styles.cards__content }>Asiste a nuestros eventos</p>
         </Box>
-        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
+        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
           <p className={ styles.cards__title }>Dona</p>
           <p className={ styles.cards__content }>Tu aporte nos ayuda a seguir</p>
         </Box>
-        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
+        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
           <p className={ styles.cards__title }>Cuida a tus mascotas</p>
           <p className={ styles.cards__content }>Trátalas con el amor que ellas te dan</p>
         </Box>
@@ -77,7 +82,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
       <section className={ styles.articles__container }>
         {
           articles.map(( article ) => (
-            <Article key={ article._id } article={ article } removable={ user && ( user.role === 'superuser' || user.role === 'admin' )  } />
+              <Article key={ article._id } article={ article } removable={ user && ( user.role === 'superuser' || user.role === 'admin' )  } />
           ))
         }
 

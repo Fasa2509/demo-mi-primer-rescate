@@ -42,7 +42,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
 
       </Head>
 
-      <Header index />
+      <Header />
 
       <SideMenu />
 
@@ -56,7 +56,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
         </div>
         <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ width: '50%' }}>
-            <Image src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+            <Image priority src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
           </div>
         </div>
         <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue' }}></div>

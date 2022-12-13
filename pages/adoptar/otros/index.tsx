@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbPets } from '../../../database';
@@ -64,7 +64,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
         </div>
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
-          <Link className={ styles.load__pets } color='secondary' alignSelf='flex-end' onClick={ requestPets }>Ver más</Link>
+        <Button className={ styles.load__pets } color='secondary' sx={{ alignSelf: 'flex-end' }} onClick={ requestPets }>Ver más</Button>
         </Box>
 
         <>

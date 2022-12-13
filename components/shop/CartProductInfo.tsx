@@ -1,11 +1,12 @@
-import { FC, useContext, useState } from "react"
-import Image from "next/image";
-import NextLink from "next/link";
+import { FC, useContext, useMemo, useState } from 'react';
+import Image from 'next/image';
+import NextLink from 'next/link';
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
-import { format } from '../../utils'
-import { ICartProduct } from "../../interfaces"
-import { ItemCounter } from "..";
-import { CartContext } from "../../context";
+
+import { format } from '../../utils';
+import { ICartProduct } from '../../interfaces';
+import { ItemCounter } from '..';
+import { CartContext } from '../../context';
 
 interface Props {
     product: ICartProduct;
@@ -15,7 +16,8 @@ export const CartProductInfo: FC<Props> = ({ product }) => {
 
     const [ currentValue, setCurrentValue ] = useState( product.quantity );
     const { updateProductQuantity } = useContext( CartContext );
-    let { name, image, price, discount, quantity, size, slug } = product;
+
+    const { name, image, price, discount, quantity, size, slug } = useMemo(() => product, [product]);
 
     return (
     <Grid container spacing={ 1 } sx={{ display: 'grid', maxWidth: '100%', gridTemplateColumns: '160px 1fr', padding: '.5rem', borderRadius: '1rem', boxShadow: '4px 4px 3rem -2rem #888', border: 'thin solid #eaeaea' }}>
@@ -46,12 +48,6 @@ export const CartProductInfo: FC<Props> = ({ product }) => {
                     }
                 >{ currentValue > 0 ? 'Llevar' : 'Remover' }</Button>
             </Box>
-
-            {/* <Box display='flex' justifyContent='flex-end' gap='.5rem' flexWrap='wrap'>
-                {
-                    tags.map(tag => <Typography key={ tag } sx={{ fontSize: '.9rem', color: '#8a8a8a' }}>#{ tag }</Typography>)
-                }
-            </Box> */}
         </Grid>
     </Grid>
   )

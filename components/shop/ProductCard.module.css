@@ -13,11 +13,6 @@
     transition: transform 350ms ease, box-shadow 350ms ease;
 }
 
-/* .big__product__image {
-    border-radius: 8px;
-    overflow: hidden;
-} */
-
 .big__product__info {
     cursor: pointer;
 }
@@ -32,11 +27,6 @@
     overflow: hidden;
     transition: transform 500ms ease, box-shadow 500ms ease;
 }
-
-/* .big__product__name {
-    margin: 0;
-    font-weight: 600;
-} */
 
 .big__product__price {
     margin: 0;

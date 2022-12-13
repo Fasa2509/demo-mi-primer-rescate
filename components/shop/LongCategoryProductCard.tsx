@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import { Box, Typography, Chip } from '@mui/material';
 
@@ -21,7 +20,7 @@ export const LongCategoryProductCard: FC<Props> = ({ product, cat }) => {
     const value = Object.values( product.inStock ).filter(c => typeof c === 'number').reduce(( prev, quantity) => prev + quantity, 0);
     setQ( value );
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <NextLink href={{

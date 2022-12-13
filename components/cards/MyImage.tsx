@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { Box } from '@mui/material';
+
 import styles from '../layouts/Loader.module.css';
 
 type myProps = ImageProps & { alt: string };

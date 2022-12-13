@@ -13,6 +13,7 @@
 }
 
 .modal__container {
+    position: relative;
     overflow-y: auto;
     width: 98vw;
     height: 98vh;

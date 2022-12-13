@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/router';
 import { Box, Button, Card, CardContent, Divider, Typography } from '@mui/material';
@@ -19,21 +19,15 @@ export const ModalFull: FC<Props> = ({ products }) => {
     const router = useRouter();
 
     const [product, setProduct] = useState( products[0] );
+    const { updateProductQuantity, getProductQuantity } = useContext( CartContext );
     const [active, setActive] = useState( false );
     const [didMount, setDidMount] = useState( false );
-
-    const { updateProductQuantity, getProductQuantity } = useContext( CartContext );
     const [currentSize, setCurrentSize] = useState<Sizes>('unique');
     const [currentValue, setCurrentValue] = useState<number>( getProductQuantity( product._id, currentSize ) );
 
-    let { _id, name, price, tags, description, discount, inStock, slug } = product;
+    let { _id, name, price, tags, description, discount, inStock, slug } = useMemo(() => product, [product]);
 
-    let { unique } = inStock;
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // useEffect(() => setCurrentValue(getProductQuantity( product._id, currentSize )), [currentSize]);
-
-    let sizes = Object.entries( inStock ).filter(s => Number(s[1]) >= 1).map(s => s[0]);
+    let sizes = useMemo(() => Object.entries( inStock ).filter(s => Number(s[1]) >= 1).map(s => s[0]), [inStock]);
 
     const productToCart = () => {
         updateProductQuantity({
@@ -44,8 +38,8 @@ export const ModalFull: FC<Props> = ({ products }) => {
             image: product.images[0],
             quantity: currentValue,
             size: currentSize,
-            maxQuantity: unique !== -1
-                            ? unique
+            maxQuantity: inStock.unique !== -1
+                            ? inStock.unique
                             : ( inStock[currentSize] === -1 )
                                 ? 9
                                 : inStock[currentSize] || 9,
@@ -57,19 +51,24 @@ export const ModalFull: FC<Props> = ({ products }) => {
     useEffect(() => setDidMount( true ), []);
 
     useEffect(() => {
+        if ( !didMount ) return;
         let productBySlug = products.find(( p ) => p.slug === `/${ router.query.product }`);
     
-        productBySlug && setProduct( productBySlug );
-        productBySlug && setActive( true );
-        productBySlug || router.push(router.pathname.match(/\/categoria/) ? '/tienda/categoria?tipo=' + router.query.tipo || 'accesorios' : '/tienda', undefined, { shallow: true, scroll: false });
-        productBySlug || setActive( false );
+        if ( productBySlug ) {
+            setProduct( productBySlug );
+            setActive( true );
+        } else {
+            router.push(router.pathname.match(/\/categoria/) ? '/tienda/categoria?tipo=' + router.query.tipo || 'accesorios' : '/tienda', undefined, { shallow: true, scroll: false });
+            setActive( false );
+        }
         
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.product]);
 
     useEffect(() => {
         setCurrentValue( getProductQuantity( product._id, currentSize ) );
-    }, [product, currentSize, getProductQuantity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [product, currentSize]);
 
     const handleClose = ( e: any ) => {
         if ( e.target.matches('#product-window') || e.target.matches('#product-close') ) {
@@ -107,12 +106,12 @@ export const ModalFull: FC<Props> = ({ products }) => {
 
                                 { sizes.length > 0 &&
                                     <Box display='flex' gap='1rem' alignItems='center'>
-                                        <Typography>Tienes</Typography><ItemCounter quantity={ currentValue } updateQuantity={ setCurrentValue } maxValue={ unique !== -1 ? unique : product.inStock[currentSize] || 9 } />
+                                        <Typography>Tienes</Typography><ItemCounter quantity={ currentValue } updateQuantity={ setCurrentValue } maxValue={ inStock.unique !== -1 ? inStock.unique : product.inStock[currentSize] || 9 } />
                                     </Box>
                                 }
 
                                 {
-                                    unique === -1 && sizes.length > 0 &&
+                                    inStock.unique === -1 && sizes.length > 0 &&
                                     <SizeSelector inStock={ inStock } selectedSize={ currentSize } setSelectedSize={ setCurrentSize } />
                                 }
 
@@ -132,7 +131,7 @@ export const ModalFull: FC<Props> = ({ products }) => {
                                 <Button
                                     color='secondary'
                                     fullWidth
-                                    disabled={ unique === -1 && currentSize === 'unique' }
+                                    disabled={ inStock.unique === -1 && currentSize === 'unique' }
                                     onClick={ productToCart }
                                 >
                                     { currentValue > 0 ? 'Llevar al carrito' : 'Remover del carrito' }

@@ -15,15 +15,15 @@ import { IAddress, IProduct } from '../../interfaces';
 import haversine from 'haversine-distance';
 
 interface Props {
-  allProducts: IProduct[];
+  // allProducts: IProduct[];
   dolarPrice: number;
 }
 
-const CarritoPage: NextPage<Props> = ({ allProducts, dolarPrice }) => {
+const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
   const router = useRouter();
   const { user } = useContext( AuthContext );
-  const { cart, clearCart, getTotal, numberOfItems, updateProductsInCart } = useContext( CartContext );
+  const { cart, clearCart, getTotal, numberOfItems/*, updateProductsInCart*/ } = useContext( CartContext );
   const { isLoading, setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
   const [contact, setContact] = useState({ name: '', facebook: '', instagram: '', whatsapp: '' });
@@ -33,10 +33,10 @@ const CarritoPage: NextPage<Props> = ({ allProducts, dolarPrice }) => {
   const [existencyChecked, setExistencyChecked] = useState( false );
   const [transaction, setTransaction] = useState({ transactionId: '', method: '', phone: '' });
 
-  useEffect(() => {
-    updateProductsInCart( allProducts );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   updateProductsInCart( allProducts );
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
     let shopInfo = JSON.parse( window.localStorage.getItem('mpr__shopInfo') || '{ "any": "" }' );
@@ -510,11 +510,11 @@ const CarritoPage: NextPage<Props> = ({ allProducts, dolarPrice }) => {
 
 export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
-  const products = await dbProducts.getAllProducts();
+  // const products = await dbProducts.getAllProducts();
 
-  if ( !products ) {
-    throw new Error("Failed to fetch products, check server's logs");
-  }
+  // if ( !products ) {
+  //   throw new Error("Failed to fetch products, check server's logs");
+  // }
 
   const dolar = await dbProducts.backGetDolarPrice();
 
@@ -523,7 +523,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
   return {
     props: {
-      allProducts: products,
+      // allProducts: products,
       dolarPrice: dolar
     },
     revalidate: 3600 * 24 // 4h

@@ -14,5 +14,4 @@ export * from './LoginForm';
 export * from './OrderInfo';
 export * from './RegisterForm';
 export * from './DirectionForm';
-export * from './ModalFull';
 export * from './AdminProductInfo'

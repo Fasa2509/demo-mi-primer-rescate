@@ -1,7 +1,7 @@
 import { FC } from "react";
-import Image from "next/image";
-import { ImageObj } from "../../interfaces";
 import Carousel from "react-material-ui-carousel";
+
+import { ImageObj } from "../../interfaces";
 import { MyImage } from "../cards";
 
 interface Props {
@@ -27,7 +27,6 @@ export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic' 
         {
           images.map((fadeImage, index) => (
             <div style={{ display: layout !== 'responsive' ? 'flex' : 'block', justifyContent: 'center', alignItems: 'center' }} key={index}>
-              {/* <Image src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } /> */}
               <MyImage src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } />  
             </div>
         ))}

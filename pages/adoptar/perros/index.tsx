@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbPets } from '../../../database';
@@ -53,7 +53,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   return (
     <MainLayout title={ 'Adopta un perrito' } H1={ 'Adopta un perrito' } pageDescription={ 'Proceso de adopción de nuestros animalitos' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/gatos'>
       
-        <p>¡Los perritos de <b>Mi Primer Rescate</b> son especiales! Vienen rellenos de mucho amor, con dósis extra de cariño y una gran ración de dulzura, ¡busca el tuyo aquí!.</p>
+        <p>¡Los perritos de <b>Mi Primer Rescate</b> son especiales! Vienen llenos de mucho amor, con dósis extra de cariño y una gran ración de dulzura, ¡busca el tuyo aquí!.</p>
 
         <div className={ styles.grid__container }>
             {
@@ -64,7 +64,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
         </div>
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
-          <Link className={ styles.load__pets } color='secondary' alignSelf='flex-end' onClick={ requestPets }>Ver más</Link>
+          <Button className={ styles.load__pets } color='secondary' sx={{ alignSelf: 'flex-end' }} onClick={ requestPets }>Ver más</Button>
         </Box>
 
         <>

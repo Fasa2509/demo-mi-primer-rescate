@@ -33,19 +33,19 @@ export const ScrollProvider: FC<Props> = ({ children, elements }) => {
                 
                 if ( element.limit ) {
                     return ( el.getClientRects()[0][element.limit] < element.distanceToTop )
-                        ? setPassedElements(( prevState: string[] ) => !prevState.includes(element.selector) ? [...prevState, element.selector] : prevState)
+                        ? setPassedElements(( prevState: string[] ) => Array.from( new Set ( [...prevState, element.selector] )) )
                         : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
                 } 
                 
                 let scroll = window.scrollY || document.documentElement.scrollTop;
 
                 return ( element.distanceToTop < scroll )
-                    ? setPassedElements(( prevState: string[] ) => !prevState.includes(element.selector) ? [...prevState, element.selector] : prevState)
+                    ? setPassedElements(( prevState: string[] ) => Array.from( new Set( [...prevState, element.selector] ) ))
                     : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
             })
-        })
+        });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [])
+      }, []);
 
     return(
         <ScrollContext.Provider value={{

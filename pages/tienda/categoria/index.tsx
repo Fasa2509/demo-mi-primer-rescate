@@ -1,17 +1,22 @@
-import { useContext, useEffect, useState, useMemo } from "react";
+import { useContext, useEffect, useState, useMemo, lazy, Suspense } from "react";
 import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { Box, Button, Typography } from "@mui/material";
-import { ShoppingBag } from "@mui/icons-material";
+import ShoppingBag from "@mui/icons-material/ShoppingBag";
 import { useSnackbar } from "notistack";
 
 import { dbProducts } from "../../../database";
 import { mprRevalidatePage } from "../../../mprApi";
 import { AuthContext, ScrollContext } from '../../../context';
-import { ContainerProductCategory, ModalFull, ShopLayout } from "../../../components";
+import { ContainerProductCategory, ShopLayout } from "../../../components";
 import { formatText } from "../../../utils";
 import { IProduct, Tags, TagsArray } from "../../../interfaces";
+
+const ModalFull = lazy(() =>
+  import('../../../components/ui/ModalFull')
+    .then(({ ModalFull }) => ({ default: ModalFull }))
+);
 
 interface Props {
     products: IProduct[];
@@ -25,27 +30,31 @@ const TypePage: NextPage<Props> = ({ products }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { user } = useContext( AuthContext );
     const { setIsLoading } = useContext( ScrollContext );
-    const [productType, setProductType] = useState<Tags>('accesorios');
+    const [productType, setProductType] = useState<Tags>('-' as Tags);
+    const [didMount, setDidMount] = useState( false );
+
+    useEffect(() => setDidMount( true ), []);
 
     useEffect(() => {
-        if ( !router.query.tipo || !TagsArray.includes( router.query.tipo.toString() as Tags ) ) {
-            router.push(router.pathname + '?tipo=accesorios', undefined, { shallow: true });
-            return;
-        }
-        setProductType( router.query.tipo.toString() as Tags );
-    }, [ router ]);
+        if ( !didMount ) return;
+        // if ( !router.query.tipo ) {
+        //     router.push(router.pathname + '?tipo=accesorios', undefined, { shallow: true });
+        //     return;
+        // }
+        router.query.tipo && setProductType( router.query.tipo.toString() as Tags );
+    }, [ router, didMount ]);
 
-    const util = useMemo(() => products.filter(( p ) => p.tags.includes( 'útil' )), [products]);
+    const útil = useMemo(() => products.filter(( p ) => p.tags.includes( 'útil' )), [products]);
     const accesorios = useMemo(() => products.filter(( p ) => p.tags.includes( 'accesorios' )), [products]);
     const ropa = useMemo(() => products.filter(( p ) => p.tags.includes( 'ropa' )), [products]);
     const consumibles = useMemo(() => products.filter(( p ) => p.tags.includes( 'consumibles' )), [products]);
 
     const cats: { útil: IProduct[]; accesorios: IProduct[]; ropa: IProduct[]; consumibles: IProduct[] } = useMemo(() => ({
-        útil: util,
+        útil,
         accesorios,
         ropa,
         consumibles,
-    }), [util, accesorios, ropa, consumibles]);
+    }), [útil, accesorios, ropa, consumibles]);
 
     const revalidate = async () => {
         if ( process.env.NODE_ENV !== 'production' ) return;
@@ -60,7 +69,9 @@ const TypePage: NextPage<Props> = ({ products }) => {
   return (
     <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/tienda' }>
 
-        <ModalFull products={ products } />
+        <Suspense fallback={ <Typography>Cargando...</Typography> }>
+            <ModalFull products={ products } />
+        </Suspense>
 
         <Typography>¿Buscas un tipo de producto en particular? Aquí lo encontrarás.</Typography>
         <Typography>Filtra tus productos por categoría.</Typography>
@@ -71,7 +82,7 @@ const TypePage: NextPage<Props> = ({ products }) => {
             }
         </Box>
 
-        <ContainerProductCategory type={ productType } products={ cats[router.query.tipo as CategoryKey || 'accesorios'] } />
+        <ContainerProductCategory type={ productType } products={ cats[router.query.tipo as CategoryKey] || [] } />
         
         <>
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
@@ -93,7 +104,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
         props: {
             products,
         },
-        revalidate: 86400, // cada 24h
+        revalidate: 3600 * 8, // cada 24h
     }
 }
 

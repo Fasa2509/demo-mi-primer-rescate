@@ -12,10 +12,9 @@ import styles from './Card.module.css';
 export interface Props {
     pet: IPet;
     removable: boolean;
-    setIsLoading?: (a: boolean) => void;
 }
 
-export const PetCard: FC<Props> = ({ pet, removable, setIsLoading }) => {
+export const PetCard: FC<Props> = ({ pet, removable }) => {
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -30,9 +29,7 @@ export const PetCard: FC<Props> = ({ pet, removable, setIsLoading }) => {
 
         if ( !accepted ) return;
 
-        setIsLoading && setIsLoading( true );
         const res = await dbPets.deletePet( pet._id );
-        setIsLoading && setTimeout(() => setIsLoading( false ), 20000);
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error' });
     }

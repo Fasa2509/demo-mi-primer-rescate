@@ -13,9 +13,10 @@
 
 .load__pets {
     background-color: var(--secondary-color-1);
-    padding: .3rem .8rem;
+    padding: .3rem .8rem .2rem;
     color: #fff;
     font-weight: 600;
+    font-size: 1rem;
     border: thin solid var(--secondary-color-1);
     border-radius: 5rem;
     cursor: pointer;
@@ -32,5 +33,10 @@
 @media screen and (min-width: 776px) {
     .grid__container {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .load__pets {
+        padding: .2rem .8rem .1rem;
+        font-size: .9rem;
     }
 }

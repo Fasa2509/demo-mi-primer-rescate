@@ -14,15 +14,17 @@ export const mprRevalidatePage = async ( pageToRevalidate: string ): Promise<{ e
         
         return data;
     } catch( error ) {
-        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
+            console.log( error.response!.data );
             return {
                 error: true,
                 // @ts-ignore
                 message: error.response ? error.response.data.message || 'Error revalidando ' + pageToRevalidate : 'Error revalidando la página ' + pageToRevalidate,
             }
         }
+
+        console.log( error );
 
         return {
             error: true,

@@ -10,9 +10,6 @@ import styles from './ContainerProduct.module.css';
 interface Props {
     type: string;
     products: IProduct[];
-    className?: string;
-    more?: boolean;
-    limit?: boolean;
 }
 
 export const ContainerProductType: FC<Props> = ({ type, products }) => {

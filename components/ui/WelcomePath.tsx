@@ -1,6 +1,9 @@
 import { useEffect } from "react"
-import { FoundationTwoTone, Groups, PetsOutlined, Yard } from "@mui/icons-material"
-import styles from './WelcomePath.module.css'
+import FoundationTwoTone from '@mui/icons-material/FoundationTwoTone';
+import Groups from '@mui/icons-material/Groups';
+import PetsOutlined from '@mui/icons-material/PetsOutlined';
+import Yard from '@mui/icons-material/Yard';
+import styles from './WelcomePath.module.css';
 
 const callback = ( entries: any ) => {
     entries.forEach(( entry: any )  => {
@@ -30,8 +33,6 @@ export const WelcomePath = () => {
                 Quiénes somos y qué hacemos <PetsOutlined sx={{ fontSize: '3rem', transform: 'translateY(.8rem)' }} />
             </p>
         </div>
-
-        {/* <div className={ styles.background }></div> */}
 
         <div className={ styles.content__container }>
             <div className={ styles.content__1 + ' observe' }>

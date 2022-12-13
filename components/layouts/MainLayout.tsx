@@ -41,7 +41,7 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
 
       </Head>
 
-      <Header index={ false } shop={ false } />
+      <Header />
 
       <SideMenu />
 

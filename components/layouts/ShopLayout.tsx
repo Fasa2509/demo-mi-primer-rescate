@@ -14,10 +14,9 @@ interface Props {
   pageImage?: string;
   titleIcon?: JSX.Element;
   nextPage?: string;
-  main?: boolean;
 }
 
-export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage, titleIcon, nextPage, main = false }) => {
+export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage, titleIcon, nextPage }) => {
 
   let finalTitle = `${ title } | MPR`;
 
@@ -48,8 +47,6 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
 
       <Loader />
 
-      {/* { main && <ContainerFavProduct initialFavProducts={ initialFavProducts } /> } */}
-      
       <main className={ styles.main__container }>
         {
           nextPage &&
