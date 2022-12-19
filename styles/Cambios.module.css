@@ -1,11 +1,3 @@
-/* .changes__section {
-    display: grid;
-    justify-items: center;
-    grid-template-columns: 1fr;
-    gap: 1.8rem;
-    margin: 1.5rem 0;
-} */
-
 .changes__section {
     display: flex;
     flex-direction: column;
@@ -26,9 +18,10 @@
 
 .load__pets {
     background-color: var(--secondary-color-1);
-    padding: .3rem .8rem;
+    padding: .3rem .8rem .2rem;
     color: #fff;
     font-weight: 600;
+    font-size: 1rem;
     border: thin solid var(--secondary-color-1);
     border-radius: 5rem;
     cursor: pointer;
@@ -62,15 +55,3 @@
 .section * {
     margin: 0;
 }
-
-/* @media screen and (min-width: 576px) {
-    .changes__section {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
-}
-
-@media screen and (min-width: 992px) {
-    .changes__section {
-        grid-template-columns: 1fr 1fr;
-    }
-} */

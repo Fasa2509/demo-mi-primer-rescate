@@ -1,7 +1,6 @@
 import { FC, useContext } from "react";
 import { useRouter } from "next/router";
 import NextLink from 'next/link';
-
 import { Box, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
 import Pets from '@mui/icons-material/Pets';
 import AddAlert from '@mui/icons-material/AddAlert';
@@ -43,7 +42,6 @@ export const SideMenu: FC = () => {
 
         toggleSideMenu();
         logoutUser();
-
         return;
     }
 
@@ -51,7 +49,7 @@ export const SideMenu: FC = () => {
     <Drawer
         open={ isMenuOpen }
         anchor='right'
-        sx={{ display: { xs: 'flex', md: 'none' }, backdropFilter: 'blur(2px)', transition: 'all 0.5s ease-out' }}
+        sx={{ display: { xs: 'flex', md: 'none' }, backdropFilter: 'blur(2px)', transition: 'all 750ms ease-out' }}
         onClose={ toggleSideMenu }
     >
         <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: '72px', position: 'relative' }}>

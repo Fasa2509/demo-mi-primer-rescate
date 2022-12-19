@@ -1,6 +1,6 @@
 import { useContext, useState, lazy, Suspense } from 'react';
 import type { GetStaticProps, NextPage } from 'next'
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { Home } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
@@ -59,19 +59,19 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
       </>
 
       <Box display='flex' flexWrap='wrap' gap='2rem' justifyContent='center' sx={{ my: 4 }}>
-        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
+        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
           <p className={ styles.cards__title }>Ayúdanos</p>
           <p className={ styles.cards__content }>Los animales nos esperan</p>
         </Box>
-        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
+        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
           <p className={ styles.cards__title }>Participa en la fundación</p>
           <p className={ styles.cards__content }>Asiste a nuestros eventos</p>
         </Box>
-        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
+        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
           <p className={ styles.cards__title }>Dona</p>
           <p className={ styles.cards__content }>Tu aporte nos ayuda a seguir</p>
         </Box>
-        <Box sx={{ padding: '1rem', color: '#fff', width: 'max(45%, 280px)', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
+        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
           <p className={ styles.cards__title }>Cuida a tus mascotas</p>
           <p className={ styles.cards__content }>Trátalas con el amor que ellas te dan</p>
         </Box>

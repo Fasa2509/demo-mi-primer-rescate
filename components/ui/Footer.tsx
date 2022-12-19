@@ -1,10 +1,44 @@
-import { FC } from 'react';
-import { CardContact } from '../cards/CardContact';
-import { CardSocial } from '../cards/CardSocial';
-import { CardShop } from '../cards';
-import styles from './Footer.module.css'
+import { FC, useContext } from 'react';
+import NextLink from 'next/link';
+import { useSnackbar } from 'notistack';
+import { IconButton, Typography } from "@mui/material";
+import Facebook from '@mui/icons-material/Facebook';
+import Instagram from '@mui/icons-material/Instagram';
+import Telegram from '@mui/icons-material/Telegram';
+import Twitter from '@mui/icons-material/Twitter';
+import YouTube from '@mui/icons-material/YouTube';
+import PetsOutlined from '@mui/icons-material/PetsOutlined';
+import ShoppingBagOutlined from '@mui/icons-material/ShoppingBagOutlined';
+
+import { AuthContext, ScrollContext } from '../../context';
+import { mprApi } from "../../mprApi";
+import { validations } from "../../utils";
+import styles from './Footer.module.css';
+import cardStyles from '../cards/Card.module.css';
 
 export const Footer: FC = () => {
+
+  const { user } = useContext( AuthContext );
+  const { setIsLoading } = useContext( ScrollContext );
+  const { enqueueSnackbar } = useSnackbar();
+  
+  const handleClick = async () => {
+      
+      if ( !user ) return enqueueSnackbar('Inicia sesión para suscribirte a MPR', { variant: 'warning' });
+      if ( !validations.isValidEmail( user.email ) ) return enqueueSnackbar('El correo no es válido', { variant: 'warning' });
+      
+      try {
+          setIsLoading( true );
+          const { data } = await mprApi.post('/contact', { email: user?.email });
+          setIsLoading( false );
+          
+          enqueueSnackbar(data.message, { variant: !data.error ? 'success' : 'error' });
+      } catch( error ) {
+          setIsLoading( false );
+          // @ts-ignore
+          enqueueSnackbar(error.response ? error.response.data.message || 'Ocurrió un error' : 'Ocurrió un error', { variant: 'error' });
+      }
+  }
 
   return (
     <footer className={ styles.footer }>
@@ -20,9 +54,56 @@ export const Footer: FC = () => {
       
       <section className={ styles.footer__card }>
         
-        <CardContact />
-        <CardSocial />
-        <CardShop />
+        <div className={ cardStyles.card }>
+          <Typography sx={{ fontSize: '1.15rem', fontWeight: '600' }}>Mantente informado</Typography>
+
+          <p>¡Sigue al día sobre nuestro proyecto!</p>
+          <p>Recibe información exclusiva de nuestra fundación en tu correo</p>
+
+          <button style={{ marginBottom: 0, marginTop: '.8rem' }} className='button' onClick={ handleClick }>¡Suscríbete!</button>
+        </div>
+        
+        <div className={ cardStyles.card }>
+          <Typography sx={{ fontSize: '1.15rem', fontWeight: '600' }}>¡Encuéntranos aquí!</Typography>
+          <p>Mantente al tanto de nuestro proyecto, síguenos por aquí</p>
+
+          <div className={ cardStyles.social__container }>
+              <a href="https://twitter.com/" target="_blank" rel="noreferrer">
+                  <IconButton>
+                      <Twitter />
+                  </IconButton>
+              </a>
+              <a href="https://facebook.com/" target="_blank" rel="noreferrer">
+                  <IconButton>
+                      <Facebook />
+                  </IconButton>
+              </a>
+              <a href="https://instagram.com/" target="_blank" rel="noreferrer">
+                  <IconButton>
+                      <Instagram />
+                  </IconButton>
+              </a>
+              <a href="https://web.telegram.org/" target="_blank" rel="noreferrer">
+                  <IconButton>
+                      <Telegram />
+                  </IconButton>
+              </a>
+              <a href="https://youtube.com/" target="_blank" rel="noreferrer">
+                  <IconButton>
+                      <YouTube />
+                  </IconButton>
+              </a>
+          </div>
+        </div>
+
+        <div className={ cardStyles.card }>
+          <Typography sx={{ fontSize: '1.15rem', fontWeight: '600' }}>¿Buscas consentir a tus peludos?</Typography>
+          <p>Visita nuestra <NextLink href={ '/tienda' }><a style={{ textDecoration: 'underline', fontWeight: 'bold' }}>tienda</a></NextLink> y encuentra geniales artículos para los consentidos de la casa</p>
+          <div>
+            <PetsOutlined />
+            <ShoppingBagOutlined />
+          </div>
+        </div>
         
       </section>
     </footer>

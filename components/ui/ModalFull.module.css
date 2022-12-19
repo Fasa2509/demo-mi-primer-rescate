@@ -15,6 +15,8 @@
 .modal__container {
     position: relative;
     overflow-y: auto;
+    background-image: url(/background-blob-scatter.svg);
+    background-size: contain;
     width: 98vw;
     height: 98vh;
     background-color: #fafafa;

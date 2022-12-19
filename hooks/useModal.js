@@ -1,10 +1,6 @@
 import { useState } from 'react'
 
-// interface Props {
-//     isInitiallyOpen?: boolean;
-// }
-
-export const useModal/*: FC<Props>*/ = () => {
+export const useModal = () => {
   
     const [isOpen, setIsOpen] = useState( false );
 

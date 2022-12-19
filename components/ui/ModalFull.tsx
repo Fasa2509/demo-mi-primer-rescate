@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useRouter } from 'next/router';
 import { Box, Button, Card, CardContent, Divider, Typography } from '@mui/material';
 
-import { SliderImages } from '../slider';
+import { SliderImages } from '../layouts';
 import { ItemCounter, SizeSelector } from '../shop';
 import { CartContext } from '../../context';
 import { format } from '../../utils';
@@ -65,10 +65,8 @@ export const ModalFull: FC<Props> = ({ products }) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.product]);
 
-    useEffect(() => {
-        setCurrentValue( getProductQuantity( product._id, currentSize ) );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [product, currentSize]);
+    useEffect(() => setCurrentValue( getProductQuantity( product._id, currentSize ) ), [product, currentSize]);
 
     const handleClose = ( e: any ) => {
         if ( e.target.matches('#product-window') || e.target.matches('#product-close') ) {
@@ -117,7 +115,7 @@ export const ModalFull: FC<Props> = ({ products }) => {
 
                                 {
                                     sizes.length === 0 &&
-                                    <Typography>¡Vaya! Parece que no tenemos este producto.</Typography>
+                                    <Typography sx={{ mt: 1.5 }}>¡Vaya! Parece que no tenemos este producto disponible.</Typography>
                                 }
 
                                 { tags.length > 0 &&

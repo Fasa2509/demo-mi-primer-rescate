@@ -1,11 +1,12 @@
-import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
 import { Box, Button, Checkbox, Chip, Link, MenuItem, TextField, Typography } from '@mui/material';
+
 import { IProduct, Tags, TagsArray } from '../../interfaces'
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
 import { useSnackbar } from 'notistack';
 import { dbProducts } from '../../database';
 import { ScrollContext } from '../../context';
-import { SliderImages } from '../slider';
+import { SliderImages } from '../layouts';
 import { mprRevalidatePage } from '../../mprApi';
 
 interface Props {

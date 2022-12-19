@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box } from '@mui/material';
 
-import { SliderImages } from '../slider';
+import { SliderImages } from '../layouts';
 import { IPet } from '../../interfaces';
 import { getParagraphs } from '../../utils';
 import styles from './ChangeCard.module.css';

@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useState } from "react";
-import { Box, Button, Input, TextField } from "@mui/material";
+import { Box, Button, Input, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 
 import { dbPets } from "../../database";
@@ -80,6 +80,15 @@ export const PetChangeForm = () => {
                 onChange={ ({ target }) => setForm({ ...form, name: target.value  }) }
             />
 
+                <Box display='flex' gap='1rem' flexWrap='wrap'>
+                    <Typography>/gato-1.webp</Typography>
+                    <Typography>/gato-2.jpg</Typography>
+                    <Typography>/perro-1.webp</Typography>
+                    <Typography>/perro-2.webp</Typography>
+                    <Typography>/Logo-Redes.png</Typography>
+                    <Typography>/Logo-MPR.png</Typography>
+                    <Typography>/square-dog.jpg</Typography>
+                </Box>
             <Box display='flex' gap='.5rem'>
                 <TextField
                     name='imagenes'

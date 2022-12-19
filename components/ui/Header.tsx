@@ -18,7 +18,7 @@ interface Props {
 
 export const Header: FC<Props> = ({ shop = false }) => {
 
-  const router = useRouter();
+  const { asPath } = useRouter();
   const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
   const { user, logoutUser } = useContext( AuthContext );
   const { numberOfItems } = useContext( CartContext );
@@ -61,7 +61,7 @@ export const Header: FC<Props> = ({ shop = false }) => {
 
           <Box className={ styles.link__hover }>
             <NextLink href='/miprimerrescate' passHref>
-              <Link color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/miprimerrescate') ? styles.active : '' }` }>Nosotros</Link>
+              <Link color='info' className={ `${ styles.link } ${ asPath.startsWith('/miprimerrescate') ? styles.active : '' }` }>Nosotros</Link>
             </NextLink>
 
             <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
@@ -78,7 +78,7 @@ export const Header: FC<Props> = ({ shop = false }) => {
           </Box>
 
           <Box className={ styles.link__hover }>
-            <Typography color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/apoyo') ? styles.active : '' }` }>Apoyo</Typography>
+            <Typography color='info' className={ `${ styles.link } ${ asPath.startsWith('/apoyo') ? styles.active : '' }` }>Apoyo</Typography>
             
             <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
               <NextLink href='/apoyo' passHref>
@@ -94,7 +94,7 @@ export const Header: FC<Props> = ({ shop = false }) => {
           </Box>
 
           <Box display='flex' flexDirection='column' className={ styles.link__hover }>
-            <Typography color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/adoptar') ? styles.active : '' }` }>Adoptar</Typography>
+            <Typography color='info' className={ `${ styles.link } ${ asPath.startsWith('/adoptar') ? styles.active : '' }` }>Adoptar</Typography>
             
             <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
               <NextLink href='/adoptar/perros' passHref>
@@ -113,7 +113,7 @@ export const Header: FC<Props> = ({ shop = false }) => {
           </Box>
 
           <Box className={ styles.link__hover }>
-            <Typography color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/cambios') ? styles.active : '' }` }>Cambios</Typography>
+            <Typography color='info' className={ `${ styles.link } ${ asPath.startsWith('/cambios') ? styles.active : '' }` }>Cambios</Typography>
             
             <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
               <NextLink href='/cambios' passHref>
@@ -130,7 +130,7 @@ export const Header: FC<Props> = ({ shop = false }) => {
 
           <Box className={ styles.link__hover }>
             <NextLink href='/tienda' passHref>
-              <Link color='info' className={ `${ styles.link } ${ router.asPath.startsWith('/tienda') ? styles.active : '' }` }>Tienda</Link>
+              <Link color='info' className={ `${ styles.link } ${ asPath.startsWith('/tienda') ? styles.active : '' }` }>Tienda</Link>
             </NextLink>
 
             <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
@@ -153,7 +153,7 @@ export const Header: FC<Props> = ({ shop = false }) => {
             ( user )
               ? (
                 <Box className={ styles.link__hover }>
-                  <Typography color='info' className={ `fadeIn ${ styles.link } ${ router.asPath.startsWith('/personal') ? styles.active : '' }` }>Personal</Typography>
+                  <Typography color='info' className={ `fadeIn ${ styles.link } ${ asPath.startsWith('/personal') ? styles.active : '' }` }>Personal</Typography>
 
                   <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
                     <NextLink href='/personal' passHref>
@@ -165,8 +165,8 @@ export const Header: FC<Props> = ({ shop = false }) => {
                 </Box>
               )
               : (
-                <NextLink href={ `/auth?p=${ router.asPath }` } passHref>
-                  <Link color='info' className={ `fadeIn ${ styles.link } ${ router.asPath.startsWith('/auth') ? styles.active : '' }` }>Entrar</Link>
+                <NextLink href={ `/auth?p=${ asPath }` } passHref>
+                  <Link color='info' className={ `fadeIn ${ styles.link } ${ asPath.startsWith('/auth') ? styles.active : '' }` }>Entrar</Link>
                 </NextLink>
               )
           }

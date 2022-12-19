@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Box } from "@mui/material";
 
 import { MyImage } from "../cards";
-import { SliderImages } from "../slider";
+import { SliderImages } from "../layouts";
 import { Countdown } from "./Countdown";
 import { getParagraphs } from "../../utils";
 import { ImageObj, Field } from "../../interfaces";

@@ -21,35 +21,35 @@ export interface ObjectToTop {
 
 export const ScrollProvider: FC<Props> = ({ children, elements }) => {
 
-    const [passedElements, setPassedElements] = useState<string[]>([]);
+    // const [passedElements, setPassedElements] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>( false );
 
-    useEffect(() => {
-        window.addEventListener("scroll", () => {
-            elements.forEach(( element ) => {
-                let el = document.querySelector( element.selector ) as HTMLElement;
+    // useEffect(() => {
+    //     window.addEventListener("scroll", () => {
+    //         elements.forEach(( element ) => {
+    //             let el = document.querySelector( element.selector ) as HTMLElement;
 
-                if ( !el ) return;
+    //             if ( !el ) return;
                 
-                if ( element.limit ) {
-                    return ( el.getClientRects()[0][element.limit] < element.distanceToTop )
-                        ? setPassedElements(( prevState: string[] ) => Array.from( new Set ( [...prevState, element.selector] )) )
-                        : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
-                } 
+    //             if ( element.limit ) {
+    //                 return ( el.getClientRects()[0][element.limit] < element.distanceToTop )
+    //                     ? setPassedElements(( prevState: string[] ) => Array.from( new Set ( [...prevState, element.selector] )) )
+    //                     : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
+    //             } 
                 
-                let scroll = window.scrollY || document.documentElement.scrollTop;
+    //             let scroll = window.scrollY || document.documentElement.scrollTop;
 
-                return ( element.distanceToTop < scroll )
-                    ? setPassedElements(( prevState: string[] ) => Array.from( new Set( [...prevState, element.selector] ) ))
-                    : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
-            })
-        });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);
+    //             return ( element.distanceToTop < scroll )
+    //                 ? setPassedElements(( prevState: string[] ) => Array.from( new Set( [...prevState, element.selector] ) ))
+    //                 : setPassedElements(( prevState: string[] ) => prevState.filter(( el: string ) => el !== element.selector))
+    //         })
+    //     });
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    //   }, []);
 
     return(
         <ScrollContext.Provider value={{
-            passedElements,
+            // passedElements,
             isLoading,
             setIsLoading,
         }}>

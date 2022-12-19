@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
@@ -7,9 +7,14 @@ import { useSnackbar } from 'notistack';
 import { dbPets } from '../../../database';
 import { AuthContext, ScrollContext } from '../../../context';
 import { mprRevalidatePage } from '../../../mprApi';
-import { MainLayout, PetCard, PetForm } from '../../../components';
+import { MainLayout, PetCard } from '../../../components';
 import { IPet } from '../../../interfaces';
 import styles from '../../../styles/Adoptar.module.css';
+
+const PetForm = lazy(() =>
+  import('../../../components/ui/PetForm')
+    .then(({ PetForm }) => ({ default: PetForm }))
+);
 
 interface Props {
   pets: IPet[];
@@ -70,7 +75,9 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
         <>
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
             <>
-              <PetForm pet='gato' />
+              <Suspense fallback={ <p>Cargando...</p> }>
+                <PetForm pet='gato' />
+              </Suspense>
               <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
             </>
           }

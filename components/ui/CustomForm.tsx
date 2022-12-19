@@ -4,13 +4,12 @@ import { isBefore } from 'date-fns';
 
 import { CustomInput } from './CustomInput';
 import { Article } from './Article';
-import { Field, IArticle } from '../../interfaces';
+import { Field } from '../../interfaces';
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
-import styles from './Form.module.css';
-import { mprApi, mprRevalidatePage } from '../../mprApi';
-import axios from 'axios';
+import { mprRevalidatePage } from '../../mprApi';
 import { dbArticles } from '../../database';
 import { ScrollContext } from '../../context';
+import styles from './Form.module.css';
 
 export const CustomForm: FC = () => {
 

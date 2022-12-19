@@ -1,13 +1,16 @@
-import { FC, useContext } from 'react';
+import { FC, lazy, Suspense } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
 import Carousel from 'react-material-ui-carousel';
 
 import { Footer, Header, SideMenu, Title, WelcomePath } from '../ui';
-import { SliderHero } from '../slider';
-import { ScrollContext } from '../../context';
+import { MyImage } from '../cards';
 import { Loader } from './Loader';
 import styles from './MainLayout.module.css';
+
+// const Footer = lazy(() =>
+//   import('../ui/Footer')
+//     .then(({ Footer }) => ({ default: Footer }))
+// );
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -21,7 +24,9 @@ interface Props {
 export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription, titleIcon, nextPage = '/miprimerrescate' }) => {
 
   let finalTitle = `${ title } | MPR`;
-  const { passedElements } = useContext( ScrollContext );
+  // const { passedElements } = useContext( ScrollContext );
+
+  console.log('mainindexlayout')
 
   const handleClick = () => {
     window.scrollTo({
@@ -47,20 +52,22 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       <SideMenu />
 
       <Loader />
-
-      <SliderHero>
+      
+      <section style={{ width: '100%' }}>
+        <Carousel indicators={ false } autoPlay duration={ 650 } interval={ 12000 }>
         <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ width: '50%' }}>
-            <Image priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
+            <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
           </div>
         </div>
         <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ width: '50%' }}>
-            <Image priority src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+            <MyImage priority src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
           </div>
         </div>
         <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue' }}></div>
-      </SliderHero>
+        </Carousel>
+      </section>
 
       <WelcomePath />
       
@@ -93,9 +100,11 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
         { children }
       </main>
 
-      <button className={ 'scroll__button ' + styles.scroll__button + `${ passedElements.includes( '.scroll__button' ) ? ` ${styles['scroll__button--scrolled']}` : '' }` } onClick={ handleClick }></button>
+      <button className={ styles.scroll__button } onClick={ handleClick }></button>
 
-      <Footer />
+      {/* <Suspense fallback={ <></> }> */}
+        <Footer />
+      {/* </Suspense> */}
     </>
   )
 }

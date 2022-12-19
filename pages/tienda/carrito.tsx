@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { PayPalButtons } from '@paypal/react-paypal-js';
@@ -11,42 +11,52 @@ import { dbOrders, dbProducts } from '../../database';
 import { AuthContext, CartContext, ScrollContext } from '../../context';
 import { CartProductInfo, ShopLayout } from '../../components';
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
-import { IAddress, IProduct } from '../../interfaces';
 import haversine from 'haversine-distance';
 
 interface Props {
-  // allProducts: IProduct[];
   dolarPrice: number;
 }
 
-const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
+const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
 
   const router = useRouter();
   const { user } = useContext( AuthContext );
-  const { cart, clearCart, getTotal, numberOfItems/*, updateProductsInCart*/ } = useContext( CartContext );
+  const { cart, clearCart, getTotal, numberOfItems } = useContext( CartContext );
   const { isLoading, setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
-  const [contact, setContact] = useState({ name: '', facebook: '', instagram: '', whatsapp: '' });
-  const [direction, setDirection] = useState<IAddress>({ address: '', maps: { latitude: null, longitude: null } });
-  const [directionError, setDirectionError] = useState('');
-  const [checkboxInfo, setCheckboxInfo] = useState( false );
-  const [existencyChecked, setExistencyChecked] = useState( false );
-  const [transaction, setTransaction] = useState({ transactionId: '', method: '', phone: '' });
 
-  // useEffect(() => {
-  //   updateProductsInCart( allProducts );
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  const name = useRef<HTMLInputElement>( null );
+  const facebook = useRef<HTMLInputElement>( null );
+  const instagram = useRef<HTMLInputElement>( null );
+  const whatsapp = useRef<HTMLInputElement>( null );
+  const checkboxInfo = useRef<HTMLInputElement>( null );
+  const address = useRef<HTMLInputElement>( null );
+  const pmcode = useRef<HTMLInputElement>( null );
+  const pmnumber = useRef<HTMLInputElement>( null );
+  
+  const [maps, setMaps] = useState<{ latitude: number | null; longitude: number | null; }>({ latitude: null, longitude: null });
+
+  const [directionError, setDirectionError] = useState('');
+  const [existencyChecked, setExistencyChecked] = useState( false );
+  const [method, setMethod] = useState<'Pago móvil' | 'Paypal' | ''>('');
+
 
   useEffect(() => {
     let shopInfo = JSON.parse( window.localStorage.getItem('mpr__shopInfo') || '{ "any": "" }' );
     if ( shopInfo === undefined || shopInfo === null || shopInfo.any === '' || Object.values( shopInfo.contact ).filter(c => c).length < 2 || Object.values( shopInfo.direction.maps ).filter(d => d).length < 2 ) return;
 
-    setContact( shopInfo.contact );
-    setDirection( shopInfo.direction );
+    address.current!.value = shopInfo.direction.address;
+    name.current!.value = shopInfo.contact.name;
+    facebook.current!.value = shopInfo.contact.facebook;
+    instagram.current!.value = shopInfo.contact.instagram;
+    whatsapp.current!.value = shopInfo.contact.whatsapp;
+    
+    setMaps(shopInfo.direction.maps);
   }, []);
 
+
   useEffect(() => setExistencyChecked( false ), [cart]);
+
 
   const cleaningCart = async () => {
       let key = enqueueSnackbar('¿Quieres vaciar el carrito?', {
@@ -61,24 +71,11 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
       return;
   }
 
+
   const handleCheckout = async (transactionInfo: { method: string; transactionId: string; phone: string; }) => {
     if ( !user || !user._id ) {
       router.push('/auth?p=/tienda/carrito');
       return;
-    }
-
-    if ( transactionInfo.method === 'Pago móvil' ) {
-    if ( direction.address.trim().length < 5 )
-      return enqueueSnackbar('Necesitamos una dirección de entrega completa', { variant: 'warning' });
-
-    if ( Object.values( direction.maps ).filter(m => m).length !== 2 )
-      return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
-
-    if ( contact.name.trim().length < 2 )
-      return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
-    
-    if ( Object.values( contact ).filter(c => c.trim()).length < 2 )
-      return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
     }
 
     const validMethod = ['Pago móvil', 'Paypal'];
@@ -86,16 +83,38 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
     if ( !validMethod.includes( transactionInfo.method ) )
       return enqueueSnackbar('La información del pago es incorrecta', { variant: 'warning' });
 
-    if ( transactionInfo.method === 'Pago móvil' && ( !transactionInfo.transactionId.trim() || !transactionInfo.phone.trim() ) )
+    if ( name.current!.value.trim().length < 2 )
+      return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
+      
+    if ( facebook.current!.value.trim().length < 2 && instagram.current!.value.trim().length < 2 && whatsapp.current!.value.trim().length < 2 )
+      return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
+
+    if ( transactionInfo.method === 'Pago móvil' && (transactionInfo.transactionId.trim().length < 4 || transactionInfo.phone.trim().length < 9) )
       return enqueueSnackbar('La información del pago está incompleta', { variant: 'warning' });
+
+    if ( address.current!.value.trim().length < 5 )
+      return enqueueSnackbar('Necesitamos una dirección de entrega completa', { variant: 'warning' });
+
+    if ( Object.values( maps ).filter(m => m).length !== 2 )
+      return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
+
+
 
     setIsLoading( true );
 
     const res = await dbOrders.createNewOrder({
       userId: user._id,
       cart,
-      shippingAddress: direction,
-      contact,
+      shippingAddress: {
+        address: address.current!.value,
+        maps,
+      },
+      contact: {
+        name: name.current!.value,
+        facebook: facebook.current!.value,
+        instagram: instagram.current!.value,
+        whatsapp: whatsapp.current!.value,
+      },
       transaction: transactionInfo,
     });
 
@@ -104,15 +123,33 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
       setIsLoading( false );
       return;
     }
-
-    if ( checkboxInfo ) window.localStorage.setItem('mpr__shopInfo', JSON.stringify({ direction, contact }));
+    
+    // @ts-ignore
+    if ( checkboxInfo.current!.checked ) window.localStorage.setItem('mpr__shopInfo', JSON.stringify({
+      direction: {
+        address: address.current!.value,
+        maps
+      },
+      contact: {
+        name: name.current!.value,
+        facebook: facebook.current!.value,
+        instagram: instagram.current!.value,
+        whatsapp: whatsapp.current!.value
+      }
+    }));
     
     enqueueSnackbar(res.message, { variant: 'success' });
     setExistencyChecked( false );
     setIsLoading( false );
-    setTransaction({ method: '', transactionId: '', phone: '' });
+    setMethod('');
+
+    if ( pmcode.current && pmnumber.current ) {
+      pmcode.current.value = '';
+      pmnumber.current.value = '';
+    }
     return;
   }
+
 
   const handleCheckExistency = async () => {
     if ( !user || !user._id ) {
@@ -120,16 +157,16 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
       return;
     }
 
-    if ( direction.address.trim().length < 5 )
+    if ( address.current!.value.trim().length < 5 )
       return enqueueSnackbar('Necesitamos una dirección de entrega completa', { variant: 'warning' });
 
-    if ( Object.values( direction.maps ).filter(m => m).length !== 2 )
+    if ( Object.values( maps ).filter(m => m).length !== 2 )
       return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
 
-    if ( contact.name.trim().length < 2 )
+    if ( name.current!.value.trim().length < 2 )
       return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
     
-    if ( Object.values( contact ).filter(c => c.trim()).length < 2 )
+    if ( facebook.current!.value.trim().length < 2 && instagram.current!.value.trim().length < 2 && whatsapp.current!.value.trim().length < 2 )
       return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
 
     setIsLoading( true );
@@ -142,13 +179,14 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
     setIsLoading( false );
 
-    setTimeout(() => setExistencyChecked( false ), 180000);
+    setTimeout(() => setExistencyChecked( false ), 200000);
   }
+
 
   const handleLocation = () => {
     setIsLoading( true );
     
-    setDirection(({ ...direction, maps: { latitude: null, longitude: null } }));
+    setMaps({ latitude: null, longitude: null });
     
     const success: PositionCallback = function( position ) {
       setIsLoading( false );
@@ -158,7 +196,6 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
       if ( accuracy > 55 ) {
         setDirectionError('La precisión fue baja. Por favor inténtalo de nuevo.');
-        setTimeout(() => setDirectionError(''), 15000);
         return;
       }
       
@@ -169,23 +206,18 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
       if ( distance > 11000 ) {
         setDirectionError('Vaya, parece que estás muy lejos. No llegamos hasta tu ubicación.');
-        setTimeout(() => setDirectionError(''), 30000);
         return;
       }
       
-      setDirection({
-        ...direction,
-        maps: {
+      setMaps({
           latitude,
           longitude,
-        }
       })
     }
     
     const error: PositionErrorCallback = function(err) {
       setIsLoading( false );
       setDirectionError('Ocurrió un error con tu ubicación. Por favor vuelve a intentarlo.');
-      setTimeout(() => setDirectionError(''), 15000);
     }
     
     const options: PositionOptions = {
@@ -197,6 +229,7 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
     navigator.geolocation.getCurrentPosition(success, error, options);
   }
   
+
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
 
@@ -270,8 +303,8 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
                   <Box sx={{ mb: 1 }}>
                     <TextField
+                      inputRef={ address }
                       name='address'
-                      value={ direction.address }
                       label='Descripción de tu ubicación'
                       type='text'
                       color='secondary'
@@ -279,19 +312,18 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
                       multiline
                       fullWidth
                       disabled={ existencyChecked }
-                      onChange={ ( e ) => setDirection({ ...direction, address: e.target.value }) }
-                      />
+                    />
                   </Box>
 
                   <Box sx={{ mb: 1 }} display='flex' flexDirection='column'>
                       <Button color='secondary' disabled={ isLoading } sx={{ py: 1, fontSize: '1rem' }} onClick={ handleLocation }>Obtener ubicación en Maps</Button>
-                      { Object.values( direction.maps ).filter(m => m).length === 2 &&
+                      { maps.latitude && maps.longitude &&
                         <Box display='flex' gap='.5rem' className='fadeIn' sx={{ maxWidth: 'max(250px, 20rem)', borderRadius: '10rem', mt: 1, padding: '.4rem 1rem .4rem .5rem', fontWeight: '600', backgroundColor: 'var(--success-color)' }}>
                           <Check color='info' />
                           <Typography sx={{ color: '#fafafa' }}>Tu ubicación es válida</Typography>
                         </Box>
                       }
-                      { directionError.length > 0 &&
+                      { directionError &&
                         <Box display='flex' gap='.5rem' className='fadeIn' sx={{ maxWidth: 'max(250px, 22rem)', borderRadius: '10rem', mt: 1, padding: '.4rem 1rem', fontWeight: '600', fontSize: '.9rem', backgroundColor: 'var(--error-color)' }}>
                           <Typography sx={{ color: '#fafafa' }}>{ directionError }</Typography>
                         </Box>
@@ -304,69 +336,65 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
                   <Box sx={{ mb: 1 }}>
                     <TextField
+                      inputRef={ name }
                       name='name'
-                      value={ contact.name }
                       label='Nombre de la persona'
                       type='text'
                       color='secondary'
                       variant='filled'
                       fullWidth
                       disabled={ existencyChecked }
-                      onChange={ ( e ) => setContact({ ...contact, name: e.target.value }) }
-                      />
+                    />
                   </Box>
 
                   <Typography sx={{ fontSize: '.9rem', color: '#666', mt: 3 }}>¡Necesario al menos uno!</Typography>
 
                   <Box sx={{ mb: 1 }}>
                     <TextField
+                      inputRef={ facebook }
                       name='facebook'
-                      value={ contact.facebook }
                       label='Facebook'
                       type='text'
                       color='secondary'
                       variant='filled'
                       fullWidth
                       disabled={ existencyChecked }
-                      onChange={ ( e ) => setContact({ ...contact, facebook: e.target.value }) }
-                      />
+                    />
                   </Box>
 
                   <Box sx={{ mb: 1 }}>
                     <TextField
+                      inputRef={ instagram }
                       name='instagram'
-                      value={ contact.instagram }
                       label='Instagram'
                       type='text'
                       color='secondary'
                       variant='filled'
                       fullWidth
                       disabled={ existencyChecked }
-                      onChange={ ( e ) => setContact({ ...contact, instagram: e.target.value }) }
-                      />
+                    />
                   </Box>
 
                   <Box sx={{ mb: 1 }}>
                     <TextField
+                      inputRef={ whatsapp }
                       name='whatsapp'
-                      value={ contact.whatsapp }
                       label='Whatsapp'
                       type='text'
                       color='secondary'
                       variant='filled'
                       fullWidth
                       disabled={ existencyChecked }
-                      onChange={ ( e ) => setContact({ ...contact, whatsapp: e.target.value }) }
                     />
                   </Box>
 
-                  <Box display='flex' alignItems='center'>
+                  <Box display='flex' justifyContent='flex-start' alignItems='center'>
                     <Checkbox
+                      id='checkboxInfo'
+                      inputRef={ checkboxInfo }
                       color='secondary'
-                      checked={ checkboxInfo }
-                      onChange={ ({ target }) => setCheckboxInfo( target.checked ) }
                     />
-                    <Typography sx={{ cursor: 'pointer', flexGrow: 1 }} onClick={ () => setCheckboxInfo( !checkboxInfo ) }>Guardar información</Typography>
+                    <label htmlFor='checkboxInfo' onClick={ () => true }>Guardar información</label>
                   </Box>
 
                   <Divider sx={{ my: 1 }} />
@@ -396,7 +424,7 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
                         color='secondary'
                         disabled={ cart.length < 1 || isLoading || !existencyChecked }
                         sx={{ fontSize: '.9rem', padding: '.2rem .4rem', flexGrow: 1 }}
-                        onClick={ () => setTransaction({ transactionId: '', method: 'Paypal', phone: '' }) }
+                        onClick={ () => setMethod('Paypal') }
                       >
                         Pagar con PayPal
                       </Button>
@@ -405,7 +433,7 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
                         color='secondary'
                         disabled={ cart.length < 1 || isLoading || !existencyChecked }
                         sx={{ fontSize: '.9rem', padding: '.2rem .4rem', flexGrow: 1 }}
-                        onClick={ () => setTransaction({ transactionId: '', method: 'Pago móvil', phone: '' }) }
+                        onClick={ () => setMethod('Pago móvil') }
                       >
                         Pagar con Pago móvil
                       </Button>
@@ -413,7 +441,7 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
                   }
 
                   {
-                    transaction.method === 'Pago móvil' && existencyChecked &&
+                    method === 'Pago móvil' && existencyChecked &&
                       <Box className='fadeIn' sx={{ mt: 1 }}>
                         <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>Pago móvil</Typography>
                         
@@ -426,27 +454,25 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
                         <Box sx={{ mb: 1 }}>
                           <TextField
+                            inputRef={ pmcode }
                             name='pmcode'
-                            value={ transaction.transactionId }
                             label='Código de verificación'
                             type='text'
                             color='secondary'
                             variant='filled'
                             fullWidth
-                            onChange={ ({ target }) => setTransaction({ ...transaction, transactionId: target.value }) }
                           />
                         </Box>
 
                         <Box sx={{ mb: 1 }}>
                           <TextField
+                            inputRef={ pmnumber }
                             name='pmnumber'
-                            value={ transaction.phone }
                             label='Número de teléfono'
                             type='text'
                             color='secondary'
                             variant='filled'
                             fullWidth
-                            onChange={ ({ target }) => setTransaction({ ...transaction, phone: target.value }) }
                           />
                         </Box>
 
@@ -456,14 +482,14 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
                           fullWidth
                           disabled={ cart.length < 1 || isLoading || !existencyChecked }
                           sx={{ fontSize: '1rem' }}
-                          onClick={ () => handleCheckout({ method: 'Pago móvil', transactionId: transaction.transactionId, phone: transaction.phone }) }
+                          onClick={ () => handleCheckout({ method: 'Pago móvil', transactionId: pmcode.current!.value, phone: pmnumber.current!.value }) }
                         >
                           Crear orden
                         </Button>
                       </Box>
                   }
 
-                  { transaction.method === 'Paypal' && existencyChecked &&
+                  { method === 'Paypal' && existencyChecked &&
                       <Box className='fadeIn' sx={{ mt: 1 }}>
                         <Typography sx={{ fontSize: '1.2rem', fontWeight: '600' }}>PayPal</Typography>
 
@@ -510,12 +536,6 @@ const CarritoPage: NextPage<Props> = ({ /*allProducts, */dolarPrice }) => {
 
 export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
-  // const products = await dbProducts.getAllProducts();
-
-  // if ( !products ) {
-  //   throw new Error("Failed to fetch products, check server's logs");
-  // }
-
   const dolar = await dbProducts.backGetDolarPrice();
 
   if ( !dolar )
@@ -523,10 +543,9 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
   return {
     props: {
-      // allProducts: products,
       dolarPrice: dolar
     },
-    revalidate: 3600 * 24 // 4h
+    revalidate: 3600 * 24 // 24h
   }
 }
 

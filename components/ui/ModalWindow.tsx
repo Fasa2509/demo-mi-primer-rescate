@@ -1,6 +1,10 @@
-import { FC } from 'react';
+import { FC, lazy, Suspense } from 'react';
 import { useModal } from '../../hooks';
-import { ModalContent } from './ModalContent';
+
+const ModalContent = lazy(() =>
+    import('./ModalContent')
+        .then(({ ModalContent }) => ({ default: ModalContent }))
+);
 
 interface Props {
     children: JSX.Element | JSX.Element[];
@@ -25,7 +29,11 @@ export const ModalWindow: FC<Props> = ({ children, buttonTxt = 'Abrir', title, b
     return (
         <>
             <button style={ buttonStyle } className={ `button${ buttonClassName ? ` ${ buttonClassName }` : '' }` } onClick={ openModal }>{ buttonTxt }</button>
-            { isOpen && <ModalContent title={ title } modalStyle={ modalStyle } modalBg={ modalBg } closeModal={ handleClose }>{ children }</ModalContent> }
+            { isOpen &&
+                <Suspense fallback={ <p>Cargando...</p> }>
+                    <ModalContent title={ title } modalStyle={ modalStyle } modalBg={ modalBg } closeModal={ handleClose }>{ children }</ModalContent>
+                </Suspense>
+            }
         </>
   )
 }

@@ -1,5 +1,5 @@
 import { FC, useContext, useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
 
 import { dbPets } from "../../database";

@@ -1,6 +1,4 @@
-import { FC, useState, useEffect } from 'react';
-import Image from 'next/image';
-import NextLink from 'next/link';
+import { FC, useMemo } from 'react';
 import { Box, Typography, Chip } from '@mui/material';
 
 import { MyImage } from '../cards';
@@ -10,24 +8,16 @@ import styles from './ProductCard.module.css'
 
 interface Props {
     product: IProduct;
+    navigateTo: ( query: string ) => void;
 }
 
-export const LongProductCard: FC<Props> = ({ product }) => {
+export const LongProductCard: FC<Props> = ({ product, navigateTo }) => {
 
-  const [q, setQ] = useState( 0 );
-
-  useEffect(() => {
-    const value = Object.values( product.inStock ).filter(c => typeof c === 'number').reduce(( prev, quantity) => prev + quantity, 0);
-    setQ( value );
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const q = useMemo(() => Object.values( product.inStock ).filter(c => typeof c === 'number').reduce(( prev, quantity) => prev + quantity, 0), []);
 
   return (
-    <NextLink href={{
-      pathname: '/tienda',
-      query: { product: product.slug.replace('/', '') }
-    }} scroll={ false } prefetch={ false } shallow>
-      <div className={ styles.product__long }>
+      <div className={ styles.product__long } onClick={ () => navigateTo(`?product=${ product.slug.replace('/', '') }`) }>
         <div className={ styles.product__long__image }>
           <Box sx={{ position: 'relative', height: { xs: '145px', sm: '200px' } }}>
               <MyImage src={ product.images[0].url } alt={ product.name } width={ 1 } height={ 1 } layout='responsive' />
@@ -57,6 +47,5 @@ export const LongProductCard: FC<Props> = ({ product }) => {
           </Box>
         </div>
       </div>
-    </NextLink>
   )
 }

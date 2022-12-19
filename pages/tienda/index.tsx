@@ -1,15 +1,13 @@
-import { useContext, lazy, Suspense } from 'react';
+import { useContext, lazy, Suspense, memo } from 'react';
 import { NextPage, GetStaticProps } from 'next';
-// import { useSession } from 'next-auth/react';
-import { Box, Typography } from '@mui/material'
-import { ShoppingBag } from '@mui/icons-material'
+import { Box, Typography } from '@mui/material';
+import { ShoppingBag } from '@mui/icons-material';
 import { isMonday, isToday } from 'date-fns';
 
 import { dbProducts, dbSolds } from '../../database';
-import { ShopLayout, ContainerProductType, ContainerFavProduct } from '../../components'
-import { IProduct, Tags, TagsArray } from '../../interfaces'
+import { ShopLayout, ContainerProductType, ContainerFavProduct } from '../../components';
+import { IProduct, Tags, TagsArray } from '../../interfaces';
 import { AuthContext } from '../../context';
-// import styles from '../../styles/Tienda.module.css';
 
 const DiscountForm = lazy(() =>
   import('../../components/shop/DiscountForm')
@@ -29,20 +27,12 @@ interface Props {
 
 const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
 
-  // const { data: thisSession } = useSession();
   const { user: session } = useContext( AuthContext );
-  // const session: any = thisSession;
-  // const { updateProductsInCart } = useContext( CartContext );
-
-  // useEffect(() => {
-  //   updateProductsInCart( products );
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
- 
+  
   return (
     <ShopLayout title={ 'Tienda Virtual' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
         
-        <Suspense fallback={ <Typography>Cargando...</Typography> }>
+        <Suspense fallback={ <></> }>
           <ModalFull products={ products } />
         </Suspense>
 

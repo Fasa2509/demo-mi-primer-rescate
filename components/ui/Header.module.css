@@ -19,6 +19,21 @@
     color: #fafafa;
 }
 
+.link__logo {
+    display: flex;
+    gap: .3rem;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: transform 200ms ease-in-out, margin-left 500ms ease-in-out;
+}
+
+.link__logo__title {
+    color: #fafafa;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
 /* .links a {
     position: relative;
     overflow: hidden;
@@ -124,6 +139,10 @@
 }
 
 @media (hover :hover) {
+    .link__logo:hover {
+        transform: scale(1.05);
+    }
+
     .admin__links > a:hover {
         color: var(--secondary-color-1);
     }

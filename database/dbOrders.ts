@@ -52,8 +52,8 @@ export const updatePaidOrder = async ( orderId: string = '', orderStatus: Paid =
 }
 
 export const createNewOrder = async ({ userId, cart, shippingAddress, contact, transaction }: { userId: string, cart: ICartProduct[], shippingAddress: IAddress, contact: IContact, transaction: { transactionId: string; method: string; phone: string; } }): Promise<{ error: boolean; message: string; }> => {
-    
-    if ( !userId || cart.length < 1 || shippingAddress.address.length < 4  || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(c => c).length < 1 ) return { error: true, message: 'Falta información de la orden' };
+
+    if ( !userId || cart.length < 1 || shippingAddress.address.length < 4  || Object.values( shippingAddress.maps ).filter(d => d).length < 2 || Object.values( contact ).filter(c => c).length < 2 ) return { error: true, message: 'Falta información de la orden' };
 
     try {
         const { data } = await mprApi.post('/order', {

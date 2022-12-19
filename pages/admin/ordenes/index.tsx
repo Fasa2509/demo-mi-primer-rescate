@@ -34,6 +34,7 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     width: 120
   },
+  { field: 'method', headerName: 'Método', disableColumnMenu: true },
   {
     field: 'transaction',
     headerName: 'ID de la Transacción',
@@ -86,7 +87,6 @@ const columns: GridColDef[] = [
     },
     width: 100
   },
-  { field: 'method', headerName: 'Método', disableColumnMenu: true },
   { field: 'createdAt', headerName: 'Fecha de creación', disableColumnMenu: true, width: 200 },
 ]
 

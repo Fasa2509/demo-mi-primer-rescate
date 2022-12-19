@@ -14,6 +14,7 @@ class MyDocument extends Document {
 
                     <meta name='Keywords' content='mascotas, animales, adopcion, adoptar, perros' />
                     <meta name='og:locale' content='es_ve' />
+                    <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
                     
                 </Head>
                 <body>

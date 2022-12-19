@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react';
-import NextLink from 'next/link';
 import { Box, Typography, Chip } from '@mui/material';
 
 import { MyImage } from '../cards';
@@ -10,9 +9,10 @@ import styles from './ProductCard.module.css'
 interface Props {
     product: IProduct;
     cat: string;
+    navigateTo: ( query: string ) => void;
 }
 
-export const LongCategoryProductCard: FC<Props> = ({ product, cat }) => {
+export const LongCategoryProductCard: FC<Props> = ({ product, cat, navigateTo }) => {
 
   const [q, setQ] = useState( 0 );
 
@@ -23,11 +23,7 @@ export const LongCategoryProductCard: FC<Props> = ({ product, cat }) => {
   }, []);
 
   return (
-    <NextLink href={{
-      pathname: '/tienda/categoria',
-      query: { tipo: cat, product: product.slug.replace('/', '') }
-    }} scroll={ false } prefetch={ false } shallow>
-      <div className={ styles.product__long }>
+      <div className={ styles.product__long } onClick={ () => navigateTo(`&product=${ product.slug.replace('/', '') }`) }>
         <div className={ styles.product__long__image }>
           <Box sx={{ position: 'relative', height: { xs: '145px', sm: '200px' } }}>
               <MyImage src={ product.images[0].url } alt={ product.name } width={ 1 } height={ 1 } layout='responsive' />
@@ -57,6 +53,5 @@ export const LongCategoryProductCard: FC<Props> = ({ product, cat }) => {
           </Box>
         </div>
       </div>
-    </NextLink>
   )
 }
