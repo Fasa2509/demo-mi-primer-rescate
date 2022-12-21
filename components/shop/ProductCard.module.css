@@ -144,12 +144,12 @@
     .big__product__info:hover .big__product__image,
     .big__product__image:hover {
         transform: scale(1.05);
-        box-shadow: 0 0 1rem -.3rem #222;
+        box-shadow: 0 0 .9rem -.4rem #222;
     }
 
     .product__long:hover {
         transform: scale(1.02);
-        box-shadow: 0 0 .8rem -.4rem #606060;    
+        box-shadow: 0 0 .9rem -.6rem #606060;    
     }
 }
 

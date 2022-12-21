@@ -1,8 +1,7 @@
-import { FC, useContext, lazy, Suspense } from 'react';
+import { FC, lazy, Suspense } from 'react';
 import Head from "next/head";
 
 import { Header, SideMenu, Title } from "../ui";
-import { ScrollContext } from "../../context";
 import { Loader } from "./Loader";
 import styles from './ShopLayout.module.css'
 
@@ -24,8 +23,6 @@ interface Props {
 export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pageImage, titleIcon, nextPage }) => {
 
   let finalTitle = `${ title } | MPR`;
-
-  // const { passedElements } = useContext( ScrollContext );
 
   const handleClick = () => {
     window.scrollTo({
@@ -64,9 +61,7 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
 
       <button className={ styles.scroll__button } onClick={ handleClick }></button>
 
-      <Suspense fallback={ <></> }>
-        <Footer />
-      </Suspense>
+      <Footer />
     </>
   )
 }

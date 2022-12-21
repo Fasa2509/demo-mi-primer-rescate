@@ -1,8 +1,12 @@
 import { useContext, useState, lazy, Suspense } from 'react';
 import type { GetStaticProps, NextPage } from 'next'
-import { Box, Button } from '@mui/material';
-import { Home } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { Box, Button, Link } from '@mui/material';
+import { Home } from '@mui/icons-material';
+import Facebook from '@mui/icons-material/Facebook';
+import Instagram from '@mui/icons-material/Instagram';
+import Twitter from '@mui/icons-material/Twitter';
+import WhatsApp from '@mui/icons-material/WhatsApp';
 
 import { mprRevalidatePage } from '../mprApi';
 import { Article, MainIndexLayout } from '../components';
@@ -41,6 +45,22 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
     setIsLoading( false );
   }
 
+  const share = async () => {
+    try {
+      if ( !navigator.canShare() ) throw new Error('No se puede compartir en estos momentos');
+
+      await navigator.share({
+          title: '¡Visita la página de Mi Primer Rescate!',
+          text: 'Mira su trabajo y participa en sus eventos',
+          url: `https://demo-mi-primer-rescate.vercel.app`,
+      });
+      
+      enqueueSnackbar('¡Gracias por compartir amor!', {variant: 'info'  });
+    } catch( error ) {
+        enqueueSnackbar('No se puede compartir en tu navegador', { variant: 'warning' });
+    }
+  }
+
   const revalidate = async () => {
     if ( process.env.NODE_ENV !== 'production' ) return;
 
@@ -58,20 +78,30 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
       { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <Suspense fallback={ <p>Cargando...</p> }><CustomForm /></Suspense> }
       </>
 
-      <Box display='flex' flexWrap='wrap' gap='2rem' justifyContent='center' sx={{ my: 4 }}>
-        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
+      <Box sx={{ my: 1.5 }}>
+        <p className={ styles.p }>¡Apóyanos en <Link href='https://www.patreon.com/' underline='always' target='_blank' rel='noreferrer'>Patreon</Link> o comparte nuestras redes para llegar a más personas! Aún queda mucho por hacer.</p>
+        <div className={ styles.share__container }>
+          <Link href='https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app&t=¡Mira este producto en la tienda MPR!' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
+          <Link href='https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href='https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+        </div>
+      </Box>
+
+      <Box display='flex' flexWrap='wrap' gap='1.5rem' justifyContent='center' sx={{ my: 6 }}>
+        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
           <p className={ styles.cards__title }>Ayúdanos</p>
-          <p className={ styles.cards__content }>Los animales nos esperan</p>
+          <p className={ styles.cards__content }>Los animales nos necesitan</p>
         </Box>
-        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
+        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
           <p className={ styles.cards__title }>Participa en la fundación</p>
           <p className={ styles.cards__content }>Asiste a nuestros eventos</p>
         </Box>
-        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
+        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
           <p className={ styles.cards__title }>Dona</p>
           <p className={ styles.cards__content }>Tu aporte nos ayuda a seguir</p>
         </Box>
-        <Box sx={{ padding: '1.2rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
+        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
           <p className={ styles.cards__title }>Cuida a tus mascotas</p>
           <p className={ styles.cards__content }>Trátalas con el amor que ellas te dan</p>
         </Box>

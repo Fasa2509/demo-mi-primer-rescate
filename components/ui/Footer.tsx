@@ -1,12 +1,13 @@
 import { FC, useContext } from 'react';
 import NextLink from 'next/link';
 import { useSnackbar } from 'notistack';
-import { IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Link, Typography } from "@mui/material";
 import Facebook from '@mui/icons-material/Facebook';
 import Instagram from '@mui/icons-material/Instagram';
 import Telegram from '@mui/icons-material/Telegram';
 import Twitter from '@mui/icons-material/Twitter';
 import YouTube from '@mui/icons-material/YouTube';
+import WhatsApp from '@mui/icons-material/WhatsApp';
 import PetsOutlined from '@mui/icons-material/PetsOutlined';
 import ShoppingBagOutlined from '@mui/icons-material/ShoppingBagOutlined';
 
@@ -40,6 +41,22 @@ export const Footer: FC = () => {
       }
   }
 
+  const share = async () => {
+    try {
+      if ( !navigator.canShare() ) throw new Error('No se puede compartir en estos momentos');
+
+      await navigator.share({
+          title: '¡Visita la página de Mi Primer Rescate!',
+          text: 'Mira su trabajo y participa en sus eventos',
+          url: `https://demo-mi-primer-rescate.vercel.app`,
+      });
+      
+      enqueueSnackbar('¡Gracias por compartir amor!', {variant: 'info'  });
+    } catch( error ) {
+        enqueueSnackbar('No se puede compartir en tu navegador', { variant: 'warning' });
+    }
+  }
+
   return (
     <footer className={ styles.footer }>
       <div className={ styles.shape__divider }>
@@ -51,6 +68,16 @@ export const Footer: FC = () => {
               </svg>
           </div>
       </div>
+
+      <Box sx={{ my: 1.5, width: '99%' }}>
+        <p className={ styles.p }>Apóyanos compartiendo nuestro contenido en redes para llegar a más personas</p>
+        <div className={ styles.share__container }>
+          <Link href='https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app&t=¡Mira este producto en la tienda MPR!' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
+          <Link href='https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href='https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+        </div>
+      </Box>
       
       <section className={ styles.footer__card }>
         

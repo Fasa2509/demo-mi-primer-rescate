@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense } from 'react';
+import { FC } from 'react';
 import Head from 'next/head';
 import Carousel from 'react-material-ui-carousel';
 
@@ -6,11 +6,6 @@ import { Footer, Header, SideMenu, Title, WelcomePath } from '../ui';
 import { MyImage } from '../cards';
 import { Loader } from './Loader';
 import styles from './MainLayout.module.css';
-
-// const Footer = lazy(() =>
-//   import('../ui/Footer')
-//     .then(({ Footer }) => ({ default: Footer }))
-// );
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -24,9 +19,6 @@ interface Props {
 export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription, titleIcon, nextPage = '/miprimerrescate' }) => {
 
   let finalTitle = `${ title } | MPR`;
-  // const { passedElements } = useContext( ScrollContext );
-
-  console.log('mainindexlayout')
 
   const handleClick = () => {
     window.scrollTo({
@@ -102,9 +94,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
 
       <button className={ styles.scroll__button } onClick={ handleClick }></button>
 
-      {/* <Suspense fallback={ <></> }> */}
-        <Footer />
-      {/* </Suspense> */}
+      <Footer />
     </>
   )
 }

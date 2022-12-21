@@ -27,10 +27,15 @@
     opacity: 0;
     visibility: hidden;
     /* transition: opacity 350ms ease; */
-    animation: button-appear 350ms ease 3s;
+    animation: button-appear 350ms ease 5s both;
 }
 
 @keyframes button-appear {
+    from {
+        opacity: 0;
+        visibility: hidden;
+    }
+
     to {
         visibility: visible;
         opacity: 1;

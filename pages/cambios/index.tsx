@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetStaticProps, NextPage } from 'next'
 import { TrendingUp } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Button, Link } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbPets } from '../../database';

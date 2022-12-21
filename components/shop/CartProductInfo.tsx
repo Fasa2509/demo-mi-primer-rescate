@@ -25,7 +25,7 @@ export const CartProductInfo: FC<Props> = ({ product }) => {
             <Image src={ image.url } alt={ name } width={ image.width } height={ image.height } layout='responsive' />
         </div>
         <Grid item>
-            <NextLink href={ '/tienda' + slug } passHref prefetch={ false }>
+            <NextLink href={ '/tienda?product=' + slug.substring(1) } passHref prefetch={ false }>
                 <Link underline="hover" color="#000" display='inline-block'>
                     <Typography>{ name }{ size !== 'unique' ? ` (${ size })` : '' }</Typography>
                 </Link>

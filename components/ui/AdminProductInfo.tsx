@@ -121,7 +121,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
                         mprRevalidatePage( '/tienda' ),
                         // mprRevalidatePage( '/tienda/carrito' ),
                         mprRevalidatePage( '/tienda/categoria' ),
-                        mprRevalidatePage( '/tienda' + form.slug.startsWith('/') ? form.slug : `/${ form.slug }` ),
+                        // mprRevalidatePage( '/tienda' + form.slug.startsWith('/') ? form.slug : `/${ form.slug }` ),
                     ]);
 
                     revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' }))
@@ -209,7 +209,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
                 />
                 
                 { form.slug.length > 1 &&
-                    <Link className='fadeIn' href={ '/tienda' + form.slug } target='_blank' rel='noreferrer' underline='hover' color='secondary' alignSelf='flex-start'>Ver página del producto</Link>
+                    <Link className='fadeIn' href={ '/tienda?product=' + form.slug.substring(1) } target='_blank' rel='noreferrer' underline='hover' color='secondary' alignSelf='flex-start'>Ver página del producto</Link>
                 }
             </Box>
 

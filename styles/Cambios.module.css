@@ -25,6 +25,7 @@
     border: thin solid var(--secondary-color-1);
     border-radius: 5rem;
     cursor: pointer;
+    min-width: max-content;
     transition: background-color 450ms ease, color 450ms ease;
 }
 

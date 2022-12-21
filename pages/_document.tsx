@@ -12,7 +12,7 @@ class MyDocument extends Document {
             <Html lang='es'>
                 <Head>
 
-                    <meta name='Keywords' content='mascotas, animales, adopcion, adoptar, perros' />
+                    <meta name='Keywords' content='mascotas, animales, perros, gatos, adopcion, adoptar, rescate, ayuda, ayudar, fundación' />
                     <meta name='og:locale' content='es_ve' />
                     <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
                     

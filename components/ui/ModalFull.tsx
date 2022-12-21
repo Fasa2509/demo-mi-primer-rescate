@@ -1,7 +1,12 @@
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, CardContent, Divider, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { Box, Button, Card, CardContent, Divider, Link, Typography } from '@mui/material';
+import Facebook from '@mui/icons-material/Facebook';
+import Instagram from '@mui/icons-material/Instagram';
+import Twitter from '@mui/icons-material/Twitter';
+import WhatsApp from '@mui/icons-material/WhatsApp';
 
 import { SliderImages } from '../layouts';
 import { ItemCounter, SizeSelector } from '../shop';
@@ -17,11 +22,12 @@ interface Props {
 export const ModalFull: FC<Props> = ({ products }) => {
 
     const router = useRouter();
-
-    const [product, setProduct] = useState( products[0] );
     const { updateProductQuantity, getProductQuantity } = useContext( CartContext );
-    const [active, setActive] = useState( false );
+    const { enqueueSnackbar } = useSnackbar();
+
     const [didMount, setDidMount] = useState( false );
+    const [product, setProduct] = useState<IProduct>( products[0] );
+    const [active, setActive] = useState<boolean>( false );
     const [currentSize, setCurrentSize] = useState<Sizes>('unique');
     const [currentValue, setCurrentValue] = useState<number>( getProductQuantity( product._id, currentSize ) );
 
@@ -53,8 +59,14 @@ export const ModalFull: FC<Props> = ({ products }) => {
     useEffect(() => {
         if ( !didMount ) return;
         let productBySlug = products.find(( p ) => p.slug === `/${ router.query.product }`);
-    
+
         if ( productBySlug ) {
+            if ( productBySlug._id === product._id ) {
+                setActive( true );
+                return;
+            }
+            
+            setCurrentSize('unique');
             setProduct( productBySlug );
             setActive( true );
         } else {
@@ -67,12 +79,26 @@ export const ModalFull: FC<Props> = ({ products }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => setCurrentValue( getProductQuantity( product._id, currentSize ) ), [product, currentSize]);
+    
+    const share = async () => {
+        try {
+            if ( !navigator.canShare() ) throw new Error('No se puede compartir en estos momentos');
+
+            await navigator.share({
+                title: '¡Mira este producto en la tienda MPR!',
+                text: 'Visita la página de Mi Primer Rescate y mira sus productos',
+                url: `https://demo-mi-primer-rescate.vercel.app${ router.asPath }`,
+            });
+            
+            enqueueSnackbar('¡Gracias por compartir amor!', {variant: 'info'  });
+        } catch( error ) {
+            enqueueSnackbar('No se puede compartir en tu navegador', { variant: 'warning' });
+        }
+    }
 
     const handleClose = ( e: any ) => {
-        if ( e.target.matches('#product-window') || e.target.matches('#product-close') ) {
+        if ( e.target.matches('#product-window') || e.target.matches('#product-close') )
             router.push(router.pathname.match(/\/categoria/) ? '/tienda/categoria?tipo=' + router.query.tipo || 'accesorios' : '/tienda', undefined, { shallow: true, scroll: false });
-            setActive( false );
-        }
     }
 
     return didMount
@@ -92,51 +118,60 @@ export const ModalFull: FC<Props> = ({ products }) => {
                     <div className={ styles.slider__container }>
                         <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 8000, duration: 650 }} layout={ 'responsive' } />
                     </div>
-                        <Card sx={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start' }}>
-                            <CardContent>
+                        
+                    <Card sx={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start', mb: 2.5 }}>
+                        <CardContent>
 
-                                <Box display='flex' gap='.5rem'>
-                                    <p className={ styles.product__price } style={ product.discount > 0 && product.discount <= 0.5 ? { fontSize: '1.1rem', color: '#666', textDecoration: 'line-through' } : {}}>{ format( product.price ) }</p>
-                                    { product.discount > 0 && product.discount <= 0.5 && <p className={ styles.product__discount }>{ format( product.price - product.discount * product.price ) }</p> }
+                            <Box display='flex' gap='.5rem'>
+                                <p className={ styles.product__price } style={ product.discount > 0 && product.discount <= 0.5 ? { fontSize: '1.1rem', color: '#666', textDecoration: 'line-through' } : {}}>{ format( product.price ) }</p>
+                                { product.discount > 0 && product.discount <= 0.5 && <p className={ styles.product__discount }>{ format( product.price - product.discount * product.price ) }</p> }
+                            </Box>
+
+                            <p className={ styles.product__description }>{ description }</p>
+
+                            { sizes.length > 0 &&
+                                <Box display='flex' gap='1rem' alignItems='center'>
+                                    <Typography>Tienes</Typography><ItemCounter quantity={ currentValue } updateQuantity={ setCurrentValue } maxValue={ inStock.unique !== -1 ? inStock.unique : product.inStock[currentSize] || 9 } />
                                 </Box>
+                            }
 
-                                <Typography>{ description }</Typography>
+                            {
+                                inStock.unique === -1 && sizes.length > 0 &&
+                                <SizeSelector inStock={ inStock } selectedSize={ currentSize } setSelectedSize={ setCurrentSize } />
+                            }
 
-                                { sizes.length > 0 &&
-                                    <Box display='flex' gap='1rem' alignItems='center'>
-                                        <Typography>Tienes</Typography><ItemCounter quantity={ currentValue } updateQuantity={ setCurrentValue } maxValue={ inStock.unique !== -1 ? inStock.unique : product.inStock[currentSize] || 9 } />
-                                    </Box>
-                                }
+                            {
+                                sizes.length === 0 &&
+                                <Typography sx={{ mt: 1.5 }}>¡Vaya! Parece que no tenemos este producto disponible.</Typography>
+                            }
 
-                                {
-                                    inStock.unique === -1 && sizes.length > 0 &&
-                                    <SizeSelector inStock={ inStock } selectedSize={ currentSize } setSelectedSize={ setCurrentSize } />
-                                }
+                            { tags.length > 0 &&
+                                <div className={ styles.tags__container }>
+                                    {
+                                        tags.map((tag: string) => <span key={ tag }>#{ tag }</span>)
+                                    }
+                                </div>
+                            }
 
-                                {
-                                    sizes.length === 0 &&
-                                    <Typography sx={{ mt: 1.5 }}>¡Vaya! Parece que no tenemos este producto disponible.</Typography>
-                                }
+                            <Button
+                                color='secondary'
+                                fullWidth
+                                disabled={ inStock.unique === -1 && currentSize === 'unique' }
+                                onClick={ productToCart }
+                            >
+                                { currentValue > 0 ? 'Llevar al carrito' : 'Remover del carrito' }
+                            </Button>
 
-                                { tags.length > 0 &&
-                                    <div className={ styles.tags__container }>
-                                        {
-                                            tags.map((tag: string) => <span key={ tag }>#{ tag }</span>)
-                                        }
-                                    </div>
-                                }
+                            <p className={ styles.share__title }>Comparte este producto</p>
+                            <div className={ styles.share__container }>
+                                <Link href={ `https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app${ router.asPath }&t=¡Mira este producto en la tienda MPR!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
+                                <Link href={ `https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=https://demo-mi-primer-rescate.vercel.app${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <Link href={ `https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! https://demo-mi-primer-rescate.vercel.app${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                            </div>
 
-                                <Button
-                                    color='secondary'
-                                    fullWidth
-                                    disabled={ inStock.unique === -1 && currentSize === 'unique' }
-                                    onClick={ productToCart }
-                                >
-                                    { currentValue > 0 ? 'Llevar al carrito' : 'Remover del carrito' }
-                                </Button>
-
-                            </CardContent>
-                        </Card>
+                        </CardContent>
+                    </Card>
                 </section>
             </section>
         </section>, document.getElementById('portal')!

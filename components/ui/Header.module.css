@@ -29,20 +29,12 @@
 }
 
 .link__logo__title {
+    line-height: 1;
     color: #fafafa;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
-/* .links a {
-    position: relative;
-    overflow: hidden;
-    font-weight: 500;
-    font-size: 1.1rem;
-    padding: .3rem .6rem .35rem;
-    border-radius: 10rem;
-    transition: background-color 250ms ease, color 250ms ease;
-} */
 .link {
     position: relative;
     overflow: hidden;

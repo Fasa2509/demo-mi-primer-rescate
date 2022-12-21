@@ -112,7 +112,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
         products,
         dolar,
       },
-      revalidate: 3600 * 8, // cada 6h
+      revalidate: 3600 * 12, // cada 8h
     }
 }
 
