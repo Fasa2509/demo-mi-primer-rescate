@@ -23,7 +23,8 @@ export const WelcomePath = () => {
         });
 
         document.querySelectorAll('#WelcomePath .observe').forEach( element => observer.observe( element ));
-    }, [])
+        return () => observer.disconnect();
+    }, []);
 
   return (
     <section id={ 'WelcomePath' } className={ styles.container }>

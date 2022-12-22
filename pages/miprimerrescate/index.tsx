@@ -7,16 +7,16 @@ import { Pets } from '@mui/icons-material'
 
 const MiPrimerRescatePage: NextPage = () => {
 
-  const text_1 = `Asignar buenos hogares que se comprometan a darles la calidad de vida que ameritan
+  const text = `Asignar buenos hogares que se comprometan a darles la calidad de vida que ameritan
   Ofrecer asesoramiento a nuestros seguidores para garantizar felicidad también a los peludos que ya gozan de un hogar
   Asistir a los animales que necesiten de atención veterinaria para sacarlos del dolor que puedan sentir y lograr que se sanen
   Organizar charlas y campañas que permitan llevar a cada rincón de nuestro país nuestra visión y así invitar a que más personas se unan a esta labor
   Luchar contra el maltrato y el abandono de las mascotas debido a la diáspora de personas en nuestro país y al poco conocimiento del respeto que ellos merecen
   Concientizar sobre la importancia de Castrar y esterilizar a las mascotas para evitar la sobrepoblación de animales en las calles además de garantizar larga vida y salud para la mascota
   Utilizar las redes sociales a beneficio de los animales, así también como instrumento para ayudar a personas que lo necesiten, como a los abuelos en los asilos, niños huérfanos, personas en situación de calle o en hospitales
-  Llevar a cabo el Proyecto Helenden, nuestro más ambicioso proyecto hasta la fecha`
+  Llevar a cabo el Proyecto Helenden, nuestro más ambicioso proyecto hasta la fecha`;
 
-  const array_1 = useMemo(() => text_1.split('\n'), [text_1])
+  const array = useMemo(() => text.split('\n'), [text])
 
   return (
     <MainLayout title={ 'Nosotros' } H1={ 'Proyecto MPR' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!' } titleIcon={ <Pets color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/apoyo'>
@@ -28,7 +28,7 @@ const MiPrimerRescatePage: NextPage = () => {
         <ContentSlider title='Objetivos' style={{ backgroundImage: 'url(/background-blob-scatter.svg), url(/wave-haikei-1.svg)', backgroundSize: 'contain', backgroundPosition: 'top left, bottom left', backgroundRepeat: 'repeat, no-repeat' }}>
           <section className={ styles.section__objectives }>
             {
-              array_1.map( (txt, index) => (
+              array.map( (txt, index) => (
                 <CardText key={ index } text={ txt } index={ index + 1 } />
               ))
             }

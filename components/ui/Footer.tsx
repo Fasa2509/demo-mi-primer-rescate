@@ -43,8 +43,6 @@ export const Footer: FC = () => {
 
   const share = async () => {
     try {
-      if ( !navigator.canShare() ) throw new Error('No se puede compartir en estos momentos');
-
       await navigator.share({
           title: '¡Visita la página de Mi Primer Rescate!',
           text: 'Mira su trabajo y participa en sus eventos',
@@ -69,8 +67,8 @@ export const Footer: FC = () => {
           </div>
       </div>
 
-      <Box sx={{ my: 1.5, width: '99%' }}>
-        <p className={ styles.p }>Apóyanos compartiendo nuestro contenido en redes para llegar a más personas</p>
+      <Box sx={{ width: '96%', margin: '.5rem auto .7rem' }}>
+        <p className={ styles.p }>¡Comparte nuestro contenido para llegar a más personas!</p>
         <div className={ styles.share__container }>
           <Link href='https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app&t=¡Mira este producto en la tienda MPR!' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
           <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>

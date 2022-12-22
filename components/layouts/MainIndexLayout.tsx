@@ -1,11 +1,16 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import Head from 'next/head';
 import Carousel from 'react-material-ui-carousel';
 
 import { Footer, Header, SideMenu, Title, WelcomePath } from '../ui';
-import { MyImage } from '../cards';
+import { MyImage, Slider } from '../cards';
 import { Loader } from './Loader';
 import styles from './MainLayout.module.css';
+
+const callback = ( entries: any[] ) =>
+  entries[0].isIntersecting
+    ? entries[0].target.classList.remove('sticks__inactive')
+    : entries[0].target.classList.add('sticks__inactive') 
 
 interface Props {
   children: JSX.Element | JSX.Element[];
@@ -19,6 +24,17 @@ interface Props {
 export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription, titleIcon, nextPage = '/miprimerrescate' }) => {
 
   let finalTitle = `${ title } | MPR`;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(callback, {
+        rootMargin: '0px 0px -96% 0px',
+        threshold: 0,
+    });
+
+    observer.observe( document.getElementById('sticks')! );
+    return () => observer.disconnect();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClick = () => {
     window.scrollTo({
@@ -46,7 +62,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       <Loader />
       
       <section style={{ width: '100%' }}>
-        <Carousel indicators={ false } autoPlay duration={ 650 } interval={ 12000 }>
+        {/* <Carousel indicators={ false } autoPlay duration={ 650 } interval={ 12000 }>
         <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ width: '50%' }}>
             <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
@@ -58,7 +74,20 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
           </div>
         </div>
         <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue' }}></div>
-        </Carousel>
+        </Carousel> */}
+        <Slider identifier='prueba'>
+        <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ width: '50%', position: 'relative' }}>
+            <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
+          </div>
+        </div>
+        <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ width: '50%', position: 'relative' }}>
+            <MyImage src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+          </div>
+        </div>
+        <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue' }}></div>
+        </Slider>
       </section>
 
       <WelcomePath />
@@ -85,7 +114,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       </div>
       
       <main className={ styles.main__container }>
-        <Title title={ H1 || title } nextPage={ nextPage }>
+        <Title title={ H1 || title } nextPage={ nextPage } index>
           { titleIcon }
         </Title>
 

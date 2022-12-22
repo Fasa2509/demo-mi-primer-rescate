@@ -47,8 +47,6 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
 
   const share = async () => {
     try {
-      if ( !navigator.canShare() ) throw new Error('No se puede compartir en estos momentos');
-
       await navigator.share({
           title: '¡Visita la página de Mi Primer Rescate!',
           text: 'Mira su trabajo y participa en sus eventos',

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetStaticProps, NextPage } from 'next'
 import { TrendingUp } from '@mui/icons-material';
-import { Button, Link } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbPets } from '../../database';
@@ -34,6 +34,8 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
     });
 
     document.querySelectorAll('.observe').forEach(( a ) => observer.observe( a ));
+
+    return () => observer.disconnect();
   }, []);
 
   const requestPets = async ( isAdmin: boolean ) => {
@@ -77,7 +79,9 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
           pets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } observe={ pets.length === 6 } />)
         }
 
-        <Link className={ styles.load__pets } color='secondary' alignSelf='flex-end' onClick={ () => requestPets( true ) }>Ver más</Link>
+        <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
+          <Button className={ styles.load__pets } color='secondary' sx={{ alignSelf: 'flex-end' }} onClick={ () => requestPets( true ) }>Ver más</Button>
+        </Box>
       </section>
 
       <section className={ styles.section }>
@@ -95,7 +99,9 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
             changedPets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } />)
           }
 
-        <Link className={ styles.load__pets } color='secondary' alignSelf='flex-end' onClick={ () => requestPets( false ) }>Ver más</Link>
+        <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
+          <Button className={ styles.load__pets } color='secondary' onClick={ () => requestPets( false ) }>Ver más</Button>
+        </Box>
       </section>
 
       <>

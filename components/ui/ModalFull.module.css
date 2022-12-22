@@ -7,7 +7,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 1350;
     transform: translateX(-110%);
     transition: transform 800ms cubic-bezier(.21,.09,.19,1.03);
 }

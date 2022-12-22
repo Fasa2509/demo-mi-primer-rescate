@@ -26,6 +26,7 @@
     overflow: hidden;
     text-align: center;
     border: thin solid #eaeaea;
+    cursor: pointer;
     transition: box-shadow 250ms ease, transform 250ms ease-in-out;
 }
 
@@ -46,7 +47,7 @@
 }
 
 .card__text {
-    color: #555;
+    color: #444;
     line-height: 1.5;
     display: flex;
     align-items: center;

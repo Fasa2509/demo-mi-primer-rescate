@@ -12,9 +12,9 @@ export interface IPet {
 
 };
 
-export type PetType = 'perro' | 'gato' | 'otro' | 'cambios' | 'experiencias';
+export type PetType = 'perro' | 'gato' | 'otro' | 'cambios';
 
-export const PetTypeArray: PetType[] = ['perro', 'gato', 'otro', 'cambios', 'experiencias'];
+export const PetTypeArray: PetType[] = ['perro', 'gato', 'otro', 'cambios'];
 
 export const adoptionPets: IPet[] = [
     {
@@ -160,7 +160,7 @@ export const adoptionPets: IPet[] = [
         description: 'Distem laborum magna consectetur sunt. Qui eiusmod amet qui fugiat anim sint reprehenderit laboris non enim dolor. Aute quis quis elit irure elit laborum eu ipsum consectetur. Nulla ea anim dolor labore officia.',
         images: ['/square-dog.jpg'],
         isAble: true,
-        isAdminPet: true,
+        isAdminPet: false,
         createdAt: 1665555899445,
     },
     {
@@ -171,7 +171,7 @@ export const adoptionPets: IPet[] = [
         description: 'Ullamco ut Lorem velit eiusmod reprehenderit nulla cillum eu quis sint voluptate voluptate veniam laborum cupidatat velit amet proident aliquip ad reprehenderit amet cupidatat consectetur. Aute fugiat ut culpa et cillum excepteur magna consectetur ea dolor. Culpa ex dolore voluptate nostrud pariatur non velit ea cupidatat sint incididunt. Elit occaecat cillum officia incididunt. Voluptate est dolor mollit cupidatat commodo labore culpa voluptate do dolore laboris exercitation. Et ad consectetur minim enim aliquip irure.',
         images: ['/perro-1.webp', '/perro-2.webp'],
         isAble: true,
-        isAdminPet: true,
+        isAdminPet: false,
         createdAt: 1665541899445,
     },
     {
@@ -193,7 +193,7 @@ export const adoptionPets: IPet[] = [
         description: 'Laboris nulla pariatur enim culpa irure consequat deserunt occaecat adipisicing do laboris dolor enim. Do consectetur sit voluptate ex amet anim sunt reprehenderit anim id fugiat. Dolore ex ad quis sunt quis culpa consectetur sint irure id.',
         images: ['/square-dog.jpg', '/perro-1.webp'],
         isAble: true,
-        isAdminPet: true,
+        isAdminPet: false,
         createdAt: 1665591999445,
     },
     {
@@ -221,29 +221,29 @@ export const adoptionPets: IPet[] = [
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Missi',
         description: 'Excepteur nulla consequat. Quis deserunt et nulla culpa qui cupidatat ex ad. Sit ad pariatur reprehenderit cupidatat fugiat consectetur. Labore dolor consequat laboris exercitation do duis. Labore duis irure magna in reprehenderit cillum. Enim amet elit velit aute irure enim reprehenderit laborum nisi ullamco occaecat Lorem excepteur minim.',
         images: ['/gato-2.jpg', '/gato-1.webp'],
         isAble: true,
-        isAdminPet: true,
+        isAdminPet: false,
         createdAt: 1664192899445,
     },
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Nébula',
         description: 'Quis deserunt et nulla culpa qui cupidatat ex fugiat consectetur. Labore dolor consequat laboris exercitation do duis irure magna in reprehenderit cillum. Enim amet elit velit aute irure enim reprehenderit laborum nisi minim.',
         images: ['/gato-1.webp', '/gato-2.jpg'],
         isAble: true,
-        isAdminPet: true,
+        isAdminPet: false,
         createdAt: 1665572090945,
     },
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Lucky',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/gato-1.webp', '/gato-2.jpg'],
@@ -254,7 +254,7 @@ export const adoptionPets: IPet[] = [
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Manu',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/gato-1.webp', '/gato-2.jpg'],
@@ -265,7 +265,7 @@ export const adoptionPets: IPet[] = [
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Rick',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/gato-2.jpg', '/square-dog.jpg', '/gato-1.webp'],
@@ -276,18 +276,18 @@ export const adoptionPets: IPet[] = [
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Decco',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/gato-2.jpg', '/gato-1.webp', '/square-dog.jpg'],
         isAble: true,
-        isAdminPet: true,
+        isAdminPet: false,
         createdAt: 1665545599445,
     },
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Decco',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/Logo-Redes.png', '/gato-2.jpg', '/gato-1.webp', '/square-dog.jpg'],
@@ -298,7 +298,7 @@ export const adoptionPets: IPet[] = [
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Decco',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/gato-1.webp', '/square-dog.jpg'],
@@ -309,7 +309,7 @@ export const adoptionPets: IPet[] = [
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Decco',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/square-dog.jpg', '/gato-2.jpg', '/gato-1.webp'],
@@ -320,7 +320,7 @@ export const adoptionPets: IPet[] = [
     {
         _id: '',
         userId: '6346ee430e1d85628bbe4191',
-        type: 'experiencias',
+        type: 'cambios',
         name: 'Decco',
         description: 'Excepteur nulla consequat nulla culpa qui cupidatat ex ad. Lorem consectetur anim mollit nulla anim labore velit Lorem ea. Non sit commodo irure incididunt pariatur elit. Ipsum commodo enim nulla velit. Nisi aliquip exercitation excepteur voluptate ad dolor. Elit veniam et cillum ex excepteur velit veniam nisi ea magna non. Ad ex consectetur labore aliqua esse nulla elit enim officia labore laborum.',
         images: ['/Logo-MPR.png', '/gato-2.jpg', '/gato-1.webp', '/square-dog.jpg'],

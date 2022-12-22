@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import { PetsOutlined } from '@mui/icons-material';
 import styles from './Title.module.css';
 
@@ -7,15 +7,16 @@ interface Props {
     title: string;
     children: JSX.Element;
     nextPage: string;
+    index?: boolean;
     style?: any;
 }
 
-export const Title: FC<Props> = ({ title, children = <PetsOutlined color='info' sx={{ fontSize: '1.5rem' }} />, nextPage = '/', style = {} }) => {
-    
+export const Title: FC<Props> = ({ title, children = <PetsOutlined color='info' sx={{ fontSize: '1.5rem' }} />, nextPage = '/', index, style = {} }) => {
+
   return (
-    <Link href={ nextPage } passHref>
+    <NextLink href={ nextPage } passHref>
         <a className={ styles.container } style={ style }>
-            <div className={ styles.sticks }></div>
+            <div id='sticks' className={ `${ styles.sticks }${ index ? ' sticks__inactive' : '' }` }></div>
             <div className={ styles.title }>
                 <h2 className={ styles.title__text }>
                     { title }
@@ -25,6 +26,6 @@ export const Title: FC<Props> = ({ title, children = <PetsOutlined color='info' 
                 </div>
             </div>
         </a>
-    </Link>
+    </NextLink>
   )
 }

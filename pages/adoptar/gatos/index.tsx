@@ -69,7 +69,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
         </div>
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
-        <Button className={ styles.load__pets } color='secondary' sx={{ alignSelf: 'flex-end' }} onClick={ requestPets }>Ver más</Button>
+          <Button className={ styles.load__pets } color='secondary' onClick={ requestPets }>Ver más</Button>
         </Box>
 
         <>

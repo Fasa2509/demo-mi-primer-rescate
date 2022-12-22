@@ -38,7 +38,7 @@ export const LongProductCard: FC<Props> = ({ product, navigateTo }) => {
             { product.discount > 0 && product.discount <= 0.5 && <p className={ styles.product__discount }>{ format( product.price - product.discount * product.price ) }</p> }
           </Box>
           <p className={ styles.product__long__description }>{ product.description }</p>
-          <Box className={ styles.product__long__tags } sx={{ display: { xs: 'flex', sm: 'none' } }}>
+          <Box className={ styles.product__long__tags } sx={{ display: 'flex' }}>
             <Box display='flex' flexWrap='wrap' justifyContent='flex-end' gap='0 .5rem'>
             {
               product.tags.map(( tag ) => <span key={ tag }>#{ tag }</span>)

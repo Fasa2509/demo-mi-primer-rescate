@@ -6,7 +6,7 @@ const petSchema = new Schema({
     type: {
         type: String,
         enum: {
-            values: ['perro', 'gato', 'otro', 'cambios', 'experiencias'],
+            values: ['perro', 'gato', 'otro', 'cambios'],
             message: '{VALUE} no es un valor permitido'
         },
         required: true,

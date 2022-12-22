@@ -82,17 +82,16 @@ export const ModalFull: FC<Props> = ({ products }) => {
     
     const share = async () => {
         try {
-            if ( !navigator.canShare() ) throw new Error('No se puede compartir en estos momentos');
-
             await navigator.share({
                 title: '¡Mira este producto en la tienda MPR!',
                 text: 'Visita la página de Mi Primer Rescate y mira sus productos',
                 url: `https://demo-mi-primer-rescate.vercel.app${ router.asPath }`,
             });
             
-            enqueueSnackbar('¡Gracias por compartir amor!', {variant: 'info'  });
+            enqueueSnackbar('¡Gracias por compartir amor!', { variant: 'info' });
         } catch( error ) {
-            enqueueSnackbar('No se puede compartir en tu navegador', { variant: 'warning' });
+            console.log( error )
+            enqueueSnackbar('No se puede compartir en tu navegador', { variant: 'warning', autoHideDuration: 100000000 });
         }
     }
 

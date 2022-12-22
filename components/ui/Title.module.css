@@ -1,10 +1,13 @@
 .container {
-    --sticks-height: 1.2rem;
     display: inline-block;
     position: sticky;
-    top: var(--sticks-height);
+    top: 1.3rem;
     margin: .25rem 0 1rem;
     z-index: 990;
+}
+
+.sticks {
+    transition: opacity 250ms ease-in-out;
 }
 
 .sticks::before,
@@ -12,7 +15,7 @@
     content: '';
     display: block;
     width: 5px;
-    height: var(--sticks-height);
+    height: 1.5rem;
     opacity: 1;
     background-color: rgb(134, 82, 32);
     position: absolute;
@@ -24,11 +27,6 @@
 
 .sticks::after {
     left: 80%;
-}
-
-.sticks.inactive::before,
-.sticks.inactive::after {
-    opacity: 0;
 }
 
 .title {
@@ -68,14 +66,8 @@
         transition: transform 250ms ease;
     }
 
-    .sticks::before,
-    .sticks::after {
-        height: 1.5rem;
-    }
-
     .container:hover .sticks {
         opacity: 0;
-        transition: opacity 150ms ease-in-out;
     }
 }
 

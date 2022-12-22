@@ -135,7 +135,7 @@ export const PetChangeForm = () => {
                 onChange={ ({ target }) => setForm({ ...form, description: target.value  }) }
             />
 
-            <Input type='submit' color='secondary' value='Guardar Mascota' />
+            <Input type='submit' color='secondary' value='Publicar' />
         </form>
     )
 }

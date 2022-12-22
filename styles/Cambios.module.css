@@ -17,15 +17,15 @@
 }
 
 .load__pets {
+    align-self: flex-end;
     background-color: var(--secondary-color-1);
-    padding: .3rem .8rem .2rem;
+    padding: .2rem .8rem .1rem;
     color: #fff;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: .9rem;
     border: thin solid var(--secondary-color-1);
     border-radius: 5rem;
     cursor: pointer;
-    min-width: max-content;
     transition: background-color 450ms ease, color 450ms ease;
 }
 

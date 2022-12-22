@@ -66,9 +66,8 @@ a {
   font-size: 1.4rem;
 }
 
-/* cambiar z-index del render de las notificaciones */
-.SnackbarContainer-bottom {
-  z-index: 10001;
+.sticks__inactive {
+  opacity: 0;
 }
 
 .notification__buttons {
@@ -86,6 +85,7 @@ a {
 }
 
 .notification__buttons.transparent {
+  padding-right: 4px;
   background-color: rgba(0, 0, 0, 0);
   transition: background-color 350ms ease;
 }
@@ -95,16 +95,14 @@ a {
   color: #FFF;
   border: none;
   border-radius: 5px;
-  padding: .5rem 1rem;
+  padding: .4rem .8rem .3rem;
   font-size: 1em;
   font-weight: 500;
   cursor: pointer;
-  /* margin: .5em; */
   transition: background-color 350ms ease;
 }
 
 .buttonOutlined {
-  /* color: var(--secondary-color-1); */
   color: #fafafa;
   font-weight: 600;
   padding: .5rem;
