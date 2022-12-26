@@ -118,7 +118,7 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions }) => {
   }));
 
   return (
-    <MainLayout title='Adopciones' pageDescription='Información de las adopciones' titleIcon={ <LocalCafe color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
+    <MainLayout title='Adopciones' pageDescription='Información de las adopciones' titleIcon={ <LocalCafe color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
 
       {
         adoptions.length > 0

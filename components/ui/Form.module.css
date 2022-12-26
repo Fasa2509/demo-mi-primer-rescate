@@ -90,7 +90,7 @@
 /* Adoption Form */
 
 .adoption__form {
-    box-shadow: /*-.5rem .5rem 1.5rem -1rem*/ 0 0 1.5rem -1rem #929292;
+    box-shadow: 0 0 1.5rem -1rem #929292;
     margin-top: 1.2rem;
     background-color: #fff;
     border-radius: 1.5rem;
@@ -126,12 +126,6 @@
     justify-content: center;
     align-items: center;
 }
-
-/* .pet__box__plus {
-    background-color: red;
-    width: 150px;
-    height: 150px;
-} */
 
 @media screen and (min-width: 770px) {
     .field input {

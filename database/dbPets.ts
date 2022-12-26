@@ -105,6 +105,29 @@ export const getMorePets = async ( date: number, type: string, isAdmin: boolean 
 
 }
 
+export const udpatePet = async ( petId: string, petDescription: string ): Promise<{ error: boolean; message: string; }> => {
+    
+    try {
+        const { data } = await mprApi.put('/pet', {
+            petId,
+            petDescription,
+        });
+
+        return data;
+    } catch( error ) {
+        console.log( error );
+
+        // @ts-ignore
+        if ( axios.isAxiosError( error ) ) return error.response ? error.response.data : { error: true, message: 'Ocurrió un error' };
+    
+        return {
+            error: true,
+            message: 'Ocurrió un error eliminando la mascota'
+        }
+    }
+
+}
+
 export const deletePet = async ( petId: string ): Promise<{ error: boolean; message: string; }> => {
 
     try {

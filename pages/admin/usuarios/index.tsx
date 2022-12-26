@@ -145,7 +145,7 @@ const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
   }))
 
   return (
-    <MainLayout title='Usuarios' pageDescription='Información de los usuario' titleIcon={ <AdminPanelSettings color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
+    <MainLayout title='Usuarios' pageDescription='Información de los usuario' titleIcon={ <AdminPanelSettings color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
 
       {
         users.length > 0

@@ -37,10 +37,6 @@ const TypePage: NextPage<Props> = ({ products }) => {
 
     useEffect(() => {
         if ( !didMount ) return;
-        // if ( !router.query.tipo ) {
-        //     router.push(router.pathname + '?tipo=accesorios', undefined, { shallow: true });
-        //     return;
-        // }
         router.query.tipo && setProductType( router.query.tipo.toString() as Tags );
     }, [ router, didMount ]);
 
@@ -67,7 +63,7 @@ const TypePage: NextPage<Props> = ({ products }) => {
     }
 
   return (
-    <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial la fundación Mi Primer Rescate. Encuentra productos por categoría para tu mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/tienda' }>
+    <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial la fundación Mi Primer Rescate. Encuentra productos por categoría para tu mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda' url='/tienda/categoria'>
 
         <Suspense fallback={ <Typography>Cargando...</Typography> }>
             <ModalFull products={ products } />

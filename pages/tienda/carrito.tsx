@@ -54,8 +54,10 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
     setMaps(shopInfo.direction.maps);
   }, []);
 
+
   useEffect(() => setExistencyChecked( false ), [cart]);
 
+  
   const cleaningCart = async () => {
       let key = enqueueSnackbar('¿Quieres vaciar el carrito?', {
         variant: 'info',
@@ -95,8 +97,6 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
 
     if ( Object.values( maps ).filter(m => m).length !== 2 )
       return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
-
-
 
     setIsLoading( true );
 
@@ -239,7 +239,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
   }
 
   return (
-    <ShopLayout title={ 'Carrito de compras' } H1={ 'Tienda' } pageDescription={ 'Carrito de compras, lista de productos' } nextPage={ '/tienda' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> }>
+    <ShopLayout title={ 'Carrito de compras' } H1={ 'Tienda' } pageDescription={ 'Carrito de compras, lista de productos' } nextPage={ '/tienda' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } url='/tienda/carrito'>
         <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#333', mb: 3 }}>Tu carrito <AddShoppingCart color='secondary' sx={{ transform: 'translateY(6px)' }} /></Typography>
         
         <Box display='flex' gap='.5rem' flexWrap='wrap'>  
@@ -392,7 +392,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
                       inputRef={ checkboxInfo }
                       color='secondary'
                     />
-                    <label htmlFor='checkboxInfo' style={{ flexGrow: 1, whiteSpace: 'nowrap' }}>Guardar información</label>
+                    <label htmlFor='checkboxInfo' style={{ flexGrow: 1 }}>Guardar información</label>
                   </Box>
 
                   <Divider sx={{ my: 1 }} />

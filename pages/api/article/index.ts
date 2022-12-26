@@ -24,8 +24,6 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const { title = '', fields = [] } = req.body;
 
-    fields.forEach(( f: any ) => console.log( f ))
-
     if ( !title || fields.length < 1 ) return res.status(400).json({ error: true, message: 'Faltan campos para crear el artículo' });
 
     try {

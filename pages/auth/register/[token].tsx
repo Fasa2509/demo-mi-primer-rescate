@@ -18,7 +18,7 @@ interface Props {
 const TokenPage: NextPage<Props> = ({ userEmail }) => {
 
     return (
-        <MainLayout title='Activar cuenta' H1='Inicio' pageDescription='Activa tu cuenta de MPR para tener acceso a todas las funcionalidades de nuestra página' pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/auth'>
+        <MainLayout title='Activar cuenta' H1='Inicio' pageDescription='Activa tu cuenta de MPR para tener acceso a todas las funcionalidades de nuestra página' pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/auth' url='/auth'>
             
             <Box className={ styles.info__container }>
                 <p className={ styles.title }>Activar Cuenta MPR</p>

@@ -126,7 +126,7 @@ const PetsPage: NextPage<Props> = ({ pets: Pets }) => {
   }));
 
   return (
-    <MainLayout title='Mascotas' pageDescription='Información de las mascotas' titleIcon={ <EmojiNature color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
+    <MainLayout title='Mascotas' pageDescription='Información de las mascotas' titleIcon={ <EmojiNature color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
 
       {
         pets.length > 0

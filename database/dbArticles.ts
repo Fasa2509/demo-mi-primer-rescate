@@ -57,7 +57,7 @@ export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<
         return data;
         // @ts-ignore
     } catch( error: Error | AxiosError ) {
-        console.log(error);
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return { error: true, message: 'Ocurrió un error guardando el artículo' }

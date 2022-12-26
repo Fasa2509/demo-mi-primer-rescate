@@ -138,7 +138,7 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
   }));
 
   return (
-    <MainLayout title='Órdenes' pageDescription='Información de las órdenes' titleIcon={ <ConfirmationNumber color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
+    <MainLayout title='Órdenes' pageDescription='Información de las órdenes' titleIcon={ <ConfirmationNumber color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
 
       {
         orders.length > 0

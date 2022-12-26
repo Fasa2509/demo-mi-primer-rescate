@@ -46,13 +46,10 @@ const TokenPage: NextPage<Props> = ({ userInfo }) => {
     }
 
     return (
-        <MainLayout title='Recuperar contraseña' H1='Inicio' pageDescription='Cambiar contraseña de tu cuenta de MPR' pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/auth'>
+        <MainLayout title='Recuperar contraseña' H1='Inicio' pageDescription='Cambiar contraseña de tu cuenta de MPR' pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/auth' url='/auth'>
             
             <Box className={ styles.info__container }>
                 <p className={ styles.title }>Actualizar Contraseña</p>
-                {/* <Box className={ styles.check__container }>
-                    <Check sx={{ fontSize: '3.5rem', color: '#fff' }} />
-                </Box> */}
 
                 <p>Cambia la contraseña de tu cuenta de MPR.</p>
 

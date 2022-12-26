@@ -242,7 +242,7 @@ const ProductosPage: NextPage<Props> = ({ products: P }) => {
   }))
 
   return (
-    <MainLayout title='Productos' pageDescription='Información de los productos' titleIcon={ <Category color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
+    <MainLayout title='Productos' pageDescription='Información de los productos' titleIcon={ <Category color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
 
       {
         products.length > 0

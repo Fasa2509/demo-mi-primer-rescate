@@ -43,6 +43,11 @@ body {
   background-color: var(--secondary-color-1);
 }
 
+.img {
+  border-radius: .4rem;
+  overflow: hidden;
+}
+
 .p {
   margin: 0;
 }

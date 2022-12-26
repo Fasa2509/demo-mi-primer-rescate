@@ -7,7 +7,7 @@ import { MainLayout } from '../../components';
 const AdoptarPage: NextPage = () => {
 
   return (
-    <MainLayout title={ 'Adopción' } H1={ 'Adopta' } pageDescription={ 'Proceso de adopción de mascotas en la fundación Mi Primer Rescate.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/cambios'>
+    <MainLayout title={ 'Adopción' } H1={ 'Adopta' } pageDescription={ 'Proceso de adopción de mascotas en la fundación Mi Primer Rescate.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/cambios' url='/adoptar'>
       
         <Typography>Página de adopción</Typography>
 

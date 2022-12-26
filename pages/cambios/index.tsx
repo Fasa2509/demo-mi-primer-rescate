@@ -68,7 +68,7 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
   }
   
   return (
-    <MainLayout title={ 'Cambios de nuestros amigos y adoptantes' } H1={ 'Antes y después' } pageDescription={ 'Aquí podrás ver el antes y después de nuestros amigos peludos. Algunos han pasado por mucho, pero con amor, esfuerzo y trabajo, han recuperado una vida digna.' } titleIcon={ <TrendingUp color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda'>
+    <MainLayout title={ 'Cambios de nuestros amigos y adoptantes' } H1={ 'Antes y después' } pageDescription={ 'Aquí podrás ver el antes y después de nuestros amigos peludos. Algunos han pasado por mucho, pero con amor, esfuerzo y trabajo, han recuperado una vida digna.' } titleIcon={ <TrendingUp color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda' url='/cambios'>
         
       <p>¡La evolución y mejora de nuestros amigos!</p>
         

@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction, useContext, useEffect, useState } from 'react';
 import { Box, Button, Checkbox, Chip, Link, MenuItem, TextField, Typography } from '@mui/material';
 
-import { IProduct, Tags, TagsArray } from '../../interfaces'
+import { IProduct, Tags, TagsArray } from '../../interfaces';
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
 import { useSnackbar } from 'notistack';
 import { dbProducts } from '../../database';

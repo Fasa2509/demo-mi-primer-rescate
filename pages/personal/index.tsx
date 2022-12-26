@@ -10,7 +10,7 @@ import { format as formatDate } from 'date-fns';
 import { dbPets, dbUsers } from '../../database';
 import { mprApi } from '../../mprApi';
 import { ScrollContext } from '../../context';
-import { MainLayout, MyImage } from '../../components';
+import { MainLayout, MyImage, UserPetInfo } from '../../components';
 import { ConfirmNotificationButtons, format, getParagraphs, PromiseConfirmHelper } from '../../utils';
 import { IOrder, IPet, IUser } from '../../interfaces';
 
@@ -51,28 +51,8 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
     }
   }
 
-  const handleSwitchAbilitatePet = async ( id: string, isAble: boolean ) => {
-
-    let key = enqueueSnackbar(`¿Quieres ${ isAble ? 'eliminar' : 'publicar' } esta mascota?`, {
-      variant: isAble ? 'warning' : 'info',
-      autoHideDuration: 10000,
-      action: ConfirmNotificationButtons,
-    });
-
-    const accepted = await PromiseConfirmHelper( key, 10000 );
-
-    if ( !accepted ) return;
-
-    const res = await dbPets.deletePet( id );
-
-    enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
-
-    if ( !res.error ) setMyPets( pets.map(( pet ) => ( pet._id === id ) ? { ...pet, isAble: !isAble } : pet));
-
-  }
-
   return (
-    <MainLayout title='Información Personal' pageDescription='Información personal de tu usuario de MPR' titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/' }>
+    <MainLayout title='Información Personal' pageDescription='Información personal de tu usuario de MPR' titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/personal'>
         
         <Box display='flex' alignItems='flex-end' gap='.5rem' sx={{ mb: 1.5 }}>
           <Typography sx={{ fontSize: '1.2rem', fontWeight: '600' }}>Nombre:</Typography>
@@ -102,28 +82,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
             ( myPets.length === 0 )
               ? <Typography>Aún no has subido ninguna mascota.</Typography>
               : myPets.map(( pet ) => (
-                <Box key={ pet._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 1.2rem -.8rem #555', borderRadius: '1rem' }}>
-                  <Box display='flex' justifyContent='space-between'>
-                    <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{ pet.name }</Typography>
-                    <Button color={ pet.isAble ? 'error' : 'success' } onClick={ () => handleSwitchAbilitatePet( pet._id, pet.isAble ) }>{ pet.isAble ? 'Eliminar' : 'Publicar' }</Button>
-                  </Box>
-
-                  <>
-                  { !pet.isAble && <Typography className='fadeIn'>{'('}esta mascota no es pública{')'}</Typography> }
-                  </>
-                  
-                  <Box display='flex' justifyContent='center' gap='1rem' position='relative'>
-                  {
-                    pet.images.map(( img, index ) => <MyImage key={ index } src={ img } alt={ pet.name } width={ 250 } height={ 250 } />)
-                  }
-                  </Box>
-
-                  <Box>
-                  {
-                    getParagraphs( pet.description ).map(( paragraph, index ) => <Typography key={ index }>{ paragraph }</Typography>)
-                  }
-                  </Box>
-                </Box>
+                <UserPetInfo key={ pet._id } pet={ pet } />
               ))
           }
         </Box>

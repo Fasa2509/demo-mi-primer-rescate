@@ -6,6 +6,7 @@ import { nextAuthOptions } from '../auth/[...nextauth]';
 import { db } from '../../../database';
 import { PetType, PetTypeArray } from '../../../interfaces';
 import { Pet, User } from '../../../models';
+import { formatText } from '../../../utils';
 
 type Data =
 | { error: boolean; message: string; };
@@ -18,6 +19,9 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
         case 'POST':
             return createNewPet( req, res );
+
+        case 'PUT':
+            return updatePetDescription( req, res );
 
         case 'DELETE':
             return updatePetAbility( req, res );
@@ -83,7 +87,7 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
         await db.connect();
 
         // @ts-ignore
-        const newPet = new Pet({ type, userId: session.user._id, name, images, description, isAdminPet: session.user.role === 'admin' || session.user.role === 'superuser' });
+        const newPet = new Pet({ type, userId: session.user._id, name: formatText( name.trim() ), images, description: description.trim(), isAdminPet: session.user.role === 'admin' || session.user.role === 'superuser' });
         await newPet.save();
         
         // @ts-ignore
@@ -104,6 +108,44 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
         console.log( error );
         await db.disconnect();
         return res.status(400).json({ error: true, message: 'Ocurrió un error guardando la mascota' });
+    }
+
+}
+
+
+const updatePetDescription = async ( req: NextApiRequest, res: NextApiResponse ) => {
+
+    const { petId = '', petDescription = '' } = req.body;
+
+    if ( !petId || !petDescription ) return res.status(400).json({ error: true, message: 'La información está incompleta' });
+
+    if ( !isValidObjectId( petId ) ) return res.status(400).json({ error: true, message: 'La información es inválida' });
+
+    // @ts-ignore
+    const { user } = await unstable_getServerSession(req, res, nextAuthOptions);
+
+    if ( !user ) return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+
+    try {
+        await db.connect();
+
+        const pet = await Pet.findById( petId );
+        
+        if ( !pet || pet.userId.toString() !== user._id ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No se pudo actualizar la mascota' });
+        }
+
+        pet.description = petDescription.trim();
+        await pet.save();
+
+        await db.disconnect();
+
+        return res.status(200).json({ error: false, message: 'La mascota fue actualizada' });
+    } catch( error ) {
+        console.log( error );
+        await db.disconnect();
+        return res.status(400).json({ error: true, message: 'Ocurrió un error actualizando la mascota' });
     }
 
 }

@@ -5,8 +5,8 @@ import { useSnackbar } from "notistack";
 import { dbPets } from "../../database";
 import { AuthContext, ScrollContext } from "../../context";
 import { MyImage } from "../cards";
-import styles from './Form.module.css';
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils";
+import styles from './Form.module.css';
 
 export const PetChangeForm = () => {
 
@@ -18,15 +18,7 @@ export const PetChangeForm = () => {
     const image = useRef<HTMLInputElement>( null );
     const description = useRef<HTMLInputElement>( null );
 
-    // const [form, setForm] = useState({
-    //     name: '',
-    //     images: ['', '' , '', ''],
-    //     description: '',
-    // });
-
     const [images, setImages] = useState<string[]>(['', '', '', '']);
-
-    // const [addImage, setAddImage] = useState('');
 
     const handleSubmit = async ( e: FormEvent ) => {
         e.preventDefault();

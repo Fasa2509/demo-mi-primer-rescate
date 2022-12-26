@@ -56,7 +56,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   }
 
   return (
-    <MainLayout title={ 'Adopta un gatito' } H1={ 'Adopta un gatito' } pageDescription={ '¿Buscas adoptar un gatito? Ve los gatitos que tenemos en nuestra fundación y adopta uno para llenarlo de amor.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/otros'>
+    <MainLayout title={ 'Adopta un gatito' } H1={ 'Adopta un gatito' } pageDescription={ '¿Buscas adoptar un gatito? Ve los gatitos que tenemos en nuestra fundación y adopta uno para llenarlo de amor.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/otros' url='/adoptar/gatos'>
       
         <p>¡Los gatitos de <b>Mi Primer Rescate</b> no son como otros! Ell@s están preparados para cualquier muestra de afecto, entrenados para hacerte reír y son expertos en ser consentidos, ¡no te quedes sin el tuyo!.</p>
 
