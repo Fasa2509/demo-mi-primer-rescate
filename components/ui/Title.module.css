@@ -1,8 +1,8 @@
 .container {
     display: inline-block;
     position: sticky;
-    top: 1.3rem;
-    margin: .25rem 0 1rem;
+    top: 1.5rem;
+    margin: 1rem 0;
     z-index: 990;
 }
 
@@ -15,7 +15,7 @@
     content: '';
     display: block;
     width: 5px;
-    height: 1.5rem;
+    height: 1.6rem;
     opacity: 1;
     background-color: rgb(134, 82, 32);
     position: absolute;
@@ -68,6 +68,13 @@
 
     .container:hover .sticks {
         opacity: 0;
+    }
+}
+
+@media screen and (min-width: 776px) {
+    .container {
+        margin: .5rem 0 1rem;
+        top: 1.3rem;
     }
 }
 

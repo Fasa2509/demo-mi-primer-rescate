@@ -87,11 +87,9 @@ export const ModalFull: FC<Props> = ({ products }) => {
                 text: 'Visita la página de Mi Primer Rescate y mira sus productos',
                 url: `https://demo-mi-primer-rescate.vercel.app${ router.asPath }`,
             });
-            
-            enqueueSnackbar('¡Gracias por compartir amor!', { variant: 'info' });
         } catch( error ) {
             console.log( error )
-            enqueueSnackbar('No se puede compartir en tu navegador', { variant: 'warning', autoHideDuration: 100000000 });
+            enqueueSnackbar('No se pudo compartir', { variant: 'warning' });
         }
     }
 

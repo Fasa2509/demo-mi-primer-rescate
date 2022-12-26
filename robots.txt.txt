@@ -1,0 +1,7 @@
+User-agent: *
+# Allow: *
+Disallow: /auth*
+Disallow: /tienda/categoria?*
+Disallow: /tienda?*
+Disallow: /personal
+Sitemap: https://demo-mi-primer-rescate.vercel.app/sitemap.xml

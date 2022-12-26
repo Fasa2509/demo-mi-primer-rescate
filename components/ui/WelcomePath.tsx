@@ -1,19 +1,14 @@
-import { useEffect } from "react"
+import { useEffect } from 'react';
 import FoundationTwoTone from '@mui/icons-material/FoundationTwoTone';
 import Groups from '@mui/icons-material/Groups';
 import PetsOutlined from '@mui/icons-material/PetsOutlined';
 import Yard from '@mui/icons-material/Yard';
 import styles from './WelcomePath.module.css';
 
-const callback = ( entries: any ) => {
-    entries.forEach(( entry: any )  => {
-        if ( entry.isIntersecting ) {
-            entry.target.classList.add(`${styles.active}`)
-        } else {
-            entry.target.classList.remove(`${styles.active}`)
-        }
-    })
-}
+const callback = ( entries: any ) => entries.forEach(( entry: any ) => ( entry.isIntersecting )
+    ? entry.target.classList.add( styles.active )
+    : entry.target.classList.remove( styles.active )
+)
 
 export const WelcomePath = () => {
     
@@ -38,7 +33,7 @@ export const WelcomePath = () => {
         <div className={ styles.content__container }>
             <div className={ styles.content__1 + ' observe' }>
                 <div className={ styles.content__wing }><Groups /><div /></div>
-                <p>Nuestro equipo de Mi Primer Rescate está formado por un grupo de voluntarios que se dedican a realizar la labor sin ningún fin de lucro</p>
+                <p>Nuestro equipo de Mi Primer Rescate está formado por un grupo de voluntarios que se dedican a realizar la labor sin ningún tipo de fin de lucro.</p>
             </div>
             <div className={ styles.content__2 + ' observe' }>
                 <div className={ styles.content__wing }><div /><FoundationTwoTone /></div>

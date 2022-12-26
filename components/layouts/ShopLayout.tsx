@@ -40,6 +40,11 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
         <meta name="og:title" content={ title } />
         <meta name="og:description" content={ pageDescription } />
         <meta name="og:image" content={ `https://demo-mi-primer-rescate.vercel.app${ pageImage ? pageImage : '/Logo-Redes.png' }` } />
+      
+        <meta property="og:title" content={ title } />
+        <meta property="og:description" content={ pageDescription } />
+        <meta property="og:image" content={ `https://demo-mi-primer-rescate.vercel.app${ pageImage ? pageImage : '/Logo-Redes.png' }` } />
+      
       </Head>
 
       <Header shop />

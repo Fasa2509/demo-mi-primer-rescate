@@ -99,7 +99,7 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
         await db.disconnect();
 
-        return res.status(200).json({ error: false, message: 'La mascota fue guardada' });
+        return res.status(200).json({ error: false, message: '¡La mascota fue publicada!' });
     } catch( error ) {
         console.log( error );
         await db.disconnect();

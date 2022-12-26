@@ -14,7 +14,7 @@
 .load__pets {
     align-self: flex-end;
     background-color: var(--secondary-color-1);
-    padding: .2rem .8rem 1rem;
+    padding: .2rem .8rem .1rem;
     color: #fff;
     font-weight: 600;
     font-size: 1rem;

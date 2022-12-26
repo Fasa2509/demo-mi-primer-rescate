@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
@@ -9,6 +9,7 @@ import { format as formatDate } from 'date-fns';
 
 import { dbPets, dbUsers } from '../../database';
 import { mprApi } from '../../mprApi';
+import { ScrollContext } from '../../context';
 import { MainLayout, MyImage } from '../../components';
 import { ConfirmNotificationButtons, format, getParagraphs, PromiseConfirmHelper } from '../../utils';
 import { IOrder, IPet, IUser } from '../../interfaces';
@@ -23,6 +24,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const [myPets, setMyPets] = useState<IPet[]>( pets );
+  const { setIsLoading } = useContext( ScrollContext );
 
   const unsubscribe = async () => {
     let key = enqueueSnackbar('¿Quieres dejar de recibir notificaciones en tu correo?', {
@@ -38,7 +40,11 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
     try {
       const { data } = await mprApi.post('/contact', { email: user.email, subscribe: 'false' });
 
+      setIsLoading( true );
       enqueueSnackbar(data.message, { variant: 'info' });
+      setIsLoading( false );
+
+      user.isSubscribed = false;
     } catch( error ) {
         // @ts-ignore
         enqueueSnackbar(error.response ? error.response.data.message || 'Ocurrió un error' : 'Ocurrió un error', { variant: 'error' });
@@ -82,11 +88,11 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
 
         {
           ( user.isSubscribed )
-            ? <Box>
+            ? <Box className='fadeIn'>
                 <Typography>¡Estás suscrit@ a <span style={{ textDecoration: 'underline', fontWeight: '600' }}>Mi Primer Rescate</span>! Recibirás información exclusiva de nuestra fundación en tu correo electrónico.</Typography>
                 <Typography>¿Ya no quieres recibir información? Pulsa <Button sx={{ backgroundColor: 'var(--secondary-color-2)', fontSize: '.9rem', padding: '.1rem' }} onClick={ unsubscribe }>aquí</Button></Typography>
               </Box>
-            : <Typography>No estás suscrit@ a nuestra página :{'('}</Typography>
+            : <Typography className='fadeIn'>No estás suscrit@ a nuestra página. ¡Suscríbete para recibir información personalizada y estar al tanto de nuestros eventos!</Typography>
         }
 
         <Typography variant='subtitle1' sx={{ mt: 2.5, fontSize: '1.4rem' }}>Mis Mascotas</Typography>
@@ -215,7 +221,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       user: user,
       orders: user.orders,
       // @ts-ignore
-      pets: user.pets.filter(( p ) => !p.isAdminPet),
+      pets: user.pets/*.filter(( p ) => !p.isAdminPet)*/,
     }
   }
 }

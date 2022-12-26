@@ -176,7 +176,7 @@ export const SideMenu: FC = () => {
                     <ListSubheader>Mi Cuenta</ListSubheader>
 
                     <NextLink href='/personal'>
-                        <a onClick={ toggleSideMenu }>
+                        <a rel='nofollow' onClick={ toggleSideMenu }>
                             <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/personal') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
                                     <AccountCircle color='secondary' />

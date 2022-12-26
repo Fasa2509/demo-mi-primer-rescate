@@ -1,25 +1,25 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { ScrollContext } from './';
 
-export interface ScrollState {
-    passedElements: string[];
-}
+// export interface ScrollState {
+//     passedElements: string[];
+// }
 
 
 interface Props {
     children: JSX.Element | JSX.Element[];
-    elements: ObjectToTop[];
+    // elements: ObjectToTop[];
 }
 
 
-export interface ObjectToTop {
-    selector: string;
-    distanceToTop: number;
-    limit?: 'top' | 'bottom';
-}
+// export interface ObjectToTop {
+//     selector: string;
+//     distanceToTop: number;
+//     limit?: 'top' | 'bottom';
+// }
 
 
-export const ScrollProvider: FC<Props> = ({ children, elements }) => {
+export const ScrollProvider: FC<Props> = ({ children/*, elements*/ }) => {
 
     // const [passedElements, setPassedElements] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>( false );

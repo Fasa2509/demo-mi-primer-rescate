@@ -48,10 +48,8 @@ export const Footer: FC = () => {
           text: 'Mira su trabajo y participa en sus eventos',
           url: `https://demo-mi-primer-rescate.vercel.app`,
       });
-      
-      enqueueSnackbar('¡Gracias por compartir amor!', {variant: 'info'  });
     } catch( error ) {
-        enqueueSnackbar('No se puede compartir en tu navegador', { variant: 'warning' });
+        enqueueSnackbar('No se pudo compartir', { variant: 'warning' });
     }
   }
 
@@ -70,10 +68,10 @@ export const Footer: FC = () => {
       <Box sx={{ width: '96%', margin: '.5rem auto .7rem' }}>
         <p className={ styles.p }>¡Comparte nuestro contenido para llegar a más personas!</p>
         <div className={ styles.share__container }>
-          <Link href='https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app&t=¡Mira este producto en la tienda MPR!' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href='https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app&t=¡Visita la página de Mi Primer Rescate!' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
           <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
-          <Link href='https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
-          <Link href='https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href='https://twitter.com/intent/tweet?text=¡Visita la página de Mi Primer Rescate!&url=https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href='https://api.whatsapp.com/send?text=¡Visita la página de Mi Primer Rescate! https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
         </div>
       </Box>
       

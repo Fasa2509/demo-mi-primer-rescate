@@ -1,14 +1,13 @@
-import { NextPage } from 'next'
-import { AddAlert } from '@mui/icons-material'
+import { NextPage } from 'next';
+import { Typography } from '@mui/material';
+import { AddAlert } from '@mui/icons-material';
 
-import { ContentSlider, MainLayout } from '../../components'
-import styles from '../../styles/Apoyo.module.css'
-import { Typography } from '@mui/material'
+import { MainLayout } from '../../components';
 
 const ApoyoPage: NextPage = () => {
   
   return (
-    <MainLayout title={ 'Cómo ayudar' } pageDescription={ '¿Te preguntas cómo ayudarnos a cumplir con nuestra labor? Pues es muy fácil. Conoce los detalles aquí.' } titleIcon={ <AddAlert color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/perros'>
+    <MainLayout title={ 'Cómo ayudar a la fundación' } pageDescription={ '¿Te preguntas cómo ayudarnos a cumplir con nuestra labor? Pues es muy fácil. Conoce los detalles aquí.' } titleIcon={ <AddAlert color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/perros'>
 
         <Typography>Página de Apoyo</Typography>
 

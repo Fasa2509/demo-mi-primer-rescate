@@ -56,7 +56,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   }
 
   return (
-    <MainLayout title={ 'Adopta una mascota' } H1={ 'Adopta una mascota' } pageDescription={ 'Proceso de adopción de nuestros animalitos' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/formulario'>
+    <MainLayout title={ 'Adopta una mascota' } H1={ 'Adopta una mascota' } pageDescription={ '¿Buscas adoptar una mascota? Ve los animales que tenemos en nuestra fundación y adopta uno para llenarlo de amor.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/formulario'>
       
         <p>Las mascotas de <b>Mi Primer Rescate</b> tienen algo en común, ¡ninguna te dejará indiferente!. Si quieres una mascota, definitivamente estás en el lugar indicado.</p>
 

@@ -208,7 +208,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, products, me
                     onChange={ ( e ) => setForm({ ...form, name: e.target.value, slug: method === 'create' ? e.target.value.toLowerCase().replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_').replace(/ /g,'_').replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u') : thisProduct.slug }) }
                 />
                 
-                { form.slug.length > 1 &&
+                { thisProduct._id &&
                     <Link className='fadeIn' href={ '/tienda?product=' + form.slug.substring(1) } target='_blank' rel='noreferrer' underline='hover' color='secondary' alignSelf='flex-start'>Ver página del producto</Link>
                 }
             </Box>

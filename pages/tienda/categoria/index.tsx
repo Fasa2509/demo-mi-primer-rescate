@@ -67,7 +67,7 @@ const TypePage: NextPage<Props> = ({ products }) => {
     }
 
   return (
-    <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/tienda' }>
+    <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial la fundación Mi Primer Rescate. Encuentra productos por categoría para tu mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage={ '/tienda' }>
 
         <Suspense fallback={ <Typography>Cargando...</Typography> }>
             <ModalFull products={ products } />
@@ -78,7 +78,7 @@ const TypePage: NextPage<Props> = ({ products }) => {
 
         <Box className='fadeIn' display='flex' justifyContent='space-evenly' sx={{ my: 2 }}>
             {
-                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` } shallow><Button color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
+                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` } rel='nofollow' shallow><Button color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
             }
         </Box>
 

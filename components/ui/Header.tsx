@@ -47,11 +47,11 @@ export const Header: FC<Props> = ({ shop = false }) => {
 
         { shop &&
           <NextLink href='/tienda/carrito' passHref>
-              <Link className={ styles.shopping__cart + ' fadeIn' }>
+              <a className={ styles.shopping__cart + ' fadeIn' }>
                 <Badge sx={{ transform: numberOfItems ? 'translateY(4px)' : 'none', transition: 'transform 100ms ease' }} badgeContent={ numberOfItems > 9 ? '+9' : numberOfItems } color='info'>
                   <ShoppingCart color='info' sx={{ fontSize: '1.7rem' }} />
                 </Badge>
-              </Link>
+              </a>
           </NextLink>
         }
         
@@ -156,7 +156,7 @@ export const Header: FC<Props> = ({ shop = false }) => {
                   <Typography color='info' className={ `fadeIn ${ styles.link } ${ asPath.startsWith('/personal') ? styles.active : '' }` }>Personal</Typography>
 
                   <Box display='flex' flexDirection='column' gap='.35rem' className={ styles.link__display }>
-                    <NextLink href='/personal' passHref>
+                    <NextLink href='/personal' rel='nofollow' passHref>
                       <Link color='info' className={ styles.link }>Mi info</Link>
                     </NextLink>
 

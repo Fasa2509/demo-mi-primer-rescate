@@ -19,7 +19,7 @@ const MiPrimerRescatePage: NextPage = () => {
   const array = useMemo(() => text.split('\n'), [text])
 
   return (
-    <MainLayout title={ 'Nosotros' } H1={ 'Proyecto MPR' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!' } titleIcon={ <Pets color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/apoyo'>
+    <MainLayout title={ '¿Qué es la fundación Mi Primer Rescate?' } H1={ 'Proyecto MPR' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!' } titleIcon={ <Pets color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/apoyo'>
 
         <ContentSlider title='Misión' initiallyDisplayed>
           <p>La Misión de la fundación es cumplir el ciclo MPR, el cual garantiza calidad de vida para el peludo rescatado.</p>

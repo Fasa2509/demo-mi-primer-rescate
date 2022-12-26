@@ -17,12 +17,13 @@ export const ContentSlider: FC<Props> = ({ children, title, initiallyDisplayed =
         // aqui actualizamos la variable de estado margin a la altura exacta del elemento
         const element = document.getElementById( title )
         
-        const resizeObserver = new ResizeObserver(( entries ) => {
-            entries.forEach(entry => setMargin( `-${ window.getComputedStyle( element! ).height }` ) )
-        });
+        const resizeObserver = new ResizeObserver(( entries ) =>
+            entries.forEach(() => setMargin( `-${ window.getComputedStyle( element! ).height }` ) ));
 
         resizeObserver.observe( element! );
-    }, [ title ])
+
+        return () => resizeObserver.disconnect();
+    }, [ title ]);
 
   return (
     <section className={ styles.container }>

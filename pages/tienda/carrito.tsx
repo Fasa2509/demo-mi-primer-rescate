@@ -54,9 +54,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
     setMaps(shopInfo.direction.maps);
   }, []);
 
-
   useEffect(() => setExistencyChecked( false ), [cart]);
-
 
   const cleaningCart = async () => {
       let key = enqueueSnackbar('¿Quieres vaciar el carrito?', {
@@ -394,7 +392,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
                       inputRef={ checkboxInfo }
                       color='secondary'
                     />
-                    <label htmlFor='checkboxInfo' onClick={ () => true }>Guardar información</label>
+                    <label htmlFor='checkboxInfo' style={{ flexGrow: 1, whiteSpace: 'nowrap' }}>Guardar información</label>
                   </Box>
 
                   <Divider sx={{ my: 1 }} />

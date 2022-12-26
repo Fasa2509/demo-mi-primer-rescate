@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <AuthProvider>
               <CartProvider>
                 <MenuProvider>
-                  <ScrollProvider elements={ [{ selector: '.scroll__button', distanceToTop: 200 }, { selector: '.sticks', distanceToTop: 25, limit: 'top' }] }>
+                  <ScrollProvider /*elements={ [{ selector: '.scroll__button', distanceToTop: 200 }, { selector: '.sticks', distanceToTop: 25, limit: 'top' }] }*/>
                       {/* <CssBaseline /> */}
                       <Component {...pageProps} />
                   </ScrollProvider>
