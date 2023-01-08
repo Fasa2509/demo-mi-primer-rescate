@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import type { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import { unstable_getServerSession } from 'next-auth';
-import { getProviders, signIn, useSession } from 'next-auth/react';
 import { Box, Button, Card, Chip, TextField, Typography } from '@mui/material';
 import { Check, ErrorOutline, Home } from '@mui/icons-material';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';

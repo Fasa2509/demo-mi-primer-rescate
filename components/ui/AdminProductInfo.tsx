@@ -92,6 +92,9 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
         if ( form.tags.length === 0 )
             return enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
+
+        if ( /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g.test( nameRef.current!.value ) )
+            return enqueueSnackbar('El nombre no puede contener caracteres especiales', { variant: 'info' });
             
         let key = enqueueSnackbar(`¿Quieres ${ method === 'update' ? 'actualizar' : 'crear' } este producto?`, {
             variant: 'info',
@@ -110,6 +113,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                 ...form,
                 name: nameRef.current!.value.trim(),
                 description: descriptionRef.current!.value.trim(),
+                slug: nameRef.current!.value.trim().replace(' ', '_'),
             }, unica);
 
             enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });

@@ -30,7 +30,7 @@ export const ModalWindow: FC<Props> = ({ children, buttonTxt = 'Abrir', title, b
         <>
             <button style={ buttonStyle } className={ `button${ buttonClassName ? ` ${ buttonClassName }` : '' }` } onClick={ openModal }>{ buttonTxt }</button>
             { isOpen &&
-                <Suspense fallback={ <p>Cargando...</p> }>
+                <Suspense fallback={ <></> }>
                     <ModalContent title={ title } modalStyle={ modalStyle } modalBg={ modalBg } closeModal={ handleClose }>{ children }</ModalContent>
                 </Suspense>
             }

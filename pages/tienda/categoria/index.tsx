@@ -98,7 +98,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
     return {
         props: {
-            products,
+            products: products.reverse(),
         },
         revalidate: 3600 * 12, // cada 24h
     }
