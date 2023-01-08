@@ -14,6 +14,7 @@ export interface IProduct {
     sold       : number;
     slug       : string;
     isAble     : boolean;
+    createdAt  : number;
   
 }
 
@@ -75,6 +76,7 @@ export const initialFavProducts: IProduct[] = [
       sold: 0,
       slug: '/capucha_perro_grande',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd2',
@@ -109,6 +111,7 @@ export const initialFavProducts: IProduct[] = [
       sold: 0,
       slug: '/recipiente_estrellado',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd3',
@@ -149,6 +152,7 @@ export const initialFavProducts: IProduct[] = [
       sold: 0,
       slug: '/perrarina_xxxxx_20kg',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd4',
@@ -177,6 +181,7 @@ export const initialFavProducts: IProduct[] = [
       sold: 0,
       slug: '/vitamina_yyy',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcde5',
@@ -205,6 +210,7 @@ export const initialFavProducts: IProduct[] = [
       sold: 0,
       slug: '/suplemento_vitaminico',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcde6',
@@ -239,6 +245,7 @@ export const initialFavProducts: IProduct[] = [
       sold: 0,
       slug: '/hueso_de_gomita',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcde7',
@@ -273,6 +280,7 @@ export const initialFavProducts: IProduct[] = [
       sold: 0,
       slug: '/arete_para_gato',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
 ]
   
@@ -304,6 +312,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/producto_1',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd6',
@@ -347,6 +356,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/producto_2',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd7',
@@ -387,6 +397,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/producto_3',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd8',
@@ -424,6 +435,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/gorra_o_chapa',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd9',
@@ -464,6 +476,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/producto_5',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd10',
@@ -502,6 +515,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/camisa_patita_de_perro',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd11',
@@ -540,6 +554,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/camisa_pata_de_gato',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd12',
@@ -578,6 +593,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/pantalon_rasgado',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
     {
       _id: 'abcd13',
@@ -617,6 +633,7 @@ export const initialProducts: IProduct[] = [
       sold: 0,
       slug: '/camiseta_deportiva_patitas',
       isAble: true,
+      createdAt: (() => Date.now())()
     },
 ]
 

@@ -6,3 +6,4 @@ export * as dbProducts from './dbProducts';
 export * as dbAdoptions from './dbAdoptions';
 export * as dbSolds from './dbSolds';
 export * as dbPets from './dbPets';
+export * as dbImages from './dbImages';

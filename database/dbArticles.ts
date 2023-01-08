@@ -71,18 +71,23 @@ export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<
 
 }
 
-export const removeArticle = async ( id: string ): Promise<{ error: boolean; message: string }> => {
+export const removeArticle = async ( id: string ): Promise<{ error: boolean; message: string; }> => {
 
     try {
-        const { data } = await mprApi.delete('/article/' + id);
-        
+        const { data } = await mprApi.delete(`/article?id=${ id }`);
+
         return data;
-        // @ts-ignore
-    } catch( error: Error | AxiosError ) {
+    } catch( error ) {
         console.log( error );
-        await db.disconnect();
-        const { data } = error.response
-        return data;
+
+        if ( axios.isAxiosError( error ) ) {
+            return { error: true, message: 'Ocurrió un error guardando el artículo' }
+        }
+
+        return {
+            error: true,
+            message: 'Ocurrió un error guardando el artículo',
+        };
     }
 
 }

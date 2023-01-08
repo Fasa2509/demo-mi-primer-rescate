@@ -11,7 +11,7 @@ const AdminLinks = () => {
     const [linksActive, setLinksActive] = useState( false );
 
     return (
-        <Box className='fadeIn' sx={{ transform: !linksActive ? 'translateX(0%)' : 'translateX(90%)', transition: 'transform 500ms ease', filter: 'drop-shadow(0 3px 3px #003021)', display: { xs: 'none', md: 'flex' }, position: 'absolute', right: 0, backgroundColor: '#B74FD1', padding: '.5rem 1.5rem .5rem .5rem', borderStartStartRadius: '10rem', borderEndStartRadius: '10rem' }}>
+        <Box className='fadeIn' sx={{ transform: !linksActive ? 'translateX(0%)' : 'translateX(90%)', transition: 'transform 500ms ease', filter: 'drop-shadow(0 3px .1rem rgba(0, 0, 0, .3))', display: { xs: 'none', md: 'flex' }, position: 'absolute', right: 0, backgroundColor: '#B74FD1', padding: '.5rem 1.5rem .5rem .5rem', borderStartStartRadius: '10rem', borderEndStartRadius: '10rem' }}>
           <input type='checkbox' className={ styles.checkbox } onClick={ () => setLinksActive( !linksActive ) } />
           <Box className={ styles.wings } />
           <Box className={ styles.admin__links } sx={{ display: { xs: 'none', md: 'flex' }, gap: '.5rem' }}>

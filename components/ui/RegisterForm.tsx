@@ -28,7 +28,7 @@ export const RegisterForm = () => {
         setAResponse({ error: false, message: '' });
 
         if ( password !== password2 ) {
-            setAResponse({ error: true, message: 'Las contraseñas deben ser iguales' });
+            setAResponse({ error: true, message: 'Las contraseñas deben coincidir' });
             setTimeout(() => setAResponse({ error: false, message: ''}), 10000);
             return;
         }
@@ -122,7 +122,7 @@ export const RegisterForm = () => {
 
                     <Box>
                         <TextField
-                            label='Contraseña 2'
+                            label='Confirm su contraseña'
                             type='password'
                             variant='filled'
                             color='secondary'

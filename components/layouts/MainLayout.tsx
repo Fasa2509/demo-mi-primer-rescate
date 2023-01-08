@@ -42,7 +42,6 @@ export const MainLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
         <meta property="og:description" content={ pageDescription } />
         <meta property="og:image" content={ `https://demo-mi-primer-rescate.vercel.app${ pageImage || '/Logo-MPR.png' }` } />
         <meta property="og:url" content={ `https://demo-mi-primer-rescate.vercel.app${ url }` } />
-
       </Head>
 
       <Header />

@@ -73,13 +73,13 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     if ( !dolar )
       throw new Error('Ocurrió un error obteniendo el valor del dólar de la DB');
 
-    const products = await dbProducts.getAllProducts();
+    let products = await dbProducts.getAllProducts();
 
     if ( !products )
         throw new Error('Ocurrió un error obteniendo los productos de la DB');
-        
+
     const solds = await dbSolds.getSoldProducts();
-        
+
     if ( !solds )
         throw new Error('Ocurrió un error obteniendo los productos vendidos de la DB');
 
@@ -109,10 +109,10 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     return {
       props: {
         mostSoldProducts,
-        products,
+        products: products.sort(() => 0.5 - Math.random()).reverse().sort(() => 0.5 - Math.random()).reverse(),
         dolar,
       },
-      revalidate: 3600 * 12, // cada 8h
+      revalidate: 3600 * 12, // cada 12h
     }
 }
 

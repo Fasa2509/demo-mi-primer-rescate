@@ -5,15 +5,6 @@ import { IProduct } from "../interfaces";
 import { Dolar, Product } from "../models";
 import { Sizes } from '../interfaces/products';
 
-// interface PayloadUpdate {
-//     name: string;
-//     description: string;
-//     price: number;
-//     discount: number;
-//     inStock: InStockSizes;
-//     tags: Tags[];
-// }
-
 export const backGetDolarPrice = async (): Promise< Number | null> => {
 
     try {
@@ -267,7 +258,7 @@ export const getAllProducts = async (): Promise<IProduct[] | null> => {
     try {
         await db.connect();
         
-        const products = await Product.find();
+        const products = await Product.find().sort({ createdAt: -1 });
 
         await db.disconnect();
 

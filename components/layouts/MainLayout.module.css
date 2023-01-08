@@ -42,7 +42,6 @@
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
-    /* transition: opacity 350ms ease; */
     animation: button-appear 350ms ease 5s both;
 }
 
@@ -74,11 +73,6 @@
     margin: auto;
     transition: transform 150ms ease;
 }
-
-/* .scroll__button--scrolled {
-    opacity: 1;
-    visibility: visible;
-} */
 
 @media (hover: hover) {
     .scroll__button:hover::after {

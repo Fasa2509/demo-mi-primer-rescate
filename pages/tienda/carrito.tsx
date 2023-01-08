@@ -400,7 +400,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
                   { existencyChecked ||
                     <>
                     <Box className='fadeIn' display='flex' alignItems='center' sx={{ maxWidth: '300px' }}>
-                      <p className='p'>Antes de hacer una compra, pulse aquí para verificar la existencia en stock de los productos.</p>
+                      <p className='p'>Pulse aquí para verificar la existencia en stock de los productos.</p>
                     </Box>
 
                     <Button

@@ -29,7 +29,7 @@
     }
 }
 
-.print, .big__print {
+.print, .big__print, .small__print {
     width: 48px;
     height: 48px;
     background-image: url(/dog-print.png);
@@ -46,6 +46,11 @@
     animation-timing-function: ease-in-out;
     -webkit-animation-name: fade;
     animation-name: fade;
+}
+
+.small__print {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .big__print {

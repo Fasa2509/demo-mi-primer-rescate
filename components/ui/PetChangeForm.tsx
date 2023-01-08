@@ -1,21 +1,21 @@
 import { FormEvent, useContext, useRef, useState } from "react";
-import { Box, Button, Input, TextField, Typography } from "@mui/material";
+import { Box, Button, Input, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
 
-import { dbPets } from "../../database";
+import { dbImages, dbPets } from "../../database";
 import { AuthContext, ScrollContext } from "../../context";
 import { MyImage } from "../cards";
-import { ConfirmNotificationButtons, PromiseConfirmHelper } from "../../utils";
+import { ConfirmNotificationButtons, getImageKeyFromUrl, PromiseConfirmHelper } from "../../utils";
 import styles from './Form.module.css';
 
 export const PetChangeForm = () => {
 
     const { user } = useContext( AuthContext );
-    const { setIsLoading } = useContext( ScrollContext );
+    const { isLoading, setIsLoading } = useContext( ScrollContext );
     const { enqueueSnackbar } = useSnackbar();
 
     const name = useRef<HTMLInputElement>( null );
-    const image = useRef<HTMLInputElement>( null );
+    const imageRef = useRef<HTMLInputElement>( null );
     const description = useRef<HTMLInputElement>( null );
 
     const [images, setImages] = useState<string[]>(['', '', '', '']);
@@ -53,21 +53,54 @@ export const PetChangeForm = () => {
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
     }
 
-    const handleAddOrRemoveImage = ( n: 1 | -1, imgIndex: number ) => {
+    const handleAddOrRemoveImage = async ( n: 1 | -1, imgIndex: number, imgUrl?: string ) => {
         if ( n === 1 ) {
 
-            if ( images.filter(img => img).length >= 4 ) return enqueueSnackbar('Ya hay muchas imágenes', { variant: 'info' });
-            if ( image.current!.value.trim().length <= 3 ) return enqueueSnackbar('La imagen no es válida', { variant: 'warning' });
-            // setAddImage('');
+            if ( !imgUrl ) return;
             let ndx = images.indexOf('') ?? -1;
-            setImages( images.map(( img, index ) => index !== ndx ? img : image.current!.value.trim().startsWith('/') ? image.current!.value.trim() : `/${ image.current!.value.trim() }` ));
-            image.current!.value = '';
+            setImages( images.map(( img, index ) => index !== ndx ? img : imgUrl ));
+            imageRef.current!.value = '';
 
         } else {
 
-            setImages( images.map(( img, index ) => index === imgIndex ? '' : img) );
+            if ( isLoading ) return;
+            if ( !images[imgIndex] ) return enqueueSnackbar('No hay imagen en esa posición', { variant: 'info' });
+
+            let key = enqueueSnackbar('¿Quieres eliminar esta imagen?', {
+                variant: 'info',
+                autoHideDuration: 12000,
+                action: ConfirmNotificationButtons,
+            });
+    
+            let accepted = await PromiseConfirmHelper(key, 12000);
+    
+            if ( !accepted ) return;
+
+            setIsLoading( true );
+            const res = await dbImages.deleteImageFromS3( getImageKeyFromUrl( images[imgIndex] ) );
+            setIsLoading( false );
+
+            enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+            !res.error && setImages( images.map(( img, index ) => index === imgIndex ? '' : img) );
 
         }
+    }
+
+    const requestUpload = async () => {
+        if ( !user ) return enqueueSnackbar('Inicia sesión para subir una imagen', { variant: 'info' });
+
+        if ( !imageRef.current || !imageRef.current.files || !imageRef.current.files[0] )
+            return;
+
+        if ( images.filter(img => img).length >= 4 ) return enqueueSnackbar('Ya hay muchas imágenes', { variant: 'info' });
+
+        setIsLoading( true );
+        const res = await dbImages.uploadImageToS3(imageRef.current.files[0]);
+        setIsLoading( false );
+
+        enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
+        res.imgUrl && handleAddOrRemoveImage(1, 0, res.imgUrl);
     }
 
     return (
@@ -76,39 +109,14 @@ export const PetChangeForm = () => {
             <TextField
                 inputRef={ name }
                 name='nombre'
-                // value={ form.name }
                 label='Nombre de tu mascota'
                 type='text'
                 color='secondary'
                 variant='filled'
                 fullWidth
-                // onChange={ ({ target }) => setForm({ ...form, name: target.value  }) }
             />
 
-                <Box display='flex' gap='1rem' flexWrap='wrap'>
-                    <Typography>/gato-1.webp</Typography>
-                    <Typography>/gato-2.jpg</Typography>
-                    <Typography>/perro-1.webp</Typography>
-                    <Typography>/perro-2.webp</Typography>
-                    <Typography>/Logo-Redes.png</Typography>
-                    <Typography>/Logo-MPR.png</Typography>
-                    <Typography>/square-dog.jpg</Typography>
-                </Box>
-            <Box display='flex' gap='.5rem'>
-                <TextField
-                    inputRef={ image }
-                    name='imagenes'
-                    // value={ addImage }
-                    label='Muestra el cambio de tu mascota'
-                    type='text'
-                    color='secondary'
-                    variant='filled'
-                    fullWidth
-                    id="img-input"
-                    // onChange={ ({ target }) => setAddImage( target.value ) }
-                />
-                <Button color='secondary' onClick={ () => handleAddOrRemoveImage( 1, 0 ) }>Agregar</Button>
-            </Box>
+            <input ref={ imageRef } className={ styles.no__display } accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={ requestUpload } />
 
             <Box display='flex' flexWrap='wrap' gap='1rem' sx={{ justifyContent: { xs: 'center', md: 'space-between' } }}>
                 {
@@ -116,8 +124,7 @@ export const PetChangeForm = () => {
                         <Box key={ index } display='flex' flexDirection='column' sx={{ border: 'thin solid var(--secondary-color-1)', borderRadius: '.4rem', overflow: 'hidden' }}>
                             <Box
                                 className={ styles.pet__box }
-                                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 180, height: 180, fontSize: '4rem', color: 'var(--secondary-color-1)', cursor: 'pointer' }}
-                                onClick={ () => document.getElementById( 'img-input' )?.focus() }
+                                onClick={ () => isLoading || imageRef.current!.click() }
                             >
                                 { images[index] && <MyImage className='fadeIn' src={ img } alt={ img } width={ 200 } height={ 200 } /> }
                             </Box>
@@ -130,7 +137,6 @@ export const PetChangeForm = () => {
             <TextField
                 inputRef={ description }
                 name='description'
-                // value={ form.description }
                 label='¿Cuál es tu historia?'
                 type='text'
                 color='secondary'
@@ -139,10 +145,9 @@ export const PetChangeForm = () => {
                 minRows={ 3 }
                 maxRows={ 10 }
                 multiline
-                // onChange={ ({ target }) => setForm({ ...form, description: target.value  }) }
             />
 
-            <Input type='submit' color='secondary' value='Publicar' />
+            <Input type='submit' color='secondary' value='Publicar mi mascota' />
         </form>
     )
 }

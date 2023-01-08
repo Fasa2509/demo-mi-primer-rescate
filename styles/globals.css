@@ -6,6 +6,7 @@
   --secondary-color-1: #2AD8A4;
   --secondary-color-1-hover: #27be91;
   --secondary-color-2: #B74FD1;
+  --secondary-color-2-hover: #9e39b8;
   --success-color: rgb(7, 179, 7);
   --error-color: #f10606;
 }
@@ -90,7 +91,6 @@ a {
 }
 
 .notification__buttons.transparent {
-  padding-right: 4px;
   background-color: rgba(0, 0, 0, 0);
   transition: background-color 350ms ease;
 }
@@ -100,11 +100,23 @@ a {
   color: #FFF;
   border: none;
   border-radius: 5px;
-  padding: .4rem .8rem .3rem;
+  padding: .5rem .9rem .4rem;
   font-size: 1em;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 350ms ease;
+}
+
+.button--purple {
+  background-color: var(--secondary-color-2);
+}
+
+.low--padding {
+  padding: .2rem .8rem;
+}
+
+.font--size {
+  font-size: 1.2rem;
 }
 
 .buttonOutlined {
@@ -174,6 +186,10 @@ section .is-active {
     background-color: var(--secondary-color-1-hover);
   }
 
+  .button--purple:hover {
+    background-color: var(--secondary-color-2-hover);
+  }
+
   .notification__buttons.transparent:hover {
     background-color: rgba(0, 0, 0, .35);
   }
@@ -211,6 +227,18 @@ section .is-active {
 @media screen and (min-width: 992px) {
   html {
     font-size: 19px;
+  }
+
+  .font--size {
+    font-size: 1rem;
+  }
+  
+  .button {
+    padding: .4rem .8rem;
+  }
+
+  .low--padding {
+    padding: .2rem .8rem;
   }
 }
 

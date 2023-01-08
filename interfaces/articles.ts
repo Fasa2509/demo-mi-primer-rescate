@@ -19,4 +19,4 @@ export interface ImageObj {
     height: number;
 };
 
-type FieldType = 'texto' | 'link' | 'subtitulo' | 'imagen' | 'contador';
+export type FieldType = 'texto' | 'link' | 'subtitulo' | 'imagen' | 'contador';

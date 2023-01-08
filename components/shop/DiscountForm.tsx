@@ -140,19 +140,19 @@ export const DiscountForm = () => {
 
                 <Box display='flex' gap='.5rem' sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
                     <FormControl fullWidth>
-                    <InputLabel id="form-tags" color='secondary'>Etiquetas</InputLabel>
+                        <InputLabel id="form-tags" color='secondary'>Etiquetas</InputLabel>
                         <Select
-                        labelId="form-tags"
-                        value={ formTags.tags }
-                        label="Etiquetas"
-                        color='secondary'
-                        onChange={ ( e: any ) => setFormTags({ ...formTags, tags: e.target.value }) }
+                            labelId="form-tags"
+                            value={ formTags.tags }
+                            label="Etiquetas"
+                            color='secondary'
+                            onChange={ ( e: any ) => setFormTags({ ...formTags, tags: e.target.value }) }
                         >
-                        <MenuItem value={ 'todos' }>todos</MenuItem>
-                        <MenuItem value={ 'accesorios' }>accesorios</MenuItem>
-                        <MenuItem value={ 'consumibles' }>consumibles</MenuItem>
-                        <MenuItem value={ 'ropa' }>ropa</MenuItem>
-                        <MenuItem value={ 'útil' }>útil</MenuItem>
+                            <MenuItem value={ 'todos' }>todos</MenuItem>
+                            <MenuItem value={ 'accesorios' }>accesorios</MenuItem>
+                            <MenuItem value={ 'consumibles' }>consumibles</MenuItem>
+                            <MenuItem value={ 'ropa' }>ropa</MenuItem>
+                            <MenuItem value={ 'útil' }>útil</MenuItem>
                         </Select>
                     </FormControl>
 

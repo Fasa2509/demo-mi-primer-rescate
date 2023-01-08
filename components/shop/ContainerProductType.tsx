@@ -23,12 +23,12 @@ export const ContainerProductType: FC<Props> = ({ type, products }) => {
     return (
         <section className={ styles.products__type__container }>
             <p className={ styles.products__type__title }>{ formatText( type ) }</p>
-                {
-                    products.slice(0, 6).map((product) => <LongProductCard key={ product.name } product={ product } navigateTo={ shallowNavigate } />)
-                }
-                <NextLink href={ `/tienda/categoria?tipo=${ type }` } passHref>
-                    <Link className={ styles.products__link } color='secondary' alignSelf='flex-end'>Ver más</Link>
-                </NextLink>
+            {
+                products.slice(0, 6).map((product) => <LongProductCard key={ product.name } product={ product } navigateTo={ shallowNavigate } />)
+            }
+            <NextLink href={ `/tienda/categoria?tipo=${ type }` } passHref>
+                <Link className={ styles.products__link } color='secondary' alignSelf='flex-end'>Ver más</Link>
+            </NextLink>
         </section>
     )
 }

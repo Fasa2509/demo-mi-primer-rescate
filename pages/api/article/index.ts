@@ -12,11 +12,33 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
         case 'GET':
             return getMoreArticles( req, res );
         
-            case 'POST':
+        case 'POST':
             return createArticle( req, res );
 
         default:
             return res.status(400).json({ error: true, message: 'BAD REQUEST' });
+    }
+
+}
+
+const getMoreArticles = async ( req: NextApiRequest, res: NextApiResponse) => {
+
+    let { seconds = 0 } = req.query;
+
+    seconds = Number(seconds.toString());
+
+    try {
+        await db.connect();
+
+        const articles = await Article.find({ createdAt: { $lt: seconds } }).sort({ createdAt: -1 }).limit( 5 );
+
+        await db.disconnect();
+
+        return res.status(200).json( articles );
+    } catch( error ) {
+        console.log( error );
+        await db.disconnect();
+        return res.status(400).json({ error: true, message: 'Ocurrió un error en la DB' });
     }
 
 }
@@ -31,27 +53,6 @@ const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
             
         const newArticle = new Article({ title, fields });
         await newArticle.save();
-
-        await db.disconnect();
-        
-        return res.status(200).json({ error: false, message: '¡El artículo fue guardado!' });
-    } catch( error ) {
-        console.log( error );
-        await db.disconnect();
-        return res.status(400).json({ error: true, message: 'Ocurrió un error en la DB' });
-    }
-}
-
-const getMoreArticles = async ( req: NextApiRequest, res: NextApiResponse) => {
-
-    let { seconds = 0 } = req.query;
-
-    seconds = Number(seconds.toString());
-
-    try {
-        await db.connect();
-
-        const articles = await Article.find({ createdAt: { $lt: seconds } }).sort({ createdAt: -1 }).limit( 5 );
 
         const usersInfo: { name: string; email: string }[] = await User
             .find({ isSubscribed: true })
@@ -73,24 +74,23 @@ const getMoreArticles = async ( req: NextApiRequest, res: NextApiResponse) => {
             }
         });
 
-        let info = await transporter.sendMail({
+        await transporter.sendMail({
             from: '"Mi Primer Rescate 👻" <miprimerrescate@gmail.com>', // sender address
             to: usersInfo.map(( i ) => i.email), // list of receivers
             subject: "MPR - ¡Novedades! ✔", // Subject line
             html: `
             <h1>Mi Primer Rescate</h1>
             <p>¡Hola! Hay novedades en nuestra página, ¡ven a verlas ya! 🐱🐶</p>
-            <p>Acabamos de publicar un nuevo artículo para mantenerte al día sobre lo que hacemos en nuestra fundación, no te lo pierdas.</p>
+            <p>Acabamos de publicar un nuevo artículo, ${ title }, para mantenerte al día sobre lo que hacemos en nuestra fundación, no te lo pierdas.</p>
             <br />
             <a href='${ process.env.NEXTAUTH_URL }/' target='_blank' rel='noreferrer'>Ven a ver qué hay de nuevo</a>
             `, // html body
         });
-
-        return res.status(200).json( articles );
+        
+        return res.status(200).json({ error: false, message: '¡El artículo fue guardado!' });
     } catch( error ) {
         console.log( error );
         await db.disconnect();
         return res.status(400).json({ error: true, message: 'Ocurrió un error en la DB' });
     }
-
 }

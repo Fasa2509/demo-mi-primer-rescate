@@ -26,6 +26,7 @@ export const Footer: FC = () => {
   const handleClick = async () => {
       
       if ( !user ) return enqueueSnackbar('Inicia sesión para suscribirte a MPR', { variant: 'warning' });
+      if ( user.isSubscribed ) return enqueueSnackbar('¡Ya estás suscrit@ a nuestra fundación!', { variant: 'warning' });
       if ( !validations.isValidEmail( user.email ) ) return enqueueSnackbar('El correo no es válido', { variant: 'warning' });
       
       try {

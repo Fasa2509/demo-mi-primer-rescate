@@ -7,7 +7,9 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: []
+    domains: [
+      "fasa-bucket.s3.sa-east-1.amazonaws.com"
+    ]
   }
 }
 

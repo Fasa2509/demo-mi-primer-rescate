@@ -38,7 +38,7 @@ export const PetCard: FC<Props> = ({ pet, removable }) => {
         <div className={ `${ styles.pet__container } fadeIn` }>
             <MyImage src={ pet.images[0] } alt={ pet.name } width={ 500 } height={ 500 } />
 
-            <ModalWindow title={ pet.name } buttonTxt={ pet.name } buttonStyle={{ position: 'absolute', right: '.5rem', bottom: '.7rem', borderRadius: '10rem' }}>
+            <ModalWindow title={ pet.name } buttonTxt={ pet.name } buttonClassName='font--size' buttonStyle={{ position: 'absolute', right: '.5rem', bottom: '.7rem', borderRadius: '10rem' }}>
                 {
                     getParagraphs( pet.description ).map(( paragraph, index ) => <p key={ index }>{ paragraph }</p>)
                 }

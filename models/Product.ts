@@ -44,6 +44,7 @@ const productSchema = new Schema({
     sold: { type: Number, default: 0 },
     slug: { type: String, required: true, lowercase: true, },
     isAble: { type: Boolean, default: true },
+    createdAt: { type: Number, default: (() => Date.now())() }
 });
 
 // @ts-ignore

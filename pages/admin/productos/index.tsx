@@ -10,7 +10,7 @@ import { nextAuthOptions } from '../../api/auth/[...nextauth]';
 import { dbProducts } from '../../../database';
 import { mprRevalidatePage } from '../../../mprApi';
 import { ScrollContext } from '../../../context';
-import { AdminProductInfo, MainLayout } from '../../../components';
+import { AdminProductInfo, MainLayout, MyImage } from '../../../components';
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../../utils';
 import { IProduct } from '../../../interfaces';
 
@@ -21,12 +21,9 @@ const columns: GridColDef[] = [
     // @ts-ignore
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <CardMedia
-          component='img'
-          className='fadeIn'
-          image={ row.images[0].url }
-          alt={ row.images[0].alt }
-        />
+        <Box sx={{ position: 'relative', width: '90%', aspectRatio: '1/1', margin: '0 auto' }}>
+          <MyImage src={ row.images[0].url } alt={ row.images[0].alt } width={ 1 } height={ 1 } layout='responsive' sm />
+        </Box>
       )
     },
     sortable: false,
@@ -180,6 +177,7 @@ const newProductInitialState: IProduct = {
   sold: 0,
   slug: '/',
   isAble: true,
+  createdAt: (() => Date.now())()
 }
 
 const ProductosPage: NextPage<Props> = ({ products: P }) => {
@@ -259,7 +257,7 @@ const ProductosPage: NextPage<Props> = ({ products: P }) => {
           : <Typography variant='h2'>No se encontraron productos en la base de datos.</Typography>
       }
 
-      <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } products={ products } />
+      <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } />
 
     </MainLayout>
   )

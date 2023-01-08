@@ -74,12 +74,12 @@ const TypePage: NextPage<Props> = ({ products }) => {
 
         <Box className='fadeIn' display='flex' justifyContent='space-evenly' sx={{ my: 2 }}>
             {
-                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` } rel='nofollow' shallow><Button color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
+                TagsArray.map(tag => <NextLink key={ tag } href={ `/tienda/categoria?tipo=${ tag }` } rel='nofollow' shallow><Button className='button low--padding' color='secondary' sx={{ fontSize: '.9rem' }}>{ formatText( tag ) }</Button></NextLink>)
             }
         </Box>
 
         <ContainerProductCategory type={ productType } products={ cats[router.query.tipo as CategoryKey] || [] } />
-        
+
         <>
           { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
             <Button className='fadeIn' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={ revalidate }>Revalidar esta página</Button>
