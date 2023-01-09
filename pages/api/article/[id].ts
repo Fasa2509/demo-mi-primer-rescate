@@ -31,9 +31,11 @@ const removeArticle = async ( req: NextApiRequest, res: NextApiResponse ) => {
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
         
+    const validRoles = ['superuser', 'admin'];
+        
         // @ts-ignore
-    if ( !session.user.isAdmin )
-        return res.status(400).json({ error: true, message: 'Acceso denegado' }); 
+    if ( !validRoles.includes( session.user.role ) )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' });    
 
     try {
         await db.connect();

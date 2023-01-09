@@ -52,9 +52,11 @@ const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+
+    const validRoles = ['superuser', 'admin'];
         
         // @ts-ignore
-    if ( !session.user.isAdmin )
+    if ( !validRoles.includes( session.user.role ) )
         return res.status(400).json({ error: true, message: 'Acceso denegado' });    
 
     if ( !title || fields.length < 1 ) return res.status(400).json({ error: true, message: 'Faltan campos para crear el artículo' });

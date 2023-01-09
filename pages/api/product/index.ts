@@ -46,9 +46,11 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
             
+    const validRoles = ['superuser', 'admin'];
+        
         // @ts-ignore
-    if ( !session.user.isAdmin )
-        return res.status(400).json({ error: true, message: 'Acceso denegado' }); 
+    if ( !validRoles.includes( session.user.role ) )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' });    
 
     try {
         await db.connect();
@@ -97,6 +99,17 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
     const { name = '', description = '', images = [], price = 0, discount = 0, inStock, tags = [], unique: unica = undefined } = req.body;
     const { unique = 0, S = 0, M = 0, L = 0, XL = 0, XXL = 0, XXXL = 0 } = inStock;
 
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+
+    const validRoles = ['superuser', 'admin'];
+        
+        // @ts-ignore
+    if ( !validRoles.includes( session.user.role ) )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' });    
+
     if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
     if ( !name || !description || price === 0 || discount > 50 || discount < 0 || unica === undefined ) return res.status(400).json({ error: true, message: 'La información no es válida' });
@@ -106,7 +119,7 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
     if ( images.length < 2 || images.length > 4 ) return res.status(400).json({ error: true, message: 'Mínimo 2 imágenes y máximo 4' });
 
     let { unique: u, ...tallas } = inStock;
-    // if ( unica && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
+    
     
     try {
         await db.connect();

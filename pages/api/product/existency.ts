@@ -92,6 +92,12 @@ const updateDolarPrice = async ( req: NextApiRequest, res: NextApiResponse ) => 
 
     if ( price === 0 ) return res.status(400).json({ error: true, message: 'El valor no es válido' });
 
+    const validRoles = ['superuser', 'admin'];
+        
+        // @ts-ignore
+    if ( !validRoles.includes( session.user.role ) )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' });
+
     try {
         await db.connect();
 

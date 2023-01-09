@@ -2,6 +2,7 @@ import { FC, FormEvent, useContext, useRef, useState } from 'react';
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { isBefore } from 'date-fns';
+import Compressor from 'compressorjs';
 
 import { dbArticles, dbImages } from '../../database';
 import { ScrollContext } from '../../context';
@@ -182,19 +183,64 @@ export const CustomForm: FC = () => {
             || width < 1 || height < 1 )
             return enqueueSnackbar('La dimensión establecida no es válida', { variant: 'info' });
 
-        if ( imagenRef.current.files[0].size / ( 1024 * 1024 ) > 5 )
-            return enqueueSnackbar('¡La imagen pesa mucho! Intenta comprimirla', { variant: 'warning' });
+        if ( imagenRef.current.files[0].size / ( 1024 * 1024 ) > 4 ) {
+            let key = enqueueSnackbar('La imagen pesa más de 4mb así que será comprimida, ¿continuar?', {
+                variant: 'info',
+                autoHideDuration: 15000,
+                action: ConfirmNotificationButtons,
+            });
+    
+            const confirm = await PromiseConfirmHelper( key, 15000 );
+    
+            if ( !confirm ) return;
+
+            new Compressor(imagenRef.current.files[0], {
+                quality: 0.8,
+                success: async ( compressedImage ) => {
+                    setIsLoading( true );
+                    const res = await dbImages.uploadImageToS3( compressedImage );
+                    setIsLoading( false );
+
+                    enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+                    !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
+            
+                    if ( !res.error && res.imgUrl ) {
+                        if ( fields.length === 0 || fields.at(-1)?.type !== 'imagen' ) {
+                            setFields([...fields, { type: 'imagen', content: '', content_: '', images: [{ url: res.imgUrl, alt: getImageNameFromUrl( imagenRef.current!.files![0].name ), width, height }] }]);
+                        } else {
+                            setFields(fields.map(( field, index ) => {
+                                if ( index < fields.length - 1 ) return field;
+            
+                                return {
+                                    ...field,
+                                    images: [
+                                        ...field.images,
+                                        { url: res.imgUrl || '', alt: getImageNameFromUrl( imagenRef.current!.files![0].name ), width, height }
+                                    ]
+                                }
+                            }))
+                        }
+                    }
+                },
+                error: () => {
+                    setIsLoading( false );
+                    enqueueSnackbar('Ocurrió un error procesando la imagen', { variant: 'error' });
+                }
+            });
+
+            return;
+        }
 
         setIsLoading( true );
-        const res = await dbImages.uploadImageToS3(imagenRef.current.files[0]);
+        const res = await dbImages.uploadImageToS3( imagenRef.current!.files[0] );
         setIsLoading( false );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
         !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
-
+            
         if ( !res.error && res.imgUrl ) {
             if ( fields.length === 0 || fields.at(-1)?.type !== 'imagen' ) {
-                setFields([...fields, { type: 'imagen', content: '', content_: '', images: [{ url: res.imgUrl, alt: getImageNameFromUrl( imagenRef.current.files[0].name ), width, height }] }]);
+                setFields([...fields, { type: 'imagen', content: '', content_: '', images: [{ url: res.imgUrl, alt: getImageNameFromUrl( imagenRef.current!.files![0].name ), width, height }] }]);
             } else {
                 setFields(fields.map(( field, index ) => {
                     if ( index < fields.length - 1 ) return field;

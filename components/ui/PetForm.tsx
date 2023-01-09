@@ -1,6 +1,7 @@
 import { FC, useContext, useRef, useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
+import Compressor from 'compressorjs';
 
 import { dbImages, dbPets } from "../../database";
 import { PetType } from "../../interfaces";
@@ -57,9 +58,37 @@ export const PetForm: FC<Props> = ({ pet }) => {
     const requestUploadObject = async () => {
         if ( !imageRef.current || !imageRef.current.files || !imageRef.current.files[0] )
             return enqueueSnackbar('Aún no has seleccionado ninguna imagen', { variant: 'info' });
+            
+        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 4 ) {
+            let key = enqueueSnackbar('La imagen pesa más de 4mb así que será comprimida, ¿continuar?', {
+                variant: 'info',
+                autoHideDuration: 15000,
+                action: ConfirmNotificationButtons,
+            });
+    
+            const confirm = await PromiseConfirmHelper( key, 15000 );
+    
+            if ( !confirm ) return;
 
-        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 5 )
-            return enqueueSnackbar('¡La imagen pesa mucho! Intenta comprimirla', { variant: 'warning' });
+            new Compressor(imageRef.current.files[0], {
+                quality: 0.8,
+                success: async ( compressedImage ) => {
+                    setIsLoading( true );
+                    const res = await dbImages.uploadImageToS3( compressedImage );
+                    setIsLoading( false );
+            
+                    enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+                    !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
+                    res.imgUrl && setImgUrl( res.imgUrl );
+                },
+                error: () => {
+                    setIsLoading( false );
+                    enqueueSnackbar('Ocurrió un error procesando la imagen', { variant: 'error' });
+                }
+            });
+
+            return;
+        }
 
         setIsLoading( true );
         const res = await dbImages.uploadImageToS3(imageRef.current.files[0]);

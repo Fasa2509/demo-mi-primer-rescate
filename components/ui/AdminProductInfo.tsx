@@ -1,5 +1,6 @@
 import { Dispatch, FC, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Button, Checkbox, Chip, Link, TextField, Typography } from '@mui/material';
+import Compressor from 'compressorjs';
 
 import { IProduct, Tags, TagsArray } from '../../interfaces';
 import { ConfirmNotificationButtons, format, getImageKeyFromUrl, getImageNameFromUrl, PromiseConfirmHelper } from '../../utils';
@@ -228,8 +229,40 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
         if ( form.images.length >= 4 ) return enqueueSnackbar('¡Ya hay muchas imágenes!', { variant: 'info' });
 
-        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 5 )
-            return enqueueSnackbar('¡La imagen pesa mucho! Intenta comprimirla', { variant: 'warning' });
+        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 0.1 ) {
+            let key = enqueueSnackbar('La imagen pesa más de 4mb así que será comprimida, ¿continuar?', {
+                variant: 'info',
+                autoHideDuration: 15000,
+                action: ConfirmNotificationButtons,
+            });
+    
+            const confirm = await PromiseConfirmHelper( key, 15000 );
+    
+            if ( !confirm ) return;
+
+            new Compressor(imageRef.current.files[0], {
+                quality: 0.8,
+                success: async ( compressedImage ) => {
+                    setIsLoading( true );
+                    const res = await dbImages.uploadImageToS3( compressedImage );
+                    setIsLoading( false );
+            
+                    enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+                    !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
+            
+                    ( !res.error && res.imgUrl ) && setForm({
+                        ...form,
+                        images: [...form.images, { url: res.imgUrl, alt: getImageNameFromUrl( res.imgUrl ), width: 400, height: 400 }]
+                    });
+                },
+                error: () => {
+                    setIsLoading( false );
+                    enqueueSnackbar('Ocurrió un error procesando la imagen', { variant: 'error' });
+                }
+            });
+
+            return;
+        }
 
         setIsLoading( true );
         const res = await dbImages.uploadImageToS3(imageRef.current.files[0]);

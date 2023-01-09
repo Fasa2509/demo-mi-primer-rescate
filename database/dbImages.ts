@@ -1,10 +1,11 @@
 import axios from "axios";
 import { mprApi } from "../mprApi";
 
-export const uploadImageToS3 = async ( file: File ): Promise<{ error: boolean; message: string; imgUrl?: string; }> => {
+export const uploadImageToS3 = async ( file: File | Blob ): Promise<{ error: boolean; message: string; imgUrl?: string; }> => {
 
     try {
         const { data } = await mprApi.post('/s3', {
+            // @ts-ignore
             rscname: file.name,
         });
 
