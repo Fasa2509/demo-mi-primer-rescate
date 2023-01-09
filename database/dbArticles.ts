@@ -74,7 +74,7 @@ export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<
 export const removeArticle = async ( id: string ): Promise<{ error: boolean; message: string; }> => {
 
     try {
-        const { data } = await mprApi.delete(`/article?id=${ id }`);
+        const { data } = await mprApi.delete(`/article/${ id }`);
 
         return data;
     } catch( error ) {

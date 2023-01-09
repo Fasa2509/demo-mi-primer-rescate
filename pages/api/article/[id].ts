@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { isValidObjectId } from 'mongoose';
 import { db } from '../../../database';
 import { Article } from '../../../models';
+import { unstable_getServerSession } from 'next-auth';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 
 type Data =
 { error: boolean; message: string }
@@ -23,6 +25,15 @@ const removeArticle = async ( req: NextApiRequest, res: NextApiResponse ) => {
     const { id: _id = '' } = req.query;
 
     if ( !_id || !isValidObjectId( _id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
+
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+        
+        // @ts-ignore
+    if ( !session.user.isAdmin )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' }); 
 
     try {
         await db.connect();

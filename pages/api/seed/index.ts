@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { unstable_getServerSession } from 'next-auth';
 import { db } from '../../../database';
 import { allProducts, adoptionPets, otherPets } from '../../../interfaces';
 import { Pet, Product } from '../../../models';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 
 type Data =
 | { error: boolean; message: string }
@@ -26,6 +28,15 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 const updateProducts = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     const { data } = req.query;
+
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+        
+        // @ts-ignore
+    if ( !session.user.isAdmin )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' }); 
 
     try {
         await db.connect();

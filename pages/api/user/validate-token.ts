@@ -35,20 +35,20 @@ const checkJWT = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     let userId = '';
 
     try {
-        userId = await jwt.isValidToken( token )
+        userId = await jwt.isValidToken( token );
     } catch( error ) {
-        return res.status(401).json({ message: 'El token de autorizacion no es valido' })
+        return res.status(401).json({ message: 'El token de autorizacion no es valido' });
     }
 
-    await db.connect()
+    await db.connect();
 
-    const user = await User.findById( userId ).lean()
+    const user = await User.findById( userId ).lean();
 
-    await db.disconnect()
+    await db.disconnect();
 
-    if ( !user ) return res.status(400).json({ message: 'Ocurrio un error buscando el usuario' })
+    if ( !user ) return res.status(400).json({ message: 'Ocurrio un error buscando el usuario' });
 
-    const { _id, email, role, name } = user
+    const { _id, email, role, name } = user;
 
     return res.status(200).json({
         token: jwt.signToken( _id, email ),

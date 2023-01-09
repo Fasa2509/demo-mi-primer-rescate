@@ -1,5 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { unstable_getServerSession } from 'next-auth';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 import { db } from '../../../database';
 import { Paid } from '../../../interfaces';
 import { Order } from '../../../models';
@@ -54,6 +56,15 @@ const updateOrderPaid = async ( req: NextApiRequest, res: NextApiResponse ) => {
     const { id = '', status = '' } = req.query;
 
     if ( !id || !isValidObjectId( id ) || !status ) return res.status(400).json({ error: true, message: 'La información está incompleta' });
+
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+        
+        // @ts-ignore
+    if ( !session.user.isAdmin )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' }); 
 
     try {
         await db.connect();

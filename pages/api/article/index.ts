@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { unstable_getServerSession } from 'next-auth';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 import nodemailer from 'nodemailer';
 import { db } from '../../../database';
 import { Article, User } from '../../../models';
@@ -38,13 +40,22 @@ const getMoreArticles = async ( req: NextApiRequest, res: NextApiResponse) => {
     } catch( error ) {
         console.log( error );
         await db.disconnect();
-        return res.status(400).json({ error: true, message: 'Ocurrió un error en la DB' });
+        return res.status(400).json({ error: true, message: 'Ocurrió un error buscando los artículos' });
     }
 
 }
 
 const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const { title = '', fields = [] } = req.body;
+
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+        
+        // @ts-ignore
+    if ( !session.user.isAdmin )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' });    
 
     if ( !title || fields.length < 1 ) return res.status(400).json({ error: true, message: 'Faltan campos para crear el artículo' });
 
@@ -83,7 +94,7 @@ const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
             <p>¡Hola! Hay novedades en nuestra página, ¡ven a verlas ya! 🐱🐶</p>
             <p>Acabamos de publicar un nuevo artículo, ${ title }, para mantenerte al día sobre lo que hacemos en nuestra fundación, no te lo pierdas.</p>
             <br />
-            <a href='${ process.env.NEXTAUTH_URL }/' target='_blank' rel='noreferrer'>Ven a ver qué hay de nuevo</a>
+            <a href='${ process.env.NEXTAUTH_URL }' target='_blank' rel='noreferrer'>Ven a ver qué hay de nuevo</a>
             `, // html body
         });
         

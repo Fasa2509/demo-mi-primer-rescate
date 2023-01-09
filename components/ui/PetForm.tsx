@@ -6,7 +6,7 @@ import { dbImages, dbPets } from "../../database";
 import { PetType } from "../../interfaces";
 import { AuthContext, ScrollContext } from "../../context";
 import { MyImage } from "../cards";
-import { getImageKeyFromUrl, getImageNameFromUrl } from "../../utils";
+import { ConfirmNotificationButtons, getImageKeyFromUrl, getImageNameFromUrl, PromiseConfirmHelper } from "../../utils";
 import styles from './Form.module.css';
 
 interface Props {
@@ -37,6 +37,16 @@ export const PetForm: FC<Props> = ({ pet }) => {
         if ( name.length < 2 ) return enqueueSnackbar('El nombre es muy corto', { variant: 'info' });
         if ( description.length < 10 ) return enqueueSnackbar('La descripción es muy corta', { variant: 'info' });
 
+        let key = enqueueSnackbar('¿Quieres publicar esta mascota?', {
+            variant: 'info',
+            autoHideDuration: 15000,
+            action: ConfirmNotificationButtons,
+        });
+
+        const confirm = await PromiseConfirmHelper( key, 15000 );
+
+        if ( !confirm ) return;
+
         setIsLoading( true );
         const res = await dbPets.createNewPet({ name, description, images: [imgUrl], type: pet });
         setIsLoading( false );
@@ -47,6 +57,9 @@ export const PetForm: FC<Props> = ({ pet }) => {
     const requestUploadObject = async () => {
         if ( !imageRef.current || !imageRef.current.files || !imageRef.current.files[0] )
             return enqueueSnackbar('Aún no has seleccionado ninguna imagen', { variant: 'info' });
+
+        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 5 )
+            return enqueueSnackbar('¡La imagen pesa mucho! Intenta comprimirla', { variant: 'warning' });
 
         setIsLoading( true );
         const res = await dbImages.uploadImageToS3(imageRef.current.files[0]);
@@ -59,6 +72,16 @@ export const PetForm: FC<Props> = ({ pet }) => {
 
     const requestDeleteObject = async () => {
         if ( !imgUrl ) return enqueueSnackbar('No hay imagen', { variant: 'info' });
+
+        let key = enqueueSnackbar('¿Quieres eliminar la imagen?', {
+            variant: 'info',
+            autoHideDuration: 15000,
+            action: ConfirmNotificationButtons,
+        });
+    
+        const confirm = await PromiseConfirmHelper( key, 15000 );
+    
+        if ( !confirm ) return;
 
         setIsLoading( true );
         const res = await dbImages.deleteImageFromS3( getImageKeyFromUrl( imgUrl ) );

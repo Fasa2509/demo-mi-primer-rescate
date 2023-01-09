@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { unstable_getServerSession } from 'next-auth';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 import nodemailer from 'nodemailer';
-import { isValidObjectId } from 'mongoose';
 import { db } from '../../../database';
 import { Product, User } from '../../../models';
 
@@ -30,6 +31,15 @@ const applyDiscountToProducts = async ( req: NextApiRequest, res: NextApiRespons
     discount /= 100;
 
     const validTags = ['accesorios', 'consumibles', 'ropa', 'útil', 'todos'];
+
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+        
+        // @ts-ignore
+    if ( !session.user.isAdmin )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' }); 
 
     try {
         await db.connect();

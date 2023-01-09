@@ -80,7 +80,7 @@
     }
 }
 
-@media screen and (max-width: 576px) {    
+@media screen and (max-width: 576px) {
     .scroll__button {
         width: 4rem;
         height: 4rem;

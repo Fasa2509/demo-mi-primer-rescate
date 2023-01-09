@@ -17,9 +17,10 @@ interface Props {
       duration?: number;
     };
     layout?: 'intrinsic' | 'responsive';
+    objectFit?: 'contain' | 'cover';
 }
 //  display: 'block', width: '100%', height: '100%',
-export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic' }) => {
+export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic', objectFit }) => {
 
   return (
     <div>
@@ -27,7 +28,7 @@ export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic' 
         {
           images.map((fadeImage, index) => (
             <div style={{ display: layout !== 'responsive' ? 'flex' : 'block', justifyContent: 'center', alignItems: 'center' }} key={index}>
-              <MyImage src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } />  
+              <MyImage src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } objectFit={ objectFit } />  
             </div>
         ))}
       </Carousel>

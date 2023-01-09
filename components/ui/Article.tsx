@@ -1,12 +1,12 @@
 import { FC, useContext } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useSnackbar } from "notistack";
 
 import { ScrollContext } from "../../context";
-import { dbArticles } from "../../database";
+import { dbArticles, dbImages } from "../../database";
 import { mprRevalidatePage } from '../../mprApi';
 import { ArticleField } from "./ArticleField";
-import { ConfirmNotificationButtons, getDistanceToNow, PromiseConfirmHelper } from "../../utils";
+import { ConfirmNotificationButtons, getDistanceToNow, getImageKeyFromUrl, PromiseConfirmHelper } from "../../utils";
 import { IArticle } from "../../interfaces";
 import styles from './Article.module.css'
 
@@ -30,7 +30,16 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
     if ( !confirm ) return;
     
     setIsLoading( true );
+
+    const imgKeys = article.fields
+      .filter(( f ) => f.type === 'imagen')
+      .map(( field ) => field.images.filter(( img ) => /amazonaws/.test( img.url )).map(( f ) => getImageKeyFromUrl( f.url )))
+      .flat();
+
+    await Promise.all(imgKeys.map(( key ) => dbImages.deleteImageFromS3( key )));
+
     const res = await dbArticles.removeArticle( article._id );
+    
     enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' });
     
     if ( !res.error ) {
@@ -40,6 +49,7 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
         enqueueSnackbar(revRes.message || 'Error', { variant: !revRes.error ? 'info' : 'error' });
       };
     }
+
     setIsLoading( false );
     return;
   }

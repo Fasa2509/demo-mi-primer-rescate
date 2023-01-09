@@ -64,7 +64,7 @@ export const PetChangeForm = () => {
         } else {
 
             if ( isLoading ) return;
-            if ( !images[imgIndex] ) return enqueueSnackbar('No hay imagen en esa posición', { variant: 'info' });
+            if ( !images[imgIndex] ) return;
 
             let key = enqueueSnackbar('¿Quieres eliminar esta imagen?', {
                 variant: 'info',
@@ -94,6 +94,9 @@ export const PetChangeForm = () => {
 
         if ( images.filter(img => img).length >= 4 ) return enqueueSnackbar('Ya hay muchas imágenes', { variant: 'info' });
 
+        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 4 )
+            return enqueueSnackbar('¡Parece que la imagen pesa mucho! Intenta comprimirla', { variant: 'info' });
+
         setIsLoading( true );
         const res = await dbImages.uploadImageToS3(imageRef.current.files[0]);
         setIsLoading( false );
@@ -118,6 +121,8 @@ export const PetChangeForm = () => {
 
             <input ref={ imageRef } className={ styles.no__display } accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={ requestUpload } />
 
+            <p>¡Las imágenes de tu mascota deben ser preferiblemente cuadradas para que se muestren correctamente!</p>
+
             <Box display='flex' flexWrap='wrap' gap='1rem' sx={{ justifyContent: { xs: 'center', md: 'space-between' } }}>
                 {
                     images.map(( img, index ) =>
@@ -126,7 +131,7 @@ export const PetChangeForm = () => {
                                 className={ styles.pet__box }
                                 onClick={ () => isLoading || imageRef.current!.click() }
                             >
-                                { images[index] && <MyImage className='fadeIn' src={ img } alt={ img } width={ 200 } height={ 200 } /> }
+                                { images[index] && <MyImage className='fadeIn' src={ img } alt={ img } width={ 200 } height={ 200 } objectFit='cover' /> }
                             </Box>
                             <Button color='secondary' sx={{ borderRadius: 0, height: 30 }} onClick={ () => handleAddOrRemoveImage( -1, index ) }>Remover</Button>
                         </Box>

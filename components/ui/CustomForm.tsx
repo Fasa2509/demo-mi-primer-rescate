@@ -77,6 +77,16 @@ export const CustomForm: FC = () => {
 
         if ( isLoading ) return;
 
+        let key = enqueueSnackbar('¿Quieres eliminar la última imagen?', {
+            variant: 'info',
+            autoHideDuration: 15000,
+            action: ConfirmNotificationButtons,
+        });
+
+        const confirm = await PromiseConfirmHelper( key, 15000 );
+
+        if ( !confirm ) return;
+
         const imgKey = getImageKeyFromUrl( fields.at(-1)!.images.at(-1)!.url );
 
         setIsLoading( true );
@@ -99,6 +109,9 @@ export const CustomForm: FC = () => {
 
     const cleanArticle = async () => {
         if ( fields.length === 0 ) return;
+
+        if ( fields.some(( field ) => field.type === 'imagen') )
+            return enqueueSnackbar('Elimina las imágenes antes de limpiar el artículo', { variant: 'info' });
 
         let key = enqueueSnackbar('¿Segur@ que quieres vaciar el formulario?', {
             variant: 'info',
@@ -168,6 +181,9 @@ export const CustomForm: FC = () => {
         if ( isNaN(width) || isNaN(height)
             || width < 1 || height < 1 )
             return enqueueSnackbar('La dimensión establecida no es válida', { variant: 'info' });
+
+        if ( imagenRef.current.files[0].size / ( 1024 * 1024 ) > 5 )
+            return enqueueSnackbar('¡La imagen pesa mucho! Intenta comprimirla', { variant: 'warning' });
 
         setIsLoading( true );
         const res = await dbImages.uploadImageToS3(imagenRef.current.files[0]);

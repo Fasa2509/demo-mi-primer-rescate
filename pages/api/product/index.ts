@@ -1,5 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { unstable_getServerSession } from 'next-auth';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 import { db } from '../../../database';
 import { Product } from '../../../models';
 
@@ -38,6 +40,15 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
 
     if ( unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) )
         return res.status(400).json({ error: true, message: 'La cantidad de tallas no es válida' });
+
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+            
+        // @ts-ignore
+    if ( !session.user.isAdmin )
+        return res.status(400).json({ error: true, message: 'Acceso denegado' }); 
 
     try {
         await db.connect();

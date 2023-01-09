@@ -87,14 +87,17 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
 
     const handleSubmitProduct = async () => {
-        if ( !nameRef.current!.value.trim() || !descriptionRef.current!.value.trim() || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
-            return enqueueSnackbar('La información del producto está incompleta', { variant: 'warning' });
-
+        if ( /[^a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ()]/.test( nameRef.current!.value ) )
+            return enqueueSnackbar('El nombre no puede contener caracteres especiales', { variant: 'info' });
+            
+        if ( nameRef.current!.value.trim().length < 3 )
+            return enqueueSnackbar('El nombre es muy corto', { variant: 'info' });
+        
         if ( form.tags.length === 0 )
             return enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
-
-        if ( /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g.test( nameRef.current!.value ) )
-            return enqueueSnackbar('El nombre no puede contener caracteres especiales', { variant: 'info' });
+        
+        if ( !nameRef.current!.value.trim() || !descriptionRef.current!.value.trim() || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
+            return enqueueSnackbar('La información del producto está incompleta', { variant: 'warning' });
             
         let key = enqueueSnackbar(`¿Quieres ${ method === 'update' ? 'actualizar' : 'crear' } este producto?`, {
             variant: 'info',
@@ -193,6 +196,9 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
 
     const removeLastImage = async () => {
+        if ( isLoading ) return;
+        if ( form.images.length === 0 ) return;
+
         let key = enqueueSnackbar('¿Quieres eliminar la última imagen?', {
             variant: 'info',
             autoHideDuration: 15000,
@@ -202,9 +208,6 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
         const confirm = await PromiseConfirmHelper( key, 15000 );
 
         if ( !confirm ) return;
-
-        if ( isLoading ) return enqueueSnackbar('Pingg', { variant: 'warning' });
-        if ( form.images.length === 0 ) return;
 
         setIsLoading( true );
         const res = await dbImages.deleteImageFromS3( getImageKeyFromUrl( form.images.at(-1)!.url ) );
@@ -224,6 +227,9 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
             return enqueueSnackbar('Aún no has seleccionado ninguna imagen', { variant: 'info' });
 
         if ( form.images.length >= 4 ) return enqueueSnackbar('¡Ya hay muchas imágenes!', { variant: 'info' });
+
+        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 5 )
+            return enqueueSnackbar('¡La imagen pesa mucho! Intenta comprimirla', { variant: 'warning' });
 
         setIsLoading( true );
         const res = await dbImages.uploadImageToS3(imageRef.current.files[0]);

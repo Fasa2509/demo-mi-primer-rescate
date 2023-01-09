@@ -15,7 +15,7 @@ export const ChangeCard: FC<Props> = ({ pet, observe = false }) => {
   return (
     <Box className={ `${ styles.card__container }${ observe ? ` observe ${ styles.card__appear }` : '' }` }>
       <Box sx={{ borderRadius: '.5rem', overflow: 'hidden', alignSelf: 'flex-start' }}>
-        <SliderImages images={ pet.images.map(( img ) => ({ url: img, alt: pet.name, width: 500, height: 500 })) } options={{ indicators: false, cycleNavigation: false, animation: 'slide', interval: 12000 }} />
+        <SliderImages images={ pet.images.map(( img ) => ({ url: img, alt: pet.name, width: 500, height: 500 })) } options={{ indicators: false, cycleNavigation: false, animation: 'slide', interval: 12000 }} objectFit='cover' />
       </Box>
       <Box>
         <p className={ styles.pet__name }>{ pet.name }</p>

@@ -31,11 +31,6 @@ const getDolarPrice = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
         const dolarPrice = await Dolar.findOne({ price: { $gt: 0 } });
 
-        // if ( !dolarPrice ) {
-        //     await db.disconnect();
-        //     return res.status(400).json({ error: false, message: 'No se encontró ningún valor' });
-        // };
-
         await db.disconnect();
 
         return res.status(200).json( dolarPrice || { price: 1 } );
