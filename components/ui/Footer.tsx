@@ -34,7 +34,6 @@ export const Footer: FC = () => {
           setIsLoading( false );
           
           enqueueSnackbar(data.message, { variant: !data.error ? 'success' : 'error' });
-          !data.error && updateUserSub( true );
       } catch( error ) {
           setIsLoading( false );
           // @ts-ignore
