@@ -4,10 +4,10 @@ import { unstable_getServerSession } from "next-auth/next";
 import { LocalCafe } from "@mui/icons-material"
 import { nextAuthOptions } from "../../api/auth/[...nextauth]";
 import { dbAdoptions } from "../../../database";
-import { MainLayout, OrderInfo } from "../../../components";
+import { MainLayout } from "../../../components";
 import { IAdoption } from "../../../interfaces";
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import { AdminAdoptionInfo } from "../../../components/ui/AdminAdoptionInfo";
 
 interface Props {
@@ -59,6 +59,26 @@ const columns: GridColDef[] = [
     sortable: false,
     disableColumnMenu: true,
   },
+  {
+    field: 'checked',
+    headerName: 'Revisada',
+    renderCell: ({ row }: GridRenderCellParams) => {
+      return (
+        <Box>
+          <Chip
+            // @ts-ignore
+            color={ row.checked ? 'success' : 'warning' }
+            // @ts-ignore
+            label={ row.checked ? 'Revisada' : 'pendiente' }
+            sx={{ fontWeight: 500, color: '#fff' }}
+            variant='filled'
+          />
+        </Box>
+      )
+    },
+    disableColumnMenu: true,
+    width: 110
+  },
   { field: 'createdAt', headerName: 'Creada el', width: 150, disableColumnMenu: true },
 ]
 
@@ -102,20 +122,34 @@ const adoptionInitialState: IAdoption = {
   input27: true,
   input28: '',
   createdAt: 0,
+  checked: false,
 }
 
-const AdopcionesPage: NextPage<Props> = ({ adoptions }) => {
+const AdopcionesPage: NextPage<Props> = ({ adoptions: allAdoptions }) => {
 
+  const [adoptions, setAdoptions] = useState( allAdoptions );
   const [adoption, setAdoption] = useState( adoptionInitialState );
 
   const rows = adoptions.map(adoption => ({
     id: adoption._id,
     user: adoption.user,
     cachorro: adoption.cachorro,
+    checked: adoption.checked,
     createdAt: new Date( adoption.createdAt ).toLocaleDateString(),
     adoption,
     setAdoption,
   }));
+
+  const updateAdoption = ( id: string ) => {
+    setAdoptions(( prevState ) => prevState.map(( current ) => {
+        if ( current._id !== id ) return current;
+        return {
+          ...current,
+          checked: true,
+        }
+      })
+    )
+  }
 
   return (
     <MainLayout title='Adopciones' pageDescription='Información de las adopciones' titleIcon={ <LocalCafe color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
@@ -136,7 +170,7 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions }) => {
       }
 
       <>
-      { adoption._id && <AdminAdoptionInfo adoption={ adoption } /> }
+      { adoption._id && <AdminAdoptionInfo adoption={ adoption } updateAdoption={ updateAdoption } /> }
       </>
 
     </MainLayout>

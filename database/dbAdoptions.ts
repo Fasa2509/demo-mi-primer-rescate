@@ -36,6 +36,33 @@ export const createAdoption = async ( form: IAdoption ): Promise<{ error: boolea
 
 }
 
+export const checkAdoption = async ( _id: string ): Promise<{ error: boolean; message: string; }> => {
+
+    try {
+        const { data } = await mprApi.put('/adoption', {
+            _id
+        });
+
+        return data;
+    } catch( error ) {
+        console.log( error );
+
+        if ( axios.isAxiosError( error ) ) {
+            return {
+                error: true,
+                // @ts-ignore
+                message: error.response ? error.response.data.message : 'Ocurrió un error actualizando la adopción',
+            }
+        }
+
+        return {
+            error: true,
+            message: 'Error',
+        };
+    }
+
+}
+
 export const getAllAdoptions = async () => {
 
     try {

@@ -42,6 +42,7 @@ const adoptionSchema = new Schema({
     input26: { type: Boolean },
     input27: { type: Boolean },
     input28: { type: String },
+    checked: { type: Boolean, default: false },
     createdAt: { type: Number, default: () => Date.now() },
 })
 

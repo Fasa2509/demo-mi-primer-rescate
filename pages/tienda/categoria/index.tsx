@@ -63,7 +63,7 @@ const TypePage: NextPage<Props> = ({ products }) => {
     }
 
   return (
-    <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial la fundación Mi Primer Rescate. Encuentra productos por categoría para tu mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda' url='/tienda/categoria'>
+    <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial la fundación Mi Primer Rescate. Encuentra distintos productos y filtra por categoría para encontrar aquel que más se adapte a tu mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda' url='/tienda/categoria'>
 
         <Suspense fallback={ <Typography>Cargando...</Typography> }>
             <ModalFull products={ products } />
@@ -98,7 +98,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
 
     return {
         props: {
-            products: products.reverse(),
+            products,
         },
         revalidate: 3600 * 12, // cada 24h
     }

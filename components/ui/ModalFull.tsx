@@ -85,7 +85,7 @@ export const ModalFull: FC<Props> = ({ products }) => {
             await navigator.share({
                 title: '¡Mira este producto en la tienda MPR!',
                 text: 'Visita la página de Mi Primer Rescate y mira sus productos',
-                url: `https://demo-mi-primer-rescate.vercel.app${ router.asPath }`,
+                url: `${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ router.asPath }`,
             });
         } catch( error ) {
             console.log( error )
@@ -161,10 +161,10 @@ export const ModalFull: FC<Props> = ({ products }) => {
 
                             <p className={ styles.share__title }>Comparte este producto</p>
                             <div className={ styles.share__container }>
-                                <Link href={ `https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app${ router.asPath }&t=¡Mira este producto en la tienda MPR!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <Link href={ `https://www.facebook.com/sharer.php?u=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ router.asPath }&t=¡Mira este producto en la tienda MPR!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
                                 <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
-                                <Link href={ `https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=https://demo-mi-primer-rescate.vercel.app${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
-                                <Link href={ `https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! https://demo-mi-primer-rescate.vercel.app${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <Link href={ `https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <Link href={ `https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! ${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
                             </div>
 
                         </CardContent>

@@ -80,15 +80,18 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
         })
         setUnica( thisProduct.inStock.unique > -1 );
 
-        nameRef.current!.value = thisProduct.name;
-        descriptionRef.current!.value = thisProduct.description;
+        if ( thisProduct._id ) {
+            nameRef.current!.value = thisProduct.name;
+            descriptionRef.current!.value = thisProduct.description;
+            imageRef.current!.files = null;
+        }
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [thisProduct]);
 
 
     const handleSubmitProduct = async () => {
-        if ( /[^a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ()]/.test( nameRef.current!.value ) )
+        if ( !(/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\(\) ]*$/.test( nameRef.current!.value )) )
             return enqueueSnackbar('El nombre no puede contener caracteres especiales', { variant: 'info' });
             
         if ( nameRef.current!.value.trim().length < 3 )
@@ -97,7 +100,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
         if ( form.tags.length === 0 )
             return enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
         
-        if ( !nameRef.current!.value.trim() || !descriptionRef.current!.value.trim() || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
+        if ( !descriptionRef.current!.value.trim() || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
             return enqueueSnackbar('La información del producto está incompleta', { variant: 'warning' });
             
         let key = enqueueSnackbar(`¿Quieres ${ method === 'update' ? 'actualizar' : 'crear' } este producto?`, {
@@ -131,6 +134,11 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                     
                     revalidations.forEach(res => enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' }));
                 }
+
+                setForm( newProductInitialState );
+                nameRef.current!.value = '';
+                descriptionRef.current!.value = '';
+                imageRef.current!.files = null;
             }
         } else {
             const res = await dbProducts.updateProductById(form._id, {
@@ -150,6 +158,12 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
                     revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error', { variant: !res.error ? 'info' : 'error' }))
                 }
+
+                setMethod( 'create' );
+                setForm( newProductInitialState );
+                nameRef.current!.value = '';
+                descriptionRef.current!.value = '';
+                imageRef.current!.files = null;
             }
         }
 
@@ -229,8 +243,8 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
         if ( form.images.length >= 4 ) return enqueueSnackbar('¡Ya hay muchas imágenes!', { variant: 'info' });
 
-        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 0.1 ) {
-            let key = enqueueSnackbar('La imagen pesa más de 4mb así que será comprimida, ¿continuar?', {
+        if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 4 ) {
+            let key = enqueueSnackbar('La imagen pesa más de 4Mb así que será comprimida, ¿continuar?', {
                 variant: 'info',
                 autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,
@@ -241,15 +255,16 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
             if ( !confirm ) return;
 
             new Compressor(imageRef.current.files[0], {
-                quality: 0.8,
+                quality: 0.9,
+                maxWidth: 700,
                 success: async ( compressedImage ) => {
                     setIsLoading( true );
                     const res = await dbImages.uploadImageToS3( compressedImage );
                     setIsLoading( false );
-            
+
                     enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
                     !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
-            
+
                     ( !res.error && res.imgUrl ) && setForm({
                         ...form,
                         images: [...form.images, { url: res.imgUrl, alt: getImageNameFromUrl( res.imgUrl ), width: 400, height: 400 }]
@@ -539,7 +554,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
           <Typography sx={{ cursor: 'pointer' }} onClick={ () => setRevalidatePage( !revalidatePage ) }>Revalidar páginas</Typography>
         </Box>
 
-        <Button color='secondary' sx={{ fontSize: '1rem' }} disabled={ isLoading } onClick={ handleSubmitProduct }>
+        <Button className='button' disabled={ isLoading } onClick={ handleSubmitProduct }>
             { ( method === 'create' ) ? 'Crear producto' : 'Actualizar producto' }
         </Button>
 

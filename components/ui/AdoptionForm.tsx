@@ -157,8 +157,6 @@ export const AdoptionForm: FC = () => {
             ...restForm,
         };
 
-        console.log( form );
-
         if ( !session || !session?.user ) return router.push('/auth?p=/adoptar');
 
         let key = enqueueSnackbar('¿Quieres enviar el formulario?', {

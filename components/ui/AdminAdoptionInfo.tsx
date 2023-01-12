@@ -1,16 +1,24 @@
-import { FC } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import { FC, useContext } from 'react';
+import { Box, Button, Divider, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
-import { formatText } from '../../utils'
+import { ScrollContext } from '../../context'
+import { ConfirmNotificationButtons, formatText, PromiseConfirmHelper } from '../../utils'
 import { IAdoption } from '../../interfaces';
+import { dbAdoptions } from '../../database';
 
 interface Props {
     adoption: IAdoption;
+    updateAdoption: ( id: string ) => void;
 }
 
-export const AdminAdoptionInfo: FC<Props> = ({ adoption }) => {
+export const AdminAdoptionInfo: FC<Props> = ({ adoption, updateAdoption }) => {
+
+    const { enqueueSnackbar } = useSnackbar();
+    const { setIsLoading } = useContext( ScrollContext );
 
     const {
+        _id,
         particular1,
         particular2,
         contact,
@@ -45,6 +53,27 @@ export const AdminAdoptionInfo: FC<Props> = ({ adoption }) => {
         input28,
         createdAt,
     } = adoption;
+
+    const checkPetition = async () => {
+        if ( !_id ) return;
+
+        let key = enqueueSnackbar('¿Quieres marcar la petición como revisada?', {
+            variant: 'info',
+            autoHideDuration: 10000,
+            action: ConfirmNotificationButtons,
+        });
+
+        const accepted = await PromiseConfirmHelper(key, 10000);
+
+        if ( !accepted ) return;
+
+        setIsLoading( true );
+        const res = await dbAdoptions.checkAdoption( _id );
+        setIsLoading( false );
+
+        enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        !res.error && updateAdoption( _id );
+    }
     
     return (
         <Box display='flex' flexDirection='column' gap='1.5rem' className='fadeIn' sx={{ boxShadow: '0 0 1rem -.7rem #333', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
@@ -279,6 +308,14 @@ export const AdminAdoptionInfo: FC<Props> = ({ adoption }) => {
                         <Typography>{ input28 }</Typography>
                     </Box>
                 </Box>
+            }
+
+            { adoption.checked
+                ? (
+                    <Typography textAlign='center'>Esta solicitud ya fue revisada</Typography>
+                ) : (
+                    <Button className='button' onClick={ checkPetition }>Marcar como revisada</Button>
+                )
             }
         </Box>
     )

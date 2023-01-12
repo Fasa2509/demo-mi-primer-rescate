@@ -14,10 +14,10 @@ interface Props {
 
 export const CartProductInfo: FC<Props> = ({ product }) => {
 
-    const [ currentValue, setCurrentValue ] = useState( product.quantity );
-    const { updateProductQuantity } = useContext( CartContext );
-
     const { name, image, price, discount, quantity, size, slug } = useMemo(() => product, [product]);
+    const { updateProductQuantity } = useContext( CartContext );
+    
+    const [ currentValue, setCurrentValue ] = useState( product.quantity );
 
     return (
     <Grid container spacing={ 1 } sx={{ display: 'grid', maxWidth: '100%', gridTemplateColumns: '160px 1fr', padding: '.5rem', borderRadius: '1rem', boxShadow: '4px 4px 3rem -2rem #888', border: 'thin solid #eaeaea' }}>

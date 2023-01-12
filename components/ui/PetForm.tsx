@@ -53,14 +53,21 @@ export const PetForm: FC<Props> = ({ pet }) => {
         setIsLoading( false );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        
+        if ( !res.error ) {
+            nameRef.current!.value = '';
+            descriptionRef.current!.value = '';
+            imageRef.current!.files = null;
+            setImgUrl('');
+        }
     }
 
     const requestUploadObject = async () => {
         if ( !imageRef.current || !imageRef.current.files || !imageRef.current.files[0] )
             return enqueueSnackbar('Aún no has seleccionado ninguna imagen', { variant: 'info' });
-            
+
         if ( imageRef.current.files[0].size / ( 1024 * 1024 ) > 4 ) {
-            let key = enqueueSnackbar('La imagen pesa más de 4mb así que será comprimida, ¿continuar?', {
+            let key = enqueueSnackbar('La imagen pesa más de 4Mb así que será comprimida, ¿continuar?', {
                 variant: 'info',
                 autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,
@@ -71,7 +78,8 @@ export const PetForm: FC<Props> = ({ pet }) => {
             if ( !confirm ) return;
 
             new Compressor(imageRef.current.files[0], {
-                quality: 0.8,
+                quality: 0.9,
+                maxWidth: 650,
                 success: async ( compressedImage ) => {
                     setIsLoading( true );
                     const res = await dbImages.uploadImageToS3( compressedImage );

@@ -49,18 +49,12 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
         <title>{ finalTitle }</title>
 
         <meta name="description" content={ pageDescription } />
-
-        {/* <meta name="og:title" content={ title } />
-        <meta name="og:site_name" content='Blog Mi Primer Rescate' />
-        <meta name="og:description" content={ pageDescription } />
-        <meta name="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
-        <meta name="og:url" content='https://demo-mi-primer-rescate.vercel.app/' /> */}
         
         <meta property="og:title" content={ title } />
         <meta property="og:site_name" content='Blog Mi Primer Rescate' />
         <meta property="og:description" content={ pageDescription } />
-        <meta property="og:image" content={ 'https://demo-mi-primer-rescate.vercel.app/Logo-Redes.png' } />
-        <meta property="og:url" content='https://demo-mi-primer-rescate.vercel.app/' />
+        <meta property="og:image" content={ `${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/Logo-Redes.png` } />
+        <meta property="og:url" content={ process.env.NEXT_PUBLIC_DOMAIN_NAME } />
       </Head>
 
       <Header />

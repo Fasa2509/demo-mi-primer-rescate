@@ -26,7 +26,6 @@ export const Footer: FC = () => {
   const handleClick = async () => {
       
       if ( !user ) return enqueueSnackbar('Inicia sesión para suscribirte a MPR', { variant: 'warning' });
-      if ( user.isSubscribed ) return enqueueSnackbar('¡Ya estás suscrit@ a nuestra fundación!', { variant: 'warning' });
       if ( !validations.isValidEmail( user.email ) ) return enqueueSnackbar('El correo no es válido', { variant: 'warning' });
       
       try {
@@ -35,6 +34,7 @@ export const Footer: FC = () => {
           setIsLoading( false );
           
           enqueueSnackbar(data.message, { variant: !data.error ? 'success' : 'error' });
+          !data.error && updateUserSub( true );
       } catch( error ) {
           setIsLoading( false );
           // @ts-ignore
@@ -47,7 +47,7 @@ export const Footer: FC = () => {
       await navigator.share({
           title: '¡Visita la página de Mi Primer Rescate!',
           text: 'Mira su trabajo y participa en sus eventos',
-          url: `https://demo-mi-primer-rescate.vercel.app`,
+          url: `${ process.env.NEXT_PUBLIC_DOMAIN_NAME }`,
       });
     } catch( error ) {
         enqueueSnackbar('No se pudo compartir', { variant: 'warning' });
@@ -69,10 +69,10 @@ export const Footer: FC = () => {
       <Box sx={{ width: '96%', margin: '.5rem auto .7rem' }}>
         <p className={ styles.p }>¡Comparte nuestro contenido para llegar a más personas!</p>
         <div className={ styles.share__container }>
-          <Link href='https://www.facebook.com/sharer.php?u=https://demo-mi-primer-rescate.vercel.app&t=¡Visita la página de Mi Primer Rescate!' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href={ `https://www.facebook.com/sharer.php?u=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }&t=¡Visita la página de Mi Primer Rescate!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
           <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
-          <Link href='https://twitter.com/intent/tweet?text=¡Visita la página de Mi Primer Rescate!&url=https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
-          <Link href='https://api.whatsapp.com/send?text=¡Visita la página de Mi Primer Rescate! https://demo-mi-primer-rescate.vercel.app' target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href={ `https://twitter.com/intent/tweet?text=¡Visita la página de Mi Primer Rescate!&url=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href={ `https://api.whatsapp.com/send?text=¡Visita la página de Mi Primer Rescate! ${ process.env.NEXT_PUBLIC_DOMAIN_NAME }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
         </div>
       </Box>
       

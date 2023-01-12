@@ -33,6 +33,7 @@ export interface IAdoption {
     input26: boolean;
     input27: boolean;
     input28: string;
+    checked: boolean;
     createdAt: number;
 }
 

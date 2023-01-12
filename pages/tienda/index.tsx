@@ -30,7 +30,7 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
   const { user: session } = useContext( AuthContext );
   
   return (
-    <ShopLayout title={ 'Tienda Virtual' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos para tu mejor amig@ y mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/tienda'>
+    <ShopLayout title={ 'Tienda Virtual' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos como alimentos y ropa para ti y tu mejor amig@ y mascota. ¡No pierdas el tiempo!' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/tienda'>
         
         <Suspense fallback={ <></> }>
           <ModalFull products={ products } />

@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
-import { ConfirmationNumber } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import PaymentIcon from '@mui/icons-material/Payment';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import ConfirmationNumber from '@mui/icons-material/ConfirmationNumber';
 
 import { nextAuthOptions } from '../../api/auth/[...nextauth]';
 import { MainLayout, OrderInfo } from '../../../components';
-import { Box, Button, Chip, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
 import { dbOrders } from '../../../database';
 import { IOrder, SpanishOrderStatus, StatusColors } from '../../../interfaces';
 import { format } from '../../../utils';
@@ -140,9 +143,41 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
   return (
     <MainLayout title='Órdenes' pageDescription='Información de las órdenes' titleIcon={ <ConfirmationNumber color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
 
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '1rem', alignItems: { xs: 'center', sm: 'stretch' }, flexDirection: { xs: 'column', sm: 'row', mt: 1.5 } }}>
+        <Box sx={{ display: 'flex', gap: '.5rem', minWidth: '220px', borderRadius: '1rem', backgroundColor: '#fff', boxShadow: '0 5px .5rem -.3rem #666', padding: '.8rem' }}>
+          <Box display='flex' alignItems='center'>
+            <LocalShippingIcon sx={{ fontSize: '2.6rem', color: 'var(--secondary-color-1)' }} />
+          </Box>
+          <Box>
+            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'send' ? 1 : 0, 0) } <span style={{ fontSize: '1.5rem' }}>órdenes</span></Typography>
+            <Typography variant='caption' sx={{ fontSize: '1rem' }}>han sido enviadas</Typography>
+          </Box>
+        </Box>
+
+        <Box display='flex' sx={{ gap: '.5rem', minWidth: '220px', borderRadius: '1rem', backgroundColor: '#fff', boxShadow: '0 5px .5rem -.3rem #666', padding: '.8rem' }}>
+          <Box display='flex' alignItems='center'>
+            <PaymentIcon color='success' sx={{ fontSize: '2.6rem' }} />
+          </Box>
+          <Box>
+            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) } <span style={{ fontSize: '1.5rem' }}>órden{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) === 1 ? '' : 'es' }</span></Typography>
+            <Typography sx={{ fontSize: '1rem' }}>pagada{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) === 1 ? '' : 's' } por enviar</Typography>
+          </Box>
+        </Box>
+
+        <Box display='flex' sx={{ gap: '.5rem', minWidth: '220px', borderRadius: '1rem', backgroundColor: '#fff', boxShadow: '0 5px .5rem -.3rem #666', padding: '.8rem' }}>
+          <Box display='flex' alignItems='center'>
+            <WarningAmberIcon color='warning' sx={{ fontSize: '2.6rem' }} />
+          </Box>
+          <Box>
+            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) } <span style={{ fontSize: '1.5rem' }}>órden{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 'es' }</span></Typography>
+            <Typography variant='caption' sx={{ fontSize: '1rem' }}>está{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 'n' } pendiente{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 's' }</Typography>
+          </Box>
+        </Box>
+      </Box>
+
       {
         orders.length > 0
-          ? <Grid container className='fadeIn' sx={{ backgroundColor: '#fafafa', borderRadius: '4px' }}>
+          ? <Grid container className='fadeIn' sx={{ backgroundColor: '#fafafa', borderRadius: '4px', mt: 2 }}>
               <Grid item xs={ 12 } sx={{ height: 660, width: '100%' }}>
                 <DataGrid
                     rows={ rows }

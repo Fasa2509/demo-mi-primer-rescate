@@ -1,6 +1,7 @@
 import { FormEvent, useContext, useRef, useState } from "react";
 import { Box, Button, Input, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
+import Compressor from 'compressorjs';
 
 import { dbImages, dbPets } from "../../database";
 import { AuthContext, ScrollContext } from "../../context";
@@ -51,6 +52,13 @@ export const PetChangeForm = () => {
         setIsLoading( false );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+
+        if ( !res.error ) {
+            name.current!.value = '';
+            description.current!.value = '';
+            imageRef.current!.files = null;
+            setImages(['', '', '', '']);
+        }
     }
 
     const handleAddOrRemoveImage = async ( n: 1 | -1, imgIndex: number, imgUrl?: string ) => {
@@ -98,12 +106,22 @@ export const PetChangeForm = () => {
             return enqueueSnackbar('¡Parece que la imagen pesa mucho! Intenta comprimirla', { variant: 'info' });
 
         setIsLoading( true );
-        const res = await dbImages.uploadImageToS3(imageRef.current.files[0]);
-        setIsLoading( false );
+        new Compressor(imageRef.current!.files[0], {
+            quality: 0.95,
+            maxWidth: 600,
+            success: async ( compressedImage ) => {
+                const res = await dbImages.uploadImageToS3( compressedImage );
 
-        enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
-        !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
-        res.imgUrl && handleAddOrRemoveImage(1, 0, res.imgUrl);
+                enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+                !res.error && !res.imgUrl && enqueueSnackbar('No hay URL de la imagen', { variant: 'info' });
+                res.imgUrl && handleAddOrRemoveImage(1, 0, res.imgUrl);
+                setIsLoading( false );
+            },
+            error: () => {
+                enqueueSnackbar('Ocurrió un error procesando la imagen', { variant: 'error' });
+                setIsLoading( false );
+            }
+        })
     }
 
     return (

@@ -84,7 +84,7 @@ export const CustomForm: FC = () => {
             action: ConfirmNotificationButtons,
         });
 
-        const confirm = await PromiseConfirmHelper( key, 15000 );
+        const confirm: any = await PromiseConfirmHelper( key, 15000 );
 
         if ( !confirm ) return;
 
@@ -125,7 +125,17 @@ export const CustomForm: FC = () => {
         if ( !confirm ) return;
 
         setTitle('');
-        setFields([]);
+
+        if ( currentType === 'texto' ) textoRef.current!.value = '';
+
+        if ( currentType === 'link' ) {
+            linkRef.current!.value = '';
+            linkTextRef.current!.value = '';
+        }
+
+        if ( currentType === 'contador' ) contadorRef.current!.value = '';
+
+        if ( currentType === 'subtitulo' ) subtituloRef.current!.value = '';
 
         enqueueSnackbar('El artículo fue limpiado', { variant: 'info' });
     }
@@ -160,6 +170,7 @@ export const CustomForm: FC = () => {
             }
 
             setTitle('');
+            setCurrentType( 'texto' );
             setFields([]);
         }
 
@@ -183,8 +194,8 @@ export const CustomForm: FC = () => {
             || width < 1 || height < 1 )
             return enqueueSnackbar('La dimensión establecida no es válida', { variant: 'info' });
 
-        if ( imagenRef.current.files[0].size / ( 1024 * 1024 ) > 4 ) {
-            let key = enqueueSnackbar('La imagen pesa más de 4mb así que será comprimida, ¿continuar?', {
+        if ( imagenRef.current.files[0].size / ( 1024 * 1024 ) > 5 ) {
+            let key = enqueueSnackbar('La imagen pesa más de 5Mb así que será comprimida, ¿continuar?', {
                 variant: 'info',
                 autoHideDuration: 15000,
                 action: ConfirmNotificationButtons,

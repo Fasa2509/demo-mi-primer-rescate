@@ -9,7 +9,7 @@ import { format as formatDate } from 'date-fns';
 
 import { dbPets, dbUsers } from '../../database';
 import { mprApi } from '../../mprApi';
-import { ScrollContext } from '../../context';
+import { AuthContext, ScrollContext } from '../../context';
 import { MainLayout, MyImage, UserPetInfo } from '../../components';
 import { ConfirmNotificationButtons, format, getParagraphs, PromiseConfirmHelper } from '../../utils';
 import { IOrder, IPet, IUser } from '../../interfaces';
@@ -24,6 +24,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const [myPets, setMyPets] = useState<IPet[]>( pets );
+  const [isSubscribed, setIsSubscribed] = useState( user.isSubscribed );
   const { setIsLoading } = useContext( ScrollContext );
 
   const unsubscribe = async () => {
@@ -44,7 +45,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
       enqueueSnackbar(data.message, { variant: 'info' });
       setIsLoading( false );
 
-      user.isSubscribed = false;
+      !data.error && setIsSubscribed( false );
     } catch( error ) {
         // @ts-ignore
         enqueueSnackbar(error.response ? error.response.data.message || 'Ocurrió un error' : 'Ocurrió un error', { variant: 'error' });
@@ -67,7 +68,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
         <Typography sx={{ my: 1.5 }}>Te uniste a la manada el { formatDate( user.createdAt, 'dd/MM/yyyy' ) }</Typography>
 
         {
-          ( user.isSubscribed )
+          ( isSubscribed )
             ? <Box className='fadeIn'>
                 <Typography>¡Estás suscrit@ a <span style={{ textDecoration: 'underline', fontWeight: '600' }}>Mi Primer Rescate</span>! Recibirás información exclusiva de nuestra fundación en tu correo electrónico.</Typography>
                 <Typography>¿Ya no quieres recibir información? Pulsa <Button sx={{ backgroundColor: 'var(--secondary-color-2)', fontSize: '.9rem', padding: '.1rem' }} onClick={ unsubscribe }>aquí</Button></Typography>

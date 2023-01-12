@@ -399,7 +399,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
 
                   { existencyChecked ||
                     <>
-                    <Box className='fadeIn' display='flex' alignItems='center' sx={{ maxWidth: '300px' }}>
+                    <Box className='fadeIn' display='flex' alignItems='center' sx={{ maxWidth: { xs: '280px', sm: '320px', md: '400px' } }}>
                       <p className='p'>Pulse aquí para verificar la existencia en stock de los productos.</p>
                     </Box>
 
@@ -509,7 +509,6 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
                         }}
                         onApprove={(data, actions) => {
                           return actions.order!.capture().then((details) => {
-                              console.log({ details });
                               handleCheckout({ transactionId: details.id, phone: '', method: 'Paypal' });
                           });
                         }}
