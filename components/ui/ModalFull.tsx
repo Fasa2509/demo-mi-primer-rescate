@@ -113,7 +113,7 @@ export const ModalFull: FC<Props> = ({ products }) => {
                 
                 <section className={ styles.product__container }>
                     <div className={ styles.slider__container }>
-                        <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 8000, duration: 650 }} layout={ 'responsive' } />
+                        <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 8000, duration: 650 }} layout='responsive' objectFit='cover' />
                     </div>
                         
                     <Card sx={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start', mb: 2.5 }}>
@@ -161,10 +161,10 @@ export const ModalFull: FC<Props> = ({ products }) => {
 
                             <p className={ styles.share__title }>Comparte este producto</p>
                             <div className={ styles.share__container }>
-                                <Link href={ `https://www.facebook.com/sharer.php?u=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ router.asPath }&t=¡Mira este producto en la tienda MPR!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <Link href={ `https://www.facebook.com/sharer.php?u=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/tienda?product=${ router.query.product }&t=¡Mira este producto en la tienda MPR!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
                                 <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
-                                <Link href={ `https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
-                                <Link href={ `https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! ${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ router.asPath }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <Link href={ `https://twitter.com/intent/tweet?text=¡Mira este producto en la tienda MPR!&url=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/tienda?product=${ router.query.product }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+                                <Link href={ `https://api.whatsapp.com/send?text=¡Mira este producto en la tienda MPR! ${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/tienda?product=${ router.query.product }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
                             </div>
 
                         </CardContent>

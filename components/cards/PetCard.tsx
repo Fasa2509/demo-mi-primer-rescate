@@ -36,7 +36,7 @@ export const PetCard: FC<Props> = ({ pet, removable }) => {
 
   return (
         <div className={ `${ styles.pet__container } fadeIn` }>
-            <MyImage src={ pet.images[0] } alt={ pet.name } width={ 500 } height={ 500 } />
+            <MyImage src={ pet.images[0] } alt={ pet.name } width={ 500 } height={ 500 } objectFit='cover' />
 
             <ModalWindow title={ pet.name } buttonTxt={ pet.name } buttonClassName='font--size' buttonStyle={{ position: 'absolute', right: '.5rem', bottom: '.7rem', borderRadius: '10rem' }}>
                 {
@@ -44,7 +44,7 @@ export const PetCard: FC<Props> = ({ pet, removable }) => {
                 }
             </ModalWindow>
 
-            { removable && <Button className='fadeIn' color='error' sx={{ position: 'absolute', top: '.7rem', right: '.5rem', borderRadius: '3rem' }} onClick={ handleDeletePet }>Eliminar</Button> }
+            { removable && <Button className='fadeIn button button--round button--error low--padding low--font--size' sx={{ position: 'absolute', top: '.7rem', right: '.5rem', borderRadius: '3rem' }} onClick={ handleDeletePet }>Eliminar</Button> }
         </div>
   )
 }

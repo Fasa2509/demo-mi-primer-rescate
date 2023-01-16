@@ -23,7 +23,7 @@ export const ContainerProductCategory: FC<Props> = ({ type, products }) => {
             <p className={ styles.products__type__title }>{ formatText( type ) }</p>
                 {
                     ( products.length > 1 )
-                        ? products.map((product) => <LongCategoryProductCard key={ product.name } product={ product } cat={ type } navigateTo={ shallowNavigate } />)
+                        ? products.map((product) => <LongCategoryProductCard key={ product.name } product={ product } navigateTo={ shallowNavigate } />)
                         : type === '-' ? <p>¡Filtra productos por categoría y encuentra el que más te guste!</p> : <p>Vaya, parece que no tenemos productos de esa categoría.</p>
                 }
         </section>

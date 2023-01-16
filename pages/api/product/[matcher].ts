@@ -68,7 +68,6 @@ const applyDiscountToProducts = async ( req: NextApiRequest, res: NextApiRespons
             .select('email name -_id')
             .lean();
 
-
         await db.disconnect();
 
         const transporter = nodemailer.createTransport({
@@ -93,7 +92,7 @@ const applyDiscountToProducts = async ( req: NextApiRequest, res: NextApiRespons
             <p>¡Hay un nuevo descuento en nuestra tienda virtual! 🛍️🐱🐶</p>
             <p>Oye, tenemos nuevos descuentos en nuestra tienda, no pierdas la oportunidad de consentir aún más a tus mascotas.</p>
             <br />
-            <h2>¿Qué esperas? Ven antes de que se acabe esta promoción.</h2>
+            <h2>¿Qué esperas? Ven a ver antes de que se acabe esta promoción.</h2>
             <a href='${ process.env.NEXTAUTH_URL }/tienda' target='_blank' rel='noreferrer'>Visitar tienda</a>
             `, // html body
         });

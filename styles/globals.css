@@ -5,6 +5,7 @@
   --main-color-hover: #2FE3EC;
   --secondary-color-1: #2AD8A4;
   --secondary-color-1-hover: #27be91;
+  --secondary-color-1-complement: #19a57b;
   --secondary-color-2: #B74FD1;
   --secondary-color-2-hover: #9e39b8;
   --success-color: rgb(7, 179, 7);
@@ -24,7 +25,7 @@ body {
   overflow-x: hidden;
   background-color: #fafafa;
   background-image: url(/background-blob-scatter.svg);
-  background-size: cover;
+  background-size: 150%;
   background-repeat: repeat;
   min-width: fit-content;
   overflow-x: hidden;
@@ -44,6 +45,7 @@ body {
   background-color: var(--secondary-color-1);
 }
 
+.img-container img,
 .img {
   border-radius: .4rem;
   overflow: hidden;
@@ -101,7 +103,7 @@ a {
   border: none;
   border-radius: 5px;
   padding: .5rem .9rem .4rem;
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 350ms ease;
@@ -111,8 +113,28 @@ a {
   background-color: var(--secondary-color-2);
 }
 
+.button--error {
+  background-color: #ec1e1e;
+}
+
+.button--success {
+  background-color: #31a037;
+}
+
+.button--warning {
+  background-color: #f37006;
+}
+
+.button--round {
+  border-radius: 10rem;
+}
+
 .low--padding {
   padding: .2rem .8rem;
+}
+
+.low--font--size {
+  font-size: .9rem;
 }
 
 .font--size {
@@ -190,6 +212,18 @@ section .is-active {
     background-color: var(--secondary-color-2-hover);
   }
 
+  .button--error:hover {
+    background-color: #d82e2e;
+  }
+  
+  .button--success:hover {
+    background-color: #2e8332;
+  }
+
+  .button--warning:hover {
+    background-color: #df6400;
+  }
+
   .notification__buttons.transparent:hover {
     background-color: rgba(0, 0, 0, .35);
   }
@@ -236,9 +270,9 @@ section .is-active {
   .button {
     padding: .4rem .8rem;
   }
-
+  
   .low--padding {
-    padding: .2rem .8rem;
+    padding: .1rem .6rem;
   }
 }
 

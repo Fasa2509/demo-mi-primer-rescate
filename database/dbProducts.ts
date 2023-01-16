@@ -180,12 +180,11 @@ export const updateProductById = async ( id: string, payload: IProduct, unique: 
 
 }
 
-export const discountProducts = async ( form: 'tags' | 'slug', discount: number, matcher: string ): Promise<{ error: boolean; message: string; }> => {
+export const discountProducts = async (discount: number, matcher: string ): Promise<{ error: boolean; message: string; }> => {
 
     if ( discount < 0 || discount > 50 ) return { error: true, message: 'El descuento no es válido' };
 
     try {
-        matcher = matcher.toString();
         if ( matcher.startsWith('/') ) matcher.replace('/', '');
         const { data } = await mprApi.get(`/product/${ matcher }?discount=${ discount }`);
 

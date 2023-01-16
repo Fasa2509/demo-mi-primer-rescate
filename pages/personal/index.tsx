@@ -27,6 +27,9 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
   const [isSubscribed, setIsSubscribed] = useState( user.isSubscribed );
   const { setIsLoading } = useContext( ScrollContext );
 
+  const updatePetInfo = ( petInfo: IPet ) =>
+    setMyPets(( prevState ) => prevState.map(( pet ) => pet._id !== petInfo._id ? pet : petInfo));
+
   const unsubscribe = async () => {
     let key = enqueueSnackbar('¿Quieres dejar de recibir notificaciones en tu correo?', {
       variant: 'info',
@@ -55,26 +58,28 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
   return (
     <MainLayout title='Información Personal' pageDescription='Información personal de tu usuario de MPR' titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/personal'>
         
-        <Box display='flex' alignItems='flex-end' gap='.5rem' sx={{ mb: 1.5 }}>
-          <Typography sx={{ fontSize: '1.2rem', fontWeight: '600' }}>Nombre:</Typography>
-          <Typography>{ user.name }</Typography>
-        </Box>
-        
-        <Box display='flex' alignItems='flex-end' gap='.5rem' sx={{ mb: 1.5 }}>
-          <Typography sx={{ fontSize: '1.2rem', fontWeight: '600' }}>Correo:</Typography>
-          <Typography>{ user.email }</Typography>
-        </Box>
-        
+        <Box sx={{ backgroundColor: '#fafafa', padding: '1rem', borderRadius: '1rem', boxShadow: '0 0 1.2rem -.8rem #555' }}>
+          <Box display='flex' flexDirection='column' sx={{ mb: 1.5 }}>
+            <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--secondary-color-1-complement)', }}>Nombre</Typography>
+            <Typography>{ user.name }</Typography>
+          </Box>
+          
+          <Box display='flex' flexDirection='column' sx={{ mb: 1.5 }}>
+            <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--secondary-color-1-complement)', }}>Correo</Typography>
+            <Typography>{ user.email }</Typography>
+          </Box>
+
         <Typography sx={{ my: 1.5 }}>Te uniste a la manada el { formatDate( user.createdAt, 'dd/MM/yyyy' ) }</Typography>
 
         {
           ( isSubscribed )
             ? <Box className='fadeIn'>
                 <Typography>¡Estás suscrit@ a <span style={{ textDecoration: 'underline', fontWeight: '600' }}>Mi Primer Rescate</span>! Recibirás información exclusiva de nuestra fundación en tu correo electrónico.</Typography>
-                <Typography>¿Ya no quieres recibir información? Pulsa <Button sx={{ backgroundColor: 'var(--secondary-color-2)', fontSize: '.9rem', padding: '.1rem' }} onClick={ unsubscribe }>aquí</Button></Typography>
+                <Typography>¿Ya no quieres recibir información? Pulsa <Button className='button button--purple low--padding' onClick={ unsubscribe }>aquí</Button></Typography>
               </Box>
             : <Typography className='fadeIn'>No estás suscrit@ a nuestra página. ¡Suscríbete para recibir información personalizada y estar al tanto de nuestros eventos!</Typography>
         }
+        </Box>
 
         <Typography variant='subtitle1' sx={{ mt: 2.5, fontSize: '1.4rem' }}>Mis Mascotas</Typography>
 
@@ -83,7 +88,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
             ( myPets.length === 0 )
               ? <Typography>Aún no has subido ninguna mascota.</Typography>
               : myPets.map(( pet ) => (
-                <UserPetInfo key={ pet._id } pet={ pet } />
+                <UserPetInfo key={ pet._id } pet={ pet } updatePetInfo={ updatePetInfo } />
               ))
           }
         </Box>
@@ -96,16 +101,25 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
               ? <Typography>Aún no has creado ninguna órden.</Typography>
               : orders.map(( order ) =>
                 <Box key={ order._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 1.2rem -.8rem #555', borderRadius: '1rem' }}>
-                  <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>ID de la Órden: { order._id }</Typography>
+                  <Box>
+                    <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>ID de la Órden</Typography>
+                    <Typography>{ order._id }</Typography>
+                  </Box>
                   
-                  <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>ID de la Transacción: { order.transaction.transactionId }</Typography>
+                  <Box>
+                    <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>ID de la Transacción</Typography>
+                    <Typography>{ order.transaction.transactionId }</Typography>
+                  </Box>
 
-                  <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>Método: { order.transaction.method }{ order.transaction.method === 'Pago móvil' ? `, ${ order.transaction.phone }` : '' }</Typography>
+                  <Box>
+                    <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>Método</Typography>
+                    <Typography>{ order.transaction.method }{ order.transaction.method === 'Pago móvil' ? `, ${ order.transaction.phone }` : '' }</Typography>
+                  </Box>
 
                   <Typography>Esta órden fue creada el { formatDate( order.createdAt, 'dd/MM/yyyy hh:mm:ssaa' ).toLowerCase() }</Typography>
 
                   <div>
-                    <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Productos</Typography>
+                    <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>Productos</Typography>
                     <Box display='flex' flexDirection='column' gap='.3rem' sx={{ fontSize: '1.1rem' }}>
                       {
                           order.orderItems.map(( product ) => (
@@ -117,7 +131,10 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
                     </Box>
                   </div>
 
-                  <Typography>Total: { format( order.transaction.totalUSD ) } = Bs. { order.transaction.totalBs }</Typography>
+                  <Box>
+                    <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>Total</Typography>
+                    <Typography>{ format( order.transaction.totalUSD ) } = Bs. { order.transaction.totalBs }</Typography>
+                  </Box>
                   
                   <Box>
                       <Chip
@@ -128,7 +145,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
                   </Box>
 
                   <Box display='flex' flexDirection='column'>
-                    <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Contacto</Typography>
+                    <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>Contacto</Typography>
                     <Box display='flex' flexDirection='column' gap='.3rem'>
                       <Typography>Nombre: { order.contact.name }</Typography>
                       { order.contact.facebook && <Typography>Facebook: { order.contact.facebook }</Typography> }
@@ -138,7 +155,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
                   </Box>
 
                   <Box display='flex' flexDirection='column'>
-                    <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>Dirección</Typography>
+                    <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>Dirección</Typography>
                     <Box display='flex' flexDirection='column' gap='.3rem'>
                         <Typography>{ order.shippingAddress.address }</Typography>
                         { order.shippingAddress.maps.latitude && order.shippingAddress.maps.longitude &&

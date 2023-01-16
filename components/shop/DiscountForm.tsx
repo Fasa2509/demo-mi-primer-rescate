@@ -8,29 +8,32 @@ import { mprRevalidatePage } from '../../mprApi';
 import { ConfirmNotificationButtons, PromiseConfirmHelper } from '../../utils';
 
 export const DiscountForm = () => {
-    const [dolarPrice, setDolarPrice] = useState( 0 );
+    const [dolarPrice, setDolarPrice] = useState( '' );
     
     const [formTags, setFormTags] = useState({
       tags: 'todos',
-      discount: 0,
+      discount: '',
     });
   
-    // const [formSlug, setFormSlug] = useState({
-    //   slug: '',
-    //   discount: 0,
-    // });
+    const [formSlug, setFormSlug] = useState({
+      slug: '',
+      discount: '',
+    });
 
     const [revalidatePage, setRevalidatePage] = useState( false );
     const { setIsLoading } = useContext( ScrollContext );
     const { enqueueSnackbar } = useSnackbar();
 
     const handleDiscount = async ( form: 'tags' | 'slug' ) => {
-        // if ( form === 'slug' && !formSlug.slug || formSlug.slug === '/' ) return enqueueSnackbar('Agrega un url', { variant: 'warning' });
+        if ( form === 'tags' && (isNaN( Number( formTags.discount )) || formTags.discount === '') ) return enqueueSnackbar('El valor de descuento no es válido', { variant: 'warning' });
+        
+        if ( form === 'slug' && !formSlug.slug ) return enqueueSnackbar('Agrega un url', { variant: 'warning' });
+        if ( form === 'slug' && (isNaN( Number( formSlug.discount ) ) || formSlug.discount === '') ) return enqueueSnackbar('El valor de descuento no es válido', { variant: 'warning' });
 
         let key = enqueueSnackbar('¿Quieres aplicar el descuento?', {
-        variant: 'info',
-        action: ConfirmNotificationButtons,
-        autoHideDuration: 15000,
+            variant: 'info',
+            action: ConfirmNotificationButtons,
+            autoHideDuration: 15000,
         });
 
         const accepted = await PromiseConfirmHelper(key, 15000);
@@ -38,51 +41,32 @@ export const DiscountForm = () => {
         if ( !accepted ) return;
 
         setIsLoading( true );
+
+        if ( form === 'tags' ) {
+            const res = await dbProducts.discountProducts( Number( formTags.discount ), formTags.tags );
+            enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        }
         
-        const res = await dbProducts.discountProducts( form, formTags.discount, formTags.tags );
-        
-        enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
-        
-        if ( res.error ) {
-        setIsLoading( false );
-        enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
-        return;
-        };
+        if ( form === 'slug' ) {
+            const res = await dbProducts.discountProducts( Number( formSlug.discount ), formSlug.slug );
+            enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        }
 
         if ( process.env.NODE_ENV === 'production' && revalidatePage ) {
-        const revalidationResponses = await Promise.all([
-            mprRevalidatePage('/tienda'),
-            mprRevalidatePage('/tienda/categoria'),
-        ]);
+            const revalidationResponses = await Promise.all([
+                mprRevalidatePage('/tienda'),
+                mprRevalidatePage('/tienda/categoria'),
+            ]);
 
-        revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error revalidando', { variant: !res.error ? 'info' : 'error' }));
-        
-        //   if ( form === 'slug' ) {
-        //     const revRes2 = await mprRevalidatePage( '/tienda' + formSlug.slug.startsWith('/') ? formSlug.slug : `/${ formSlug.slug }` );
-        //     enqueueSnackbar(revRes2.message || 'Error revalidando el producto', { variant: !revRes2.error ? 'info' : 'error' });
-        //     setIsLoading( false );
-        //     return;
-        //   };
-        
-        //   if ( formTags.tags === 'todos' ) {
-        //     const slugsToRevalidate = products.map(p => p.slug.startsWith('/') ? p.slug : `/${ p.slug }`);
-        //     const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( '/tienda' + s )) );
-
-        //     revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: 'error' }));
-        //   } else {
-        //     const slugsToRevalidate = products.filter(p => p.tags.includes(formTags.tags as Tags)).map(p => p.slug.startsWith('/') ? p.slug : `/${ p.slug }`);
-        //     const revalidationResponses = await Promise.all( slugsToRevalidate.map(s => mprRevalidatePage( '/tienda' + s )) );
-
-        //     revalidationResponses.filter(r => r.error).forEach(res => enqueueSnackbar(res.message || 'Error revalidando un producto', { variant: 'error' }));
-        //   }
-        };
+            revalidationResponses.forEach(res => enqueueSnackbar(res.message || 'Error revalidando', { variant: !res.error ? 'info' : 'error' }));
+        }
 
         setIsLoading( false );
         return;
     }
 
     const handleUpdateDolar = async () => {
-        if ( dolarPrice === 0 ) return enqueueSnackbar('El valor no es válido', { variant: 'warning' });
+        if ( isNaN( Number( dolarPrice ) ) || Number( dolarPrice ) === 0 ) return enqueueSnackbar('El valor no es válido', { variant: 'warning' });
 
         let key = enqueueSnackbar('¿Quieres actualizar el valor del dólar?', {
             variant: 'info',
@@ -95,7 +79,7 @@ export const DiscountForm = () => {
         if ( !accepted ) return;
 
         setIsLoading( true );
-        const res = await dbProducts.updateDolarPrice( dolarPrice );
+        const res = await dbProducts.updateDolarPrice( Number( dolarPrice ) );
         setIsLoading( false );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
@@ -127,16 +111,14 @@ export const DiscountForm = () => {
                     variant='filled'
                     onChange={ ( e ) => {
                         if ( isNaN(Number( e.target.value )) ) return;
-                        setDolarPrice( Number( e.target.value ) );
+                        setDolarPrice( e.target.value );
                     }}
                     />
-                    <Button color='secondary' onClick={ handleUpdateDolar }>Aplicar</Button>
+                    <Button className='button' onClick={ handleUpdateDolar }>Aplicar</Button>
                 </Box>
                 </Box>
 
-                <Box>
                 <Typography sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Aplicar descuento a varios productos</Typography>
-                </Box>
 
                 <Box display='flex' gap='.5rem' sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
                     <FormControl fullWidth>
@@ -167,27 +149,25 @@ export const DiscountForm = () => {
                         onChange={ ( e ) => {
                             if ( isNaN(Number( e.target.value )) ) return;
                             if ( Number( e.target.value ) > 50 || Number( e.target.value ) < 0 ) return;
-                            setFormTags({ ...formTags, discount: Number(e.target.value) });
+                            setFormTags({ ...formTags, discount: e.target.value });
                         }}
                     />
 
-                    <Button color='info' sx={{ backgroundColor: 'var(--secondary-color-1)' }} onClick={ () => handleDiscount('tags') }>Aplicar</Button>
+                    <Button className='button' sx={{ minWidth: '88px' }} onClick={ () => handleDiscount('tags') }>Aplicar</Button>
                 </Box>
 
-                {/* <Box>
-                    <Typography sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Aplicar descuento a un producto (por url)</Typography>
-                </Box>
+                <Typography sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}>Aplicar descuento a un producto (por url)</Typography>
 
                 <Box display='flex' gap='.5rem' sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
                     <TextField
                         name='url'
-                        value={ formSlug.slug.trim() }
+                        value={ formSlug.slug }
                         label='Url del producto'
                         type='string'
                         color='secondary'
                         variant='filled'
-                        fullWidth
-                        onChange={ ( e ) => setFormSlug({ ...formSlug, slug: e.target.value }) }
+                        sx={{ flexGrow: 1 }}
+                        onChange={ ( e ) => setFormSlug({ ...formSlug, slug: e.target.value.trim() }) }
                     />
 
                     <TextField
@@ -197,16 +177,16 @@ export const DiscountForm = () => {
                         type='number'
                         color='secondary'
                         variant='filled'
-                        fullWidth
+                        sx={{ flexGrow: 1 }}
                         onChange={ ( e ) => {
-                        if ( isNaN(Number( e.target.value )) ) return;
-                        if ( Number( e.target.value ) > 50 || Number( e.target.value ) < 0 ) return;
-                        setFormSlug({ ...formSlug, discount: Number(e.target.value) });
+                            if ( isNaN(Number( e.target.value )) ) return;
+                            if ( Number( e.target.value ) > 50 || Number( e.target.value ) < 0 ) return;
+                            setFormSlug({ ...formSlug, discount: e.target.value });
                         }}
                     />
 
-                    <Button color='info' sx={{ backgroundColor: 'var(--secondary-color-1)' }} onClick={ () => handleDiscount('slug') }>Aplicar</Button>
-                </Box> */}
+                    <Button className='button' onClick={ () => handleDiscount('slug') }>Aplicar</Button>
+                </Box>
                 
                 <Box display='flex' alignItems='center'>
                     <Checkbox

@@ -5,42 +5,56 @@ import { useSnackbar } from 'notistack';
 import { dbPets } from '../../database';
 import { ScrollContext } from '../../context';
 import { MyImage } from '../../components';
-import { ConfirmNotificationButtons, PromiseConfirmHelper, getParagraphs } from '../../utils';
+import { ConfirmNotificationButtons, PromiseConfirmHelper, getParagraphs, getImageNameFromUrl } from '../../utils';
 import { IPet } from '../../interfaces';
+import { SliderImages } from '../layouts/SliderImages';
 
 interface Props {
     pet: IPet;
+    updatePetInfo: ( pet: IPet ) => void;
 }
 
-export const UserPetInfo: FC<Props> = ({ pet }) => {
+export const UserPetInfo: FC<Props> = ({ pet, updatePetInfo }) => {
     
     const { setIsLoading } = useContext( ScrollContext );
     const { enqueueSnackbar } = useSnackbar();
     const [isEditing, setIsEditing] = useState( false );
+    const [disableInput, setDisableInput] = useState( false );
 
-    const description = useRef<HTMLInputElement>( null );
+    const descriptionRef = useRef<HTMLInputElement>( null );
 
     const handleUpdatePet = async () => {
-        if ( description.current!.value.trim().length < 10 ) {
-            description.current!.focus();    
+        let description = descriptionRef.current!.value.trim();
+
+        if ( description.length < 10 ) {
+            descriptionRef.current!.focus();    
             return enqueueSnackbar('Cuenta la historia de tu mascota', { variant: 'info' });
         }
+
+        setDisableInput( true );
 
         let key = enqueueSnackbar(`¿Quieres editar esta mascota?`, {
             variant: 'info',
             autoHideDuration: 10000,
             action: ConfirmNotificationButtons,
-          });
+        });
       
         const accepted = await PromiseConfirmHelper( key, 10000 );
       
-        if ( !accepted ) return;
+        if ( !accepted ) {
+            setDisableInput( false );
+            return;
+        }
 
         setIsLoading( true );
-        const res = await dbPets.udpatePet(pet._id, description.current!.value);
+        const res = await dbPets.udpatePet(pet._id, description);
         setIsLoading( false );
 
+        setDisableInput( false );
+
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        !res.error && setIsEditing( false );
+        !res.error && updatePetInfo({ ...pet, description });
     }
 
     const handleSwitchAbilitatePet = async ( id: string, isAble: boolean ) => {
@@ -58,12 +72,13 @@ export const UserPetInfo: FC<Props> = ({ pet }) => {
         const res = await dbPets.deletePet( id );
     
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
-    
+        !res.error && updatePetInfo({ ...pet, isAble: !pet.isAble });
     }
 
     const startEditing = () => {
         setIsEditing( true );
-        description.current!.value = pet.description;
+        descriptionRef.current!.value = pet.description;
+        setTimeout(() => descriptionRef.current!.focus(), 100);
     }
 
     return (
@@ -72,22 +87,33 @@ export const UserPetInfo: FC<Props> = ({ pet }) => {
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{ pet.name }</Typography>
 
                 <Box className='fadeIn' display={ isEditing ? 'none' : 'flex' } gap='.5rem'>
-                    <Button color='primary' onClick={ startEditing }>Editar</Button>
-                    <Button color={ pet.isAble ? 'error' : 'success' } onClick={ () => handleSwitchAbilitatePet( pet._id, pet.isAble ) }>{ pet.isAble ? 'Eliminar' : 'Publicar' }</Button>
+                    <Button className='button button--purple low--padding' onClick={ startEditing }>Editar</Button>
+                    <Button className={ `button ${ pet.isAble ? 'button--error' : 'button--success' } low--padding` } onClick={ () => handleSwitchAbilitatePet( pet._id, pet.isAble ) }>{ pet.isAble ? 'Eliminar' : 'Publicar' }</Button>
                 </Box>
             </Box>
 
             <>
-            { !pet.isAble && <Typography className='fadeIn'>{'('}esta mascota no es pública{')'}</Typography> }
+            { !pet.isAble && !isEditing && <Typography textAlign='end' className='fadeIn'>{'('}esta mascota no es pública{')'}</Typography> }
             </>
-                  
+
             <Box display='flex' justifyContent='center' sx={{ gap: { xs: '0', md: '1rem' } }}>
-            {
-              pet.images.map(( img, index ) => 
-                <Box key={ index } sx={{ position: 'relative', flexBasis: '250px' }}>
-                  <MyImage className='img' src={ img } alt={ pet.name } width={ 350 } height={ 350 } />
+                <Box sx={{
+                    width: '100%',
+                    display: ( pet.images.length === 1 ) ? 'flex' : 'block',
+                    justifyContent: 'center',
+                }}>
+                    {
+                        ( pet.images.length > 1 )
+                            ? (
+                                <SliderImages images={ pet.images.map(( img ) => ({ url: img, alt: getImageNameFromUrl( img ), width: 350, height: 350 })) } options={{ indicators: false, cycleNavigation: false, animation: 'slide', interval: 12000 }} objectFit='cover' />
+                            )
+                            : (
+                            <Box sx={{ position: 'relative', flexBasis: '350px' }}>
+                                <MyImage className='img' src={ pet.images[0] } alt={ pet.name } width={ 350 } height={ 350 } objectFit='cover' />
+                            </Box>
+                            )
+                    }
                 </Box>
-            )}
             </Box>
 
             <Box>
@@ -96,7 +122,7 @@ export const UserPetInfo: FC<Props> = ({ pet }) => {
                 </Box>
                 <Box className='fadeIn' display={ isEditing ? 'flex' : 'none' } flexDirection='column' gap='1rem' alignItems='center'>
                     <TextField
-                        inputRef={ description }
+                        inputRef={ descriptionRef }
                         name='pet-description'
                         label='Historia de tu mascota'
                         type='text'
@@ -104,8 +130,9 @@ export const UserPetInfo: FC<Props> = ({ pet }) => {
                         variant='filled'
                         fullWidth
                         multiline
+                        disabled={ disableInput }
                     />
-                    <Button color='secondary' onClick={ handleUpdatePet }>Actualizar historia</Button>
+                    <Button className='button button--purple low--padding' onClick={ handleUpdatePet }>Actualizar historia</Button>
                 </Box>
             </Box>
         </Box>

@@ -27,7 +27,7 @@ export const SliderImages: FC<Props> = ({ images, options, layout = 'intrinsic',
       <Carousel indicators={ options ? options.indicators : true } animation={ options ? options.animation || 'fade' : 'fade' } navButtonsAlwaysVisible={ options ? options.navButtonsAlwaysVisible : false } autoPlay={ options ? options.autoPlay : true } fullHeightHover={ options ? options.fullHeightHover : false } interval={ options ? options.interval || 8000 : 8000 } duration={ options ? options.duration || 800 : 250 }>
         {
           images.map((fadeImage, index) => (
-            <div style={{ display: layout !== 'responsive' ? 'flex' : 'block', justifyContent: 'center', alignItems: 'center' }} key={index}>
+            <div className='img-container' style={{ display: layout !== 'responsive' ? 'flex' : 'block', justifyContent: 'center', alignItems: 'center' }} key={index}>
               <MyImage src={ fadeImage.url } alt={ fadeImage.alt } width={ fadeImage.width } height={ fadeImage.height } layout={ layout } objectFit={ objectFit } />  
             </div>
         ))}

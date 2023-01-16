@@ -14,6 +14,7 @@ export const PetChangeForm = () => {
     const { user } = useContext( AuthContext );
     const { isLoading, setIsLoading } = useContext( ScrollContext );
     const { enqueueSnackbar } = useSnackbar();
+    const [disableInputs, setDisableInputs] = useState( false );
 
     const name = useRef<HTMLInputElement>( null );
     const imageRef = useRef<HTMLInputElement>( null );
@@ -32,6 +33,8 @@ export const PetChangeForm = () => {
         if ( images.filter(( img ) => img).length > 4 )
             return enqueueSnackbar('Hay muchas imágenes', { variant: 'warning' });
 
+        setDisableInputs( true );
+
         let key = enqueueSnackbar('¿Quieres publicar esta historia?', {
             variant: 'info',
             autoHideDuration: 12000,
@@ -40,7 +43,10 @@ export const PetChangeForm = () => {
 
         let accepted = await PromiseConfirmHelper(key, 12000);
 
-        if ( !accepted ) return;
+        if ( !accepted ) {
+            setDisableInputs( false );
+            return;
+        }
 
         setIsLoading( true );
         const res = await dbPets.createNewPet({
@@ -50,6 +56,7 @@ export const PetChangeForm = () => {
             type: 'cambios',
         });
         setIsLoading( false );
+        setDisableInputs( true );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
 
@@ -135,6 +142,7 @@ export const PetChangeForm = () => {
                 color='secondary'
                 variant='filled'
                 fullWidth
+                disabled={ disableInputs }
             />
 
             <input ref={ imageRef } className={ styles.no__display } accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={ requestUpload } />
@@ -168,6 +176,7 @@ export const PetChangeForm = () => {
                 minRows={ 3 }
                 maxRows={ 10 }
                 multiline
+                disabled={ disableInputs }
             />
 
             <Input type='submit' color='secondary' value='Publicar mi mascota' />

@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { Typography, CardMedia, Box, Grid, Link, Button } from '@mui/material';
+import { Typography, Box, Grid, Link, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Category } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -86,6 +86,7 @@ const columns: GridColDef[] = [
     sortable: false,
     disableColumnMenu: true,
     align: 'center',
+    width: 120,
   },
   {
     field: 'setNewProduct',
@@ -237,7 +238,7 @@ const ProductosPage: NextPage<Props> = ({ products: P }) => {
     },
     isAble: product.isAble,
     switchProductAbility,
-  }))
+  }));
 
   return (
     <MainLayout title='Productos' pageDescription='Información de los productos' titleIcon={ <Category color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>

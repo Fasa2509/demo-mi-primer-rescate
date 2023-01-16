@@ -10,45 +10,38 @@ import { format, ConfirmNotificationButtons, PromiseConfirmHelper, formatText } 
 
 interface Props {
     info: IOrder;
-    orders: IOrder[];
-    setOrders: Dispatch<SetStateAction<IOrder[]>>;
+    updateOrderStatus: ( order: IOrder ) => void;
 }
 
-export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
+export const OrderInfo: FC<Props> = ({ info, updateOrderStatus }) => {
 
     const { _id: orderId, orderItems, transaction, user, shippingAddress, contact, createdAt } = info;
     const { setIsLoading } = useContext( ScrollContext );
     const { enqueueSnackbar } = useSnackbar();
 
     const updatePaidOrder = async ( orderStatus: Paid ) => {
-            let key = enqueueSnackbar(`¿Segur@ que quieres marcarla como ${ SpanishOrderStatus[orderStatus] }?`, {
-                variant: 'info',
-                autoHideDuration: 10000,
-                action: ConfirmNotificationButtons,
-            });
+        let key = enqueueSnackbar(`¿Segur@ que quieres marcarla como ${ SpanishOrderStatus[orderStatus] }?`, {
+            variant: 'info',
+            autoHideDuration: 10000,
+            action: ConfirmNotificationButtons,
+        });
 
-            const confirm = await PromiseConfirmHelper( key, 10000 );
+        const confirm = await PromiseConfirmHelper( key, 10000 );
 
-            if ( !confirm ) return;
+        if ( !confirm ) return;
             
-            setIsLoading( true );
+        setIsLoading( true );
         
-            const res = await dbOrders.updatePaidOrder( orderId, orderStatus );
+        const res = await dbOrders.updatePaidOrder( orderId, orderStatus );
             
-            enqueueSnackbar(res.message, { variant: ( !res.error ) ? 'success' : 'error' });
+        enqueueSnackbar(res.message, { variant: ( !res.error ) ? 'success' : 'error' });
 
-            if ( !res.error ) {
-                setOrders( orders.map(order => {
-                    if ( order._id === orderId ) return { ...order, transaction: { ...order.transaction, status: orderStatus } };
-                    return order;
-                }));
-                info.transaction.status = orderStatus;
-            }
+        !res.error && updateOrderStatus({ ...info, transaction: { ...info.transaction, status: orderStatus } });
+        if ( !res.error ) info.transaction.status = orderStatus;
 
-            setIsLoading( false );
-
+        setIsLoading( false );
     }
-  
+
     return (
         <Box className='fadeIn' display='flex' flexDirection='column' gap='1rem' sx={{ boxShadow: '0 0 1rem -.7rem #333', padding: '1.2rem', backgroundColor: '#fff', my: 3, borderRadius: '1rem' }}>
            
@@ -106,16 +99,16 @@ export const OrderInfo: FC<Props> = ({ info, orders, setOrders }) => {
                 <Box display='flex' gap='.5rem' flexWrap='wrap'>
                     <Typography>Marcar como</Typography>
                     <Box display='flex' gap='.5rem' flexWrap='wrap'>
-                        <Button color='secondary' sx={{ fontWeight: 'bold', color: '#fafafa' }} onClick={ () => updatePaidOrder('send') }>
+                        <Button className='button low--font--size low--padding' onClick={ () => updatePaidOrder('send') }>
                             Enviada
                         </Button>
-                        <Button color='success' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('paid') }>
+                        <Button className='button button--success low--font--size low--padding' onClick={ () => updatePaidOrder('paid') }>
                             Pagada
                         </Button>
-                        <Button color='warning' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('pending') }>
+                        <Button className='button button--warning low--font--size low--padding' onClick={ () => updatePaidOrder('pending') }>
                             Pendiente
                         </Button>
-                        <Button color='error' sx={{ fontWeight: 'bold' }} onClick={ () => updatePaidOrder('notpaid') }>
+                        <Button className='button button--error low--font--size low--padding' onClick={ () => updatePaidOrder('notpaid') }>
                             No Pagada
                         </Button>
                     </Box>

@@ -97,9 +97,13 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
         if ( nameRef.current!.value.trim().length < 3 )
             return enqueueSnackbar('El nombre es muy corto', { variant: 'info' });
         
-        if ( form.tags.length === 0 )
-            return enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
-        
+        if ( form.tags.length === 0 ) {
+            enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
+            let input = document.getElementById('tags-input');
+            input && input.focus();
+            return;
+        }
+
         if ( !descriptionRef.current!.value.trim() || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
             return enqueueSnackbar('La información del producto está incompleta', { variant: 'warning' });
             
@@ -143,8 +147,8 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
         } else {
             const res = await dbProducts.updateProductById(form._id, {
                 ...form,
-                name: nameRef.current!.value,
-                description: descriptionRef.current!.value,
+                name: nameRef.current!.value.trim(),
+                description: descriptionRef.current!.value.trim(),
             }, unica);
 
             enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
@@ -531,6 +535,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
             <Box display='flex' gap='.5rem' sx={{ mt: 1.5 }}>
                 <TextField
+                    id='tags-input'
                     name='etiqueta'
                     value={ tag }
                     label='etiqueta'

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { AdminPanelSettings } from '@mui/icons-material';
 import { Box, Button, Grid, Typography } from '@mui/material';
@@ -86,8 +86,9 @@ interface Props {
   adminId: Session;
 }
 
-const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
+const UsuariosPage: NextPage<Props> = ({ users: actualUsers, adminId }) => {
 
+  const [users, setUsers] = useState( actualUsers );
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
 
@@ -103,10 +104,10 @@ const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
       if ( !confirm ) return;
 
       setIsLoading( true );
-      
       const res = await dbUsers.updateUserRole( userId, role );
-      
       setIsLoading( false );
+
+      setUsers(( prevState ) => prevState.map(( u ) => u._id !== userId ? u : { ...u, role }));
 
       enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
   }
@@ -123,11 +124,11 @@ const UsuariosPage: NextPage<Props> = ({ users, adminId }) => {
       if ( !confirm ) return;
 
       setIsLoading( true );
-
       const res = await dbUsers.deleteUserById( userId, enable );
-
       setIsLoading( false );
-        
+
+      setUsers(( prevState ) => prevState.map(( u ) => u._id !== userId ? u : { ...u, isAble: !enable }));
+
       enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
   }
 

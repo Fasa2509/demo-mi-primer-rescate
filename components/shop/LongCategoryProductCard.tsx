@@ -8,11 +8,10 @@ import styles from './ProductCard.module.css'
 
 interface Props {
     product: IProduct;
-    cat: string;
     navigateTo: ( query: string ) => void;
 }
 
-export const LongCategoryProductCard: FC<Props> = ({ product, cat, navigateTo }) => {
+export const LongCategoryProductCard: FC<Props> = ({ product, navigateTo }) => {
 
   const [q, setQ] = useState( 0 );
 

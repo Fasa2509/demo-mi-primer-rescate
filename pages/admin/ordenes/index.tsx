@@ -140,6 +140,9 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
     createdAt: new Date( order.createdAt ).toLocaleString(),
   }));
 
+  const updateOrderStatus = ( orderInfo: IOrder ) =>
+    setThisOrders(( prevState ) => prevState.map(( o ) => o._id !== orderInfo._id ? o : orderInfo));
+
   return (
     <MainLayout title='Órdenes' pageDescription='Información de las órdenes' titleIcon={ <ConfirmationNumber color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
 
@@ -191,7 +194,7 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
       }
 
       <>
-      { orderInfo._id && <OrderInfo info={ orderInfo } orders={ thisOrders } setOrders={ setThisOrders } /> }
+      { orderInfo._id && <OrderInfo info={ orderInfo } updateOrderStatus={ updateOrderStatus } /> }
       </>
 
     </MainLayout>

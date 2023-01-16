@@ -11,9 +11,6 @@ type Data =
 export default function handler (req: NextApiRequest, res: NextApiResponse<Data>) {
     
     switch( req.method ) {
-        case 'GET':
-            return res.status(400).json({ error: true, message: 'BAD REQUEST' });
-            
         case 'POST':
             return createNewProduct( req, res );
 

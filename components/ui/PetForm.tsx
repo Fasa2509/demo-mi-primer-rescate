@@ -29,13 +29,12 @@ export const PetForm: FC<Props> = ({ pet }) => {
         if ( !user ) return enqueueSnackbar('Inicia sesión primero', { variant: 'warning' });
 
         if ( !nameRef.current || !imageRef.current || !descriptionRef.current ) return;
-
-        if ( !imgUrl ) return enqueueSnackbar('Sube una imagen de la mascota', { variant: 'info' });
-
+        
         let name = nameRef.current.value.trim();
         let description = descriptionRef.current.value.trim();
 
         if ( name.length < 2 ) return enqueueSnackbar('El nombre es muy corto', { variant: 'info' });
+        if ( !imgUrl ) return enqueueSnackbar('Sube una imagen de la mascota', { variant: 'info' });
         if ( description.length < 10 ) return enqueueSnackbar('La descripción es muy corta', { variant: 'info' });
 
         let key = enqueueSnackbar('¿Quieres publicar esta mascota?', {
@@ -148,7 +147,7 @@ export const PetForm: FC<Props> = ({ pet }) => {
 
             { imgUrl &&
                 <Box className='fadeIn' sx={{ position: 'relative', alignSelf: 'center' }}>
-                    <MyImage src={ imgUrl } alt={ getImageNameFromUrl( imgUrl ) } width={ 350 } height={ 350 } layout='intrinsic' />
+                    <MyImage src={ imgUrl } alt={ getImageNameFromUrl( imgUrl ) } width={ 350 } height={ 350 } layout='intrinsic' objectFit="cover" />
                 </Box>
             }
 
@@ -178,7 +177,7 @@ export const PetForm: FC<Props> = ({ pet }) => {
             minRows={ 4 }
         />
 
-        <Button className='button low--padding' color='secondary' onClick={ handleSubmit }>Guardar mascota</Button>
+        <Button className='button button--purple low--padding' onClick={ handleSubmit }>Guardar mascota</Button>
     </form>
   )
 }

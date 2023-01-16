@@ -106,7 +106,9 @@ const PetsPage: NextPage<Props> = ({ pets: Pets }) => {
 
     if ( !accepted ) return;
 
+    setIsLoading( true );
     const res = await dbPets.deletePet( id );
+    setIsLoading( false );
 
     enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
 
