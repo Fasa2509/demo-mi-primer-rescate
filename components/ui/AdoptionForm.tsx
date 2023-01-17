@@ -433,7 +433,7 @@ export const AdoptionForm: FC = () => {
             <Typography>13. ¿En qué tipo de vivienda reside?</Typography>
             <TextField
                 name='input13'
-                label='13. Casa, deptartamento, finca, quinta etc...'
+                label='13. Casa, deptartamento, finca, quinta, etc...'
                 type='text'
                 color='secondary'
                 variant='filled'

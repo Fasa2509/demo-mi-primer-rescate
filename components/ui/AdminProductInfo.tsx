@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useContext, useEffect, useMemo, useRef, u
 import { Box, Button, Checkbox, Chip, Link, TextField, Typography } from '@mui/material';
 import Compressor from 'compressorjs';
 
-import { IProduct, Tags, TagsArray } from '../../interfaces';
+import { InStockSizes, IProduct, Tags, TagsArray } from '../../interfaces';
 import { ConfirmNotificationButtons, format, getImageKeyFromUrl, getImageNameFromUrl, PromiseConfirmHelper } from '../../utils';
 import { useSnackbar } from 'notistack';
 import { dbImages, dbProducts } from '../../database';
@@ -14,6 +14,8 @@ interface Props {
     product: IProduct;
     method: 'create' | 'update';
     setMethod: Dispatch<SetStateAction<'create' | 'update'>>;
+    clearProductInfo: () => void;
+    updateProductsInfo: ( aProduct: IProduct ) => void;
 }
 
 const newProductInitialState: IProduct = {
@@ -36,10 +38,10 @@ const newProductInitialState: IProduct = {
     sold: 0,
     slug: '',
     isAble: true,
-    createdAt: (() => Date.now())()
+    createdAt: (() => Date.now())(),
 }
 
-export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setMethod }) => {
+export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setMethod, clearProductInfo, updateProductsInfo }) => {
 
     const { enqueueSnackbar } = useSnackbar();
     const { isLoading, setIsLoading } = useContext( ScrollContext );
@@ -48,7 +50,9 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
     const [unica, setUnica] = useState( true );
     const [tag, setTag] = useState('');
     const [revalidatePage, setRevalidatePage] = useState( false );
-    const { price, discount, inStock, sold } = useMemo(() => thisProduct, [thisProduct]);
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const inStock = useMemo(() => thisProduct.inStock, [thisProduct]);
 
     const nameRef = useRef<HTMLInputElement>( null );
     const descriptionRef = useRef<HTMLInputElement>( null );
@@ -140,6 +144,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                 }
 
                 setForm( newProductInitialState );
+                clearProductInfo();
                 nameRef.current!.value = '';
                 descriptionRef.current!.value = '';
                 imageRef.current!.files = null;
@@ -164,7 +169,36 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                 }
 
                 setMethod( 'create' );
-                setForm( newProductInitialState );
+
+                updateProductsInfo({
+                    ...form,
+                    name: nameRef.current!.value,
+                    description: descriptionRef.current!.value,
+                    images: form.images,
+                    discount: form.discount / 100,
+                    inStock: ( unica )
+                        ? {
+                            unique: ( form.inStock.unique < 0 && Math.abs( form.inStock.unique ) > inStock.unique ) ? 0 : inStock.unique + form.inStock.unique,
+                            S: 0,
+                            M: 0,
+                            L: 0,
+                            XL: 0,
+                            XXL: 0,
+                            XXXL: 0,
+                        }
+                        : {
+                            unique: -1,
+                            S: ( form.inStock.S! < 0 && Math.abs( form.inStock.S! ) > inStock.S! ) ? 0 : inStock.S! + form.inStock.S!,
+                            M: ( form.inStock.M! < 0 && Math.abs( form.inStock.M! ) > inStock.M! ) ? 0 : inStock.M! + form.inStock.M!,
+                            L: ( form.inStock.L! < 0 && Math.abs( form.inStock.L! ) > inStock.L! ) ? 0 : inStock.L! + form.inStock.L!,
+                            XL: ( form.inStock.XL! < 0 && Math.abs( form.inStock.XL! ) > inStock.XL! ) ? 0 : inStock.XL! + form.inStock.XL!,
+                            XXL: ( form.inStock.XXL! < 0 && Math.abs( form.inStock.XXL! ) > inStock.XXL! ) ? 0 : inStock.XXL! + form.inStock.XXL!,
+                            XXXL: ( form.inStock.XXXL! < 0 && Math.abs( form.inStock.XXXL! ) > inStock.XXXL! ) ? 0 : inStock.XXXL! + form.inStock.XXXL!,
+                        },
+                });
+                
+                clearProductInfo();
+                setForm(() => ({ ...newProductInitialState, inStock: { unique: 0, S: 0, M: 0, L: 0, XL: 0, XXL: 0, XXXL: 0 } }));
                 nameRef.current!.value = '';
                 descriptionRef.current!.value = '';
                 imageRef.current!.files = null;
@@ -177,7 +211,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
 
     const handleClearProduct = async () => {
-        if ( form.images.length > 0 ) return enqueueSnackbar('Antes de limpiar la info elimina las imágenes subidas', { variant: 'warning' });
+        if ( method === 'create' && form.images.length > 0 ) return enqueueSnackbar('Antes de limpiar la info elimina las imágenes subidas', { variant: 'warning' });
 
         let key = enqueueSnackbar('¿Quieres vaciar la info del producto?', {
             variant: 'info',
@@ -190,7 +224,9 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
         if ( !confirm ) return;
 
         setMethod( 'create' );
-        setForm( newProductInitialState );
+        clearProductInfo();
+        nameRef.current!.value = '';
+        descriptionRef.current!.value = '';
     }
 
 
@@ -340,7 +376,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
             <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Imágenes del Producto:</Typography>
 
             { form.images.length > 0 &&
-                <SliderImages images={ form.images } options={{ indicators: false, animation: 'slide', navButtonsAlwaysVisible: true, interval: 6500, autoPlay: false }} />
+                <SliderImages images={ form.images } options={{ indicators: false, animation: 'slide', navButtonsAlwaysVisible: true, interval: 9000, autoPlay: false }} objectFit='cover' />
             }
             
             <input ref={ imageRef } style={{ display: 'none' }} accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={ requestUpload } />
@@ -369,7 +405,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                 />
             </Box>
 
-            <Typography>Descuento: { discount * 100 }%{ discount > 0 && discount <= 50 && `. ${ format( price ) } - ${ discount * 100 }% = ${ format( price - price * discount ) }` }</Typography>
+            <Typography>Descuento: { form.discount }%{ form.discount > 0 && form.discount <= 50 && `. ${ format( form.price ) } - ${ form.discount }% = ${ format( form.price - form.price * form.discount / 100 ) }` }</Typography>
 
             <Box display='flex' alignItems='center'>
                 <TextField
@@ -387,22 +423,41 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                 <p>%</p>
             </Box>
 
-            <Typography>Vendidos: { sold }</Typography>
+            <Typography>Vendidos: { form.sold }</Typography>
         </Box>
 
         <Box display='flex' flexDirection='column'>
             <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Existencias:</Typography>
             <Box display='flex' flexDirection='column' sx={{ fontSize: '1.1rem' }}>
-            {
-                Object.entries( inStock ).filter(e => e[0] !== '_id' && e[1] !== -1).map(( stock, index: number ) =>{
-                    if ( !unica && stock[0] === 'unique' ) return <div key={ 'unique' } style={{ display: 'none' }}></div>
-                    if ( unica && inStock.unique !== -1 && stock[0] !== 'unique' ) return <div key={ stock[0] } style={{ display: 'none' }}></div>
-                    
-                    return <Box key={ index }>
-                                <Typography>{ ( stock[0] === 'unique' ) ? 'Única' : stock[0] }: { stock[1] }</Typography>
-                            </Box>
-                })
-            }
+                <Box display='flex' gap='3rem'>
+                    <Box display='flex' flexDirection='column'>
+                        <Typography>Ahora</Typography>
+                        {
+                            Object.entries( inStock ).filter(e => e[0] !== '_id' && e[1] !== -1).map(( stock, index: number ) =>{
+                                if ( !unica && stock[0] === 'unique' ) return <div key={ 'unique' } style={{ display: 'none' }}></div>
+                                if ( unica && inStock.unique !== -1 && stock[0] !== 'unique' ) return <div key={ stock[0] } style={{ display: 'none' }}></div>
+                                
+                                return <Box key={ index }>
+                                            <Typography>{ ( stock[0] === 'unique' ) ? 'Única' : stock[0] }: { stock[1] }</Typography>
+                                        </Box>
+                            })
+                        }
+                    </Box>
+
+                    <Box display='flex' flexDirection='column'>
+                        <Typography>Después</Typography>
+                        {
+                            Object.entries( inStock ).filter(e => e[0] !== '_id' && e[1] !== -1).map(( stock, index ) =>{
+                                if ( !unica && stock[0] === 'unique' ) return <div key={ 'unique' } style={{ display: 'none' }}></div>
+                                if ( unica && inStock.unique !== -1 && stock[0] !== 'unique' ) return <div key={ stock[0] } style={{ display: 'none' }}></div>
+                                
+                                return <Box key={ index }>
+                                            <Typography>{ ( stock[0] === 'unique' ) ? 'Única' : stock[0] }: { ( form.inStock[stock[0] as keyof InStockSizes] && form.inStock[stock[0] as keyof InStockSizes]! < 0 && Math.abs( form.inStock[stock[0] as keyof InStockSizes]! ) > inStock[stock[0] as keyof InStockSizes]! ) ? 0 : form.inStock[stock[0] as keyof InStockSizes]! + inStock[stock[0] as keyof InStockSizes]! }</Typography>
+                                        </Box>
+                            })
+                        }
+                    </Box>
+                </Box>
 
             <Typography className='fadeIn' sx={{ fontWeight: '300', mt: 1.5 }}>Si deseas cambiar la cantidad de unidades, debes escribir el número de unidades <b>a sumar</b>. Si escribes un número positivo se añadirá esa cantidad de unidades a las ya existentes de la respectiva talla en la base de datos. Si escribes un número negativo, se reducirá esa cantidad de unidades.</Typography>
             
@@ -429,7 +484,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                         ? (
                             <TextField
                                 name='unique'
-                                value={ Number(form.inStock.unique) }
+                                value={ form.inStock.unique }
                                 label='Única'
                                 type='number'
                                 color='secondary'
@@ -441,7 +496,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                         <>
                             <TextField
                                 name='S'
-                                value={ Number(form.inStock.S) }
+                                value={ form.inStock.S }
                                 label='S'
                                 type='number'
                                 color='secondary'
@@ -451,7 +506,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
                             <TextField
                                 name='M'
-                                value={ Number(form.inStock.M) }
+                                value={ form.inStock.M }
                                 label='M'
                                 type='number'
                                 color='secondary'
@@ -461,7 +516,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
                             <TextField
                                 name='L'
-                                value={ Number(form.inStock.L) }
+                                value={ form.inStock.L }
                                 label='L'
                                 type='number'
                                 color='secondary'
@@ -471,7 +526,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
                             <TextField
                                 name='XL'
-                                value={ Number(form.inStock.XL) }
+                                value={ form.inStock.XL }
                                 label='XL'
                                 type='number'
                                 color='secondary'
@@ -481,7 +536,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
                             <TextField
                                 name='XXL'
-                                value={ Number(form.inStock.XXL) }
+                                value={ form.inStock.XXL }
                                 label='XXL'
                                 type='number'
                                 color='secondary'

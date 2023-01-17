@@ -113,7 +113,7 @@ export const ModalFull: FC<Props> = ({ products }) => {
                 
                 <section className={ styles.product__container }>
                     <div className={ styles.slider__container }>
-                        <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 8000, duration: 650 }} layout='responsive' objectFit='cover' />
+                        <SliderImages images={ product.images } options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 9000, duration: 650 }} layout='responsive' objectFit='cover' />
                     </div>
                         
                     <Card sx={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start', mb: 2.5 }}>

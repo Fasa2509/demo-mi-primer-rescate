@@ -11,8 +11,8 @@ import { ChangeCard, MainLayout, PetChangeForm } from '../../components'
 import { IPet } from '../../interfaces';
 import styles from '../../styles/Cambios.module.css'
 
-const callback = ( entries: any ) => 
-  entries.forEach(( entry: any ) => entry.isIntersecting && entry.target.classList.add(`${ styles.visible }`));
+const callback: IntersectionObserverCallback = ( entries ) =>
+  entries.forEach(( entry ) => entry.isIntersecting && entry.target.classList.add(`${ styles.visible }`));
 
 interface Props {
   pets: IPet[];
@@ -76,7 +76,7 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
 
       <section className={ styles.changes__section }>
         {
-          pets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } observe={ pets.length === 6 } />)
+          pets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } observe={ pets.length === 6 } removable={ user && ( user.role === 'superuser' || user.role === 'admin' ) } />)
         }
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
@@ -96,7 +96,7 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
           <p className={ styles.changes__title }>¡Algunas experiencias de nuestros seguidores!</p>
 
           {
-            changedPets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } />)
+            changedPets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } observe={ changedPets.length === 6 } removable={ user && ( user.role === 'superuser' || user.role === 'admin' ) } />)
           }
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>

@@ -1,4 +1,4 @@
-import { useContext, useState, lazy, Suspense } from 'react';
+import { useContext, useEffect, useState, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
@@ -10,6 +10,13 @@ import { mprRevalidatePage } from '../../../mprApi';
 import { MainLayout, PetCard } from '../../../components';
 import { IPet } from '../../../interfaces';
 import styles from '../../../styles/Adoptar.module.css';
+
+const callback: IntersectionObserverCallback = ( entries ) =>
+  entries.forEach(( entry ) =>
+    ( entry.isIntersecting )
+      ? entry.target.classList.add( styles.pet__focused )
+      : entry.target.classList.remove( styles.pet__focused )  
+    );
 
 const PetForm = lazy(() =>
   import('../../../components/ui/PetForm')
@@ -26,6 +33,21 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
   const [pets, setPets] = useState( Pets );
+
+
+  useEffect(() => {
+    if ( window.innerWidth < 700 ) {
+      const observer = new IntersectionObserver(callback, {
+        rootMargin: '-50% 0px -50% 0px',
+        threshold: 0,
+      });
+
+      document.querySelectorAll('.observe').forEach(( el ) => observer.observe( el ));
+
+      return () => observer.disconnect();
+    }
+  }, []);
+
   
   const requestPets = async () => {
     setIsLoading( true );

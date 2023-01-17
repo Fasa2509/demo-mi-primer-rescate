@@ -74,7 +74,7 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
 
-    if ( !PetTypeArray.includes( type as PetType ) || !name.trim() || !description.trim() )
+    if ( !PetTypeArray.includes( type as PetType ) || name.trim().length < 2 || description.trim().length < 5 )
         return res.status(400).json({ error: true, message: 'La información de la mascota no es válida' });
 
     if ( (type === 'cambios' || type === 'experiencias') && (images.length < 2 || images.length > 4) )

@@ -35,7 +35,7 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
         
     const { unique, ...tallas } = inStock;
 
-    if ( unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) )
+    if ( unique !== -1 && Object.values( tallas ).some(( value ) => typeof value === 'number' && value > 0) )
         return res.status(400).json({ error: true, message: 'La cantidad de tallas no es válida' });
 
     const session = await unstable_getServerSession( req, res, nextAuthOptions );
@@ -109,15 +109,17 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
 
     if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
-    if ( !name || !description || price === 0 || discount > 50 || discount < 0 || unica === undefined ) return res.status(400).json({ error: true, message: 'La información no es válida' });
+    if ( !name || !description || price === 0 || discount > 50 || discount < 0 || unica === undefined )
+        return res.status(400).json({ error: true, message: 'La información no es válida' });
     
-    if ( tags.length === 0 || tags.length > 4 ) return res.status(400).json({ error: true, message: 'Se necesita al menos una etiqueta' });
+    if ( tags.length === 0 || tags.length > 4 )
+        return res.status(400).json({ error: true, message: 'Se necesita al menos una etiqueta' });
 
-    if ( images.length < 2 || images.length > 4 ) return res.status(400).json({ error: true, message: 'Mínimo 2 imágenes y máximo 4' });
-
+    if ( images.length < 2 || images.length > 4 )
+        return res.status(400).json({ error: true, message: 'Mínimo 2 imágenes y máximo 4' });
+        
     let { unique: u, ...tallas } = inStock;
-    
-    
+        
     try {
         await db.connect();
         
@@ -129,16 +131,25 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
                 return res.status(400).json({ error: true, message: 'No existe product con ese id' });
             }
             
-            if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
-            if ( product.inStock.unique === -1 && inStock.unique >= 0 ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
+            if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value ) => typeof value === 'number' && value > 0) ) {
+                await db.disconnect();
+                return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
+            }
+
+            if ( product.inStock.unique === -1 && inStock.unique >= 0 ) {
+                await db.disconnect();
+                return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
+            }
             
             product.name = name;
             product.description = description;
             product.images = [...images];
             product.price = price;
-            product.discount = discount / 100;
+            product.discount = ( discount > 0.5 ) ? discount / 100 : discount;
             
-            product.inStock.unique += unique;
+            ( unique < 0 && Math.abs( unique ) > product.inStock.unique )
+                ? product.inStock.unique = 0
+                : product.inStock.unique += unique
             product.inStock.S = 0;
             product.inStock.M = 0;
             product.inStock.L = 0;
@@ -152,11 +163,17 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
             const product = await Product.findById( id );
             if ( !product ) {
                 await db.disconnect();
-                return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+                return res.status(400).json({ error: true, message: 'No existe producto con ese id' });
             }
             
-            if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
-            if ( product.inStock.unique === -1 && inStock.unique >= 0 ) return res.status(400).json({ error: true, message: 'Error en la info de las tallasssss' });
+            if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) {
+                await db.disconnect();   
+                return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
+            }
+            if ( product.inStock.unique === -1 && inStock.unique >= 0 ) {
+                await db.disconnect();   
+                return res.status(400).json({ error: true, message: 'Error en la info de las tallasssss' });
+            }
 
             product.name = name;
             product.description = description;
@@ -164,22 +181,24 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
             product.discount = discount / 100;
             
             product.inStock.unique = -1;
-            product.inStock.S += S;
-            product.inStock.M += M;
-            product.inStock.L += L;
-            product.inStock.XL += XL;
-            product.inStock.XXL += XXL;
-            product.inStock.XXXL+= XXXL;
+            
+            product.inStock.S = ( S < 0 && Math.abs( S ) > product.inStock.S! ) ? 0 : product.inStock.S! + S;
+            product.inStock.M = ( M < 0 && Math.abs( M ) > product.inStock.M! ) ? 0 : product.inStock.M! + M;
+            product.inStock.L = ( L < 0 && Math.abs( L ) > product.inStock.L! ) ? 0 : product.inStock.L! + L;
+            product.inStock.XL = ( XL < 0 && Math.abs( XL ) > product.inStock.XL! ) ? 0 : product.inStock.XL! + XL;
+            product.inStock.XXL = ( XXL < 0 && Math.abs( XXL ) > product.inStock.XXL! ) ? 0 : product.inStock.XXL! + XXL;
+            product.inStock.XXXL = ( XXXL < 0 && Math.abs( XXXL ) > product.inStock.XXXL! ) ? 0 : product.inStock.XXXL! + XXXL;
+
             product.tags = [...tags];
             await product.save();
         }
 
         await db.disconnect();
-        return res.status(200).json({ error: false, message: 'El producto fue actualizado' })
+        return res.status(200).json({ error: false, message: 'El producto fue actualizado' });
     } catch( error ) {
         console.log( error );
         await db.disconnect();
-        return res.status(400).json({ error: true, message: 'BAD REQUEST' });
+        return res.status(400).json({ error: true, message: 'Ocurrió un error actualizando el producto' });
     }
 
 }

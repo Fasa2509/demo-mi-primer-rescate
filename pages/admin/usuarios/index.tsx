@@ -75,7 +75,7 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     renderCell: ({ row }: GridRenderCellParams) => {
         return row.thisUserId !== row.id
-        ? <Button color={ row.isEnable ? 'error' : 'success' } onClick={ () => row.enableUser( row.id, !row.isEnable ) }>{ row.isEnable ? 'Eliminar' : 'Habilitar' }</Button>
+        ? <Button className={ `button button--round low--padding low--font--size ${ row.isEnable ? 'button--error' : 'button--success' }` } onClick={ () => row.enableUser( row.id, !row.isEnable ) }>{ row.isEnable ? 'Eliminar' : 'Habilitar' }</Button>
         : <></>
     }
   }
@@ -127,7 +127,7 @@ const UsuariosPage: NextPage<Props> = ({ users: actualUsers, adminId }) => {
       const res = await dbUsers.deleteUserById( userId, enable );
       setIsLoading( false );
 
-      setUsers(( prevState ) => prevState.map(( u ) => u._id !== userId ? u : { ...u, isAble: !enable }));
+      setUsers(( prevState ) => prevState.map(( u ) => u._id !== userId ? u : { ...u, isAble: enable }));
 
       enqueueSnackbar(res.message, { variant: !res.error ? 'info' : 'error', autoHideDuration: 5000 });
   }

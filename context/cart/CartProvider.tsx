@@ -37,8 +37,14 @@ export const CartProvider: FC<Props> = ({ children }) => {
         dispatch({ type: 'NumberOfItems - Update' });
     }, [state.cart]);
 
-    const updateProductQuantity = ( product: ICartProduct ) =>
-        dispatch({ type: 'Cart - Update Product in Cart', payload: product });
+    const updateProductQuantity = ( product: ICartProduct ) => {
+        if ( product.quantity === 0 && state.cart.length === 1 ) {
+            dispatch({ type: 'Cart - Clear Cart' });
+            Cookies.set('mpr__cart', JSON.stringify( [] ));
+        } else {
+            dispatch({ type: 'Cart - Update Product in Cart', payload: product });
+        }
+    };
 
     const getProductQuantity = ( productId: string, productSize: Sizes ): number => {
         const productInCart = state.cart.find(p => p._id === productId && p.size === productSize)

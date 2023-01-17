@@ -69,7 +69,9 @@ export const UserPetInfo: FC<Props> = ({ pet, updatePetInfo }) => {
     
         if ( !accepted ) return;
     
+        setIsLoading( true );
         const res = await dbPets.deletePet( id );
+        setIsLoading( false );
     
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
         !res.error && updatePetInfo({ ...pet, isAble: !pet.isAble });

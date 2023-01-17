@@ -59,7 +59,7 @@ export const Article: FC<{ article: IArticle; removable?: boolean; }> = ({ artic
 
         <Box display='flex' justifyContent='space-between'>
           <p className={ styles.title }>{ title }</p>
-          { removable && <Button color='error' sx={{ alignSelf: 'center' }} onClick={ deleteArticle }>Eliminar</Button> }
+          { removable && <Button className='button button--error low--padding button--round low--font--size' sx={{ alignSelf: 'center' }} onClick={ deleteArticle }>Eliminar</Button> }
         </Box>
         
         {

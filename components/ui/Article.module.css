@@ -1,11 +1,11 @@
 .article {
     display: flex;
     flex-direction: column;
-    gap: .9em;
+    gap: .9rem;
     border: thin solid #eaeaea;
     background-color: #FFF;
     border-radius: 5px;
-    color: #444;
+    color: #333;
     padding: 1.2rem 1.5rem;
     margin-bottom: 2rem;
 }

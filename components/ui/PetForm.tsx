@@ -146,7 +146,7 @@ export const PetForm: FC<Props> = ({ pet }) => {
             <input ref={ imageRef } className={ styles.no__display } accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={ requestUploadObject } />
 
             { imgUrl &&
-                <Box className='fadeIn' sx={{ position: 'relative', alignSelf: 'center' }}>
+                <Box className='fadeIn img-container' sx={{ position: 'relative', alignSelf: 'center' }}>
                     <MyImage src={ imgUrl } alt={ getImageNameFromUrl( imgUrl ) } width={ 350 } height={ 350 } layout='intrinsic' objectFit="cover" />
                 </Box>
             }

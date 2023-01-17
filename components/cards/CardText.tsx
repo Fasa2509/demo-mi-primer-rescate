@@ -8,7 +8,7 @@ interface Props {
 
 export const CardText: FC<Props> = ({ text, index }) => {
   return (
-    <div className={ styles.card__goal }>
+    <div className={ `${ styles.card__goal } observe` }>
         <div className={ styles.card__number }>{ index }</div>
         <p className={ styles.card__text }>{ text }</p>
     </div>
