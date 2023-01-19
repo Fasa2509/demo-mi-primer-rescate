@@ -53,16 +53,18 @@
 /* Pet Card */
 
 .pet__container {
+    display: flex;
     position: relative;
     border-radius: 1.2rem;
     overflow: hidden;
     background-color: #fafafa;
     box-shadow: 0 0 1.2rem -.8rem #444;
-    display: flex;
 }
 
 .pet__container img {
-    transition: transform 300ms ease-in-out;
+    transform: scale(1.2);
+    filter: brightness(0.90);
+    transition: transform 450ms ease-in-out, filter 450ms ease-in-out;
 }
 
 .pet__container p {
@@ -79,6 +81,7 @@
     }
 
     .pet__container:hover img {
-        transform: scale(1.15);
+        transform: scale(1);
+        filter: brightness(1);
     }
 }

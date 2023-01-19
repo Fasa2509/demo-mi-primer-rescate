@@ -70,9 +70,10 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
   return (
     <MainLayout title={ 'Cambios de nuestros amigos y adoptantes' } H1={ 'Antes y después' } pageDescription={ 'Aquí podrás ver el antes y después de nuestros amigos peludos. Algunos han pasado por mucho, pero con amor, esfuerzo y trabajo, han recuperado una vida digna, ¡comparte tu historia de adopción con otros adoptantes!.' } titleIcon={ <TrendingUp color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda' url='/cambios'>
         
-      <p>¡La evolución y mejora de nuestros amigos!</p>
-        
-      <p>Sint veniam aliquip incididunt labore pariatur. Lorem ipsum culpa sit consectetur. Eiusmod ad magnaunt esse adipisicing quis incididunt adipisicing voluptate commodo minim exercitation. Velit nulla cupidatat culpa irure Lorem non ut nulla ex nulla et in occaecat.</p>
+      <section className='content-island'>
+        <p>¡La evolución y mejora de nuestros amigos!</p>
+        <p>Sint veniam aliquip incididunt labore pariatur. Lorem ipsum culpa sit consectetur. Eiusmod ad magnaunt esse adipisicing quis incididunt adipisicing voluptate commodo minim exercitation. Velit nulla cupidatat culpa irure Lorem non ut nulla ex nulla et in occaecat.</p>
+      </section>
 
       <section className={ styles.changes__section }>
         {

@@ -51,7 +51,7 @@ const applyDiscountToProducts = async ( req: NextApiRequest, res: NextApiRespons
                 ? await Product.updateMany({}, { $set: { discount }})
                 : await Product.updateMany({ tags: matcher }, { $set: { discount }});
         } else {
-            matcher = '/' + matcher;
+            matcher = matcher.toLocaleLowerCase();
             const product = await Product.findOne({ slug: matcher });
 
             if ( !product ) {

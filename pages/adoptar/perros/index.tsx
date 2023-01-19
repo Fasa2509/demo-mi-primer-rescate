@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, lazy, Suspense } from 'react';
+import { useContext, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
@@ -32,6 +32,8 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   const { user } = useContext( AuthContext );
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
+  const intersectionObserverRef = useRef<IntersectionObserver>( null );
+  const lastPetsLengthRef = useRef<number>( 0 );
   const [pets, setPets] = useState( Pets );
 
 
@@ -42,11 +44,29 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
         threshold: 0,
       });
 
-      document.querySelectorAll('.observe').forEach(( el ) => observer.observe( el ));
+      const allPets = document.querySelectorAll('.observe');
+
+      allPets.forEach(( el ) => observer.observe( el ));
+
+      // @ts-ignore
+      intersectionObserverRef.current = observer;
+      lastPetsLengthRef.current = allPets.length;
 
       return () => observer.disconnect();
     }
   }, []);
+
+
+  useEffect(() => {
+    if ( window.innerWidth < 700 ) {
+      if ( pets.length <= 6 ) return;
+
+      document.querySelectorAll('.observe')
+        .forEach(( el, index ) => ( index >= lastPetsLengthRef.current! ) && intersectionObserverRef.current!.observe( el ));
+      
+      lastPetsLengthRef.current = pets.length;
+    }
+  }, [pets]);
 
   
   const requestPets = async () => {
@@ -80,7 +100,9 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   return (
     <MainLayout title={ 'Adopta un perrito' } H1={ 'Adopta un perrito' } pageDescription={ '¿Buscas adoptar un perrito? Ve los perritos que tenemos en nuestra fundación y adopta uno para llenarlo de amor. Encuentra el ideal para ti aquí entre una amplia selección de animales rescatados.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/gatos' url='/adoptar/perros'>
       
-        <p>¡Los perritos de <b>Mi Primer Rescate</b> son especiales! Vienen llenos de mucho amor, con dósis extra de cariño y una gran ración de dulzura, ¡busca el tuyo aquí!.</p>
+        <section className='content-island'>
+          <p>¡Los perritos de <b>Mi Primer Rescate</b> son especiales! Vienen llenos de mucho amor, con dósis extra de cariño y una gran ración de dulzura, ¡busca el tuyo aquí!.</p>
+        </section>
 
         <div className={ styles.grid__container }>
             {

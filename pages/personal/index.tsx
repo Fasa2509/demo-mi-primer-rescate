@@ -58,7 +58,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
   return (
     <MainLayout title='Información Personal' pageDescription='Información personal de tu usuario de MPR' titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/personal'>
         
-        <Box sx={{ backgroundColor: '#fafafa', padding: '1rem', borderRadius: '1rem', boxShadow: '0 0 1.2rem -.8rem #555' }}>
+        <section className='content-island'>
           <Box display='flex' flexDirection='column' sx={{ mb: 1.5 }}>
             <Typography sx={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--secondary-color-1-complement)', }}>Nombre</Typography>
             <Typography>{ user.name }</Typography>
@@ -69,17 +69,17 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
             <Typography>{ user.email }</Typography>
           </Box>
 
-        <Typography sx={{ my: 1.5 }}>Te uniste a la manada el { formatDate( user.createdAt, 'dd/MM/yyyy' ) }</Typography>
+          <Typography sx={{ my: 1.5 }}>Te uniste a la manada el { formatDate( user.createdAt, 'dd/MM/yyyy' ) }</Typography>
 
-        {
-          ( isSubscribed )
-            ? <Box className='fadeIn'>
-                <Typography>¡Estás suscrit@ a <span style={{ textDecoration: 'underline', fontWeight: '600' }}>Mi Primer Rescate</span>! Recibirás información exclusiva de nuestra fundación en tu correo electrónico.</Typography>
-                <Typography>¿Ya no quieres recibir información? Pulsa <Button className='button button--purple low--padding' onClick={ unsubscribe }>aquí</Button></Typography>
-              </Box>
-            : <Typography className='fadeIn'>No estás suscrit@ a nuestra página. ¡Suscríbete para recibir información personalizada y estar al tanto de nuestros eventos!</Typography>
-        }
-        </Box>
+          {
+            ( isSubscribed )
+              ? <Box className='fadeIn'>
+                  <Typography>¡Estás suscrit@ a <span style={{ textDecoration: 'underline', fontWeight: '600' }}>Mi Primer Rescate</span>! Recibirás información exclusiva de nuestra fundación en tu correo electrónico.</Typography>
+                  <Typography>¿Ya no quieres recibir información? Pulsa <Button className='button button--purple low--padding' onClick={ unsubscribe }>aquí</Button></Typography>
+                </Box>
+              : <Typography className='fadeIn'>No estás suscrit@ a nuestra página. ¡Suscríbete para recibir información personalizada y estar al tanto de nuestros eventos!</Typography>
+          }
+        </section>
 
         <Typography variant='subtitle1' sx={{ mt: 2.5, fontSize: '1.4rem' }}>Mis Mascotas</Typography>
 
@@ -98,9 +98,9 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
         <Box display='flex' flexDirection='column' gap='1.5rem'>
           {
             ( orders.length === 0 )
-              ? <Typography>Aún no has creado ninguna órden.</Typography>
+              ? <section className='content-island'><Typography>Aún no has creado ninguna órden.</Typography></section>
               : orders.map(( order ) =>
-                <Box key={ order._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 1.2rem -.8rem #555', borderRadius: '1rem' }}>
+                <Box key={ order._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 .8rem -.5rem #666', borderRadius: '1rem' }}>
                   <Box>
                     <Typography sx={{ color: 'var(--secondary-color-1-complement)', fontSize: '1.2rem', fontWeight: '600' }}>ID de la Órden</Typography>
                     <Typography>{ order._id }</Typography>

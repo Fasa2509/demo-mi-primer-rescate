@@ -35,6 +35,11 @@ body {
   width: 4px;
 }
 
+body::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color-1);
+  box-shadow: 0 -100vh 0 100vh var(--secondary-color-1);
+}
+
 ::-webkit-scrollbar-thumb {
   background-color: var(--secondary-color-1);
 }
@@ -70,6 +75,21 @@ h1, h2, h3, p, hr {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.content-island {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  border-radius: .4rem;
+  padding: 1rem .8rem;
+  background-color: #fff;
+  box-shadow: 0 0 .8rem -.6rem #777;
+  transition: box-shadow 300ms ease;
+}
+
+.content-island * {
+  margin: 0;
 }
 
 /* cambiar display de las notificaciones */
@@ -230,6 +250,10 @@ section .is-active {
 
   .button--warning:hover {
     background-color: #df6400;
+  }
+
+  .content-island:hover {
+    box-shadow: 0 0 .8rem -.4rem #555;
   }
 
   .notification__buttons.transparent:hover {

@@ -86,7 +86,7 @@ const columns: GridColDef[] = [
     sortable: false,
     disableColumnMenu: true,
     align: 'center',
-    width: 120,
+    width: 135,
   },
   {
     field: 'setNewProduct',

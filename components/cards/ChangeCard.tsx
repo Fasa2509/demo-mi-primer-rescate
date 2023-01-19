@@ -44,7 +44,7 @@ export const ChangeCard: FC<Props> = ({ pet, observe = false, removable = false 
         <SliderImages images={ pet.images.map(( img ) => ({ url: img, alt: pet.name, width: 500, height: 500 })) } options={{ indicators: false, cycleNavigation: false, animation: 'slide', interval: 12000, autoPlay: false }} objectFit='cover' />
       </Box>
       <Box>
-        <Box display='flex' justifyContent='space-between'>
+        <Box display='flex' justifyContent='space-between' alignItems='center' sx={{ mb: { xs: 1, md: 0 } }}>
           <p className={ styles.pet__name }>{ pet.name }</p>
           { removable && <Button className='fadeIn button button--error button--round low--padding low--font--size' onClick={ handleDeletePet }>Eliminar</Button> }
         </Box>

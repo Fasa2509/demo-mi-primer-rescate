@@ -42,11 +42,11 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
         
         <ContainerFavProduct products={ mostSoldProducts } />
 
-        <Typography>¡Bienvenido a nuestra tienda online!</Typography>
-
-        <Typography>Aquí podrás encontrar todo tipo de artículos para los más consentidos de la casa.</Typography>
-
-        <Typography>Explora todos nuestros productos o usa nuestro buscador para encontrar uno en particular.</Typography>
+        <section className='content-island'>
+          <Typography>¡Bienvenido a nuestra tienda online!</Typography>
+          <Typography>Aquí podrás encontrar todo tipo de artículos para los más consentidos de la casa.</Typography>
+          <Typography>Explora todos nuestros productos o usa nuestro buscador para encontrar uno en particular.</Typography>
+        </section>
 
         <>
           {

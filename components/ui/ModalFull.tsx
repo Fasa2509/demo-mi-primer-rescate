@@ -58,14 +58,14 @@ export const ModalFull: FC<Props> = ({ products }) => {
 
     useEffect(() => {
         if ( !didMount ) return;
-        let productBySlug = products.find(( p ) => p.slug === `/${ router.query.product }`);
+        let productBySlug = products.find(( p ) => p.slug === router.query.product);
 
         if ( productBySlug ) {
             if ( productBySlug._id === product._id ) {
                 setActive( true );
                 return;
             }
-            
+
             setCurrentSize('unique');
             setProduct( productBySlug );
             setActive( true );

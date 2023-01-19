@@ -84,7 +84,7 @@ export const UserPetInfo: FC<Props> = ({ pet, updatePetInfo }) => {
     }
 
     return (
-        <Box key={ pet._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 1.2rem -.8rem #555', borderRadius: '1rem' }}>
+        <Box key={ pet._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 .8rem -.5rem #666', borderRadius: '1rem' }}>
             <Box display='flex' justifyContent='space-between'>
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{ pet.name }</Typography>
 

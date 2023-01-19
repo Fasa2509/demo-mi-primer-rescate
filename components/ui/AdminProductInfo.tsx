@@ -100,6 +100,9 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
             
         if ( nameRef.current!.value.trim().length < 3 )
             return enqueueSnackbar('El nombre es muy corto', { variant: 'info' });
+
+        if ( !descriptionRef.current!.value.trim() || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
+            return enqueueSnackbar('La información del producto está incompleta', { variant: 'warning' });
         
         if ( form.tags.length === 0 ) {
             enqueueSnackbar('El producto debe tener etiquetas', { variant: 'warning' });
@@ -107,9 +110,6 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
             input && input.focus();
             return;
         }
-
-        if ( !descriptionRef.current!.value.trim() || form.images.length < 2 || form.images.length > 4 || form.price === 0 )
-            return enqueueSnackbar('La información del producto está incompleta', { variant: 'warning' });
             
         let key = enqueueSnackbar(`¿Quieres ${ method === 'update' ? 'actualizar' : 'crear' } este producto?`, {
             variant: 'info',
@@ -128,7 +128,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
                 ...form,
                 name: nameRef.current!.value.trim(),
                 description: descriptionRef.current!.value.trim(),
-                slug: nameRef.current!.value.trim().replace(' ', '_'),
+                slug: nameRef.current!.value.trim(),
             }, unica);
 
             enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
@@ -376,7 +376,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
             <Typography sx={{ fontSize: '1.4rem', fontWeight: '600', color: '#444' }}>Imágenes del Producto:</Typography>
 
             { form.images.length > 0 &&
-                <SliderImages images={ form.images } options={{ indicators: false, animation: 'slide', navButtonsAlwaysVisible: true, interval: 9000, autoPlay: false }} objectFit='cover' />
+                <SliderImages images={ form.images } options={{ indicators: false, animation: 'slide', interval: 9000, autoPlay: false }} objectFit='cover' />
             }
             
             <input ref={ imageRef } style={{ display: 'none' }} accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={ requestUpload } />

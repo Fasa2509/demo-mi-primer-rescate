@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import Image from 'next/image';
 import NextLink from 'next/link';
 
+import { MyImage } from '../cards';
 import { format } from '../../utils';
 import { IProduct } from '../../interfaces';
 import { Box, Typography } from '@mui/material';
@@ -19,7 +19,7 @@ export const BigProductCard: FC<Props> = ({ product }) => {
     }} scroll={ false } prefetch={ false } shallow>
       <Box className={ styles.big__product__info } display='flex' flexDirection='column'>
         <Box className={ styles.big__product__image }>
-          <Image src={ product.images[0].url } alt={ product.name } width={ 1 } height={ 1 } layout='responsive' />
+          <MyImage src={ product.images[0].url } alt={ product.name } width={ 1 } height={ 1 } layout='responsive' objectFit='cover' />
         </Box>
         <Box className={ styles.big__product__data }>
           <Typography sx={{ fontWeight: '600', fontSize: '1.1rem', lineHeight: '1.15' }}>{ product.name }</Typography>

@@ -30,7 +30,7 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
 
     const { name = '', description = '', images = [], inStock, price = 0, discount, tags = [], slug = '', unica = undefined } = req.body;
 
-    if ( !name || !description || images.length < 2 || images.length > 4 || price === 0 || discount > 50 || tags.length === 0 || !slug.startsWith('/') || unica === undefined )
+    if ( !name || !(/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\(\) ]*$/.test( name )) || !description.trim() || images.length < 2 || images.length > 4 || price === 0 || discount > 50 || tags.length === 0 || unica === undefined )
         return res.status(400).json({ error: true, message: 'La información no es válida' });
         
     const { unique, ...tallas } = inStock;
@@ -54,7 +54,7 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
 
         const product = new Product({
             name,
-            description,
+            description: description.trim(),
             images,
             inStock:
                 ( unica )
@@ -74,7 +74,7 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
             price,
             discount: discount > 1 ? discount / 100 : discount,
             tags,
-            slug,
+            slug: slug.toLocaleLowerCase().replaceAll(' ', '_').replaceAll('/', ''),
         });
 
         await product.save();
@@ -109,7 +109,7 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
 
     if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
-    if ( !name || !description || price === 0 || discount > 50 || discount < 0 || unica === undefined )
+    if ( !name || !(/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\(\) ]*$/.test( name )) || !description.trim() || price === 0 || discount > 50 || discount < 0 || unica === undefined )
         return res.status(400).json({ error: true, message: 'La información no es válida' });
     
     if ( tags.length === 0 || tags.length > 4 )
@@ -117,32 +117,33 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
 
     if ( images.length < 2 || images.length > 4 )
         return res.status(400).json({ error: true, message: 'Mínimo 2 imágenes y máximo 4' });
-        
-    let { unique: u, ...tallas } = inStock;
+
+    const { unique: u, ...tallas } = inStock;
         
     try {
         await db.connect();
         
+        const product = await Product.findById( id );
+
+        if ( !product ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'No existe product con ese id' });
+        }
+
+        if ( ( product.inStock.unique === -1 ) && ( unique >= 0 || unica ) ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
+        }
+
+        if ( ( product.inStock.unique >= 0 ) && ( Object.values( tallas ).some(( size ) => typeof size === 'number' && size >= 0) || !unica ) ) {
+            await db.disconnect();
+            return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
+        }
+        
         if ( unica ) {
-            const product = await Product.findById( id );
-
-            if ( !product ) {
-                await db.disconnect();
-                return res.status(400).json({ error: true, message: 'No existe product con ese id' });
-            }
-            
-            if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value ) => typeof value === 'number' && value > 0) ) {
-                await db.disconnect();
-                return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
-            }
-
-            if ( product.inStock.unique === -1 && inStock.unique >= 0 ) {
-                await db.disconnect();
-                return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
-            }
             
             product.name = name;
-            product.description = description;
+            product.description = description.trim();
             product.images = [...images];
             product.price = price;
             product.discount = ( discount > 0.5 ) ? discount / 100 : discount;
@@ -160,23 +161,9 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
             product.tags = [...tags];
             await product.save();
         } else {
-            const product = await Product.findById( id );
-            if ( !product ) {
-                await db.disconnect();
-                return res.status(400).json({ error: true, message: 'No existe producto con ese id' });
-            }
-            
-            if ( product.inStock.unique !== -1 && Object.values( tallas ).some(( value, index, array ) => typeof value === 'number' && value > 0) ) {
-                await db.disconnect();   
-                return res.status(400).json({ error: true, message: 'Error en la info de las tallas' });
-            }
-            if ( product.inStock.unique === -1 && inStock.unique >= 0 ) {
-                await db.disconnect();   
-                return res.status(400).json({ error: true, message: 'Error en la info de las tallasssss' });
-            }
 
             product.name = name;
-            product.description = description;
+            product.description = description.trim();
             product.price = price;
             product.discount = discount / 100;
             
