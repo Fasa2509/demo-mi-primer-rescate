@@ -22,9 +22,9 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 const removeArticle = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    const { id: _id = '' } = req.query;
+    const { id = '' } = req.query;
 
-    if ( !_id || !isValidObjectId( _id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
+    if ( !id || !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
     const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
@@ -40,7 +40,7 @@ const removeArticle = async ( req: NextApiRequest, res: NextApiResponse ) => {
     try {
         await db.connect();
 
-        await Article.deleteOne({ _id });
+        await Article.findByIdAndDelete( id );
 
         await db.disconnect();
 

@@ -51,8 +51,10 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500 }) => 
     return (
         <section id={ identifier } className={ styles.container }>
             { children }
-            <button className={ `${ styles.pass__button } ${ styles.left }` } disabled={ buttonsDisabled } onClick={ () => passElement( -1 ) }>{ '<' }</button>
-            <button className={ `${ styles.pass__button } ${ styles.right }` } disabled={ buttonsDisabled } onClick={ () => passElement( 1 ) }>{ '>' }</button>
+            <div className={ styles.buttons__container }>
+                <button className={ `${ styles.pass__button } ${ styles.left }` } disabled={ buttonsDisabled } onClick={ () => passElement( -1 ) }></button>
+                <button className={ `${ styles.pass__button } ${ styles.right }` } disabled={ buttonsDisabled } onClick={ () => passElement( 1 ) }></button>
+            </div>
         </section>
     )
 }

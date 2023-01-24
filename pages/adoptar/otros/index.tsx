@@ -63,8 +63,6 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
 
       document.querySelectorAll('.observe')
         .forEach(( el, index ) => ( index >= lastPetsLengthRef.current! ) && intersectionObserverRef.current!.observe( el ));
-      document.querySelectorAll('.observe')
-        .forEach(( el, index ) => index >= lastPetsLengthRef.current! && console.log( el ));
       
       lastPetsLengthRef.current = pets.length;
     }
@@ -143,7 +141,6 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     props: {
       pets
     },
-    revalidate: 3600 * 24 * 7,
   }
 }
 

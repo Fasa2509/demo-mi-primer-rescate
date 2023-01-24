@@ -5,7 +5,7 @@ import { Box, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbPets } from '../../../database';
-import { AuthContext, ScrollContext } from '../../../context'
+import { AuthContext, ScrollContext } from '../../../context';
 import { mprRevalidatePage } from '../../../mprApi';
 import { MainLayout, PetCard } from '../../../components';
 import { IPet } from '../../../interfaces';
@@ -141,7 +141,6 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     props: {
       pets
     },
-    revalidate: 3600 * 24 * 7,
   }
 }
 

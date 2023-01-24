@@ -36,6 +36,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   const lastPetsLengthRef = useRef<number>( 0 );
   const [pets, setPets] = useState( Pets );
   
+  
   useEffect(() => {
     if ( window.innerWidth < 700 ) {
       const observer = new IntersectionObserver(callback, {
@@ -103,13 +104,13 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
           <p>¡Los gatitos de <b>Mi Primer Rescate</b> no son como otros! Ell@s están preparados para cualquier muestra de afecto, entrenados para hacerte reír y son expertos en ser consentidos, ¡no te quedes sin el tuyo!.</p>
         </section>
 
-        <div className={ styles.grid__container }>
+        <section className={ styles.grid__container }>
             {
                 pets.map(( pet, index ) => (
                     <PetCard key={ pet.name + index } pet={ pet } removable={ user ? user.role === 'admin' || user.role === 'superuser' : false } />
                 ))
             }
-        </div>
+        </section>
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
           <Button className={ styles.load__pets } color='secondary' onClick={ requestPets }>Ver más</Button>
@@ -140,7 +141,6 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     props: {
       pets
     },
-    revalidate: 3600 * 24 * 7,
   }
 }
 

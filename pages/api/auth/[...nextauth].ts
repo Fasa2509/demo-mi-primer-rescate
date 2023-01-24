@@ -1,10 +1,13 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
-import Credentials from 'next-auth/providers/credentials'
-import Google from 'next-auth/providers/google'
-import Facebook from 'next-auth/providers/facebook'
-import Instagram from 'next-auth/providers/instagram'
-import GitHub from 'next-auth/providers/github'
-import { dbUsers } from '../../../database'
+import NextAuth, { NextAuthOptions } from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
+import Facebook from 'next-auth/providers/facebook';
+import Instagram from 'next-auth/providers/instagram';
+import GitHub from 'next-auth/providers/github';
+
+import { db } from '../../../database';
+import { User } from '../../../models';
+import { dbUsers } from '../../../database';
 
 export const nextAuthOptions: NextAuthOptions = {
 
@@ -17,7 +20,6 @@ export const nextAuthOptions: NextAuthOptions = {
         password: { label: 'Contraseña', type: 'password', placeholder: 'Contraseña' },
       },
       async authorize( credentials ) {
-        // console.log(credentials)
         return await dbUsers.CheckUserEmailPassword( credentials!.email, credentials!.password );
       }
     }),
@@ -25,22 +27,22 @@ export const nextAuthOptions: NextAuthOptions = {
     GitHub({
       clientId: process.env.GITHUB_ID || '',
       clientSecret: process.env.GITHUB_SECRET || '',
-    })
+    }),
 
-    // Google({
-    //   clientId: process.env.GOOGLE_ID || '',
-    //   clientSecret: process.env.GOOGLE_SECRET || '',
-    // }),
+    Google({
+      clientId: process.env.GOOGLE_ID || '',
+      clientSecret: process.env.GOOGLE_SECRET || '',
+    }),
 
-    // Facebook({
-    //   clientId: process.env.FACEBOOK_ID || '',
-    //   clientSecret: process.env.FACEBOOK_SECRET || '',
-    // }),
+    Facebook({
+      clientId: process.env.FACEBOOK_ID || '',
+      clientSecret: process.env.FACEBOOK_SECRET || '',
+    }),
 
-    // Instagram({
-    //   clientId: process.env.INSTAGRAM_ID || '',
-    //   clientSecret: process.env.INSTAGRAM_SECRET || '',
-    // }),
+    Instagram({
+      clientId: process.env.INSTAGRAM_ID || '',
+      clientSecret: process.env.INSTAGRAM_SECRET || '',
+    }),
 
   ],
 
@@ -62,6 +64,17 @@ export const nextAuthOptions: NextAuthOptions = {
 
   callbacks: {
 
+    async signIn({ user, account, profile, email, credentials }) {
+      
+      await db.connect();
+      const userInfo = await User.findOne({ email: user.email! });
+      await db.disconnect();
+
+      if ( userInfo && !userInfo.isAble ) return '/';
+
+      return true;
+    },
+
     async jwt({ token, account, user }) {
       if ( account ) {
         token.accessToken = account.access_token;
@@ -72,7 +85,7 @@ export const nextAuthOptions: NextAuthOptions = {
             break;
 
           case 'oauth':
-            token.user = await dbUsers.oAuthToDbUser( user?.email || '', user?.name || '' )
+            token.user = await dbUsers.oAuthToDbUser( user?.email || '', user?.name || '' );
             break;
         }
       }

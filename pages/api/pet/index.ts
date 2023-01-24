@@ -85,10 +85,6 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     try {
         await db.connect();
-
-        // @ts-ignore
-        const newPet = new Pet({ type, userId: session.user._id, name: formatText( name.trim() ), images, description: description.trim(), isAdminPet: session.user.role === 'admin' || session.user.role === 'superuser' });
-        await newPet.save();
         
         // @ts-ignore
         const user = await User.findById( session.user._id );
@@ -97,6 +93,18 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
             await db.disconnect();
             return res.status(400).json({ error: true, message: 'No se guardó la mascota correctamente' });
         }
+
+        const newPet = new Pet({
+            type,
+            // @ts-ignore
+            userId: session.user._id,
+            name: formatText( name.trim() ),
+            images,
+            description: description.trim(),
+            // @ts-ignore
+            isAdminPet: session.user.role === 'admin' || session.user.role === 'superuser'
+        });
+        await newPet.save();
 
         user.pets = [...user?.pets, newPet._id];
         await user.save();
@@ -117,7 +125,7 @@ const updatePetDescription = async ( req: NextApiRequest, res: NextApiResponse )
 
     const { petId = '', petDescription = '' } = req.body;
 
-    if ( !petId || !petDescription ) return res.status(400).json({ error: true, message: 'La información está incompleta' });
+    if ( !petId || !petDescription.trim() ) return res.status(400).json({ error: true, message: 'La información está incompleta' });
 
     if ( !isValidObjectId( petId ) ) return res.status(400).json({ error: true, message: 'La información es inválida' });
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { IAdoption } from '../interfaces';
-const { Schema, Types, model } = mongoose;
+const { Schema, model } = mongoose;
 
 const adoptionSchema = new Schema({
     particular1: { type: String },

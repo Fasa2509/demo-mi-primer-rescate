@@ -13,7 +13,6 @@ export const getSoldProducts = async (): Promise<ISold[] | null> => {
 
         return JSON.parse( JSON.stringify( solds ) );
     } catch( error ) {
-        console.log( error );
         return null;
     }
 
@@ -33,7 +32,6 @@ export const updateSoldProducts = async ( updatedProducts: ISold[] ): Promise< b
 
         return true;
     } catch( error ) {
-        console.log( error );
         return false;
     }
 

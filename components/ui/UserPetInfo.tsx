@@ -80,7 +80,7 @@ export const UserPetInfo: FC<Props> = ({ pet, updatePetInfo }) => {
     const startEditing = () => {
         setIsEditing( true );
         descriptionRef.current!.value = pet.description;
-        setTimeout(() => descriptionRef.current!.focus(), 100);
+        setTimeout(() => descriptionRef.current!.focus(), 150);
     }
 
     return (

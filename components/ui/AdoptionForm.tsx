@@ -1,7 +1,7 @@
-import { ChangeEvent, FC, useContext, useState, useRef } from "react"
+import { ChangeEvent, FC, useContext, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Box, FormControlLabel, FormLabel, Input, Radio, RadioGroup, TextField, Typography } from "@mui/material"
+import { Box, FormControlLabel, FormLabel, Input, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 
 import { ScrollContext } from "../../context";
@@ -47,68 +47,6 @@ const baseForm = {
     input27: false,
     input28: '',
 }
-
-// Antes de empezar el cuestionario ¿Está usted interesado en algún perro/gato en particular de la manada MPR? De ser así escriba su nombre aquí. 
-
-// Si este ya fue adoptado, ¿estaría interesado en adoptar otro? 
-
-// 1. ¿Por qué motivos desea adoptar una mascota? 
-
-// 2. ¿En que lugar/zona reside usted?
-
-// 3. ¿El animal que desea adoptar es para usted o para un tercero? 
-
-// 4. ¿Cuántas personas habitan en su hogar? ¿Cual es su parentesco? Enumere sus edades por separado
-
-// 5. ¿Viven niños en su hogar? ¿Que edad tienen? 
-
-// 6. ¿Todos los miembros de su familia (o habitantes de su hogar) están de acuerdo con adoptar un animal? 
-
-// 7. ¿Viven otros animales en casa? 
-
-// 8. Si es así, ¿que tipo de animal es/son? ¿Se encuentran vacunados/castrados? Enumere sus edades 
-
-// 9. En caso de que no los haya, ¿ha tenido/vivido con animales alguna vez? ¿Por qué ya no? 
-
-// 10. ¿Suele usted viajar/vacacionar? ¿Con que frecuencia? 
-
-// 11. Si es muy constante la frecuencia con la que viaja, ¿que hará con el animal cuando tenga que viajar? 
-
-// 12. ¿Es consciente de los gastos y cuidados que implica tener un animal en casa? ¿Está dispuesto a asumirlos? 
-
-// 13. ¿En que tipo de vivienda reside? (casa, townhouse, depto, finca, casa quinta etc.)
-
-// 14. ¿Vivirá en esa vivienda el animal adoptado? 
-
-// 15. ¿Es propietario de la vivienda donde reside o alquila la propiedad? Si su condición es de inquilino, ¿está seguro de que permiten tener animales? 
-
-// 16. Si se mudara de su actual vivienda ¿que haría con el animal? 
-
-// 17. ¿Su vivienda cuenta con un espacio al aire libre? (patio, porche, terraza, balcón) de ser así indique como es y si tiene un cercado en buenas condiciones (rejas, muros, red, entre otros)
-
-// 18. ¿El animal que desea adoptar es para compañía, guardia, trabajo, etc? Si es por otro motivo indique cuál 
-
-// 19. ¿Cuantas horas al día estima que el animal estará solo en la propiedad? 
-
-// 20. ¿Cuanto tiempo al día dispone usted o los miembros de su familia para pasear al animal, jugar con el, o amaestrarlo? 
-
-// 21. ¿Es consciente de que el animal se adaptará a su nueva familia, lugar y horarios en un periodo aproximado de entre 15 a 30 días? 
-
-// 22. Si su animal presenta una inadaptación o problema de comportamiento, ¿cual cree que debe ser la solución? 
-
-// 23. Por favor, indique las características físicas y conductivas del animal que desea adoptar y cualquier dato importante a tener en cuenta que no se le haya preguntado. 
-
-// LAS PREGUNTAS A CONTINUACIÓN DEBERÁN SER RESPONDIDAS POR AQUELLAS PERSONAS INTERESADAS EN ADOPTAR UN CACHORRO 
-
-// 24. ¿Por qué motivos decide adoptar un cachorro? 
-
-// 25. Indique los cuidados que usted cree que necesita un cachorro 
-
-// 26. Es un requisito prioritario castrar al animal adoptado entre los primeros 6-8 meses después de su adopción ¿Está de acuerdo? ¿Se compromete a cumplirlo?
-
-// 27. ¿Es consciente de que un cachorro, durante su proceso de adaptación puede que haga sus necesidades en diferentes lugares de la casa, rompa objetos, llore durante las noches, etc? 
-
-// 278. ¿Que sucedería si su cachorro crece más de lo esperado?
 
 export const AdoptionForm: FC = () => {
 

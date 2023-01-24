@@ -3,7 +3,10 @@ import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { Box, Button, Card, CardContent, Checkbox, Divider, TextField, Typography } from '@mui/material';
-import { AddShoppingCart, Check, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
+import AddShoppingCart from '@mui/icons-material/AddShoppingCart';
+import Check from '@mui/icons-material/Check';
+import RemoveShoppingCart from '@mui/icons-material/RemoveShoppingCart';
+import ShoppingBag from '@mui/icons-material/ShoppingBag';
 import { useSnackbar } from 'notistack';
 
 import { mprRevalidatePage } from '../../mprApi';

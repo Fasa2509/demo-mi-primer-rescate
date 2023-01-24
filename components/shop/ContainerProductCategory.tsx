@@ -13,10 +13,10 @@ interface Props {
 
 export const ContainerProductCategory: FC<Props> = ({ type, products }) => {
     
-    const router = useRouter();
+    const { push, asPath } = useRouter();
 
     const shallowNavigate = ( query: string ) =>
-        router.push(router.asPath + query, undefined, { shallow: true });
+        push(asPath + query, undefined, { shallow: true });
 
     return (
         <section className={ styles.products__type__container }>

@@ -7,9 +7,9 @@ import { useSnackbar } from 'notistack';
 import { dbPets } from '../../database';
 import { AuthContext, ScrollContext } from '../../context';
 import { mprRevalidatePage } from '../../mprApi';
-import { ChangeCard, MainLayout, PetChangeForm } from '../../components'
+import { ChangeCard, MainLayout, PetChangeForm } from '../../components';
 import { IPet } from '../../interfaces';
-import styles from '../../styles/Cambios.module.css'
+import styles from '../../styles/Cambios.module.css';
 
 const callback: IntersectionObserverCallback = ( entries ) =>
   entries.forEach(( entry ) => entry.isIntersecting && entry.target.classList.add(`${ styles.visible }`));
@@ -130,7 +130,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
       pets,
       changedPets,
     },
-    revalidate: 3600 * 24 * 3,
+    revalidate: 3600 * 24 * 2,
   }
 } 
 

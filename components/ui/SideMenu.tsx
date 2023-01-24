@@ -109,14 +109,14 @@ export const SideMenu: FC = () => {
                     <>
                     <Divider />
                     <ListSubheader>Admin Panel</ListSubheader>
-
-                    <NextLink href='/admin/productos'>
+                    
+                    <NextLink href='/admin/usuarios'>
                         <a onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/productos') ? '#eee' : '#fff' }}>
+                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/usuarios') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
-                                    <Category color='secondary' />
+                                    <AdminPanelSettings color='secondary' />
                                 </ListItemIcon>
-                                <ListItemText primary={'Productos'} />
+                                <ListItemText primary={'Usuarios'} />
                             </ListItemButton>
                         </a>
                     </NextLink>
@@ -131,14 +131,14 @@ export const SideMenu: FC = () => {
                             </ListItemButton>
                         </a>
                     </NextLink>
-                    
-                    <NextLink href='/admin/usuarios'>
+
+                    <NextLink href='/admin/productos'>
                         <a onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/usuarios') ? '#eee' : '#fff' }}>
+                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/productos') ? '#eee' : '#fff' }}>
                                 <ListItemIcon>
-                                    <AdminPanelSettings color='secondary' />
+                                    <Category color='secondary' />
                                 </ListItemIcon>
-                                <ListItemText primary={'Usuarios'} />
+                                <ListItemText primary={'Productos'} />
                             </ListItemButton>
                         </a>
                     </NextLink>

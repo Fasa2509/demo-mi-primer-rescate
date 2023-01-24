@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import NextLink from 'next/link';
+import { Box, Typography } from '@mui/material';
 
 import { MyImage } from '../cards';
 import { format } from '../../utils';
 import { IProduct } from '../../interfaces';
-import { Box, Typography } from '@mui/material';
 import styles from './ProductCard.module.css';
 
 interface Props {

@@ -63,23 +63,23 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
 
       <Loader />
       
-      <section style={{ width: '100%' }}>
+      <section style={{ minWidth: '310px' }}>
         <Slider identifier='hero-slider' duration={ 10000 }>
-        <div className='fadeIn' style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ width: '50%', position: 'relative' }}>
-            <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
+          <div className='fadeIn' style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '50%', position: 'relative' }}>
+              <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
+            </div>
           </div>
-        </div>
-        <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ width: '50%', position: 'relative' }}>
-            <MyImage src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+          <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '50%', position: 'relative' }}>
+              <MyImage src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+            </div>
           </div>
-        </div>
-        <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ width: '20%', position: 'relative' }}>
-            <MyImage src={ '/icon.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+          <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '20%', position: 'relative' }}>
+              <MyImage src={ '/icon.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+            </div>
           </div>
-        </div>
         </Slider>
       </section>
 

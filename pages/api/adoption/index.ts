@@ -25,10 +25,16 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 const createAdoption = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+
+    if ( !session || !session.user )
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+
     try {
         await db.connect();
 
-        const adoption = new Adoption( req.body );
+        // @ts-ignore
+        const adoption = new Adoption({ ...req.body, user: session.user._id });
         await adoption.save();
 
         await db.disconnect();
@@ -64,7 +70,7 @@ const checkAdoption = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
         if ( !adoption ) {
             await db.disconnect();
-           return res.status(400).json({ error: true, message: 'No se encontró la petición' });
+            return res.status(400).json({ error: true, message: 'No se encontró la petición' });
         }
 
         adoption.checked = true;

@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { useSnackbar } from 'notistack';
 import { Box, IconButton, Link, Typography } from "@mui/material";
@@ -22,9 +22,11 @@ export const Footer: FC = () => {
   const { user } = useContext( AuthContext );
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
+  const [isSubscribed, setIsSubscribed] = useState( false );
   
   const handleClick = async () => {
       
+      if ( isSubscribed ) return enqueueSnackbar('¡Ahora estás suscrit@ a MPR!', { variant: 'success' });
       if ( !user ) return enqueueSnackbar('Inicia sesión para suscribirte a MPR', { variant: 'warning' });
       if ( !validations.isValidEmail( user.email ) ) return enqueueSnackbar('El correo no es válido', { variant: 'warning' });
       
@@ -32,6 +34,8 @@ export const Footer: FC = () => {
           setIsLoading( true );
           const { data } = await mprApi.post('/contact', { email: user?.email });
           setIsLoading( false );
+
+          !data.error && setIsSubscribed( true );
           
           enqueueSnackbar(data.message, { variant: !data.error ? 'success' : 'error' });
       } catch( error ) {

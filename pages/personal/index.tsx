@@ -7,11 +7,11 @@ import { Home } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { format as formatDate } from 'date-fns';
 
-import { dbPets, dbUsers } from '../../database';
+import { dbUsers } from '../../database';
 import { mprApi } from '../../mprApi';
-import { AuthContext, ScrollContext } from '../../context';
-import { MainLayout, MyImage, UserPetInfo } from '../../components';
-import { ConfirmNotificationButtons, format, getParagraphs, PromiseConfirmHelper } from '../../utils';
+import { ScrollContext } from '../../context';
+import { MainLayout, UserPetInfo } from '../../components';
+import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
 import { IOrder, IPet, IUser } from '../../interfaces';
 
 interface Props {
@@ -35,7 +35,7 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
       variant: 'info',
       autoHideDuration: 10000,
       action: ConfirmNotificationButtons,
-    })
+    });
 
     const confirm = await PromiseConfirmHelper( key, 10000 );
 

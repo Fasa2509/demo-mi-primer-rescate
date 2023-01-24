@@ -16,7 +16,6 @@ export const backGetDolarPrice = async (): Promise< Number | null> => {
         
         return dolarPrice ? dolarPrice.price : 10;
     } catch( error ) {
-        console.log( error );
         return null;
     }
 
@@ -29,7 +28,6 @@ export const frontGetDolarPrice = async (): Promise< number | null> => {
 
         return data.price;
     } catch( error ) {
-        console.log( error );
         return null;
     }
 
@@ -44,7 +42,6 @@ export const updateDolarPrice = async ( price: number ): Promise<{ error: boolea
 
         return data;
     } catch( error ) {
-        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return error.response?.data as { error: boolean; message: string; };
@@ -69,7 +66,6 @@ export const checkProductsExistency = async ( productsToCheck: Array<{ _id: stri
 
         return data;
     } catch( error ) {
-        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -113,7 +109,6 @@ export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promi
 
         return data;
     } catch( error ) {
-        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -162,7 +157,6 @@ export const updateProductById = async ( id: string, payload: IProduct, unique: 
             ? res.data
             : { error: true, message: 'Error en la petición' };
     } catch( error ) {
-        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -190,7 +184,6 @@ export const discountProducts = async (discount: number, matcher: string ): Prom
 
         return data;
     } catch( error: any ) {
-        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -215,7 +208,6 @@ export const switchProductAbilityById = async ( id: string ) => {
 
         return data;
     } catch( error: any ) {
-        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -246,7 +238,6 @@ export const getProductBySlug = async ( slug: string ): Promise<IProduct | null 
 
         return JSON.parse( JSON.stringify( product ) );
     } catch( error ) {
-        console.log( error );
         return null;
     }
 
@@ -263,7 +254,6 @@ export const getAllProducts = async (): Promise<IProduct[] | null> => {
 
         return JSON.parse( JSON.stringify( products ) );
     } catch( error ) {
-        console.log( error );
         return null;
     }
 

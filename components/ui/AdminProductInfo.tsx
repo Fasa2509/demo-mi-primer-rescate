@@ -307,7 +307,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
                     ( !res.error && res.imgUrl ) && setForm({
                         ...form,
-                        images: [...form.images, { url: res.imgUrl, alt: getImageNameFromUrl( res.imgUrl ), width: 400, height: 400 }]
+                        images: [...form.images, { url: res.imgUrl, alt: getImageNameFromUrl( res.imgUrl ), width: 500, height: 500 }]
                     });
                 },
                 error: () => {
@@ -328,7 +328,7 @@ export const AdminProductInfo: FC<Props> = ({ product: thisProduct, method, setM
 
         ( !res.error && res.imgUrl ) && setForm({
             ...form,
-            images: [...form.images, { url: res.imgUrl, alt: getImageNameFromUrl( res.imgUrl ), width: 400, height: 400 }]
+            images: [...form.images, { url: res.imgUrl, alt: getImageNameFromUrl( res.imgUrl ), width: 500, height: 500 }]
         });
     }
     

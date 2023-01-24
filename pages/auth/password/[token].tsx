@@ -49,7 +49,7 @@ const TokenPage: NextPage<Props> = ({ userInfo }) => {
         <MainLayout title='Recuperar contraseña' H1='Inicio' pageDescription='Cambiar contraseña de tu cuenta de MPR' pageImage={ 'Logo-MPR.png' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/auth' url='/auth'>
             
             <Box className={ styles.info__container }>
-                <p className={ styles.title }>Actualizar Contraseña</p>
+                <p className={ styles.title }>Recuperar Contraseña</p>
 
                 <p>Cambia la contraseña de tu cuenta de MPR.</p>
 
@@ -69,7 +69,7 @@ const TokenPage: NextPage<Props> = ({ userInfo }) => {
                     />
 
                     <TextField
-                        label='Repetir contraseña'
+                        label='Repite tu contraseña'
                         type='password'
                         variant='filled'
                         color='secondary'
@@ -78,7 +78,7 @@ const TokenPage: NextPage<Props> = ({ userInfo }) => {
                         onChange={ ({ target }) => setPasswords({ ...passwords, password2: target.value })}
                     />
 
-                    <Button color='secondary' sx={{ fontSize: '.9rem', alignSelf: 'center', borderRadius: '5rem', padding: '.3rem 1.5rem' }} onClick={ handleChangePassword }>Actualizar clave</Button>
+                    <Button color='secondary' sx={{ fontSize: '.9rem', alignSelf: 'center', borderRadius: '5rem', padding: '.3rem 1.5rem' }} onClick={ handleChangePassword }>Cambiar contraseña</Button>
                     </>
                 }
 

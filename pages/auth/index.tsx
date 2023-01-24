@@ -1,14 +1,32 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { GetServerSideProps, NextPage } from 'next';
-import Image from 'next/image';
 import { unstable_getServerSession } from 'next-auth';
-import { Box, Button, Card, Chip, TextField, Typography } from '@mui/material';
-import { Check, ErrorOutline, Home } from '@mui/icons-material';
+import { getProviders, signIn } from 'next-auth/react';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';
+import { Box, Button, Card, Chip, TextField, Typography } from '@mui/material';
+import Check from '@mui/icons-material/Check';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import Home from '@mui/icons-material/Home';
+import Facebook from '@mui/icons-material/Facebook';
+import Instagram from '@mui/icons-material/Instagram';
+import Google from '@mui/icons-material/Google';
+import styles from '../../components/ui/Form.module.css';
+
+interface ProviderIcons {
+  Facebook: JSX.Element;
+  Instagram: JSX.Element;
+  Google: JSX.Element;
+}
+
+const providerIcons: ProviderIcons = {
+  Facebook: <Facebook color='info' />,
+  Instagram: <Instagram color='info' />,
+  Google: <Google color='info' />,
+}
 
 import { dbUsers } from '../../database';
 import { ScrollContext } from '../../context';
-import { MainLayout, ModalWindow, LoginForm, RegisterForm } from '../../components';
+import { MainLayout, ModalWindow, MyImage, LoginForm, RegisterForm } from '../../components';
 import { validations } from '../../utils';
 
 const AuthPage: NextPage = () => {
@@ -18,14 +36,16 @@ const AuthPage: NextPage = () => {
     const [anError, setAnError] = useState({ error: false, message: '' });
     const [aSuccess, setASuccess] = useState('');
 
-    // const [providers, setProviders] = useState<any>({});
+    const [providers, setProviders] = useState<any>({});
 
-    // useEffect(() => {
-    //   getProviders()
-    //       .then(prov => {
-    //           setProviders(prov)
-    //       })
-    // }, [])
+    useEffect(() => {
+      getProviders()
+          .then(prov => {
+              // @ts-ignore
+              let { credentials, ...provs } = prov;
+              setProviders( provs );
+          })
+    }, []);
 
     const handleChangePassword = async () => {
       if ( !validations.isValidEmail( correo ) ) return setAnError({ error: true, message: 'El correo no es válido' });
@@ -50,7 +70,7 @@ const AuthPage: NextPage = () => {
         <Card sx={{ display: 'grid', padding: '1rem', border: { xs: 'none', sm: 'none', md: '2px solid var(--secondary-color-1)' }, gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 1fr' }, alignItems: 'center' }}>
           
           <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
-            <Image src='/Logo-MPR.png' alt='Mi Primer Rescate' width={ 500 } height={ 500 } />
+            <MyImage src='/Logo-MPR.png' alt='Mi Primer Rescate' width={ 500 } height={ 500 } />
           </Box>
 
           <Box display='flex' flexDirection='column' gap='.5rem'>
@@ -99,15 +119,14 @@ const AuthPage: NextPage = () => {
               <RegisterForm />
             </ModalWindow>
 
-            <Box display='flex' flexDirection='column' gap='.5rem'>
-              <Typography>¡También puedes iniciar sesión con alguna de tus redes!</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '.6rem', mt: 1 }}>
+              <Typography textAlign='center'>¡Puedes iniciar sesión con alguna de tus redes!</Typography>
 
-              {/* {
+              {
                 Object.values( providers ).map(( provider: any ) => {
-                  if ( provider.id === "credentials" ) return <div style={{ display: 'none' }} key='credentials'></div>
-                
-                  return <Button
-                      key={ provider.id}
+                  if ( provider.name === 'GitHub' ) return
+                  <Button
+                      key={ provider.id }
                       variant='outlined'
                       fullWidth
                       color='secondary'
@@ -115,8 +134,15 @@ const AuthPage: NextPage = () => {
                   >
                       { provider.name }
                   </Button>
+                  return <Button
+                      key={ provider.id }
+                      className={ `${ styles.share__button } ${ provider.name === 'Facebook' ? styles.facebook : provider.name === 'Instagram' ? styles.instagram : styles.google }` }
+                      onClick={ () => false && signIn( provider.id ) }
+                  >
+                      { providerIcons[ provider.name as keyof ProviderIcons ] }{ provider.name }
+                  </Button>
                 })
-              } */}
+              }
             </Box>
           </Box>
           

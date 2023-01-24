@@ -22,7 +22,6 @@ export const RegisterForm = () => {
     const { isLoading, setIsLoading } = useContext( ScrollContext );
     const [checked, setChecked] = useState(false);
     const [aResponse, setAResponse] = useState({ error: false, message: '' });
-    const [displayInfo, setDisplayInfo] = useState( false );
 
     const onRegisterForm = async ( { name, email, password, password2 }: FormData ) => {
         setAResponse({ error: false, message: '' });
@@ -34,9 +33,7 @@ export const RegisterForm = () => {
         }
 
         setIsLoading( true );
-        
         const res = await registerUser( name, email, password, checked );
-        
         setIsLoading( false );
 
         setAResponse( res );

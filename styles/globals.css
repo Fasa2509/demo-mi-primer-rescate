@@ -307,7 +307,3 @@ section .is-active {
     padding: .1rem .6rem;
   }
 }
-
-.active-color {
-  border: 2px solid rgb(0, 0, 0);
-}
