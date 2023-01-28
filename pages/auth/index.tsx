@@ -125,15 +125,7 @@ const AuthPage: NextPage = () => {
               {
                 Object.values( providers ).map(( provider: any ) => {
                   if ( provider.name === 'GitHub' ) return
-                  <Button
-                      key={ provider.id }
-                      variant='outlined'
-                      fullWidth
-                      color='secondary'
-                      onClick={ () => signIn( provider.id ) }
-                  >
-                      { provider.name }
-                  </Button>
+                  <div style={{ display: 'none' }}></div>
                   return <Button
                       key={ provider.id }
                       className={ `${ styles.share__button } ${ provider.name === 'Facebook' ? styles.facebook : provider.name === 'Instagram' ? styles.instagram : styles.google }` }

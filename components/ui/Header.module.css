@@ -22,22 +22,20 @@
     display: flex;
     gap: .3rem;
     align-items: center;
-    font-size: 1.2rem;
-    font-weight: bold;
     transition: transform 200ms ease-in-out, margin-left 500ms ease-in-out;
 }
 
 .link__logo__title {
     line-height: 1;
     color: #fafafa;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 400;
 }
 
 .link {
     position: relative;
     overflow: hidden;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 1.1rem;
     padding: .3rem .6rem .35rem;
     border-radius: 10rem;
@@ -70,7 +68,7 @@
 
 .link__display > a {
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 400;
     background-color: var(--secondary-color-1);
 }
 

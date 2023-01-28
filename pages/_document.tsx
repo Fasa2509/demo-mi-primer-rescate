@@ -12,13 +12,15 @@ class MyDocument extends Document {
             <Html lang='es'>
                 <Head>
 
+                    <link
+                        rel="stylesheet"
+                        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+                    />
                     <link rel="icon" type="image/png" sizes="32x32" href="/icon.png" />
                     <meta name='audience' content='all' />
                     <meta name='keywords' content='mascotas, perros, gatos, adoptar' />
                     <meta name='og:locale' content='es_ve' />
-                    {/* <meta property='og:locale' content='es_ve' /> */}
                     <meta name="og:type" content="website" />
-                    {/* <meta property="og:type" content="website" /> */}
                     
                 </Head>
                 <body>

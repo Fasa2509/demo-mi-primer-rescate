@@ -67,7 +67,7 @@ export const nextAuthOptions: NextAuthOptions = {
     async signIn({ user, account, profile, email, credentials }) {
       
       await db.connect();
-      const userInfo = await User.findOne({ email: user.email! });
+      const userInfo = await User.findOne({ email: user.email! }).select('isAble').lean();
       await db.disconnect();
 
       if ( userInfo && !userInfo.isAble ) return '/';
