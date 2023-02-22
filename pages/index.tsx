@@ -10,9 +10,9 @@ import WhatsApp from '@mui/icons-material/WhatsApp';
 
 import { mprRevalidatePage } from '../mprApi';
 import { Article, MainIndexLayout } from '../components';
-import { IArticle } from '../interfaces';
+import { IArticle, IIndexImage } from '../interfaces';
 import { AuthContext, ScrollContext } from '../context';
-import { dbArticles } from '../database';
+import { dbArticles, dbImages } from '../database';
 import styles from '../styles/Home.module.css';
 
 const CustomForm = lazy(() =>
@@ -22,9 +22,10 @@ const CustomForm = lazy(() =>
 
 interface Props {
   articles: IArticle[];
+  indexImages: IIndexImage[];
 }
 
-const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
+const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
 
   const { isLoggedIn, user } = useContext( AuthContext );
   const { setIsLoading } = useContext( ScrollContext );
@@ -68,7 +69,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
   }
 
   return (
-    <MainIndexLayout title={ 'Fundación Mi Primer Rescate' } H1={ 'Mi Primer Rescate' } pageDescription={ 'Esta es la página oficial de @miprimerrescate, fundación dedicada al rescate y cuidado de animales y personas en situación de calle. Buscamos mejorar la calidad de vida de los animales que rescatamos asignándoles un hogar.' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> }>
+    <MainIndexLayout indexImages={ indexImages } title={ 'Fundación Mi Primer Rescate' } H1={ 'Mi Primer Rescate' } pageDescription={ 'Esta es la página oficial de @miprimerrescate, fundación dedicada al rescate y cuidado de animales y personas en situación de calle. Buscamos mejorar la calidad de vida de los animales que rescatamos asignándoles un hogar.' } titleIcon={ <Home color='info' sx={{ fontSize: '1.5rem' }} /> }>
       
       <>
       { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <Suspense fallback={ <p>Cargando...</p> }><CustomForm /></Suspense> }
@@ -131,13 +132,16 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
   
   const articles = await dbArticles.getAllArticles();
 
-  if ( !articles ) {
-    throw new Error("Failed to fetch articles, check server's logs");
-  }
+  if ( !articles ) throw new Error("Error trayendo los artículos de la página");
+
+  const indexImages = await dbImages.getIndexImages();
+
+  if ( !indexImages ) throw new Error("Error trayendo las imágenes de inicio de la página");
 
   return {
     props: {
-      articles: JSON.parse( JSON.stringify( articles ) ),
+      articles,
+      indexImages,
     }
   }
 }

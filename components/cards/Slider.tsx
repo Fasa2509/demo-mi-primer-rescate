@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useRef } from 'react';
 import styles from './Slider.module.css';
 
 interface Props {
@@ -12,21 +12,29 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500 }) => 
     const [elements, setElements] = useState<HTMLElement[]>([]);
     const [active, setActive] = useState( 0 );
     const [buttonsDisabled, setButtonsDisabled] = useState( false );
+    const intervalRef = useRef<ReturnType<typeof setInterval>>( null );
 
     useEffect(() => {
+        // @ts-ignore
+        intervalRef.current = setInterval(() => setActive(( prevState ) => ( prevState === children.length - 1 )
+            ? 0
+            : prevState += 1
+        ), duration);
+        
+        return () => clearInterval( intervalRef.current! );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if ( children.length === elements.length ) return;
+
         const els = document.querySelectorAll(`#${ identifier } > div`);
         // @ts-ignore
         setElements( Array.from( els ) );
         els[0].classList.add( styles.active );
 
-        let interval = setInterval(() => setActive(( prevState ) => ( prevState === children.length - 1 )
-            ? 0
-            : prevState += 1
-        ), duration);
-        
-        return () => clearInterval( interval );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [ children ])
 
     useEffect(() =>
             elements.forEach(( el, index ) =>
@@ -38,6 +46,7 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500 }) => 
     , [active]);
 
     const passElement = ( pass: 1 | -1 ) => {
+        clearInterval( intervalRef.current! );
         setButtonsDisabled( true );
         setTimeout(() => setButtonsDisabled( false ), 500);
         setActive(( prevState ) => {
@@ -46,15 +55,21 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500 }) => 
 
             return prevState += pass;
         });
+
+        // @ts-ignore
+        intervalRef.current = setInterval(() => setActive(( prevState ) => ( prevState === children.length - 1 )
+            ? 0
+            : prevState += 1
+        ), duration);
     }
 
     return (
         <section id={ identifier } className={ styles.container }>
             { children }
-            <div className={ styles.buttons__container }>
+            <section className={ styles.buttons__container }>
                 <button className={ `${ styles.pass__button } ${ styles.left }` } disabled={ buttonsDisabled } onClick={ () => passElement( -1 ) }></button>
                 <button className={ `${ styles.pass__button } ${ styles.right }` } disabled={ buttonsDisabled } onClick={ () => passElement( 1 ) }></button>
-            </div>
+            </section>
         </section>
     )
 }

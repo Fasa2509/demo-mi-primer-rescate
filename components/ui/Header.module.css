@@ -22,7 +22,7 @@
     display: flex;
     gap: .3rem;
     align-items: center;
-    transition: transform 200ms ease-in-out, margin-left 500ms ease-in-out;
+    transition: transform 300ms ease-out, margin-left 500ms ease-in-out;
 }
 
 .link__logo__title {
@@ -36,8 +36,10 @@
     position: relative;
     overflow: hidden;
     font-weight: 400;
+    display: flex;
+    align-items: center;
     font-size: 1.1rem;
-    padding: .3rem .6rem .35rem;
+    padding: .3rem .6rem;
     border-radius: 10rem;
     cursor: pointer;
     transition: background-color 300ms ease, color 250ms ease;
@@ -73,6 +75,8 @@
 }
 
 .admin__links > a {
+    display: flex;
+    align-items: center;
     transition: color 250ms ease;
 }
 
@@ -129,7 +133,7 @@
 
 @media (hover :hover) {
     .link__logo:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
 
     .admin__links > a:hover {
