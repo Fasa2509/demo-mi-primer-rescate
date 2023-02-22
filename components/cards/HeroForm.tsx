@@ -30,7 +30,7 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
             ? 'La imagen pesa más de 4Mb, ¿continuar?'
             : '¿Subir imagen?'
 
-        let key = enqueueSnackbar( message, {
+        let key = enqueueSnackbar(message, {
             variant: 'info',
             autoHideDuration: 15000,
             action: ConfirmNotificationButtons,
