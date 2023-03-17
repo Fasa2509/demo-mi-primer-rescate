@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import NextLink from 'next/link';
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { Box, Link } from "@mui/material";
 import { Check, Home } from "@mui/icons-material";
 import { nextAuthOptions } from "../../api/auth/[...nextauth]";
@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
         }
     }
 
-    const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+    const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
   
     if ( session ) {
       return {

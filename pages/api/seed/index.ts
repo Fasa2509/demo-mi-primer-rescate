@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { db } from '../../../database';
 import { allProducts, adoptionPets, otherPets } from '../../../interfaces';
 import { Pet, Product } from '../../../models';
@@ -29,7 +29,7 @@ const updateProducts = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     const { data } = req.query;
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+    const session = await getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });

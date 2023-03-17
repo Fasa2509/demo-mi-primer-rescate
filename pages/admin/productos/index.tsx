@@ -4,7 +4,7 @@ import { Typography, Box, Grid, Link, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Category } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import { nextAuthOptions } from '../../api/auth/[...nextauth]';
 
 import { dbProducts } from '../../../database';
@@ -264,7 +264,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
   if ( !products ) products = [];
 
-  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin']; 
 

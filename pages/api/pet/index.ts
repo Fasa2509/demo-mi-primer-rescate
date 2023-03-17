@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { isValidObjectId } from 'mongoose';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
 
 import { db } from '../../../database';
@@ -69,7 +69,7 @@ const createNewPet = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     const { type = '', name = '', images = [], description = '' } = req.body as { type: string; name: string; images: string[]; description: string };
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+    const session = await getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
@@ -130,7 +130,7 @@ const updatePetDescription = async ( req: NextApiRequest, res: NextApiResponse )
     if ( !isValidObjectId( petId ) ) return res.status(400).json({ error: true, message: 'La información es inválida' });
 
     // @ts-ignore
-    const { user } = await unstable_getServerSession(req, res, nextAuthOptions);
+    const { user } = await getServerSession(req, res, nextAuthOptions);
 
     if ( !user ) return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
 
@@ -165,7 +165,7 @@ const updatePetAbility = async ( req: NextApiRequest, res: NextApiResponse ) => 
     
     if ( !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id de la mascota no es válido' });
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+    const session = await getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'No tienes permiso para eliminar esa mascota' });
