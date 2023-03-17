@@ -19,7 +19,7 @@ export const nextAuthOptions: NextAuthOptions = {
         email: { label: 'Correo', type: 'email', placeholder: 'correo@google.com' },
         password: { label: 'Contraseña', type: 'password', placeholder: 'Contraseña' },
       },
-      async authorize( credentials ) {
+      async authorize( credentials, req ) {
         return await dbUsers.CheckUserEmailPassword( credentials!.email, credentials!.password );
       }
     }),
@@ -95,6 +95,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
     async session({ session, token, user }) {
 
+      // @ts-ignore
       session.accessToken = token.accessToken;
       session.user = token.user as any;
 

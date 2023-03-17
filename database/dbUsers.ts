@@ -1,3 +1,4 @@
+import { User as NextAuthUser } from "next-auth";
 import axios from "axios";
 import bcrypt from 'bcryptjs';
 import { isValidObjectId } from "mongoose";
@@ -147,7 +148,7 @@ export const getAllUsers = async (): Promise<IUser[] | null> => {
 
 }
 
-export const CheckUserEmailPassword = async ( email: string, password: string ) => {
+export const CheckUserEmailPassword = async ( email: string, password: string ): Promise<NextAuthUser | null> => {
 
     await db.connect();
     
@@ -162,10 +163,11 @@ export const CheckUserEmailPassword = async ( email: string, password: string ) 
     if ( match ) {
         const { _id, name, email, role } = user;
         return {
+            // @ts-ignore
             _id,
             name,
             email,
-            role
+            role,
         }
     }
 
