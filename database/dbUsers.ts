@@ -163,7 +163,7 @@ export const CheckUserEmailPassword = async ( email: string, password: string ):
     if ( match ) {
         const { _id, name, email, role } = user;
         return {
-            // @ts-ignore
+            id: undefined,
             _id,
             name,
             email,
@@ -179,12 +179,12 @@ export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => 
 
     await db.connect();
 
-    const user = await User.findOne({ email: oAuthEmail, isAble: true }).lean();
+    const user = await User.findOne({ email: oAuthEmail }).lean();
 
     if ( user ) {
         await db.disconnect();
 
-        // if ( !user.isAble ) return;
+        if ( !user.isAble ) return undefined;   // rejects the user signin
         const { _id, name, email, role } = user;
         return { _id, name, email, role };
     }

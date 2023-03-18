@@ -95,8 +95,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
     async session({ session, token, user }) {
 
-      // @ts-ignore
-      session.accessToken = token.accessToken;
+      session.accessToken = token.accessToken as string;
       session.user = token.user as any;
 
       return session;

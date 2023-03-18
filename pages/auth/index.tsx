@@ -145,7 +145,13 @@ const AuthPage: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  let session: unknown;
+
+  try {
+    session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  } catch ( err ) {
+    console.log( err );
+  }
 
   if ( session ) {
     return {
