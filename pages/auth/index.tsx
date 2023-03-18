@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import type { GetServerSideProps, NextPage } from 'next';
-import { getServerSession } from 'next-auth';
+import { unstable_getServerSession } from 'next-auth';
 import { getProviders, signIn } from 'next-auth/react';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';
 import { Box, Button, Card, Chip, TextField, Typography } from '@mui/material';
@@ -145,13 +145,7 @@ const AuthPage: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-  let session: unknown;
-
-  try {
-    session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
-  } catch ( err ) {
-    console.log( err );
-  }
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   if ( session ) {
     return {

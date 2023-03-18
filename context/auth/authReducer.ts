@@ -3,7 +3,7 @@ import { IUser } from '../../interfaces';
 import { AuthState } from '.'
 
 type NameActionType =
-| { type: 'Auth - Login', payload: Session }
+| { type: 'Auth - Login', payload: any }
 | { type: 'Auth - Logout' }
 
 export const authReducer = ( state: AuthState, action: NameActionType ): AuthState => {

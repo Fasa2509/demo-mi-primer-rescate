@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
+import { unstable_getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
 import nodemailer from 'nodemailer';
 import { db } from '../../../database';
@@ -32,7 +32,7 @@ const applyDiscountToProducts = async ( req: NextApiRequest, res: NextApiRespons
 
     const validTags = ['accesorios', 'consumibles', 'ropa', 'útil', 'todos'];
 
-    const session = await getServerSession( req, res, nextAuthOptions );
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });

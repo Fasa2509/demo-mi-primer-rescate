@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';
-import { getServerSession } from 'next-auth';
+import { unstable_getServerSession } from 'next-auth';
 import { Box, Button, Chip, Link, Typography } from '@mui/material';
 import { Home } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -175,9 +175,9 @@ const PersonalPage: NextPage<Props> = ({ user, orders, pets }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
-  const session: any = await getServerSession(req, res, nextAuthOptions);
+  const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
-  if ( !session ) return {
+  if ( !session || !session.user ) return {
       redirect: {
         destination: '/auth?p=/personal',
         permanent: false,

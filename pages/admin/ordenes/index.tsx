@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth/next';
+import { unstable_getServerSession } from "next-auth/next";
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -203,7 +203,7 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin'];
 

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth';
+import { unstable_getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
 import { isValidObjectId } from 'mongoose';
 import { db } from '../../../database';
@@ -35,7 +35,7 @@ const updateUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
     if ( !validRoles.includes( role.toString() ) ) return res.status(400).json({ error: true, message: 'El rol no es válido' });
 
     try {
-        const session = await getServerSession( req, res, nextAuthOptions );
+        const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
         // @ts-ignore
         if ( !session || session?.user.role !== 'admin' ) return res.status(400).json({ error: true, message: 'No tienes permiso para actualizar un usuario' });
@@ -73,7 +73,7 @@ const deleteUser = async ( req: NextApiRequest, res: NextApiResponse ) => {
     if ( !id || !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
     try {
-        const session = await getServerSession( req, res, nextAuthOptions );
+        const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
         // @ts-ignore
         if ( !session || session?.user.role !== 'admin' ) return res.status(400).json({ error: true, message: 'No tienes permiso para eliminar un usuario' });

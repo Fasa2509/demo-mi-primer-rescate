@@ -3,7 +3,7 @@ import { NextPage, GetServerSideProps } from 'next';
 import { AdminPanelSettings } from '@mui/icons-material';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { getServerSession } from 'next-auth/next';
+import { unstable_getServerSession } from "next-auth/next";
 import { Session } from 'next-auth';
 
 import { nextAuthOptions } from '../../api/auth/[...nextauth]';
@@ -169,7 +169,7 @@ const UsuariosPage: NextPage<Props> = ({ users: actualUsers, adminId }) => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
   
-  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin'];
 

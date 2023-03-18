@@ -1,6 +1,6 @@
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth';
+import { unstable_getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
 import { db } from '../../../database';
 import { Product } from '../../../models';
@@ -38,7 +38,7 @@ const createNewProduct = async ( req: NextApiRequest, res: NextApiResponse ) => 
     if ( unique !== -1 && Object.values( tallas ).some(( value ) => typeof value === 'number' && value > 0) )
         return res.status(400).json({ error: true, message: 'La cantidad de tallas no es válida' });
 
-    const session = await getServerSession( req, res, nextAuthOptions );
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
@@ -96,7 +96,7 @@ const updateProductInfo = async ( req: NextApiRequest, res: NextApiResponse ) =>
     const { name = '', description = '', images = [], price = 0, discount = 0, inStock, tags = [], unique: unica = undefined } = req.body;
     const { unique = 0, S = 0, M = 0, L = 0, XL = 0, XXL = 0, XXXL = 0 } = inStock;
 
-    const session = await getServerSession( req, res, nextAuthOptions );
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });

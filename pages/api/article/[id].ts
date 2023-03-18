@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { isValidObjectId } from 'mongoose';
 import { db } from '../../../database';
 import { Article } from '../../../models';
-import { getServerSession } from 'next-auth';
+import { unstable_getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
 
 type Data =
@@ -26,7 +26,7 @@ const removeArticle = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     if ( !id || !isValidObjectId( id ) ) return res.status(400).json({ error: true, message: 'El id no es válido' });
 
-    const session = await getServerSession( req, res, nextAuthOptions );
+    const session = await unstable_getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
