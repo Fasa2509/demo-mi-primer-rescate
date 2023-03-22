@@ -43,7 +43,7 @@ export const LoginForm = () => {
 
   return (
           <form style={{ width: '100%', padding: 0 }} onSubmit={ handleSubmit(onLoginForm) }>
-            <CardContent sx={{ padding: 0 }}>
+            <CardContent sx={{ padding: 0, display: 'flex', flexDirection: 'column' }}>
               <Box display='flex' justifyContent='center' alignItems='center' gap='.5rem' sx={{ mb: 1 }}>
                 <AccountCircle color='secondary' sx={{ fontSize: '2rem' }} />
                 <Typography sx={{ fontSize: '1.4rem', fontWeight: 'bold' }} variant='h2'>Iniciar sesión</Typography>
@@ -100,8 +100,7 @@ export const LoginForm = () => {
                   color='secondary'
                   variant='outlined'
                   disabled={ isLoading }
-                  sx={{ borderRadius: '10rem', my: 1, fontSize: '1rem' }}
-                  fullWidth
+                  sx={{ borderRadius: '10rem', margin: '.5rem auto 0', padding: '.1rem 1rem', fontSize: '1rem' }}
               >
                   Ingresar
               </Button>

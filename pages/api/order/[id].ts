@@ -1,6 +1,6 @@
 import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
 import { db } from '../../../database';
 import { Paid } from '../../../interfaces';
@@ -57,7 +57,7 @@ const updateOrderPaid = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     if ( !id || !isValidObjectId( id ) || !status ) return res.status(400).json({ error: true, message: 'La información está incompleta' });
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+    const session = await getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });

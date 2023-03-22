@@ -65,7 +65,7 @@ export const nextAuthOptions: NextAuthOptions = {
   callbacks: {
 
     async signIn({ user, account, profile, email, credentials }) {
-      
+
       await db.connect();
       const userInfo = await User.findOne({ email: user.email! }).select('isAble').lean();
       await db.disconnect();
@@ -77,7 +77,10 @@ export const nextAuthOptions: NextAuthOptions = {
 
     async jwt({ token, account, user }) {
       if ( account ) {
+        console.log({ token })
+        console.log({ user })
         token.accessToken = account.access_token;
+        token.abc = 123
 
         switch( account.type ) {
           case 'credentials':
@@ -94,7 +97,6 @@ export const nextAuthOptions: NextAuthOptions = {
     },
 
     async session({ session, token, user }) {
-
       session.accessToken = token.accessToken as string;
       session.user = token.user as any;
 

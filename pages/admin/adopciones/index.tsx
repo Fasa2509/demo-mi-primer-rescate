@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { LocalCafe } from "@mui/icons-material"
 import { nextAuthOptions } from "../../api/auth/[...nextauth]";
 import { dbAdoptions } from "../../../database";
@@ -179,7 +179,7 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions: allAdoptions }) => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin']; 
 

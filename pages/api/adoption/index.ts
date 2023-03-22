@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { nextAuthOptions } from '../auth/[...nextauth]';
 import { isValidObjectId } from 'mongoose';
 import { db } from '../../../database';
@@ -25,7 +25,7 @@ export default function handler (req: NextApiRequest, res: NextApiResponse<Data>
 
 const createAdoption = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+    const session = await getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
@@ -55,7 +55,7 @@ const checkAdoption = async ( req: NextApiRequest, res: NextApiResponse ) => {
     if ( !_id || !isValidObjectId( _id ) )
         return res.status(400).json({ error: true, message: 'El id no es válido' });
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+    const session = await getServerSession( req, res, nextAuthOptions );
 
     const validRoles = ['superuser', 'admin'];
 

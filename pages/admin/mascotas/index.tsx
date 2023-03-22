@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { Button, CardMedia, Grid, Typography } from '@mui/material';
 import { EmojiNature } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
@@ -151,7 +151,7 @@ const PetsPage: NextPage<Props> = ({ pets: Pets }) => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   const validRoles = ['superuser', 'admin'];
 

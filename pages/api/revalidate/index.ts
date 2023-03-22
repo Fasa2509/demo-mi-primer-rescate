@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { nextAuthOptions } from '../auth/[...nextauth]';
 
 type Data =
@@ -21,7 +21,7 @@ const revalidatePage = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
     if ( !p.startsWith('/') || secret !== process.env.NEXT_PUBLIC_SECRET_REVALIDATE ) return res.status(403).json({ error: true, message: 'No tienes permiso para llamar a esta api' });
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
+    const session = await getServerSession( req, res, nextAuthOptions );
 
     if ( !session || !session.user )
         return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });

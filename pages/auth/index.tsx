@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import type { GetServerSideProps, NextPage } from 'next';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
+import { getToken } from 'next-auth/jwt';
 import { getProviders, signIn } from 'next-auth/react';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';
 import { Box, Button, Card, Chip, TextField, Typography } from '@mui/material';
@@ -10,6 +11,7 @@ import Home from '@mui/icons-material/Home';
 import Facebook from '@mui/icons-material/Facebook';
 import Instagram from '@mui/icons-material/Instagram';
 import Google from '@mui/icons-material/Google';
+
 import styles from '../../components/ui/Form.module.css';
 
 interface ProviderIcons {
@@ -145,7 +147,7 @@ const AuthPage: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-  const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
   if ( session ) {
     return {

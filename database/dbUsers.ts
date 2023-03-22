@@ -164,7 +164,7 @@ export const CheckUserEmailPassword = async ( email: string, password: string ):
         const { _id, name, email, role } = user;
         return {
             id: undefined,
-            _id,
+            _id: String( _id ),
             name,
             email,
             role,

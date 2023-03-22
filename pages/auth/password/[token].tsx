@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { GetServerSideProps, NextPage } from "next"
+import { GetServerSideProps, NextPage } from "next";
 import NextLink from 'next/link';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { Box, Button, Link, TextField } from "@mui/material";
 import { Check, Home } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
@@ -98,7 +98,7 @@ const TokenPage: NextPage<Props> = ({ userInfo }) => {
 
 export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-    const session = await unstable_getServerSession( ctx.req, ctx.res, nextAuthOptions );
+    const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
   
     if ( session ) {
       return {

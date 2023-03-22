@@ -30,7 +30,7 @@
     overflow-y: auto;
     padding:  1rem 1.2rem 1.2rem;
     background-color: #fafafa;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     position: relative;    
     animation: modalAppear 650ms cubic-bezier(.21,.09,.19,1.03) 0ms 1 normal both;
 }
