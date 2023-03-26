@@ -93,17 +93,16 @@ export const LoginForm = () => {
                   error={ !!errors.password }
                   helperText={ errors.password?.message }
                 />
-              </Box>
 
-              <Button
-                  type='submit'
-                  color='secondary'
-                  variant='outlined'
-                  disabled={ isLoading }
-                  sx={{ borderRadius: '10rem', margin: '.5rem auto 0', padding: '.1rem 1rem', fontSize: '1rem' }}
-              >
-                  Ingresar
-              </Button>
+                <Button
+                    type='submit'
+                    color='secondary'
+                    disabled={ isLoading }
+                    className='buttonOutlined'
+                >
+                    Ingresar
+                </Button>
+              </Box>
             </CardContent>
           </form>
   )

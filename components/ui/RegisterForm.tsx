@@ -145,17 +145,14 @@ export const RegisterForm = () => {
                         <Typography sx={{ cursor: 'pointer' }} onClick={ () => setChecked( !checked ) }>¿Te gustaría recibir las novedades de MPR?</Typography>
                     </Box>
                     
-                    <Box>
-                        <Button
-                            type='submit'
-                            color='secondary'
-                            fullWidth
-                            disabled={ isLoading }
-                            sx={{ borderRadius: '10rem', fontSize: '.9rem', padding: '.4rem' }}
-                        >
-                            Crear Cuenta
-                        </Button>
-                    </Box>
+                    <Button
+                        type='submit'
+                        color='secondary'
+                        disabled={ isLoading }
+                        className='buttonOutlined'
+                    >
+                        Crear Cuenta
+                    </Button>
                     
             </Box>
         </form>
