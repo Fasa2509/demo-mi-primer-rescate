@@ -112,7 +112,7 @@ const sendEmailPassword = async ( req: NextApiRequest, res: NextApiResponse ) =>
             <h1>Mi Primer Rescate</h1>
             <p>Hubo una petición para cambiar la contraseña de tu cuenta en la página de MPR. Por favor, haz click en el siguiente enlace.</p>
             <br />
-            <a href='${ process.env.NEXTAUTH_URL }/auth/password/${ token }' target='_blank' rel='noreferrer'>Ir a la página</a>
+            <a href='${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/auth/password/${ token }' target='_blank' rel='noreferrer'>Ir a la página</a>
             `, // html body
         });
         

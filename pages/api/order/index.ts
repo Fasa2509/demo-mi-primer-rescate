@@ -226,7 +226,7 @@ const saveOrder = async ( req: NextApiRequest, res: NextApiResponse ) => {
             <br />
             <p>Haz click en el siguiente enlace para ver la información de la órden en tu perfil.</p>
             <br />
-            <a href='${ process.env.NEXTAUTH_URL }/personal' target='_blank' rel='noreferrer'>Ver perfil</a>
+            <a href='${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/personal' target='_blank' rel='noreferrer'>Ver perfil</a>
             `, // html body
         });
 

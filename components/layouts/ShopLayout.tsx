@@ -41,8 +41,8 @@ export const ShopLayout: FC<Props> = ({ children, title, H1, pageDescription, pa
       
         <meta property="og:title" content={ title } />
         <meta property="og:description" content={ pageDescription } />
-        <meta property="og:image" content={ `${ process.env.NEXTAUTH_URL }${ pageImage ? pageImage : '/Logo-Redes.png' }` } />
-        <meta property="og:url" content={ `${ process.env.NEXTAUTH_URL }${ url }` } />
+        <meta property="og:image" content={ `${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ pageImage ? pageImage : '/Logo-Redes.png' }` } />
+        <meta property="og:url" content={ `${ process.env.NEXT_PUBLIC_DOMAIN_NAME }${ url }` } />
       
       </Head>
 

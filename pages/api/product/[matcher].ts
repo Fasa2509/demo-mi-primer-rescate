@@ -106,7 +106,7 @@ const applyDiscountToProducts = async ( req: NextApiRequest, res: NextApiRespons
                 <p>Oye, tenemos nuevos descuentos en nuestra tienda ${ infoDiscount }, no pierdas la oportunidad de consentir aún más a tus mascotas.</p>
                 <br />
                 <h2>¿Qué esperas? Ven a ver antes de que se acabe esta promoción.</h2>
-                <a href='${ process.env.NEXTAUTH_URL }/tienda' target='_blank' rel='noreferrer'>Visitar tienda</a>
+                <a href='${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/tienda' target='_blank' rel='noreferrer'>Visitar tienda</a>
                 `, // html body
             });
         }

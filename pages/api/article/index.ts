@@ -96,7 +96,7 @@ const createArticle = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
             <p>¡Hola! Hay novedades en nuestra página, ¡ven a verlas ya! 🐱🐶</p>
             <p>Acabamos de publicar un nuevo artículo, ${ title }, para mantenerte al día sobre lo que hacemos en nuestra fundación, no te lo pierdas.</p>
             <br />
-            <a href='${ process.env.NEXTAUTH_URL }' target='_blank' rel='noreferrer'>Ven a ver qué hay de nuevo</a>
+            <a href='${ process.env.NEXT_PUBLIC_DOMAIN_NAME }' target='_blank' rel='noreferrer'>Ven a ver qué hay de nuevo</a>
             `, // html body
         });
         

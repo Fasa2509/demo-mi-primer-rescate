@@ -92,7 +92,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
             <br />
             <p>Por favor haz click en el siguiente enlace para activar tu cuenta de MPR.</p>
             <br />
-            <a href='${ process.env.NEXTAUTH_URL }/auth/register/${ token }' target='_blank' rel='noreferrer'>Activar cuenta MPR</a>
+            <a href='${ process.env.NEXT_PUBLIC_DOMAIN_NAME }/auth/register/${ token }' target='_blank' rel='noreferrer'>Activar cuenta MPR</a>
             `, // html body
         });
     } catch( error ) {
