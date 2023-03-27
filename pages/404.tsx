@@ -1,5 +1,5 @@
 import { NextPage } from "next"
-import { Close } from "@mui/icons-material";
+import Close from "@mui/icons-material/Close";
 import { MainLayout } from "../components"
 
 const Custom404: NextPage = () => {

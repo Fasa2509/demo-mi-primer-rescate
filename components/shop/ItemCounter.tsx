@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
-import { AddCircleOutline, RemoveCircleOutline } from "@mui/icons-material";
+import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutline from "@mui/icons-material/RemoveCircleOutline";
 
 interface Props {
   maxValue: number;

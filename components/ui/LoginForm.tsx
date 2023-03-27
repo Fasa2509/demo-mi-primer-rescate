@@ -2,7 +2,8 @@ import { useContext, useState } from "react";
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import { Box, Button, CardContent, Chip, TextField, Typography } from "@mui/material";
-import { AccountCircle, ErrorOutline } from "@mui/icons-material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 

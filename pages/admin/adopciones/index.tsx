@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { getServerSession } from "next-auth/next";
-import { LocalCafe } from "@mui/icons-material"
+import LocalCafe from "@mui/icons-material/LocalCafe"
 import { nextAuthOptions } from "../../api/auth/[...nextauth]";
 import { dbAdoptions } from "../../../database";
 import { MainLayout } from "../../../components";

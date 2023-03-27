@@ -3,7 +3,8 @@ import { GetServerSideProps, NextPage } from "next";
 import NextLink from 'next/link';
 import { getServerSession } from 'next-auth';
 import { Box, Button, Link, TextField } from "@mui/material";
-import { Check, Home } from "@mui/icons-material";
+import Check from "@mui/icons-material/Check";
+import Home from "@mui/icons-material/Home";
 import { useSnackbar } from "notistack";
 import { nextAuthOptions } from "../../api/auth/[...nextauth]";
 
