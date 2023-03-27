@@ -68,3 +68,16 @@ export interface IContact {
     instagram?: string;
     whatsapp? : string;
 }
+
+// export interface IOrderInfo {
+
+//     orderId        : string;
+//     products       : IOrderProduct[];
+//     total          : number;
+//     isPaid         : Paid;
+//     shippingAddress: IAddress;
+//     contact        : IContact;
+//     transactionId  : string;
+//     createdAt      : string;
+
+// }

@@ -9,7 +9,6 @@ import { AuthContext, ScrollContext } from "../../context";
 import { MyImage } from "../cards";
 import { ConfirmNotificationButtons, getImageKeyFromUrl, getImageNameFromUrl, PromiseConfirmHelper } from "../../utils";
 import styles from './Form.module.css';
-import { mprRevalidatePage } from "../../mprApi";
 
 interface Props {
     pet: PetType;
@@ -50,11 +49,6 @@ export const PetForm: FC<Props> = ({ pet }) => {
 
         setIsLoading( true );
         const res = await dbPets.createNewPet({ name, description, images: [imgUrl], type: pet });
-
-        if ( !res.error ) {
-            const resRev = await mprRevalidatePage(`/adoptar/${ pet }`);
-            enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' });
-        }
         setIsLoading( false );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
@@ -152,7 +146,7 @@ export const PetForm: FC<Props> = ({ pet }) => {
             <input ref={ imageRef } className={ styles.no__display } accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={ requestUploadObject } />
 
             { imgUrl &&
-                <Box className='fadeIn img-container' sx={{ position: 'relative', alignSelf: 'center' }}>
+                <Box className='fadeIn' sx={{ position: 'relative', alignSelf: 'center' }}>
                     <MyImage src={ imgUrl } alt={ getImageNameFromUrl( imgUrl ) } width={ 350 } height={ 350 } layout='intrinsic' objectFit="cover" />
                 </Box>
             }

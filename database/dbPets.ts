@@ -17,6 +17,7 @@ export const getAllPets = async (): Promise<IPet[] | null> => {
 
         return JSON.parse( JSON.stringify( pets ) );
     } catch( error ) {
+        console.log( error );
         return null;
     }
 
@@ -36,6 +37,7 @@ export const createNewPet = async ({ type, name, images, description }: { type: 
         // @ts-ignore
         return data;
     } catch( error ) {
+        console.log( error );
 
         // @ts-ignore
         if ( axios.isAxiosError( error ) ) return error.response ? error.response.data : { error: true, message: 'Ocurrió un error' };
@@ -59,6 +61,7 @@ export const getAllTypePets = async ( petType: PetType ): Promise<IPet[] | null>
 
         return JSON.parse( JSON.stringify( pets ) );
     } catch( error ) {
+        console.log( error );
         await db.disconnect();
         return null;
     }
@@ -79,6 +82,7 @@ export const getChangedPets = async (): Promise<IPet[] | null> => {
 
         return JSON.parse( JSON.stringify( pets ) );
     } catch( error ) {
+        console.log( error );
         await db.disconnect();
         return null;
     }
@@ -94,6 +98,7 @@ export const getMorePets = async ( date: number, type: string, isAdmin: boolean 
 
         return data;
     } catch( error ) {
+        console.log( error );
         await db.disconnect();
         return null;
     }
@@ -110,6 +115,7 @@ export const udpatePet = async ( petId: string, petDescription: string ): Promis
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         // @ts-ignore
         if ( axios.isAxiosError( error ) ) return error.response ? error.response.data : { error: true, message: 'Ocurrió un error' };
@@ -129,6 +135,7 @@ export const deletePet = async ( petId: string ): Promise<{ error: boolean; mess
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         // @ts-ignore
         if ( axios.isAxiosError( error ) ) return error.response ? error.response.data : { error: true, message: 'Ocurrió un error' };

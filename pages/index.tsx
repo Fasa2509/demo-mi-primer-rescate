@@ -74,17 +74,15 @@ const HomePage: NextPage<Props> = ({ articles: myArticles }) => {
       { ( isLoggedIn && user && (user.role === 'superuser' || user.role === 'admin') ) && <Suspense fallback={ <p>Cargando...</p> }><CustomForm /></Suspense> }
       </>
 
-      <article className='content-island'>
-        <Box sx={{ my: 1.5 }}>
-          <p className={ styles.p }>¡Apóyanos en <Link href='https://www.patreon.com/' underline='always' target='_blank' rel='noreferrer'>Patreon</Link> o comparte nuestras redes para llegar a más personas! Aún queda mucho por hacer.</p>
-          <div className={ styles.share__container }>
-            <Link href={ `https://www.facebook.com/sharer.php?u=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }&t=¡Visita la página de Mi Primer Rescate!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
-            <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
-            <Link href={ `https://twitter.com/intent/tweet?text=¡Visita la página de Mi Primer Rescate!&url=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
-            <Link href={ `https://api.whatsapp.com/send?text=¡Visita la página de Mi Primer Rescate! ${ process.env.NEXT_PUBLIC_DOMAIN_NAME }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
-          </div>
-        </Box>
-      </article>
+      <Box sx={{ my: 1.5 }}>
+        <p className={ styles.p }>¡Apóyanos en <Link href='https://www.patreon.com/' underline='always' target='_blank' rel='noreferrer'>Patreon</Link> o comparte nuestras redes para llegar a más personas! Aún queda mucho por hacer.</p>
+        <div className={ styles.share__container }>
+          <Link href={ `https://www.facebook.com/sharer.php?u=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }&t=¡Visita la página de Mi Primer Rescate!` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.facebook }` }><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <button className={ `${ styles.share__button } ${ styles.instagram }` } onClick={ share }><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
+          <Link href={ `https://twitter.com/intent/tweet?text=¡Visita la página de Mi Primer Rescate!&url=${ process.env.NEXT_PUBLIC_DOMAIN_NAME }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.twitter }` }><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+          <Link href={ `https://api.whatsapp.com/send?text=¡Visita la página de Mi Primer Rescate! ${ process.env.NEXT_PUBLIC_DOMAIN_NAME }` } target='_blank' rel='noreferrer' className={ `${ styles.share__button } ${ styles.whatsapp }` }><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+        </div>
+      </Box>
 
       <Box display='flex' flexWrap='wrap' gap='1.5rem' justifyContent='center' sx={{ my: 6 }}>
         <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>

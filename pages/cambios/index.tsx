@@ -7,12 +7,12 @@ import { useSnackbar } from 'notistack';
 import { dbPets } from '../../database';
 import { AuthContext, ScrollContext } from '../../context';
 import { mprRevalidatePage } from '../../mprApi';
-import { ChangeCard, MainLayout, PetChangeForm } from '../../components';
+import { ChangeCard, MainLayout, PetChangeForm } from '../../components'
 import { IPet } from '../../interfaces';
-import styles from '../../styles/Cambios.module.css';
+import styles from '../../styles/Cambios.module.css'
 
-const callback: IntersectionObserverCallback = ( entries ) =>
-  entries.forEach(( entry ) => entry.isIntersecting && entry.target.classList.add(`${ styles.visible }`));
+const callback = ( entries: any ) => 
+  entries.forEach(( entry: any ) => entry.isIntersecting && entry.target.classList.add(`${ styles.visible }`));
 
 interface Props {
   pets: IPet[];
@@ -70,14 +70,13 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
   return (
     <MainLayout title={ 'Cambios de nuestros amigos y adoptantes' } H1={ 'Antes y después' } pageDescription={ 'Aquí podrás ver el antes y después de nuestros amigos peludos. Algunos han pasado por mucho, pero con amor, esfuerzo y trabajo, han recuperado una vida digna, ¡comparte tu historia de adopción con otros adoptantes!.' } titleIcon={ <TrendingUp color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda' url='/cambios'>
         
-      <section className='content-island'>
-        <p>¡La evolución y mejora de nuestros amigos!</p>
-        <p>Sint veniam aliquip incididunt labore pariatur. Lorem ipsum culpa sit consectetur. Eiusmod ad magnaunt esse adipisicing quis incididunt adipisicing voluptate commodo minim exercitation. Velit nulla cupidatat culpa irure Lorem non ut nulla ex nulla et in occaecat.</p>
-      </section>
+      <p>¡La evolución y mejora de nuestros amigos!</p>
+        
+      <p>Sint veniam aliquip incididunt labore pariatur. Lorem ipsum culpa sit consectetur. Eiusmod ad magnaunt esse adipisicing quis incididunt adipisicing voluptate commodo minim exercitation. Velit nulla cupidatat culpa irure Lorem non ut nulla ex nulla et in occaecat.</p>
 
       <section className={ styles.changes__section }>
         {
-          pets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } observe={ pets.length === 6 } removable={ user && ( user.role === 'superuser' || user.role === 'admin' ) } />)
+          pets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } observe={ pets.length === 6 } />)
         }
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
@@ -97,7 +96,7 @@ const CambiosPage: NextPage<Props> = ({ pets: a, changedPets: b }) => {
           <p className={ styles.changes__title }>¡Algunas experiencias de nuestros seguidores!</p>
 
           {
-            changedPets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } observe={ changedPets.length === 6 } removable={ user && ( user.role === 'superuser' || user.role === 'admin' ) } />)
+            changedPets.map(( pet, index ) => <ChangeCard key={ index } pet={ pet } />)
           }
 
         <Box display='flex' justifyContent='flex-end' sx={{ paddingRight: { xs: '1rem', md: '2.5rem' } }}>
@@ -130,7 +129,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
       pets,
       changedPets,
     },
-    revalidate: 3600 * 24 * 2,
+    revalidate: 3600 * 24 * 3,
   }
 } 
 

@@ -1,2 +1,2 @@
-export * from './ScrollContext';
-export * from './ScrollProvider';
+export * from './ScrollContext'
+export * from './ScrollProvider'

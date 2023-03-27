@@ -41,6 +41,8 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
     
     const decodedToken = await jwt.isValidEmailToken( token.toString().replaceAll('___', '.') );
 
+    console.log({ decodedToken })
+
     if ( !decodedToken ) {
         return {
             redirect: {

@@ -12,21 +12,14 @@
     transition: opacity 500ms ease-in-out;
 }
 
+
+
 .active {
     opacity: 1;
 }
 
-.buttons__container {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    opacity: 1;
-    padding: 0 1.1rem 0;
-}
-
 .pass__button {
-    position: relative;
+    opacity: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,57 +27,25 @@
     height: 2.8rem;
     border-radius: 100%;
     border: 0;
+    font-size: 1.8rem;
     color: #eaeaea;
     background-color: rgba(0, 0, 0, 0.25);
+    position: absolute;
+    top: calc(50% - 1.4rem);
     cursor: pointer;
     transition: background-color 250ms ease;
 }
 
-.left::before,
-.left::after,
-.right::before,
-.right::after  {
-    content: '';
-    display: block;
-    position: absolute;
-    border-radius: 1rem;
-    top: 36%;
-    left: .9rem;
-    height: 4px;
-    width: 18px;
-    background-color: #FFF;
-    cursor: pointer;
-    transform: rotate(40deg);
-    transition: transform 250ms ease;
+.left {
+    left: 1rem;
 }
 
-.right::after {
-    top: 56%;
-    transform: rotate(-40deg);
-}
-
-.left::after {
-    left: .7rem;
-    top: 56%;
-}
-
-.left::before {
-    left: .7rem;
-    transform: rotate(-40deg);
+.right {
+    right: 1rem;
 }
 
 @media (hover: hover) {
     .pass__button:hover {
         background-color: rgba(0, 0, 0, 0.5);
-    }
-}
-
-@media screen and (min-width: 772px) {
-    .left::after {
-        left: .8rem;
-    }
-
-    .left::before {
-        left: .8rem;
     }
 }

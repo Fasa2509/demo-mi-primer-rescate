@@ -4,6 +4,7 @@ export * from './ContainerFavProduct';
 export * from './LongProductCard';
 export * from './LongCategoryProductCard';
 export * from './BigProductCard';
+export * from './ProductInfo';
 export * from './ItemCounter';
 export * from './CartProductInfo';
 export * from './SizeSelector';

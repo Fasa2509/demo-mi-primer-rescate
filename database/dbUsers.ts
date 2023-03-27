@@ -15,6 +15,7 @@ export const updateUserRole = async ( userId: string, role: Role ): Promise<{ er
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -39,6 +40,7 @@ export const deleteUserById = async ( userId: string, enable: boolean ): Promise
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -66,6 +68,7 @@ export const updateUserPassword = async ( userId: string, userPassword: string )
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -92,6 +95,7 @@ export const sendMailPassword = async ( userEmail: string ): Promise<{ error: bo
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -124,6 +128,7 @@ export const getUserById = async ( userId: string ): Promise<IUser | null> => {
 
         return JSON.parse( JSON.stringify( user ) );
     } catch( error ) {
+        console.log( error );
         await db.disconnect();
         return null;
     }
@@ -141,6 +146,7 @@ export const getAllUsers = async (): Promise<IUser[] | null> => {
 
         return JSON.parse( JSON.stringify( users.sort((a: IUser, b: IUser) => b.createdAt - a.createdAt) ) );
     } catch( error ) {
+        console.log( error );
         await db.disconnect();
         return null;
     }
@@ -181,8 +187,6 @@ export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => 
 
     if ( user ) {
         await db.disconnect();
-
-        // if ( !user.isAble ) return;
         const { _id, name, email, role } = user;
         return { _id, name, email, role };
     }

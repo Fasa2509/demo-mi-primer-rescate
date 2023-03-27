@@ -69,9 +69,7 @@ export const UserPetInfo: FC<Props> = ({ pet, updatePetInfo }) => {
     
         if ( !accepted ) return;
     
-        setIsLoading( true );
         const res = await dbPets.deletePet( id );
-        setIsLoading( false );
     
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
         !res.error && updatePetInfo({ ...pet, isAble: !pet.isAble });
@@ -80,11 +78,11 @@ export const UserPetInfo: FC<Props> = ({ pet, updatePetInfo }) => {
     const startEditing = () => {
         setIsEditing( true );
         descriptionRef.current!.value = pet.description;
-        setTimeout(() => descriptionRef.current!.focus(), 150);
+        setTimeout(() => descriptionRef.current!.focus(), 100);
     }
 
     return (
-        <Box key={ pet._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 .8rem -.5rem #666', borderRadius: '1rem' }}>
+        <Box key={ pet._id } display='flex' flexDirection='column' gap='.8rem' sx={{ backgroundColor: '#fafafa', padding: '.8rem', boxShadow: '0 0 1.2rem -.8rem #555', borderRadius: '1rem' }}>
             <Box display='flex' justifyContent='space-between'>
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{ pet.name }</Typography>
 

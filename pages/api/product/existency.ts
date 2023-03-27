@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { unstable_getServerSession } from 'next-auth';
 import { db } from '../../../database';
 import { Dolar, Product } from '../../../models';
-import { nextAuthOptions } from '../auth/[...nextauth]';
 
 type Data =
 | { error: boolean; message: string; payload: string[]; }
@@ -59,10 +57,7 @@ const checkExistency = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
         const products = await Product.find({ _id: { $in: productsToCheckId } });
 
-        if ( !products || products.length < 1 ) {
-            await db.disconnect();
-            return res.status(400).json({ error: true, message: '', payload: 'Ocurrió un error buscando los productos' });
-        }
+        if ( !products || products.length < 1 ) return res.status(400).json({ error: true, message: '', payload: 'Ocurrió un error buscando los productos' });
 
         for ( let p of productsToCheck ) {
             const productInDb = products.find(( item ) => item._id.toString() === p._id );
@@ -80,10 +75,7 @@ const checkExistency = async ( req: NextApiRequest, res: NextApiResponse ) => {
 
         await db.disconnect();
 
-        if ( rejectedProducts.length > 0 ) {
-            await db.disconnect();
-            return res.status(200).json({ error: true, message: '', payload: rejectedProducts });
-        }
+        if ( rejectedProducts.length > 0 ) return res.status(200).json({ error: true, message: '', payload: rejectedProducts });
 
         return res.status(200).json({ error: false, message: '¡Todos los productos están disponibles!', payload: [] });
     } catch( error ) {
@@ -100,11 +92,6 @@ const updateDolarPrice = async ( req: NextApiRequest, res: NextApiResponse ) => 
 
     if ( price === 0 ) return res.status(400).json({ error: true, message: 'El valor no es válido' });
 
-    const session = await unstable_getServerSession( req, res, nextAuthOptions );
-
-    if ( !session || !session.user )
-        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
-        
     const validRoles = ['superuser', 'admin'];
         
         // @ts-ignore

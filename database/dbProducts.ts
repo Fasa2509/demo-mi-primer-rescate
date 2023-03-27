@@ -16,6 +16,7 @@ export const backGetDolarPrice = async (): Promise< Number | null> => {
         
         return dolarPrice ? dolarPrice.price : 10;
     } catch( error ) {
+        console.log( error );
         return null;
     }
 
@@ -28,6 +29,7 @@ export const frontGetDolarPrice = async (): Promise< number | null> => {
 
         return data.price;
     } catch( error ) {
+        console.log( error );
         return null;
     }
 
@@ -42,6 +44,7 @@ export const updateDolarPrice = async ( price: number ): Promise<{ error: boolea
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return error.response?.data as { error: boolean; message: string; };
@@ -66,6 +69,7 @@ export const checkProductsExistency = async ( productsToCheck: Array<{ _id: stri
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -103,12 +107,13 @@ export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promi
             price,
             discount,
             tags,
-            slug,
+            slug: slug.startsWith('/') ? slug : '/' + slug,
             unica,
         });
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -157,6 +162,7 @@ export const updateProductById = async ( id: string, payload: IProduct, unique: 
             ? res.data
             : { error: true, message: 'Error en la petición' };
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -179,11 +185,12 @@ export const discountProducts = async (discount: number, matcher: string ): Prom
     if ( discount < 0 || discount > 50 ) return { error: true, message: 'El descuento no es válido' };
 
     try {
-        matcher = matcher.replace('/', '');
+        if ( matcher.startsWith('/') ) matcher.replace('/', '');
         const { data } = await mprApi.get(`/product/${ matcher }?discount=${ discount }`);
 
         return data;
     } catch( error: any ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -208,6 +215,7 @@ export const switchProductAbilityById = async ( id: string ) => {
 
         return data;
     } catch( error: any ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -238,6 +246,7 @@ export const getProductBySlug = async ( slug: string ): Promise<IProduct | null 
 
         return JSON.parse( JSON.stringify( product ) );
     } catch( error ) {
+        console.log( error );
         return null;
     }
 
@@ -254,6 +263,7 @@ export const getAllProducts = async (): Promise<IProduct[] | null> => {
 
         return JSON.parse( JSON.stringify( products ) );
     } catch( error ) {
+        console.log( error );
         return null;
     }
 

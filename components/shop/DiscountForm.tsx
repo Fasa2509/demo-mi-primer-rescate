@@ -42,19 +42,17 @@ export const DiscountForm = () => {
 
         setIsLoading( true );
 
-        let res;
-
         if ( form === 'tags' ) {
-            res = await dbProducts.discountProducts( Number( formTags.discount ), formTags.tags );
+            const res = await dbProducts.discountProducts( Number( formTags.discount ), formTags.tags );
             enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
         }
         
         if ( form === 'slug' ) {
-            res = await dbProducts.discountProducts( Number( formSlug.discount ), formSlug.slug.trim() );
+            const res = await dbProducts.discountProducts( Number( formSlug.discount ), formSlug.slug );
             enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
         }
 
-        if ( res && !res.error && revalidatePage && process.env.NODE_ENV === 'production' ) {
+        if ( process.env.NODE_ENV === 'production' && revalidatePage ) {
             const revalidationResponses = await Promise.all([
                 mprRevalidatePage('/tienda'),
                 mprRevalidatePage('/tienda/categoria'),
@@ -82,19 +80,9 @@ export const DiscountForm = () => {
 
         setIsLoading( true );
         const res = await dbProducts.updateDolarPrice( Number( dolarPrice ) );
+        setIsLoading( false );
 
         enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
-        
-        if ( !res.error && process.env.NODE_ENV === 'production' ) {
-            setDolarPrice('');
-            const responses = await Promise.all([
-                mprRevalidatePage('/tienda/carrito'),
-                mprRevalidatePage('/tienda'),
-            ]);
-
-            responses.forEach(( resRev ) => enqueueSnackbar(resRev.message, { variant: !resRev.error ? 'success' : 'error' }));
-        }
-        setIsLoading( false );
     }
 
     const revalidate = async () => {

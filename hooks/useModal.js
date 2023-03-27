@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 export const useModal = () => {
   
@@ -8,5 +8,5 @@ export const useModal = () => {
 
     const closeModal = () => setIsOpen( false );
 
-    return { isOpen, openModal, closeModal };
+    return { isOpen, openModal, closeModal }
 }

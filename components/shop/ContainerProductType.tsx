@@ -15,10 +15,10 @@ interface Props {
 
 export const ContainerProductType: FC<Props> = ({ type, products }) => {
 
-    const { push, pathname } = useRouter();
+    const router = useRouter();
 
     const shallowNavigate = ( query: string ) =>
-        push(pathname + query, undefined, { shallow: true });
+        router.push(router.pathname + query, undefined, { shallow: true });
 
     return (
         <section className={ styles.products__type__container }>

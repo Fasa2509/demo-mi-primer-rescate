@@ -36,7 +36,7 @@ const columns: GridColDef[] = [
     // @ts-ignore
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <Link href={ `/tienda?product=${ row.slug.replace("/", "") }` } color='info' target='_blank' rel='noreferrer'>
+        <Link href={ `/tienda${ row.slug }` } color='info' target='_blank' rel='noreferrer'>
             <Typography className='admin__link'>{ row.name }</Typography>
         </Link>
       )
@@ -86,7 +86,7 @@ const columns: GridColDef[] = [
     sortable: false,
     disableColumnMenu: true,
     align: 'center',
-    width: 135,
+    width: 120,
   },
   {
     field: 'setNewProduct',
@@ -95,8 +95,20 @@ const columns: GridColDef[] = [
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
         <Button
-          className='button low--padding button--round low--font--size'
-          onClick={ () => row.setNewProduct( row.rowProduct ) }
+          color='secondary'
+          onClick={ () => row.setNewProduct({
+            _id: row.id,
+            name: row.name,
+            description: row.description,
+            images: row.images,
+            inStock: row.inStock,
+            price: row.price,
+            discount: row.discount,
+            tags: row.tags,
+            sold: row.sold,
+            slug: row.slug,
+          })
+          }
         >
           Ver info
         </Button>
@@ -136,7 +148,7 @@ const columns: GridColDef[] = [
     // @ts-ignore
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <Button className={ `button low--padding button--round low--font--size ${ row.isAble ? 'button--error' : 'button--success' }` } onClick={ () => row.switchProductAbility( row.id, row.name, row.isAble ) }>{ row.isAble ? 'Eliminar' : 'Habilitar' }</Button>
+        <Button color={ row.isAble ? 'error' : 'success' } onClick={ () => row.switchProductAbility( row.id, row.name, row.isAble ) }>{ row.isAble ? 'Eliminar' : 'Habilitar' }</Button>
       )
     }
   }
@@ -164,9 +176,9 @@ const newProductInitialState: IProduct = {
   discount: 0,
   tags: [],
   sold: 0,
-  slug: '',
+  slug: '/',
   isAble: true,
-  createdAt: (() => Date.now())(),
+  createdAt: (() => Date.now())()
 }
 
 const ProductosPage: NextPage<Props> = ({ products: P }) => {
@@ -210,7 +222,6 @@ const ProductosPage: NextPage<Props> = ({ products: P }) => {
   }
 
   const rows = products.map(product => ({
-    rowProduct: product,
     id: product._id,
     images: [...product.images],
     name: product.name,
@@ -228,11 +239,6 @@ const ProductosPage: NextPage<Props> = ({ products: P }) => {
     isAble: product.isAble,
     switchProductAbility,
   }));
-
-  const clearProductInfo = () => setNewProduct( newProductInitialState );
-
-  const updateProductsInfo = ( aProduct: IProduct ) =>
-    setProducts(( prevState ) => prevState.map(( p ) => ( p._id !== aProduct._id ) ? p : aProduct));
 
   return (
     <MainLayout title='Productos' pageDescription='Información de los productos' titleIcon={ <Category color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
@@ -252,7 +258,7 @@ const ProductosPage: NextPage<Props> = ({ products: P }) => {
           : <Typography variant='h2'>No se encontraron productos en la base de datos.</Typography>
       }
 
-      <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } clearProductInfo={ clearProductInfo } updateProductsInfo={ updateProductsInfo } />
+      <AdminProductInfo product={ newProduct } method={ method } setMethod={ setMethod } />
 
     </MainLayout>
   )

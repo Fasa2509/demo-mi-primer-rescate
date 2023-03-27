@@ -1,4 +1,4 @@
-import { useContext, lazy, Suspense } from 'react';
+import { useContext, lazy, Suspense, memo } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { Box, Typography } from '@mui/material';
 import { ShoppingBag } from '@mui/icons-material';
@@ -27,7 +27,7 @@ interface Props {
 
 const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
 
-  const { user } = useContext( AuthContext );
+  const { user: session } = useContext( AuthContext );
   
   return (
     <ShopLayout title={ 'Tienda Virtual' } pageDescription={ 'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos como alimentos y ropa para ti y tu mejor amig@ y mascota. ¡No pierdas el tiempo!' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/tienda'>
@@ -42,11 +42,11 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
         
         <ContainerFavProduct products={ mostSoldProducts } />
 
-        <section className='content-island'>
-          <Typography>¡Bienvenid@ a nuestra tienda online!</Typography>
-          <Typography>Aquí podrás encontrar todo tipo de artículos para los más consentidos de la casa.</Typography>
-          <Typography>Explora todos nuestros productos o usa nuestro buscador para encontrar uno en particular.</Typography>
-        </section>
+        <Typography>¡Bienvenido a nuestra tienda online!</Typography>
+
+        <Typography>Aquí podrás encontrar todo tipo de artículos para los más consentidos de la casa.</Typography>
+
+        <Typography>Explora todos nuestros productos o usa nuestro buscador para encontrar uno en particular.</Typography>
 
         <>
           {
@@ -55,7 +55,7 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
         </>
 
         <>
-          { user && ( user.role === 'admin' || user.role === 'superuser' ) &&
+          { session && ( session.role === 'superuser' || session.role === 'admin' ) &&
             <Suspense fallback={ <Typography>Cargando...</Typography> }>
               <DiscountForm />
             </Suspense>

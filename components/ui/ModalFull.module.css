@@ -119,7 +119,6 @@
 
 .slider__container {
     display: block;
-    background-color: #fff;
     overflow: hidden;
     align-self: flex-start;
     border-radius: 1rem;

@@ -17,6 +17,7 @@ export const getAllArticles = async (): Promise<IArticle[] | null> => {
 
         return JSON.parse( JSON.stringify( allArticles ) );
     } catch( error ) {
+        console.log( error );
         return null;
     }
 
@@ -33,6 +34,7 @@ export const getMoreArticles = async ( seconds: number ): Promise<IArticle[] | n
 
         return JSON.parse( JSON.stringify( data ));
     } catch( error ) {
+        console.log( error );
         return null;
     }
 
@@ -55,6 +57,7 @@ export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<
         return data;
         // @ts-ignore
     } catch( error: Error | AxiosError ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return { error: true, message: 'Ocurrió un error guardando el artículo' }
@@ -75,6 +78,7 @@ export const removeArticle = async ( id: string ): Promise<{ error: boolean; mes
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return { error: true, message: 'Ocurrió un error guardando el artículo' }

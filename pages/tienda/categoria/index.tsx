@@ -65,14 +65,12 @@ const TypePage: NextPage<Props> = ({ products }) => {
   return (
     <ShopLayout title={ 'Tienda Virtual' } H1={ 'Tienda' } pageDescription={ 'Tienda virtual oficial la fundación Mi Primer Rescate. Encuentra distintos productos y filtra por categoría para encontrar aquel que más se adapte a tu mascota.' } titleIcon={ <ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/tienda' url='/tienda/categoria'>
 
-        <Suspense fallback={ <></> }>
+        <Suspense fallback={ <Typography>Cargando...</Typography> }>
             <ModalFull products={ products } />
         </Suspense>
 
-        <section className='content-island'>
-            <Typography>¿Buscas un tipo de producto en particular? Aquí lo encontrarás.</Typography>
-            <Typography>Filtra tus productos por categoría.</Typography>
-        </section>
+        <Typography>¿Buscas un tipo de producto en particular? Aquí lo encontrarás.</Typography>
+        <Typography>Filtra tus productos por categoría.</Typography>
 
         <Box className='fadeIn' display='flex' justifyContent='space-evenly' sx={{ my: 2 }}>
             {

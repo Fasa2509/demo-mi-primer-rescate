@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import styles from './ContentSlider.module.css';
+import styles from './ContentSlider.module.css'
 
 interface Props {
     children: JSX.Element | JSX.Element[];

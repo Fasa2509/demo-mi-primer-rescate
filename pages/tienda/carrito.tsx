@@ -3,10 +3,7 @@ import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { Box, Button, Card, CardContent, Checkbox, Divider, TextField, Typography } from '@mui/material';
-import AddShoppingCart from '@mui/icons-material/AddShoppingCart';
-import Check from '@mui/icons-material/Check';
-import RemoveShoppingCart from '@mui/icons-material/RemoveShoppingCart';
-import ShoppingBag from '@mui/icons-material/ShoppingBag';
+import { AddShoppingCart, Check, RemoveShoppingCart, ShoppingBag } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
 import { mprRevalidatePage } from '../../mprApi';
@@ -143,7 +140,6 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
     setExistencyChecked( false );
     setIsLoading( false );
     setMethod('');
-    clearCart();
 
     if ( pmcode.current && pmnumber.current ) {
       pmcode.current.value = '';
@@ -249,7 +245,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
         <Box display='flex' gap='.5rem' flexWrap='wrap'>  
           <Box display='flex' flexDirection='column' gap='1.5rem' alignItems='center' flexGrow={ 1 }>
             {
-              cart.map(( product ) => <CartProductInfo key={ product._id + product.size } product={ product } /> )
+              cart.map(( product, index ) => <CartProductInfo key={ product.name + index } product={ product } /> )
             }
 
             { ( numberOfItems > 0 )
@@ -546,6 +542,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     props: {
       dolarPrice: dolar
     },
+    revalidate: 3600 * 12 // 24h
   }
 }
 

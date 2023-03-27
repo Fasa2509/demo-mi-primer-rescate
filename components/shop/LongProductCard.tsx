@@ -4,7 +4,7 @@ import { Box, Typography, Chip } from '@mui/material';
 import { MyImage } from '../cards';
 import { format } from '../../utils';
 import { IProduct } from '../../interfaces';
-import styles from './ProductCard.module.css';
+import styles from './ProductCard.module.css'
 
 interface Props {
     product: IProduct;

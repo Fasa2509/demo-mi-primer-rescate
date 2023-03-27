@@ -1,0 +1,31 @@
+.container * {
+    margin: .2rem 0;
+}
+
+.name {
+    color: #0a0a0a;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.product__price {
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
+.product__discount {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.tags__container {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    flex-wrap: wrap;
+    font-size: .9rem;
+    font-weight: 600;
+    color: #8a8a8a;
+}

@@ -7,8 +7,8 @@ import { MyImage, Slider } from '../cards';
 import { Loader } from './Loader';
 import styles from './MainLayout.module.css';
 
-const callback: IntersectionObserverCallback = ( entries ) =>
-  ( entries[0]!.isIntersecting )
+const callback = ( entries: any[] ) =>
+  entries[0].isIntersecting
     ? entries[0].target.classList.remove('sticks__inactive')
     : entries[0].target.classList.add('sticks__inactive') 
 
@@ -63,23 +63,23 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
 
       <Loader />
       
-      <section style={{ minWidth: '310px' }}>
+      <section style={{ width: '100%' }}>
         <Slider identifier='hero-slider' duration={ 10000 }>
-          <div className='fadeIn' style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ width: '50%', position: 'relative' }}>
-              <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
-            </div>
+        <div className='fadeIn' style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ width: '50%', position: 'relative' }}>
+            <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
           </div>
-          <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ width: '50%', position: 'relative' }}>
-              <MyImage src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
-            </div>
+        </div>
+        <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ width: '50%', position: 'relative' }}>
+            <MyImage src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
           </div>
-          <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ width: '20%', position: 'relative' }}>
-              <MyImage src={ '/icon.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
-            </div>
+        </div>
+        <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ width: '20%', position: 'relative' }}>
+            <MyImage src={ '/icon.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
           </div>
+        </div>
         </Slider>
       </section>
 

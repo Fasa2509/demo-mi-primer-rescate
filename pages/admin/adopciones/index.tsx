@@ -54,7 +54,7 @@ const columns: GridColDef[] = [
     field: 'setAdoption',
     headerName: 'Ver info',
     renderCell: ({ row }: GridRenderCellParams) => {
-      return <Button className='button button--round low--padding low--font--size' onClick={ () => row.setAdoption( row.adoption ) }>Ver info</Button>
+      return <Button color='secondary' onClick={ () => row.setAdoption( row.adoption ) }>Ver info</Button>
     },
     sortable: false,
     disableColumnMenu: true,
@@ -141,14 +141,14 @@ const AdopcionesPage: NextPage<Props> = ({ adoptions: allAdoptions }) => {
   }));
 
   const updateAdoption = ( id: string ) => {
-    setAdoptions(( prevState ) => prevState.map(( current ) =>
-      (current._id !== id)
-        ? current
-        : {
+    setAdoptions(( prevState ) => prevState.map(( current ) => {
+        if ( current._id !== id ) return current;
+        return {
           ...current,
           checked: true,
         }
-    ))
+      })
+    )
   }
 
   return (

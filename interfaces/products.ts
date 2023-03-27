@@ -1,4 +1,5 @@
 import { ImageObj } from './articles'
+// import { ISize } from './';
 
 export interface IProduct {
   
@@ -35,6 +36,12 @@ export type InStockSizes = {
   XXXL?: number;
 }
 
+// export interface ISold {
+//   _id: string;
+//   productId: string;
+//   soldUnits: number;
+// }
+
 export const initialFavProducts: IProduct[] = [
     {
       _id: 'abcd1',
@@ -42,8 +49,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/square-dog.jpg',
@@ -54,8 +61,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Capucha perro grande',
@@ -67,7 +74,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['accesorios', 'útil'],
       sold: 0,
-      slug: 'capucha_perro_grande',
+      slug: '/capucha_perro_grande',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -77,8 +84,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/square-dog.jpg',
@@ -89,8 +96,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
       ],
       name: 'Recipiente (estrellado)',
@@ -102,7 +109,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['útil'],
       sold: 0,
-      slug: 'recipiente_estrellado',
+      slug: '/recipiente_estrellado',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -118,14 +125,14 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/gato-1.webp',
@@ -143,7 +150,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles'],
       sold: 0,
-      slug: 'perrarina_xxxxx_20kg',
+      slug: '/perrarina_xxxxx_20kg',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -159,8 +166,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Vitamina YYY',
@@ -172,7 +179,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles'],
       sold: 0,
-      slug: 'vitamina_yyy',
+      slug: '/vitamina_yyy',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -188,8 +195,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/perro-1.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Suplemento Vitamínico',
@@ -201,7 +208,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles', 'útil'],
       sold: 0,
-      slug: 'suplemento_vitaminico',
+      slug: '/suplemento_vitaminico',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -211,8 +218,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/gato-1.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/gato-2.jpg',
@@ -236,7 +243,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles', 'accesorios'],
       sold: 0,
-      slug: 'hueso_de_gomita',
+      slug: '/hueso_de_gomita',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -246,8 +253,8 @@ export const initialFavProducts: IProduct[] = [
         {
           url: '/square-dog.jpg',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/gato-2.jpg',
@@ -271,7 +278,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['accesorios'],
       sold: 0,
-      slug: 'arete_para_gato',
+      slug: '/arete_para_gato',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -284,14 +291,14 @@ export const initialProducts: IProduct[] = [
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
       ],
       name: 'Ex est laboris ullamco',
@@ -303,7 +310,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['consumibles', 'accesorios', 'útil'],
       sold: 0,
-      slug: 'producto_1',
+      slug: '/producto_1',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -319,20 +326,20 @@ export const initialProducts: IProduct[] = [
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/Logo-Redes.png',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Ex est laboris ullamco tipce',
@@ -347,7 +354,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa', 'útil'],
       sold: 0,
-      slug: 'producto_2',
+      slug: '/producto_2',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -357,26 +364,26 @@ export const initialProducts: IProduct[] = [
         {
           url: '/Logo-Redes.png',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/Logo-MPR.png',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Ex est laboris',
@@ -388,7 +395,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['accesorios'],
       sold: 0,
-      slug: 'producto_3',
+      slug: '/producto_3',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -398,20 +405,20 @@ export const initialProducts: IProduct[] = [
         {
           url: '/Logo-MPR.png',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Gorra o Chapa',
@@ -426,7 +433,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: 'gorra_o_chapa',
+      slug: '/gorra_o_chapa',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -448,8 +455,8 @@ export const initialProducts: IProduct[] = [
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Tomos elec ullamco',
@@ -467,7 +474,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: 'producto_5',
+      slug: '/producto_5',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -489,8 +496,8 @@ export const initialProducts: IProduct[] = [
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Camisa patita de perro',
@@ -506,7 +513,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: 'camisa_patita_de_perro',
+      slug: '/camisa_patita_de_perro',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -516,20 +523,20 @@ export const initialProducts: IProduct[] = [
         {
           url: '/gato-1.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/gato-2.jpg',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Camisa pata de gato',
@@ -545,7 +552,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: 'camisa_pata_de_gato',
+      slug: '/camisa_pata_de_gato',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -561,14 +568,14 @@ export const initialProducts: IProduct[] = [
         {
           url: '/perro-1.webp',
           alt: 'Perro 1',
-          width: 500,
-          height: 500,
+          width: 300,
+          height: 300,
         },
         {
           url: '/Logo-Redes.png',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Pantalon rasgado',
@@ -584,7 +591,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: 'pantalon_rasgado',
+      slug: '/pantalon_rasgado',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -594,8 +601,8 @@ export const initialProducts: IProduct[] = [
         {
           url: '/perro-2.webp',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
         {
           url: '/square-dog.jpg',
@@ -606,8 +613,8 @@ export const initialProducts: IProduct[] = [
         {
           url: '/Logo-MPR.png',
           alt: 'Perro 2',
-          width: 500,
-          height: 500,
+          width: 250,
+          height: 250,
         },
       ],
       name: 'Camiseta deportiva patitas',
@@ -624,10 +631,10 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: 'camiseta_deportiva_patitas',
+      slug: '/camiseta_deportiva_patitas',
       isAble: true,
       createdAt: (() => Date.now())()
     },
 ]
 
-export const allProducts = [...initialFavProducts, ...initialProducts];
+export const allProducts = [...initialFavProducts, ...initialProducts]

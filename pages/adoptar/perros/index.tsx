@@ -1,22 +1,15 @@
-import { useContext, useEffect, useRef, useState, lazy, Suspense } from 'react';
+import { useContext, useState, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbPets } from '../../../database';
-import { AuthContext, ScrollContext } from '../../../context';
+import { AuthContext, ScrollContext } from '../../../context'
 import { mprRevalidatePage } from '../../../mprApi';
 import { MainLayout, PetCard } from '../../../components';
 import { IPet } from '../../../interfaces';
 import styles from '../../../styles/Adoptar.module.css';
-
-const callback: IntersectionObserverCallback = ( entries ) =>
-  entries.forEach(( entry ) =>
-    ( entry.isIntersecting )
-      ? entry.target.classList.add( styles.pet__focused )
-      : entry.target.classList.remove( styles.pet__focused )  
-    );
 
 const PetForm = lazy(() =>
   import('../../../components/ui/PetForm')
@@ -32,42 +25,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   const { user } = useContext( AuthContext );
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
-  const intersectionObserverRef = useRef<IntersectionObserver>( null );
-  const lastPetsLengthRef = useRef<number>( 0 );
   const [pets, setPets] = useState( Pets );
-
-
-  useEffect(() => {
-    if ( window.innerWidth < 700 ) {
-      const observer = new IntersectionObserver(callback, {
-        rootMargin: '-50% 0px -50% 0px',
-        threshold: 0,
-      });
-
-      const allPets = document.querySelectorAll('.observe');
-
-      allPets.forEach(( el ) => observer.observe( el ));
-
-      // @ts-ignore
-      intersectionObserverRef.current = observer;
-      lastPetsLengthRef.current = allPets.length;
-
-      return () => observer.disconnect();
-    }
-  }, []);
-
-
-  useEffect(() => {
-    if ( window.innerWidth < 700 ) {
-      if ( pets.length <= 6 ) return;
-
-      document.querySelectorAll('.observe')
-        .forEach(( el, index ) => ( index >= lastPetsLengthRef.current! ) && intersectionObserverRef.current!.observe( el ));
-      
-      lastPetsLengthRef.current = pets.length;
-    }
-  }, [pets]);
-
   
   const requestPets = async () => {
     setIsLoading( true );
@@ -100,9 +58,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   return (
     <MainLayout title={ 'Adopta un perrito' } H1={ 'Adopta un perrito' } pageDescription={ '¿Buscas adoptar un perrito? Ve los perritos que tenemos en nuestra fundación y adopta uno para llenarlo de amor. Encuentra el ideal para ti aquí entre una amplia selección de animales rescatados.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/gatos' url='/adoptar/perros'>
       
-        <section className='content-island'>
-          <p>¡Los perritos de <b>Mi Primer Rescate</b> son especiales! Vienen llenos de mucho amor, con dósis extra de cariño y una gran ración de dulzura, ¡busca el tuyo aquí!.</p>
-        </section>
+        <p>¡Los perritos de <b>Mi Primer Rescate</b> son especiales! Vienen llenos de mucho amor, con dósis extra de cariño y una gran ración de dulzura, ¡busca el tuyo aquí!.</p>
 
         <div className={ styles.grid__container }>
             {
@@ -141,6 +97,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     props: {
       pets
     },
+    revalidate: 3600 * 24 * 7,
   }
 }
 

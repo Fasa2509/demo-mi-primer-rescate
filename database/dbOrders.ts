@@ -17,6 +17,8 @@ export const getUserOrders = async ( userId: string ): Promise<IOrder[]> => {
 
         return JSON.parse( JSON.stringify( orders.sort((a: IOrder, b: IOrder) => b.createdAt - a.createdAt) ) );
     } catch( error ) {
+        console.log( error );
+
         return [];
     }
 
@@ -31,6 +33,7 @@ export const updatePaidOrder = async ( orderId: string = '', orderStatus: Paid =
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -63,6 +66,7 @@ export const createNewOrder = async ({ userId, cart, shippingAddress, contact, t
 
         return data;
     } catch( error: any ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -91,6 +95,7 @@ export const getAllOrders = async (): Promise<IOrder[] | null> => {
 
         return JSON.parse( JSON.stringify( orders ) );
     } catch( error ) {
+        console.log( error );
         return null;
     }
 

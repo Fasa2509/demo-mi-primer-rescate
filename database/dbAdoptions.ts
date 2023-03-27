@@ -18,6 +18,7 @@ export const createAdoption = async ( form: IAdoption ): Promise<{ error: boolea
 
         return data;
     } catch( error: any ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -44,6 +45,7 @@ export const checkAdoption = async ( _id: string ): Promise<{ error: boolean; me
 
         return data;
     } catch( error ) {
+        console.log( error );
 
         if ( axios.isAxiosError( error ) ) {
             return {
@@ -66,12 +68,13 @@ export const getAllAdoptions = async () => {
     try {
         await db.connect();
         
-        const adoptions = await Adoption.find().sort({ createdAt: -1 }).limit( 100 );
+        const adoptions = await Adoption.find().sort({ createdAt: -1 }).limit( 150 );
         
         await db.disconnect();
         
         return JSON.parse( JSON.stringify( adoptions ) );
     } catch( error: any ) {
+        console.log( error );
         await db.disconnect();
         return null;
     }

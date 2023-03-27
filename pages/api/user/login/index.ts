@@ -94,6 +94,7 @@ const sendEmailPassword = async ( req: NextApiRequest, res: NextApiResponse ) =>
 
         const token = jwt.signToken( user._id, user.email ).replaceAll('.', '___');
         
+        // TODO: enviar correo electronico con el token que lleva userId y correo
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 465,

@@ -270,7 +270,7 @@ export const CustomForm: FC = () => {
 
 
   return (
-    <section style={{ marginBottom: '.5rem' }}>
+    <section>
 
         <form className={ styles.form }>
 

@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
-import { formatDuration, intervalToDuration, isBefore, isToday } from 'date-fns';
+import { formatDuration, intervalToDuration, isBefore, isToday } from 'date-fns'
 import { es } from 'date-fns/locale';
-import confetti from 'canvas-confetti';
+import confetti from 'canvas-confetti'
 import styles from './Article.module.css';
 
 interface Props {
