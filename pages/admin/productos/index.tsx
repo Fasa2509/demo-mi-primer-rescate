@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { Typography, Box, Grid, Link, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Category } from '@mui/icons-material';
+import Category from '@mui/icons-material/Category';
 import { useSnackbar } from 'notistack';
 import { getServerSession } from "next-auth/next";
 import { nextAuthOptions } from '../../api/auth/[...nextauth]';

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GetStaticProps, NextPage } from 'next'
-import { TrendingUp } from '@mui/icons-material';
+import TrendingUp from '@mui/icons-material/TrendingUp';
 import { Box, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 

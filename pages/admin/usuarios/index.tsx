@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
-import { AdminPanelSettings } from '@mui/icons-material';
+import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { getServerSession } from "next-auth/next";

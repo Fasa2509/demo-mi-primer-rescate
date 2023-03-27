@@ -3,7 +3,7 @@ import { NextPage, GetServerSideProps } from 'next';
 import { nextAuthOptions } from '../api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth';
 import { Box, Button, Chip, Link, Typography } from '@mui/material';
-import { Home } from '@mui/icons-material';
+import Home from '@mui/icons-material/Home';
 import { useSnackbar } from 'notistack';
 import { format as formatDate } from 'date-fns';
 

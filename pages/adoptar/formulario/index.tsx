@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { VolunteerActivism } from '@mui/icons-material';
+import VolunteerActivism from '@mui/icons-material/VolunteerActivism';
 import { Typography } from '@mui/material';
 
 import { AdoptionForm, MainLayout } from '../../../components';

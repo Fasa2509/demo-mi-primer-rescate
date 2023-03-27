@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { NextPage } from 'next';
-import { Pets } from '@mui/icons-material';
+import Pets from '@mui/icons-material/Pets';
 
 import { CardText, ContentSlider, MainLayout } from '../../components';
 import styles from '../../styles/ProyectoMPR.module.css';

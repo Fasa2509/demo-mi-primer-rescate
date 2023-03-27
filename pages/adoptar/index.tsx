@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { Typography } from '@mui/material';
-import { VolunteerActivism } from '@mui/icons-material';
+import VolunteerActivism from '@mui/icons-material/VolunteerActivism';
 
 import { MainLayout } from '../../components';
 

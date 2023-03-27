@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Star } from '@mui/icons-material';
+import Star from '@mui/icons-material/Star';
 
 import { BigProductCard } from './';
 import { IProduct } from '../../interfaces';

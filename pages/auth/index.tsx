@@ -145,24 +145,24 @@ const AuthPage: NextPage = () => {
     )
 }
 
-// export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
+export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
-//   const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
 
-//   if ( session ) {
-//     return {
-//       redirect: {
-//         destination: '/',
-//         permanent: false,
-//       }
-//     }
-//   }
+  if ( session ) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
 
-//   return {
-//     props: {
+  return {
+    props: {
 
-//     }
-//   }
-// }
+    }
+  }
+}
 
 export default AuthPage;

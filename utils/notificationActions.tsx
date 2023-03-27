@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { useSnackbar } from 'notistack';
-import { Check, Close } from '@mui/icons-material';
+import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
 
 export const CloseNotificationButton: FC = ( snackbarKey: any ) => {
     

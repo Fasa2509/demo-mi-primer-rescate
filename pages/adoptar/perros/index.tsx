@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
-import { VolunteerActivism } from '@mui/icons-material';
+import VolunteerActivism from '@mui/icons-material/VolunteerActivism';
 import { Box, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 

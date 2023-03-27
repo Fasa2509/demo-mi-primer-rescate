@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Checkbox, Chip, TextField, Typography } from '@mui/material';
-import { Check, ErrorOutline } from '@mui/icons-material';
+import Check from '@mui/icons-material/Check';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 
 import { AuthContext, ScrollContext } from '../../context';
 import { validations } from '../../utils';

@@ -2,7 +2,7 @@ import { useContext, useState, lazy, Suspense } from 'react';
 import type { GetStaticProps, NextPage } from 'next'
 import { useSnackbar } from 'notistack';
 import { Box, Button, Link } from '@mui/material';
-import { Home } from '@mui/icons-material';
+import Home from '@mui/icons-material/Home';
 import Facebook from '@mui/icons-material/Facebook';
 import Instagram from '@mui/icons-material/Instagram';
 import Twitter from '@mui/icons-material/Twitter';

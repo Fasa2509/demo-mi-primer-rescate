@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import NextLink from 'next/link';
-import { PetsOutlined } from '@mui/icons-material';
+import PetsOutlined from '@mui/icons-material/PetsOutlined';
 import styles from './Title.module.css';
 
 interface Props {

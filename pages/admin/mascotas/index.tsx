@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { getServerSession } from "next-auth/next";
 import { Button, CardMedia, Grid, Typography } from '@mui/material';
-import { EmojiNature } from '@mui/icons-material';
+import EmojiNature from '@mui/icons-material/EmojiNature';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
 import { format as formatDate } from 'date-fns';

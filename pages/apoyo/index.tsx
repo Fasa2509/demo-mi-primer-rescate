@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { Typography } from '@mui/material';
-import { AddAlert } from '@mui/icons-material';
+import AddAlert from '@mui/icons-material/AddAlert';
 
 import { MainLayout } from '../../components';
 

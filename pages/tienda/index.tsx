@@ -1,7 +1,7 @@
 import { useContext, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { Box, Typography } from '@mui/material';
-import { ShoppingBag } from '@mui/icons-material';
+import ShoppingBag from '@mui/icons-material/ShoppingBag';
 import { isMonday, isToday } from 'date-fns';
 
 import { dbProducts, dbSolds } from '../../database';
