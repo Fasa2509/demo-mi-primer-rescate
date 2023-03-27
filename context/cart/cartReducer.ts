@@ -19,8 +19,6 @@ export const cartReducer = ( state: CartState, action: CartActionType ): CartSta
             }
 
         case 'Cart - Update Product in Cart':
-            let productInCart = state.cart.find(product => product._id === action.payload._id && product.size === action.payload.size);
-
             if ( action.payload.quantity < 1 ) {
                 return  {
                         ...state,
@@ -28,7 +26,9 @@ export const cartReducer = ( state: CartState, action: CartActionType ): CartSta
                     }
             }
 
-            return productInCart
+            let productInCart = state.cart.find(product => product._id === action.payload._id && product.size === action.payload.size);
+
+            return ( productInCart )
                 ? {
                     ...state,
                     cart: state.cart.map(p => {

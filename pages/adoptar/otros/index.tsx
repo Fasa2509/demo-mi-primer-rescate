@@ -1,4 +1,4 @@
-import { useContext, useState, lazy, Suspense } from 'react';
+import { useContext, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { VolunteerActivism } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
@@ -10,6 +10,13 @@ import { mprRevalidatePage } from '../../../mprApi';
 import { MainLayout, PetCard } from '../../../components';
 import { IPet } from '../../../interfaces';
 import styles from '../../../styles/Adoptar.module.css';
+
+const callback: IntersectionObserverCallback = ( entries ) =>
+  entries.forEach(( entry ) =>
+    ( entry.isIntersecting )
+      ? entry.target.classList.add( styles.pet__focused )
+      : entry.target.classList.remove( styles.pet__focused )  
+    );
 
 const PetForm = lazy(() =>
   import('../../../components/ui/PetForm')
@@ -25,7 +32,44 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   const { user } = useContext( AuthContext );
   const { setIsLoading } = useContext( ScrollContext );
   const { enqueueSnackbar } = useSnackbar();
+  const intersectionObserverRef = useRef<IntersectionObserver>( null );
+  const lastPetsLengthRef = useRef<number>( 0 );
   const [pets, setPets] = useState( Pets );
+  
+
+  useEffect(() => {
+    if ( window.innerWidth < 700 ) {
+      const observer = new IntersectionObserver(callback, {
+        rootMargin: '-50% 0px -50% 0px',
+        threshold: 0,
+      });
+
+      const allPets = document.querySelectorAll('.observe');
+
+      allPets.forEach(( el ) => observer.observe( el ));
+
+      // @ts-ignore
+      intersectionObserverRef.current = observer;
+      lastPetsLengthRef.current = allPets.length;
+
+      return () => observer.disconnect();
+    }
+  }, []);
+
+  
+  useEffect(() => {
+    if ( window.innerWidth < 700 ) {
+      if ( pets.length <= 6 ) return;
+
+      document.querySelectorAll('.observe')
+        .forEach(( el, index ) => ( index >= lastPetsLengthRef.current! ) && intersectionObserverRef.current!.observe( el ));
+      document.querySelectorAll('.observe')
+        .forEach(( el, index ) => index >= lastPetsLengthRef.current! && console.log( el ));
+      
+      lastPetsLengthRef.current = pets.length;
+    }
+  }, [pets]);
+
 
   const requestPets = async () => {
     setIsLoading( true );
@@ -58,7 +102,9 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
   return (
     <MainLayout title={ 'Adopta una mascota' } H1={ 'Adopta una mascota' } pageDescription={ '¿Buscas adoptar una mascota? Ve los animales que tenemos en nuestra fundación y adopta uno para llenarlo de amor. Encuentra el ideal para ti aquí entre una amplia selección de animales rescatados.' } titleIcon={ <VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/adoptar/formulario'  url='/adoptar/otros'>
       
-        <p>Las mascotas de <b>Mi Primer Rescate</b> tienen algo en común, ¡ninguna te dejará indiferente!. Si quieres una mascota, definitivamente estás en el lugar indicado.</p>
+        <section className='content-island'>
+          <p>Las mascotas de <b>Mi Primer Rescate</b> tienen algo en común, ¡ninguna te dejará indiferente!. Si quieres una mascota, definitivamente estás en el lugar indicado.</p>
+        </section>
 
         <div className={ styles.grid__container }>
             {

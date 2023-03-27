@@ -1,9 +1,15 @@
-import { useMemo } from 'react'
-import { NextPage } from 'next'
+import { useEffect, useMemo } from 'react';
+import { NextPage } from 'next';
+import { Pets } from '@mui/icons-material';
 
-import { CardText, ContentSlider, MainLayout } from '../../components'
-import styles from '../../styles/ProyectoMPR.module.css'
-import { Pets } from '@mui/icons-material'
+import { CardText, ContentSlider, MainLayout } from '../../components';
+import styles from '../../styles/ProyectoMPR.module.css';
+
+const callback: IntersectionObserverCallback = ( entries ) =>
+  entries.forEach(( entry ) => ( entry.isIntersecting )
+    ? entry.target.classList.add( styles.active )
+    : entry.target.classList.remove( styles.active )
+  )
 
 const MiPrimerRescatePage: NextPage = () => {
 
@@ -16,7 +22,19 @@ const MiPrimerRescatePage: NextPage = () => {
   Utilizar las redes sociales a beneficio de los animales, así también como instrumento para ayudar a personas que lo necesiten, como a los abuelos en los asilos, niños huérfanos, personas en situación de calle o en hospitales
   Llevar a cabo el Proyecto Helenden, nuestro más ambicioso proyecto hasta la fecha`;
 
-  const array = useMemo(() => text.split('\n'), [text])
+  const array = useMemo(() => text.split('\n'), [text]);
+
+  useEffect(() => {
+    if (window.innerWidth < 700) {
+      const observer = new IntersectionObserver(callback, {
+        rootMargin: '-50% -100px -50% -100px',
+        threshold: 0,
+      });
+
+      document.querySelectorAll('.observe__container .observe').forEach(( el ) => observer.observe( el ));
+      return () => observer.disconnect();
+    }
+  }, []);
 
   return (
     <MainLayout title={ '¿Qué es la fundación Mi Primer Rescate?' } H1={ 'Proyecto MPR' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!, la fundación tiene mucha historia y trabajo detrás.' } titleIcon={ <Pets color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/apoyo' url='/miprimerrescate'>
@@ -26,7 +44,7 @@ const MiPrimerRescatePage: NextPage = () => {
         </ContentSlider>
 
         <ContentSlider title='Objetivos' style={{ backgroundImage: 'url(/background-blob-scatter.svg), url(/wave-haikei-1.svg)', backgroundSize: 'contain', backgroundPosition: 'top left, bottom left', backgroundRepeat: 'repeat, no-repeat' }}>
-          <section className={ styles.section__objectives }>
+          <section className={ `${ styles.section__objectives } observe__container` }>
             {
               array.map( (txt, index) => (
                 <CardText key={ index } text={ txt } index={ index + 1 } />

@@ -1,5 +1,4 @@
 import { ImageObj } from './articles'
-// import { ISize } from './';
 
 export interface IProduct {
   
@@ -36,12 +35,6 @@ export type InStockSizes = {
   XXXL?: number;
 }
 
-// export interface ISold {
-//   _id: string;
-//   productId: string;
-//   soldUnits: number;
-// }
-
 export const initialFavProducts: IProduct[] = [
     {
       _id: 'abcd1',
@@ -74,7 +67,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['accesorios', 'útil'],
       sold: 0,
-      slug: '/capucha_perro_grande',
+      slug: 'capucha_perro_grande',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -109,7 +102,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['útil'],
       sold: 0,
-      slug: '/recipiente_estrellado',
+      slug: 'recipiente_estrellado',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -150,7 +143,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles'],
       sold: 0,
-      slug: '/perrarina_xxxxx_20kg',
+      slug: 'perrarina_xxxxx_20kg',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -179,7 +172,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles'],
       sold: 0,
-      slug: '/vitamina_yyy',
+      slug: 'vitamina_yyy',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -208,7 +201,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles', 'útil'],
       sold: 0,
-      slug: '/suplemento_vitaminico',
+      slug: 'suplemento_vitaminico',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -243,7 +236,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['consumibles', 'accesorios'],
       sold: 0,
-      slug: '/hueso_de_gomita',
+      slug: 'hueso_de_gomita',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -278,7 +271,7 @@ export const initialFavProducts: IProduct[] = [
       },
       tags: ['accesorios'],
       sold: 0,
-      slug: '/arete_para_gato',
+      slug: 'arete_para_gato',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -310,7 +303,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['consumibles', 'accesorios', 'útil'],
       sold: 0,
-      slug: '/producto_1',
+      slug: 'producto_1',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -354,7 +347,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa', 'útil'],
       sold: 0,
-      slug: '/producto_2',
+      slug: 'producto_2',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -395,7 +388,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['accesorios'],
       sold: 0,
-      slug: '/producto_3',
+      slug: 'producto_3',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -433,7 +426,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: '/gorra_o_chapa',
+      slug: 'gorra_o_chapa',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -474,7 +467,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: '/producto_5',
+      slug: 'producto_5',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -513,7 +506,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: '/camisa_patita_de_perro',
+      slug: 'camisa_patita_de_perro',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -552,7 +545,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: '/camisa_pata_de_gato',
+      slug: 'camisa_pata_de_gato',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -591,7 +584,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: '/pantalon_rasgado',
+      slug: 'pantalon_rasgado',
       isAble: true,
       createdAt: (() => Date.now())()
     },
@@ -631,7 +624,7 @@ export const initialProducts: IProduct[] = [
       },
       tags: ['ropa'],
       sold: 0,
-      slug: '/camiseta_deportiva_patitas',
+      slug: 'camiseta_deportiva_patitas',
       isAble: true,
       createdAt: (() => Date.now())()
     },

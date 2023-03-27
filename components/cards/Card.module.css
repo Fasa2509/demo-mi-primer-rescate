@@ -30,16 +30,6 @@
     transition: box-shadow 250ms ease, transform 250ms ease-in-out;
 }
 
-@media (hover: hover) {
-    .card__goal:hover {
-        transform: scale(1.05);
-    }
-
-    .card:hover {
-        transform: translateY(-.3rem);
-    }
-}
-
 .card__number {
     background-color: var(--secondary-color-1);
     color: #FFF;
@@ -63,14 +53,35 @@
 /* Pet Card */
 
 .pet__container {
+    display: flex;
     position: relative;
     border-radius: 1.2rem;
     overflow: hidden;
     background-color: #fafafa;
     box-shadow: 0 0 1.2rem -.8rem #444;
-    display: flex;
+}
+
+.pet__container img {
+    transform: scale(1.2);
+    filter: brightness(0.90);
+    transition: transform 450ms ease-in-out, filter 450ms ease-in-out;
 }
 
 .pet__container p {
     margin: 0;
+}
+
+@media (hover: hover) {
+    .card__goal:hover {
+        transform: scale(1.05);
+    }
+
+    .card:hover {
+        transform: translateY(-.3rem);
+    }
+
+    .pet__container:hover img {
+        transform: scale(1);
+        filter: brightness(1);
+    }
 }

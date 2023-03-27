@@ -107,7 +107,7 @@ export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promi
             price,
             discount,
             tags,
-            slug: slug.startsWith('/') ? slug : '/' + slug,
+            slug,
             unica,
         });
 
@@ -185,7 +185,7 @@ export const discountProducts = async (discount: number, matcher: string ): Prom
     if ( discount < 0 || discount > 50 ) return { error: true, message: 'El descuento no es válido' };
 
     try {
-        if ( matcher.startsWith('/') ) matcher.replace('/', '');
+        matcher = matcher.replace('/', '');
         const { data } = await mprApi.get(`/product/${ matcher }?discount=${ discount }`);
 
         return data;

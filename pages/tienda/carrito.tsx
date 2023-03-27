@@ -140,6 +140,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
     setExistencyChecked( false );
     setIsLoading( false );
     setMethod('');
+    clearCart();
 
     if ( pmcode.current && pmnumber.current ) {
       pmcode.current.value = '';
@@ -245,7 +246,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
         <Box display='flex' gap='.5rem' flexWrap='wrap'>  
           <Box display='flex' flexDirection='column' gap='1.5rem' alignItems='center' flexGrow={ 1 }>
             {
-              cart.map(( product, index ) => <CartProductInfo key={ product.name + index } product={ product } /> )
+              cart.map(( product ) => <CartProductInfo key={ product._id + product.size } product={ product } /> )
             }
 
             { ( numberOfItems > 0 )
@@ -542,7 +543,6 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
     props: {
       dolarPrice: dolar
     },
-    revalidate: 3600 * 12 // 24h
   }
 }
 

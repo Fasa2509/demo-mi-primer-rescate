@@ -9,7 +9,7 @@ import ConfirmationNumber from '@mui/icons-material/ConfirmationNumber';
 
 import { nextAuthOptions } from '../../api/auth/[...nextauth]';
 import { MainLayout, OrderInfo } from '../../../components';
-import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
+import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { dbOrders } from '../../../database';
 import { IOrder, SpanishOrderStatus, StatusColors } from '../../../interfaces';
 import { format } from '../../../utils';
@@ -53,7 +53,7 @@ const columns: GridColDef[] = [
     headerName: 'Info Órden',
     renderCell: ({ row }: GridRenderCellParams) => {
       return (
-        <Button color='secondary' onClick={ () => row.setOrder( row.order ) }>Ver órden</Button>
+        <Button className='button button--round low--padding low--font--size' onClick={ () => row.setOrder( row.order ) }>Ver órden</Button>
       )
     },
     sortable: false,

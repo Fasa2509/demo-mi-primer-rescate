@@ -77,7 +77,7 @@ const columns: GridColDef[] = [
         sortable: false,
         disableColumnMenu: true,
         renderCell: ({ row }: GridRenderCellParams) => {
-            return <Button color={ row.isAble ? 'error' : 'success' } onClick={ () => row.handleAbilitate( row.id, row.name, row.isAble ) }>{ row.isAble ? 'Eliminar' : 'Habilitar' }</Button>
+            return <Button className={ `button button--round low--padding low--font--size ${ row.isAble ? 'button--error' : 'button--success' }` } onClick={ () => row.handleAbilitate( row.id, row.name, row.isAble ) }>{ row.isAble ? 'Eliminar' : 'Habilitar' }</Button>
         }
     },
 ];

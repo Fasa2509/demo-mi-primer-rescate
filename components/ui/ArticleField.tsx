@@ -33,7 +33,7 @@ export const ArticleField: FC<Props> = ({ field, selector }) => {
                     {
                         ( field.images?.length === 1 )
                             ? (
-                                <Box sx={{ position: 'relative' }}>
+                                <Box className='img-container' sx={{ position: 'relative' }}>
                                     <MyImage src={ field.images[0].url } alt={ field.images[0].alt } width={ field.images[0].width } height={ field.images[0].height } />
                                 </Box>
                             ) : (

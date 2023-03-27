@@ -7,8 +7,8 @@ import { MyImage, Slider } from '../cards';
 import { Loader } from './Loader';
 import styles from './MainLayout.module.css';
 
-const callback = ( entries: any[] ) =>
-  entries[0].isIntersecting
+const callback: IntersectionObserverCallback = ( entries ) =>
+  ( entries[0]!.isIntersecting )
     ? entries[0].target.classList.remove('sticks__inactive')
     : entries[0].target.classList.add('sticks__inactive') 
 
