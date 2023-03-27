@@ -1,19 +1,11 @@
-import { FC, useEffect, useContext, lazy, Suspense } from 'react';
+import { FC, useEffect } from 'react';
 import Head from 'next/head';
-import { Box } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 
-import { AuthContext } from '../../context';
 import { Footer, Header, SideMenu, Title, WelcomePath } from '../ui';
 import { MyImage, Slider } from '../cards';
 import { Loader } from './Loader';
-import { IIndexImage } from '../../interfaces';
 import styles from './MainLayout.module.css';
-
-const HeroForm = lazy(() =>
-  import('../cards/HeroForm')
-    .then(({ HeroForm }) => ({ default: HeroForm }))
-)
 
 const callback: IntersectionObserverCallback = ( entries ) =>
   ( entries[0]!.isIntersecting )
@@ -27,12 +19,9 @@ interface Props {
   pageDescription: string;
   titleIcon: JSX.Element;
   nextPage?: string;
-  indexImages: IIndexImage[];
 }
 
-export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription, titleIcon, nextPage = '/miprimerrescate', indexImages }) => {
-
-  const { user } = useContext( AuthContext );
+export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescription, titleIcon, nextPage = '/miprimerrescate' }) => {
 
   let finalTitle = `${ title } | MPR`;
 
@@ -74,26 +63,25 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
 
       <Loader />
       
-      <section style={{ minWidth: '310px', backgroundColor: 'green' }}>
-        <Slider identifier='hero-slider' duration={ 12000 }>
-          {
-            indexImages.map(({ url, alt }, index) => 
-            <Box key={ index } sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', aspectRatio: '16/9' }}>
-                <Box sx={{ position: 'relative', display: 'block', width: '100%' }}>
-                  <MyImage src={ url } alt={ alt } layout='responsive' width={ 1280 } height={ 720 } />
-                </Box>
-            </Box>
-            )
-          }
+      <section style={{ minWidth: '310px' }}>
+        <Slider identifier='hero-slider' duration={ 10000 }>
+          <div className='fadeIn' style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '50%', position: 'relative' }}>
+              <MyImage priority src={ '/Logo-Redes.png' } alt={ 'Mi Primer Rescate' } layout='responsive' width={ 1 } height={ 1 } />
+            </div>
+          </div>
+          <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'green', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '50%', position: 'relative' }}>
+              <MyImage src={ '/Logo-MPR.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+            </div>
+          </div>
+          <div style={{ height: 'calc(100vw / calc(16 / 9))', backgroundColor: 'blue', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ width: '20%', position: 'relative' }}>
+              <MyImage src={ '/icon.png' } alt={ 'Mi Primer Rescate Logo' } layout='responsive' width={ 1 } height={ 1 } />
+            </div>
+          </div>
         </Slider>
       </section>
-
-      {
-        user && ( user.role === 'admin' || user.role === 'superuser' ) &&
-        <Suspense fallback={ <></> }>
-          <HeroForm images={ indexImages } />
-        </Suspense>
-      }
 
       <WelcomePath />
       

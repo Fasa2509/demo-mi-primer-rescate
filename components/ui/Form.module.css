@@ -15,7 +15,7 @@
 }
 
 .facebook {
-    background-image: linear-gradient(#4267B2, #4267B2);
+    background-color: #4267B2;
 }
 
 .instagram {
@@ -30,7 +30,7 @@
 }
 
 .google {
-    background-image: linear-gradient(#DB4437, #DB4437);
+    background-color: #DB4437;
 }
 
 @media screen and (hover: hover) {
@@ -40,6 +40,14 @@
 
     .share__button:active {
         transform: scale(0.98);
+    }
+
+    .facebook:hover {
+        background-color: #4267B2;
+    }
+
+    .google:hover {
+        background-color: #DB4437;
     }
 }
 

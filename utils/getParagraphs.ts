@@ -13,7 +13,7 @@ export const formatText = ( txt: string ): string => {
 };
 
 export const getImageNameFromUrl = ( imgName: string ): string => {
-    let name = imgName.split('/').at(-1)!.replaceAll('_', ' ').replaceAll('-', ' ').split(' ').slice(1).join(' ');
+    let name = imgName.replaceAll('_', ' ').replaceAll('-', ' ')
     if ( /\.jpeg/i.test(name) || /\.webp/i.test(name) ) return name.slice(0, name.length - 5);
     return name.slice(0, name.length - 4);
 }

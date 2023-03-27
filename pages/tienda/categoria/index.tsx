@@ -40,14 +40,10 @@ const TypePage: NextPage<Props> = ({ products }) => {
         router.query.tipo && setProductType( router.query.tipo.toString() as Tags );
     }, [ router, didMount ]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const útil = useMemo(() => products.filter(( p ) => p.tags.includes( 'útil' )), []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const accesorios = useMemo(() => products.filter(( p ) => p.tags.includes( 'accesorios' )), []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const ropa = useMemo(() => products.filter(( p ) => p.tags.includes( 'ropa' )), []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const consumibles = useMemo(() => products.filter(( p ) => p.tags.includes( 'consumibles' )), []);
+    const útil = useMemo(() => products.filter(( p ) => p.tags.includes( 'útil' )), [products]);
+    const accesorios = useMemo(() => products.filter(( p ) => p.tags.includes( 'accesorios' )), [products]);
+    const ropa = useMemo(() => products.filter(( p ) => p.tags.includes( 'ropa' )), [products]);
+    const consumibles = useMemo(() => products.filter(( p ) => p.tags.includes( 'consumibles' )), [products]);
 
     const cats: { útil: IProduct[]; accesorios: IProduct[]; ropa: IProduct[]; consumibles: IProduct[] } = useMemo(() => ({
         útil,

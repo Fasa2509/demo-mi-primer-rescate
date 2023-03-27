@@ -1,54 +1,5 @@
-import { db } from ".";
 import axios from "axios";
-import { IndexImage } from "../models";
 import { mprApi } from "../mprApi";
-import { IIndexImage } from "../interfaces";
-
-export const getIndexImages = async (): Promise<IIndexImage[] | null> => {
-    try {
-        await db.connect();
-        
-        const images = await IndexImage.find();
-
-        await db.disconnect();
-
-        return JSON.parse( JSON.stringify( images ) );
-    } catch( error ) {
-        return null;
-    }
-}
-
-export const saveIndexImages = async (newImages: Array<{ imgName: string; imgUrl: string }>): Promise<{ error: boolean; message: string; }> => {
-
-    try {
-        const { data } = await mprApi.post('/images', { newImages });
-
-        return data;
-    } catch( error ) {
-        if ( axios.isAxiosError( error ) )
-            // @ts-ignore
-            return error.response ? error.response.data : { error: true, message: 'Ocurrió un error subiendo la imagen' };
-
-        return { error: true, message: 'Ocurrió un error subiendo la imagen' };
-    }
-
-}
-
-export const deleteIndexImage = async ( imgId: string ): Promise<{ error: boolean; message: string; }> => {
-
-    try {
-        const { data } = await mprApi.delete('/images?id=' + imgId);
-
-        return data;
-    } catch( error ) {
-        if ( axios.isAxiosError( error ) )
-            // @ts-ignore
-            return error.response ? error.response.data : { error: true, message: 'Ocurrió un error subiendo la imagen' };
-
-        return { error: true, message: 'Ocurrió un error subiendo la imagen' };
-    }
-
-}
 
 export const uploadImageToS3 = async ( file: File | Blob ): Promise<{ error: boolean; message: string; imgUrl?: string; }> => {
 

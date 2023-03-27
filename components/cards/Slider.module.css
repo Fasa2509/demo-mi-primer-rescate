@@ -48,10 +48,10 @@
     display: block;
     position: absolute;
     border-radius: 1rem;
-    top: 35%;
+    top: 36%;
     left: .9rem;
     height: 4px;
-    width: 16px;
+    width: 18px;
     background-color: #FFF;
     cursor: pointer;
     transform: rotate(40deg);
@@ -80,18 +80,6 @@
 }
 
 @media screen and (min-width: 772px) {
-    .left::before,
-    .left::after,
-    .right::before,
-    .right::after {
-        width: 18px;
-    }
-
-    .right::before,
-    .left::before {
-        top: 38%;
-    }
-
     .left::after {
         left: .8rem;
     }

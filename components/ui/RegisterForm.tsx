@@ -119,7 +119,7 @@ export const RegisterForm = () => {
 
                     <Box>
                         <TextField
-                            label='Confirme su contraseña'
+                            label='Confirm su contraseña'
                             type='password'
                             variant='filled'
                             color='secondary'
