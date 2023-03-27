@@ -27,6 +27,38 @@ export const uploadImageToS3 = async ( file: File | Blob ): Promise<{ error: boo
 
 }
 
+export const saveIndexImages = async (newImages: Array<{ imgName: string; imgUrl: string }>): Promise<{ error: boolean; message: string; }> => {
+
+    try {
+        const { data } = await mprApi.post('/images', { newImages });
+
+        return data;
+    } catch( error ) {
+        if ( axios.isAxiosError( error ) )
+            // @ts-ignore
+            return error.response ? error.response.data : { error: true, message: 'Ocurrió un error subiendo la imagen' };
+
+        return { error: true, message: 'Ocurrió un error subiendo la imagen' };
+    }
+
+}
+
+export const deleteIndexImage = async ( imgId: string ): Promise<{ error: boolean; message: string; }> => {
+
+    try {
+        const { data } = await mprApi.delete('/images?id=' + imgId);
+
+        return data;
+    } catch( error ) {
+        if ( axios.isAxiosError( error ) )
+            // @ts-ignore
+            return error.response ? error.response.data : { error: true, message: 'Ocurrió un error subiendo la imagen' };
+
+        return { error: true, message: 'Ocurrió un error subiendo la imagen' };
+    }
+
+}
+
 export const deleteImageFromS3 = async ( Key: string ): Promise<{ error: boolean; message: string; }> => {
 
     try {
