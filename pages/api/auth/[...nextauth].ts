@@ -70,21 +70,18 @@ export const nextAuthOptions: NextAuthOptions = {
       const userInfo = await User.findOne({ email: user.email! }).select('isAble').lean();
       await db.disconnect();
 
-      if ( userInfo && !userInfo.isAble ) return '/';
+      if ( !userInfo || !userInfo.isAble ) return '/';
 
       return true;
     },
 
     async jwt({ token, account, user }) {
       if ( account ) {
-        console.log({ token })
-        console.log({ user })
         token.accessToken = account.access_token;
-        token.abc = 123
 
         switch( account.type ) {
           case 'credentials':
-            token.user = user
+            token.user = user;
             break;
 
           case 'oauth':

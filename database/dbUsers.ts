@@ -150,28 +150,32 @@ export const getAllUsers = async (): Promise<IUser[] | null> => {
 
 export const CheckUserEmailPassword = async ( email: string, password: string ): Promise<NextAuthUser | null> => {
 
-    await db.connect();
-    
-    const user = await User.findOne({ email: email.toLowerCase(), isAble: true }).lean();
+    try {
+        await db.connect();
+        
+        const user = await User.findOne({ email: email.toLowerCase(), isAble: true }).lean();
 
-    await db.disconnect();
+        await db.disconnect();
 
-    if ( !user ) return null;
+        if ( !user ) return null;
 
-    const match = await bcrypt.compare(password, user.password!);
+        const match = await bcrypt.compare(password, user.password!);
 
-    if ( match ) {
-        const { _id, name, email, role } = user;
-        return {
-            id: undefined,
-            _id: String( _id ),
-            name,
-            email,
-            role,
+        if ( match ) {
+            const { _id, name, email, role } = user;
+            return {
+                id: undefined,
+                _id: String( _id ),
+                name,
+                email,
+                role,
+            }
         }
-    }
 
-    return null;
+        return null;
+    } catch( error ) {
+        return null;
+    }
 
 };
 
@@ -184,7 +188,7 @@ export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => 
     if ( user ) {
         await db.disconnect();
 
-        if ( !user.isAble ) return undefined;   // rejects the user signin
+        // if ( !user.isAble ) return undefined;   // rejects the user signin
         const { _id, name, email, role } = user;
         return { _id, name, email, role };
     }

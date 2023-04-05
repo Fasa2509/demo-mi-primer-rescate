@@ -47,15 +47,15 @@
     content: '';
     display: block;
     position: absolute;
-    border-radius: 1rem;
+    /* border-radius: 1rem; */
     top: 35%;
     left: .9rem;
     height: 4px;
     width: 16px;
-    background-color: #FFF;
+    background-color: #f8f4f4da;
     cursor: pointer;
     transform: rotate(40deg);
-    transition: transform 250ms ease;
+    transition: transform 250ms ease, background-color 250ms ease;
 }
 
 .right::after {
@@ -76,6 +76,13 @@
 @media (hover: hover) {
     .pass__button:hover {
         background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .left:hover::before,
+    .left:hover::after,
+    .right:hover::before,
+    .right:hover::after {
+        background-color: #FFF;
     }
 }
 

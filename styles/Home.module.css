@@ -71,8 +71,8 @@
     background-color: var(--secondary-color-1);
     padding: .2rem .8rem .1rem;
     color: #fff;
-    font-weight: 600;
-    font-size: .9rem;
+    font-weight: 500;
+    font-size: 1rem;
     border: thin solid var(--secondary-color-1);
     border-radius: 5rem;
     align-self: flex-end;
