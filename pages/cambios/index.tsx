@@ -130,7 +130,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
       pets,
       changedPets,
     },
-    revalidate: 3600 * 24 * 2,
+    revalidate: 3600 * 24 * 7,
   }
 } 
 

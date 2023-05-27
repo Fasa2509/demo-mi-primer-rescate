@@ -112,7 +112,7 @@ export const getStaticProps: GetStaticProps = async ( ctx ) => {
         products: products.sort(() => 0.5 - Math.random()).reverse().sort(() => 0.5 - Math.random()).reverse(),
         dolar,
       },
-      revalidate: 3600 * 12, // cada 12h
+      revalidate: 3600 * 12 * 2 * 7, // cada 12h
     }
 }
 
