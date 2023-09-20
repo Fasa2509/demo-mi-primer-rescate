@@ -5,7 +5,6 @@ export * from './SideMenu';
 export * from './ModalWindow';
 export * from './Article';
 export * from './CustomForm';
-export * from './WelcomePath';
 export * from './PetForm';
 export * from './Title';
 export * from './AdoptionForm';

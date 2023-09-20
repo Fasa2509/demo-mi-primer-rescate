@@ -9,7 +9,7 @@
     left: 0;
     z-index: 1350;
     transform: translateX(-110%);
-    transition: transform 800ms cubic-bezier(.21,.09,.19,1.03);
+    transition: transform 800ms cubic-bezier(.21, .09, .19, 1.03);
 }
 
 .modal__container {
@@ -87,14 +87,12 @@
 }
 
 .instagram {
-    background-image: radial-gradient(
-        circle at 33% 100%,
-        #FED373 4%,
-        #F15245 30%,
-        #D92E7F 62%,
-        #9B36B7 85%,
-        #515ECF
-    );
+    background-image: radial-gradient(circle at 33% 100%,
+            #FED373 4%,
+            #F15245 30%,
+            #D92E7F 62%,
+            #9B36B7 85%,
+            #515ECF);
 }
 
 .twitter {
@@ -102,7 +100,7 @@
 }
 
 .whatsapp {
-    background-color: 	#25D366;
+    background-color: #25D366;
 }
 
 .product__name {
@@ -123,7 +121,7 @@
     overflow: hidden;
     align-self: flex-start;
     border-radius: 1rem;
-    box-shadow: 0 0 .5rem 0 rgba(6, 37, 0, 0.8);
+    box-shadow: 0 0 .4rem 0 #66666699;
     width: 100%;
     max-width: 450px;
     margin: 0 auto;
@@ -164,7 +162,7 @@
     transform: translateX(0);
 }
 
-@media screen and (min-width: 992px ) {
+@media screen and (min-width: 992px) {
     .modal__container {
         width: 85vw;
         height: 95vh;

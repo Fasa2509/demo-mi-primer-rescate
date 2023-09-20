@@ -1,4 +1,24 @@
-.section__objectives {
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    align-self: flex-start;
+}
+
+.img__container {
+    aspect-ratio: 800/449;
+    position: relative;
+    box-shadow: 0 0 .3rem #44444488;
+    margin-top: 1rem;
+    border-radius: .3rem;
+    overflow: hidden;
+    max-width: 800px;
+}
+
+/* .section__objectives {
     color: #777;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -13,4 +33,4 @@
     .goals__container {
         flex-direction: row;
     }
-}
+} */

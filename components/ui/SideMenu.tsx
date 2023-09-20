@@ -25,8 +25,8 @@ import { SideMenuButton } from "./SideMenuButton";
 export const SideMenu: FC = () => {
 
     const router = useRouter();
-    const { isMenuOpen, toggleSideMenu } = useContext( MenuContext );
-    const { isLoggedIn, logoutUser, user } = useContext( AuthContext );
+    const { isMenuOpen, toggleSideMenu } = useContext(MenuContext);
+    const { isLoggedIn, logoutUser, user } = useContext(AuthContext);
     const { enqueueSnackbar } = useSnackbar();
 
     const logOut = async () => {
@@ -36,180 +36,201 @@ export const SideMenu: FC = () => {
             action: ConfirmNotificationButtons,
         })
 
-        const confirm = await PromiseConfirmHelper( key, 10000 );
-      
-        if ( !confirm ) return;
+        const confirm = await PromiseConfirmHelper(key, 10000);
+
+        if (!confirm) return;
 
         toggleSideMenu();
         logoutUser();
         return;
     }
 
-  return (
-    <Drawer
-        open={ isMenuOpen }
-        anchor='right'
-        sx={{ display: { xs: 'flex', md: 'none' }, backdropFilter: 'blur(2px)', transition: 'all 750ms ease-out' }}
-        onClose={ toggleSideMenu }
-    >
-        <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: '72px', position: 'relative' }}>
+    return (
+        <Drawer
+            open={isMenuOpen}
+            anchor='right'
+            sx={{ display: { xs: 'flex', md: 'none' }, backdropFilter: 'blur(2px)', transition: 'all 750ms ease-out' }}
+            onClose={toggleSideMenu}
+        >
+            <Box sx={{ width: { xs: 200, sm: 250, md: 300 }, paddingTop: '72px', position: 'relative' }}>
 
-            <div style={{
-                width: '100%',
-                height: '80px',
-                backgroundColor: '#2AD8A4',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-            }}></div>
+                <div style={{
+                    width: '100%',
+                    height: '80px',
+                    backgroundColor: '#2AD8A4',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                }}></div>
 
-            <List>
+                <List>
 
-                <NextLink href='/' scroll={ false }>
-                    <a onClick={ toggleSideMenu }>
-                        <ListItemButton sx={{ backgroundColor: router.asPath === '/' ? '#eee' : '#fff' }}>
-                            <ListItemIcon>
-                                <Home color='secondary' />
-                            </ListItemIcon>
-                            <ListItemText primary={'Inicio'} />
-                        </ListItemButton>
-                    </a>
-                </NextLink>
-                
-                <SideMenuButton active={ router.asPath.startsWith('/miprimerrescate') } text='Nosotros' links={[{ path: '/miprimerrescate', text: 'Path 1' }, { path: '/miprimerrescate', text: 'Path 2' }, { path: '/miprimerrescate', text: 'Path 3' }]}>
-                    <Pets color='secondary' />
-                </SideMenuButton>
+                    <NextLink href='/' scroll={false} passHref>
+                        <a onClick={toggleSideMenu}>
+                            <ListItemButton sx={{ backgroundColor: router.asPath === '/' ? '#eee' : '#fff' }}>
+                                <ListItemIcon>
+                                    <Home color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Inicio'} />
+                            </ListItemButton>
+                        </a>
+                    </NextLink>
 
-                <SideMenuButton active={ router.asPath.startsWith('/apoyo') } text='Apoyo' links={[{ path: '/apoyo', text: 'Path 1' }, { path: '/apoyo', text: 'Path 2' }, { path: '/apoyo', text: 'Path 3' }]}>
-                    <AddAlert color='secondary' />
-                </SideMenuButton>
+                    <NextLink href='/miprimerrescate' scroll={false} passHref>
+                        <a onClick={toggleSideMenu}>
+                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/miprimerrescate') ? '#eee' : '#fff' }}>
+                                <ListItemIcon>
+                                    <Pets color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Nosotros'} />
+                            </ListItemButton>
+                        </a>
+                    </NextLink>
 
-                <SideMenuButton active={ router.asPath.startsWith('/adoptar') } text='Adoptar' links={[{ path: '/adoptar/perros', text: 'Perros' }, { path: '/adoptar/gatos', text: 'Gatos' }, { path: '/adoptar/otros', text: 'Otros' }, { path: '/adoptar/formulario', text: 'Formulario' }]}>
-                    <VolunteerActivism color='secondary' />
-                </SideMenuButton>
+                    <NextLink href='/apoyo' scroll={false} passHref>
+                        <a onClick={toggleSideMenu}>
+                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/apoyo') ? '#eee' : '#fff' }}>
+                                <ListItemIcon>
+                                    <AddAlert color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Apoyo'} />
+                            </ListItemButton>
+                        </a>
+                    </NextLink>
 
-                <SideMenuButton active={ router.asPath.startsWith('/cambios') } text='Cambios' links={[{ path: '/cambios', text: 'Link 1' }, { path: '/cambios', text: 'Link 2' }, { path: '/cambios', text: 'Link 3' }]}>
-                    <TrendingUp color='secondary' />
-                </SideMenuButton>
+                    <SideMenuButton active={router.asPath.startsWith('/adoptar')} text='Adoptar' links={[{ path: '/adoptar/perros', text: 'Perros' }, { path: '/adoptar/gatos', text: 'Gatos' }, { path: '/adoptar/otros', text: 'Otros' }, { path: '/adoptar/formulario', text: 'Formulario' }]}>
+                        <VolunteerActivism color='secondary' />
+                    </SideMenuButton>
 
-                <NextLink href='/tienda'>
-                    <a onClick={ toggleSideMenu }>
-                        <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/tienda') ? '#eee' : '#fff' }}>
-                            <ListItemIcon>
-                                <ShoppingBag color='secondary' />
-                            </ListItemIcon>
-                            <ListItemText primary={'Tienda'} />
-                        </ListItemButton>
-                    </a>
-                </NextLink>
+                    <NextLink href='/cambios' scroll={false} passHref>
+                        <a onClick={toggleSideMenu}>
+                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/cambios') ? '#eee' : '#fff' }}>
+                                <ListItemIcon>
+                                    <AddAlert color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Cambios'} />
+                            </ListItemButton>
+                        </a>
+                    </NextLink>
 
-                {/* Admin */}
-                
-                { isLoggedIn && user && ( user.role === 'admin' || user.role === 'superuser' ) && (
-                    <>
+                    <NextLink href='/tienda'>
+                        <a onClick={toggleSideMenu}>
+                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/tienda') ? '#eee' : '#fff' }}>
+                                <ListItemIcon>
+                                    <ShoppingBag color='secondary' />
+                                </ListItemIcon>
+                                <ListItemText primary={'Tienda'} />
+                            </ListItemButton>
+                        </a>
+                    </NextLink>
+
+                    {/* Admin */}
+
+                    {isLoggedIn && user && (user.role === 'admin' || user.role === 'superuser') && (
+                        <>
+                            <Divider />
+                            <ListSubheader>Admin Panel</ListSubheader>
+
+                            <NextLink href='/admin/usuarios'>
+                                <a onClick={toggleSideMenu}>
+                                    <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/usuarios') ? '#eee' : '#fff' }}>
+                                        <ListItemIcon>
+                                            <AdminPanelSettings color='secondary' />
+                                        </ListItemIcon>
+                                        <ListItemText primary={'Usuarios'} />
+                                    </ListItemButton>
+                                </a>
+                            </NextLink>
+
+                            <NextLink href='/admin/ordenes'>
+                                <a onClick={toggleSideMenu}>
+                                    <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/ordenes') ? '#eee' : '#fff' }}>
+                                        <ListItemIcon>
+                                            <ConfirmationNumber color='secondary' />
+                                        </ListItemIcon>
+                                        <ListItemText primary={'Órdenes'} />
+                                    </ListItemButton>
+                                </a>
+                            </NextLink>
+
+                            <NextLink href='/admin/productos'>
+                                <a onClick={toggleSideMenu}>
+                                    <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/productos') ? '#eee' : '#fff' }}>
+                                        <ListItemIcon>
+                                            <Category color='secondary' />
+                                        </ListItemIcon>
+                                        <ListItemText primary={'Productos'} />
+                                    </ListItemButton>
+                                </a>
+                            </NextLink>
+
+                            <NextLink href='/admin/adopciones'>
+                                <a onClick={toggleSideMenu}>
+                                    <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/adopciones') ? '#eee' : '#fff' }}>
+                                        <ListItemIcon>
+                                            <LocalCafe color='secondary' />
+                                        </ListItemIcon>
+                                        <ListItemText primary={'Adopciones'} />
+                                    </ListItemButton>
+                                </a>
+                            </NextLink>
+
+                            <NextLink href='/admin/mascotas'>
+                                <a onClick={toggleSideMenu}>
+                                    <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/mascotas') ? '#eee' : '#fff' }}>
+                                        <ListItemIcon>
+                                            <EmojiNature color='secondary' />
+                                        </ListItemIcon>
+                                        <ListItemText primary={'Mascotas'} />
+                                    </ListItemButton>
+                                </a>
+                            </NextLink>
+                        </>
+                    )}
+
+
                     <Divider />
-                    <ListSubheader>Admin Panel</ListSubheader>
-                    
-                    <NextLink href='/admin/usuarios'>
-                        <a onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/usuarios') ? '#eee' : '#fff' }}>
+
+                    {isLoggedIn ? (
+                        <>
+                            <Divider />
+                            <ListSubheader>Mi Cuenta</ListSubheader>
+
+                            <NextLink href='/personal'>
+                                <a rel='nofollow' onClick={toggleSideMenu}>
+                                    <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/personal') ? '#eee' : '#fff' }}>
+                                        <ListItemIcon>
+                                            <AccountCircle color='secondary' />
+                                        </ListItemIcon>
+                                        <ListItemText primary={'Mi Información'} />
+                                    </ListItemButton>
+                                </a>
+                            </NextLink>
+
+                            <ListItemButton onClick={logOut}>
                                 <ListItemIcon>
-                                    <AdminPanelSettings color='secondary' />
+                                    <LoginOutlined color='secondary' />
                                 </ListItemIcon>
-                                <ListItemText primary={'Usuarios'} />
+                                <ListItemText primary={'Cerrar sesión'} />
                             </ListItemButton>
-                        </a>
-                    </NextLink>
+                        </>
+                    ) : (
+                        <NextLink href={'/auth?p=' + router.asPath}>
+                            <a onClick={toggleSideMenu}>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <VpnKey color='secondary' />
+                                    </ListItemIcon>
+                                    <ListItemText primary={'Entrar'} />
+                                </ListItemButton>
+                            </a>
+                        </NextLink>
+                    )
 
-                    <NextLink href='/admin/ordenes'>
-                        <a onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/ordenes') ? '#eee' : '#fff' }}>
-                                <ListItemIcon>
-                                    <ConfirmationNumber color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Órdenes'} />
-                            </ListItemButton>
-                        </a>
-                    </NextLink>
+                    }
 
-                    <NextLink href='/admin/productos'>
-                        <a onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/productos') ? '#eee' : '#fff' }}>
-                                <ListItemIcon>
-                                    <Category color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Productos'} />
-                            </ListItemButton>
-                        </a>
-                    </NextLink>
-
-                    <NextLink href='/admin/adopciones'>
-                        <a onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/adopciones') ? '#eee' : '#fff' }}>
-                                <ListItemIcon>
-                                    <LocalCafe color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Adopciones'} />
-                            </ListItemButton>
-                        </a>
-                    </NextLink>
-
-                    <NextLink href='/admin/mascotas'>
-                        <a onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/admin/mascotas') ? '#eee' : '#fff' }}>
-                                <ListItemIcon>
-                                    <EmojiNature color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Mascotas'} />
-                            </ListItemButton>
-                        </a>
-                    </NextLink>
-                    </>
-                )}
-
-                
-                <Divider />
-
-                { isLoggedIn ? (
-                    <>
-                    <Divider />
-                    <ListSubheader>Mi Cuenta</ListSubheader>
-
-                    <NextLink href='/personal'>
-                        <a rel='nofollow' onClick={ toggleSideMenu }>
-                            <ListItemButton sx={{ backgroundColor: router.asPath.startsWith('/personal') ? '#eee' : '#fff' }}>
-                                <ListItemIcon>
-                                    <AccountCircle color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Mi Información'} />
-                            </ListItemButton>
-                        </a>
-                    </NextLink>
-
-                    <ListItemButton onClick={ logOut }>
-                        <ListItemIcon>
-                            <LoginOutlined color='secondary' />
-                        </ListItemIcon>
-                        <ListItemText primary={'Cerrar sesión'} />
-                    </ListItemButton>
-                    </>
-                ) : (
-                    <NextLink href={ '/auth?p=' + router.asPath }>
-                        <a onClick={ toggleSideMenu }>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <VpnKey color='secondary' />
-                                </ListItemIcon>
-                                <ListItemText primary={'Entrar'} />
-                            </ListItemButton>
-                        </a>
-                    </NextLink>
-                )
-            
-                }
-                        
-            </List>
-        </Box>
-    </Drawer>
-  )
+                </List>
+            </Box>
+        </Drawer>
+    )
 }

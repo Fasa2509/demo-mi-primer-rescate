@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { getServerSession } from "next-auth/next";
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
@@ -13,6 +13,9 @@ import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { dbOrders } from '../../../database';
 import { IOrder, SpanishOrderStatus, StatusColors } from '../../../interfaces';
 import { format } from '../../../utils';
+import { getPaginatedOrders } from '../../../database/dbOrders';
+import { ScrollContext } from '../../../context';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   orders: IOrder[];
@@ -23,7 +26,7 @@ const columns: GridColDef[] = [
     field: 'id',
     headerName: 'ID de Órden',
     renderCell: ({ row }: GridRenderCellParams) => {
-      return <Typography sx={{ overflowX: 'auto' }}>{ row.id }</Typography>
+      return <Typography sx={{ overflowX: 'auto' }}>{row.id}</Typography>
     },
     width: 120
   },
@@ -31,7 +34,7 @@ const columns: GridColDef[] = [
     field: 'user',
     headerName: 'ID del Usuario',
     renderCell: ({ row }: GridRenderCellParams) => {
-      return <Typography sx={{ overflowX: 'auto' }}>{ row.user }</Typography>
+      return <Typography sx={{ overflowX: 'auto' }}>{row.user}</Typography>
     },
     sortable: false,
     disableColumnMenu: true,
@@ -42,7 +45,7 @@ const columns: GridColDef[] = [
     field: 'transaction',
     headerName: 'ID de la Transacción',
     renderCell: ({ row }: GridRenderCellParams) => {
-      return <Typography sx={{ overflowX: 'auto' }}>{ row.transaction.transactionId }</Typography>
+      return <Typography sx={{ overflowX: 'auto' }}>{row.transaction.transactionId}</Typography>
     },
     sortable: false,
     disableColumnMenu: true,
@@ -53,7 +56,7 @@ const columns: GridColDef[] = [
     headerName: 'Info Órden',
     renderCell: ({ row }: GridRenderCellParams) => {
       return (
-        <Button className='button button--round low--padding low--font--size' onClick={ () => row.setOrder( row.order ) }>Ver órden</Button>
+        <Button className='button button--round low--padding low--font--size' onClick={() => row.setOrder(row.order)}>Ver órden</Button>
       )
     },
     sortable: false,
@@ -68,9 +71,9 @@ const columns: GridColDef[] = [
         <Box>
           <Chip
             // @ts-ignore
-            color={ StatusColors[ row.transaction.status ] }
+            color={StatusColors[row.transaction.status]}
             // @ts-ignore
-            label={ SpanishOrderStatus[ row.transaction.status ] }
+            label={SpanishOrderStatus[row.transaction.status]}
             sx={{ fontWeight: 500, color: '#fff' }}
             variant='filled'
           />
@@ -85,7 +88,7 @@ const columns: GridColDef[] = [
     headerName: 'Total',
     renderCell: ({ row }: GridRenderCellParams) => {
       return (
-        <Typography>{ format( row.total ) }</Typography>
+        <Typography>{format(row.total)}</Typography>
       )
     },
     width: 100
@@ -95,7 +98,10 @@ const columns: GridColDef[] = [
 
 const OrdenesPage: NextPage<Props> = ({ orders }) => {
 
-  const [thisOrders, setThisOrders] = useState( orders );
+  const [thisOrders, setThisOrders] = useState(orders);
+  const [page, setPage] = useState(1);
+  const { setIsLoading } = useContext(ScrollContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [orderInfo, setOrderInfo] = useState<IOrder>({
     _id: '',
@@ -137,14 +143,31 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
     transaction: order.transaction,
     method: order.transaction.method,
     total: order.transaction.totalUSD,
-    createdAt: new Date( order.createdAt ).toLocaleString(),
+    createdAt: new Date(order.createdAt).toLocaleString(),
   }));
 
-  const updateOrderStatus = ( orderInfo: IOrder ) =>
-    setThisOrders(( prevState ) => prevState.map(( o ) => o._id !== orderInfo._id ? o : orderInfo));
+  const getMoreOrders = async () => {
+    setIsLoading(true);
+    const res = await getPaginatedOrders(page);
+    setIsLoading(false);
+
+    if (res.error) return enqueueSnackbar(res.message, { variant: 'error', autoHideDuration: 7000 });
+
+    if (res.payload) {
+      if (res.payload.orders.length > 0) {
+        setThisOrders((prev) => [...prev, ...res.payload!.orders])
+        setPage((prevState) => prevState + 1);
+      } else {
+        enqueueSnackbar(res.message, { variant: 'info', autoHideDuration: 7000 });
+      }
+    }
+  }
+
+  const updateOrderStatus = (orderInfo: IOrder) =>
+    setThisOrders((prevState) => prevState.map((o) => o._id !== orderInfo._id ? o : orderInfo));
 
   return (
-    <MainLayout title='Órdenes' pageDescription='Información de las órdenes' titleIcon={ <ConfirmationNumber color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/' url='/'>
+    <MainLayout title='Órdenes' pageDescription='Información de las órdenes' titleIcon={<ConfirmationNumber color='info' sx={{ fontSize: '1.5rem' }} />} nextPage='/' url='/'>
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '1rem', alignItems: { xs: 'center', sm: 'stretch' }, flexDirection: { xs: 'column', sm: 'row', mt: 1.5 } }}>
         <Box sx={{ display: 'flex', gap: '.5rem', minWidth: '220px', borderRadius: '1rem', backgroundColor: '#fff', boxShadow: '0 5px .5rem -.3rem #666', padding: '.8rem' }}>
@@ -152,7 +175,7 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
             <LocalShippingIcon sx={{ fontSize: '2.6rem', color: 'var(--secondary-color-1)' }} />
           </Box>
           <Box>
-            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'send' ? 1 : 0, 0) } <span style={{ fontSize: '1.5rem' }}>órdenes</span></Typography>
+            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'send' ? 1 : 0, 0)} <span style={{ fontSize: '1.5rem' }}>órdenes</span></Typography>
             <Typography variant='caption' sx={{ fontSize: '1rem' }}>han sido enviadas</Typography>
           </Box>
         </Box>
@@ -162,8 +185,8 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
             <PaymentIcon color='success' sx={{ fontSize: '2.6rem' }} />
           </Box>
           <Box>
-            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) } <span style={{ fontSize: '1.5rem' }}>órden{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) === 1 ? '' : 'es' }</span></Typography>
-            <Typography sx={{ fontSize: '1rem' }}>pagada{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) === 1 ? '' : 's' } por enviar</Typography>
+            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0)} <span style={{ fontSize: '1.5rem' }}>órden{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) === 1 ? '' : 'es'}</span></Typography>
+            <Typography sx={{ fontSize: '1rem' }}>pagada{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'paid' ? 1 : 0, 0) === 1 ? '' : 's'} por enviar</Typography>
           </Box>
         </Box>
 
@@ -172,8 +195,8 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
             <WarningAmberIcon color='warning' sx={{ fontSize: '2.6rem' }} />
           </Box>
           <Box>
-            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) } <span style={{ fontSize: '1.5rem' }}>órden{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 'es' }</span></Typography>
-            <Typography variant='caption' sx={{ fontSize: '1rem' }}>está{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 'n' } pendiente{ thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 's' }</Typography>
+            <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0)} <span style={{ fontSize: '1.5rem' }}>órden{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 'es'}</span></Typography>
+            <Typography variant='caption' sx={{ fontSize: '1rem' }}>está{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 'n'} pendiente{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'pending' ? 1 : 0, 0) === 1 ? '' : 's'}</Typography>
           </Box>
         </Box>
       </Box>
@@ -181,34 +204,36 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
       {
         orders.length > 0
           ? <Grid container className='fadeIn' sx={{ backgroundColor: '#fafafa', borderRadius: '4px', mt: 2 }}>
-              <Grid item xs={ 12 } sx={{ height: 660, width: '100%' }}>
-                <DataGrid
-                    rows={ rows }
-                    columns={ columns }
-                    pageSize={ 10 }
-                    rowsPerPageOptions={ [10] }
-                />
-              </Grid>
+            <Grid item xs={12} sx={{ height: 660, width: '100%' }}>
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+              />
             </Grid>
+
+            <Button className='button' sx={{ mt: 2 }} onClick={getMoreOrders}>Obtener más</Button>
+          </Grid>
           : <Typography variant='h2'>No se encontraron órdenes en la base de datos.</Typography>
       }
 
       <>
-      { orderInfo._id && <OrderInfo info={ orderInfo } updateOrderStatus={ updateOrderStatus } /> }
+        {orderInfo._id && <OrderInfo info={orderInfo} updateOrderStatus={updateOrderStatus} />}
       </>
 
     </MainLayout>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  const session = await getServerSession( ctx.req, ctx.res, nextAuthOptions );
+  const session = await getServerSession(ctx.req, ctx.res, nextAuthOptions);
 
   const validRoles = ['superuser', 'admin'];
 
   // @ts-ignore
-  if ( !session || !session.user || !validRoles.includes( session.user.role ) ) {
+  if (!session || !session.user || !validRoles.includes(session.user.role)) {
     ctx.req.cookies = {
       mpr__notification: JSON.stringify({
         notificationMessage: 'No tiene permiso para ver esta api',
@@ -226,7 +251,7 @@ export const getServerSideProps: GetServerSideProps = async ( ctx ) => {
 
   const orders = await dbOrders.getAllOrders();
 
-  if ( !orders ) {
+  if (!orders) {
     ctx.req.cookies = {
       mpr__notification: JSON.stringify({
         notificationMessage: 'Ocurrió un error obteniendo las órdenes',

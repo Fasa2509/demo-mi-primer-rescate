@@ -1,65 +1,71 @@
-import { useEffect, useMemo } from 'react';
 import { NextPage } from 'next';
 import Pets from '@mui/icons-material/Pets';
 
-import { CardText, ContentSlider, MainLayout } from '../../components';
+import { MainLayout, MyImage } from '../../components';
 import styles from '../../styles/ProyectoMPR.module.css';
-
-const callback: IntersectionObserverCallback = ( entries ) =>
-  entries.forEach(( entry ) => ( entry.isIntersecting )
-    ? entry.target.classList.add( styles.active )
-    : entry.target.classList.remove( styles.active )
-  )
 
 const MiPrimerRescatePage: NextPage = () => {
 
-  const text = `Asignar buenos hogares que se comprometan a darles la calidad de vida que ameritan
-  Ofrecer asesoramiento a nuestros seguidores para garantizar felicidad también a los peludos que ya gozan de un hogar
-  Asistir a los animales que necesiten de atención veterinaria para sacarlos del dolor que puedan sentir y lograr que se sanen
-  Organizar charlas y campañas que permitan llevar a cada rincón de nuestro país nuestra visión y así invitar a que más personas se unan a esta labor
-  Luchar contra el maltrato y el abandono de las mascotas debido a la diáspora de personas en nuestro país y al poco conocimiento del respeto que ellos merecen
-  Concientizar sobre la importancia de Castrar y esterilizar a las mascotas para evitar la sobrepoblación de animales en las calles además de garantizar larga vida y salud para la mascota
-  Utilizar las redes sociales a beneficio de los animales, así también como instrumento para ayudar a personas que lo necesiten, como a los abuelos en los asilos, niños huérfanos, personas en situación de calle o en hospitales
-  Llevar a cabo el Proyecto Helenden, nuestro más ambicioso proyecto hasta la fecha`;
-
-  const array = useMemo(() => text.split('\n'), [text]);
-
-  useEffect(() => {
-    if (window.innerWidth < 700) {
-      const observer = new IntersectionObserver(callback, {
-        rootMargin: '-50% -100px -50% -100px',
-        threshold: 0,
-      });
-
-      document.querySelectorAll('.observe__container .observe').forEach(( el ) => observer.observe( el ));
-      return () => observer.disconnect();
-    }
-  }, []);
-
   return (
-    <MainLayout title={ '¿Qué es la fundación Mi Primer Rescate?' } H1={ 'Proyecto MPR' } pageDescription={ 'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!, la fundación tiene mucha historia y trabajo detrás.' } titleIcon={ <Pets color='info' sx={{ fontSize: '1.5rem' }} /> } nextPage='/apoyo' url='/miprimerrescate'>
+    <MainLayout title={'¿Qué es Mi Primer Rescate?'} H1={'Proyecto MPR'} pageDescription={'Te contamos quiénes somos, qué hacemos, cuáles son nuestros objetivos y lo que hacemos para conseguirlos. ¡Conócenos!, la fundación tiene mucha historia y trabajo detrás.'} titleIcon={<Pets color='info' sx={{ fontSize: '1.5rem' }} />} nextPage='/apoyo' url='/miprimerrescate'>
 
-        <ContentSlider title='Misión' initiallyDisplayed>
-          <p>La Misión de la fundación es cumplir el ciclo MPR, el cual garantiza calidad de vida para el peludo rescatado.</p>
-        </ContentSlider>
+      <section className={`${styles.content} content-island`}>
+        <h2 className={styles.title}>¿Quiénes Somos?</h2>
 
-        <ContentSlider title='Objetivos' style={{ backgroundImage: 'url(/background-blob-scatter.svg), url(/wave-haikei-1.svg)', backgroundSize: 'contain', backgroundPosition: 'top left, bottom left', backgroundRepeat: 'repeat, no-repeat' }}>
-          <section className={ `${ styles.section__objectives } observe__container` }>
-            {
-              array.map( (txt, index) => (
-                <CardText key={ index } text={ txt } index={ index + 1 } />
-              ))
-            }
-          </section>
-        </ContentSlider>
+        <p>
+          Mi Primer Rescate es una organización sin fines de lucro dirigida de la mano de un grupo de jóvenes voluntarios y comprometidos con luchar en contra del abandono, sobrepoblación y maltrato
+          que viven diariamente miles de animales en toda Venezuela (Carabobo).
+        </p>
 
-        <ContentSlider title='¿Cómo llevamos a cabo la labor?'>
-          <p>En primer lugar está la identificación del caso directamente en la calle o indirectamente mediante nuestras redes sociales o terceras personas que se comunican con nosotros.</p>
-          <p>En segundo lugar buscamos documentar el estado del animal para poder subir a nuestras redes sociales el caso y así buscar las herramientas inmediatas para brindarle la atención médica veterinaria que necesite.</p>
-          <p>En tercer lugar buscamos la manera de hospedar la mascota en algún hogar temporal que nos permita descartar cualquier enfermedad transmisible que pueda traer y así  asegurarnos de proteger a la manada.</p>
-          <p>Y por cuarto lugar asignamos a la mascota en un hogar donde se comprometan mediante un contrato validado legalmente a darle calidad de vida.</p>
-          <p>Existen muchas variantes del cómo abordamos cada caso debido a las condiciones que cada uno presenta, en muchas ocasiones sólo prestamos el apoyo de manera virtual o de manera física. Lo importante es comunicarse con el equipo y en cuanto podamos responderle.</p>
-        </ContentSlider>
+        <p>
+          Entendemos a los animales como fieles compañeros y seres vivos cuya vida es igual de importante que la nuestra,
+          por lo tanto nos mostramos en contra de cualquier manifestación de estas conductas en contra de los animales domésticos y no domésticos.
+        </p>
+
+        <div className={styles.img__container}>
+          <MyImage src="/mpr nosotros.png" alt='Nosotros' width={1368} height={769} />
+        </div>
+      </section>
+
+      <section className="content-island">
+        <h2>Objetivos MPR</h2>
+        <ul>
+          <li>
+            Concientizar a toda la comunidad acerca del respeto hacia los animales
+          </li>
+          <li>
+            Luchar empedernidamente en contra de todo tipo de maltrato, abuso, abandono y explotación animal
+          </li>
+          <li>
+            Rescatar a animales en cualquier situación de peligro, riesgo de muerte y abandono
+          </li>
+          <li>
+            Brindar la atención médica necesaria para la recuperación de cualquier animal que haya sufrido y estado en condiciones vulnerables
+          </li>
+          <li>
+            Reubicar a todos los animales que sea posible con una nueva familia que pueda brindar amor, seguridad y sustento
+          </li>
+        </ul>
+      </section>
+
+      <section className="content-island">
+        <h2>Ciclo MPR</h2>
+        <p>Mi Primer Rescate realiza su labor poniendo en práctica la ejecución del "Ciclo MPR", el cual cumple con 4 objetivos para garantizar la salud, felicidad y plenitud del animal rescatado.</p>
+        <ol>
+          <li>
+            Rescatar al animal en condiciones vulnerables
+          </li>
+          <li>
+            Brindarle la atención médica necesaria
+          </li>
+          <li>
+            Sanar sus heridas corporales y sentimentales
+          </li>
+          <li>
+            Asignarle una familia
+          </li>
+        </ol>
+      </section>
 
     </MainLayout>
   )

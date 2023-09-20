@@ -30,7 +30,7 @@
 }
 
 .title {
-    filter: drop-shadow(3px 5px 2px #003021);
+    filter: drop-shadow(-.2rem .3rem .3rem #666666cc);
     display: flex;
     justify-content: flex-start;
     align-items: center;

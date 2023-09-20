@@ -6,18 +6,18 @@ import { isValidObjectId } from "mongoose";
 import { db } from ".";
 import { User } from "../models";
 import { IUser, Role } from "../interfaces";
-import { mprApi } from "../mprApi";
+import { ApiResponse, ApiResponsePayload, mprApi } from "../mprApi";
 import { validations } from "../utils";
 
-export const updateUserRole = async ( userId: string, role: Role ): Promise<{ error: boolean; message: string }> => {
+export const updateUserRole = async (userId: string, role: Role): Promise<{ error: boolean; message: string }> => {
 
     try {
-        const { data } = await mprApi.put(`/user/${ userId }?role=${ role }`);
+        const { data } = await mprApi.put(`/user/${userId}?role=${role}`);
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -33,15 +33,15 @@ export const updateUserRole = async ( userId: string, role: Role ): Promise<{ er
 
 }
 
-export const deleteUserById = async ( userId: string, enable: boolean ): Promise<{ error: boolean; message: string }> => {
+export const deleteUserById = async (userId: string, enable: boolean): Promise<{ error: boolean; message: string }> => {
 
     try {
-        const { data } = await mprApi.delete(`/user/${ userId }?enable=${ String( enable ) }`);
+        const { data } = await mprApi.delete(`/user/${userId}?enable=${String(enable)}`);
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -57,18 +57,18 @@ export const deleteUserById = async ( userId: string, enable: boolean ): Promise
 
 }
 
-export const updateUserPassword = async ( userId: string, userPassword: string ): Promise<{ error: boolean; message: string; }> => {
-    
-    if ( !userId || !validations.isValidPassword( userPassword ) )
+export const updateUserPassword = async (userId: string, userPassword: string): Promise<{ error: boolean; message: string; }> => {
+
+    if (!userId || !validations.isValidPassword(userPassword))
         return { error: true, message: 'La información no es válida' };
 
     try {
         const { data } = await mprApi.put('/user/login', { id: userId, newPassword: userPassword });
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -84,17 +84,17 @@ export const updateUserPassword = async ( userId: string, userPassword: string )
 
 }
 
-export const sendMailPassword = async ( userEmail: string ): Promise<{ error: boolean; message: string; }> => {
-    
-    if ( !validations.isValidEmail( userEmail ) ) return { error: true, message: 'El correo no es válido' };
+export const sendMailPassword = async (userEmail: string): Promise<{ error: boolean; message: string; }> => {
+
+    if (!validations.isValidEmail(userEmail)) return { error: true, message: 'El correo no es válido' };
 
     try {
-        const { data } = await mprApi.get(`/user/login?email=${ userEmail }`);
+        const { data } = await mprApi.get(`/user/login?email=${userEmail}`);
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -110,62 +110,81 @@ export const sendMailPassword = async ( userEmail: string ): Promise<{ error: bo
 
 }
 
-export const getUserById = async ( userId: string ): Promise<IUser | null> => {
+export const getUserById = async (userId: string): Promise<IUser | null> => {
 
     try {
-        if ( !isValidObjectId( userId ) ) return null;
+        if (!isValidObjectId(userId)) return null;
 
         await db.connect();
 
-        const user = await User.findById( userId ).populate('orders').populate('pets');
+        const user = await User.findById(userId).populate('orders').populate('pets');
 
         await db.disconnect();
 
-        if ( !user ) return null;
+        if (!user) return null;
 
-        return JSON.parse( JSON.stringify( user ) );
-    } catch( error ) {
+        return JSON.parse(JSON.stringify(user));
+    } catch (error) {
         await db.disconnect();
         return null;
     }
 
 }
 
-export const getAllUsers = async (): Promise<IUser[] | null> => {
+export const getUsers = async (): Promise<IUser[] | null> => {
 
     try {
         await db.connect();
-        
-        const users = await User.find().lean();
+
+        const users = await User.find().skip(0).limit(20).sort({ createdAt: -1 }).lean();
 
         await db.disconnect();
 
-        return JSON.parse( JSON.stringify( users.sort((a: IUser, b: IUser) => b.createdAt - a.createdAt) ) );
-    } catch( error ) {
+        return JSON.parse(JSON.stringify(users.sort((a: IUser, b: IUser) => b.createdAt - a.createdAt)));
+    } catch (error) {
         await db.disconnect();
         return null;
     }
 
 }
 
-export const CheckUserEmailPassword = async ( email: string, password: string ): Promise<NextAuthUser | null> => {
+export const getPaginatedUsers = async (page: number): Promise<ApiResponsePayload<{ users: IUser[] }>> => {
+
+    try {
+        const { data } = await mprApi.get<ApiResponsePayload<{ users: IUser[] }>>('/user?p=' + page);
+
+        return data;
+    } catch (error) {
+
+        // @ts-ignore
+        if (axios.isAxiosError(error)) return error.response ? error.response.data : { error: true, message: 'Ocurrió un error' };
+
+        return {
+            error: true,
+            message: 'Ocurrió un error obteniendo los usuarios'
+        }
+    }
+
+}
+
+export const CheckUserEmailPassword = async (email: string, password: string): Promise<NextAuthUser | null> => {
 
     try {
         await db.connect();
-        
+
         const user = await User.findOne({ email: email.toLowerCase(), isAble: true }).lean();
 
         await db.disconnect();
 
-        if ( !user ) return null;
+        if (!user) return null;
 
         const match = await bcrypt.compare(password, user.password!);
 
-        if ( match ) {
+        if (match) {
             const { _id, name, email, role } = user;
             return {
                 id: undefined,
-                _id: String( _id ),
+                _id: String(_id),
                 name,
                 email,
                 role,
@@ -173,19 +192,19 @@ export const CheckUserEmailPassword = async ( email: string, password: string ):
         }
 
         return null;
-    } catch( error ) {
+    } catch (error) {
         return null;
     }
 
 };
 
-export const oAuthToDbUser = async ( oAuthEmail: string, oAuthName: string ) => {
+export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
 
     await db.connect();
 
     const user = await User.findOne({ email: oAuthEmail }).lean();
 
-    if ( user ) {
+    if (user) {
         await db.disconnect();
 
         // if ( !user.isAble ) return undefined;   // rejects the user signin

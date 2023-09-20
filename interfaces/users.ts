@@ -14,3 +14,4 @@ export interface IUser {
 
 export type Role = 'user' | 'superuser' | 'admin';
 export const RoleArray: Role[] = ['user', 'superuser', 'admin'];
+export const adminRoles = ['admin', 'superuser'];
