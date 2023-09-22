@@ -1,7 +1,16 @@
+export interface IIndexSection {
+    _id: string;
+    sections: IIndexImage[];
+}
+
 export interface IIndexImage {
     _id: string;
     url: string;
     alt: string;
+    content?: string;
+    link?: string;
+    linkText?: string;
+    bgcolor?: string;
 }
 
 export interface IArticle {

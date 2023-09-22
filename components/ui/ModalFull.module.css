@@ -19,9 +19,9 @@
     background-size: contain;
     width: 98vw;
     height: 98vh;
-    background-color: #fafafa;
-    border-radius: 1rem;
-    border: 2px solid #eaeaea;
+    background-color: #fff;
+    border-radius: .6rem;
+    box-shadow: 0 0 1rem -.5rem #333333aa;
 }
 
 .modal__close {
@@ -120,8 +120,8 @@
     background-color: #fff;
     overflow: hidden;
     align-self: flex-start;
-    border-radius: 1rem;
-    box-shadow: 0 0 .4rem 0 #66666699;
+    border-radius: .7rem;
+    box-shadow: 0 0 .4rem -.1rem #66666688;
     width: 100%;
     max-width: 450px;
     margin: 0 auto;

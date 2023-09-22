@@ -1,5 +1,6 @@
 import { FC, useContext, useRef, useState } from 'react';
-import { Box, Button } from '@mui/material';
+import NextLink from 'next/link';
+import { Box, Button, TextField, Link } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { dbImages } from '../../database';
@@ -17,35 +18,76 @@ interface Props {
 export const HeroForm: FC<Props> = ({ images: allImages }) => {
 
     const [images, setImages] = useState(allImages);
+    const [currentSection, setCurrentSection] = useState<IIndexImage>({ _id: '', alt: '', url: '' });
     const { isLoading, setIsLoading } = useContext(ScrollContext);
     const imagenRef = useRef<HTMLInputElement>(null);
+    const textRef = useRef<HTMLInputElement>(null);
+    const linkRef = useRef<HTMLInputElement>(null);
+    const linkTextRef = useRef<HTMLInputElement>(null);
+    const colorRef = useRef<HTMLInputElement>(null);
+    const rangeRef = useRef<HTMLInputElement>(null);
 
     const { enqueueSnackbar } = useSnackbar();
 
+    const addInfo = () => {
+        if (!textRef.current || !colorRef.current || !rangeRef.current || !linkRef.current || !linkTextRef.current || isNaN(Number(rangeRef.current.value))) return;
+
+        setCurrentSection((prevState) => ({ ...prevState, content: textRef.current!.value, bgcolor: colorRef.current!.value + Number(rangeRef.current!.value).toString(16), link: linkRef.current!.value, linkText: linkTextRef.current!.value }));
+        textRef.current.value = '';
+        linkRef.current.value = '';
+        linkTextRef.current.value = '';
+    }
+
     const addImage = async () => {
-        if (!imagenRef.current || !imagenRef.current.files || imagenRef.current.files?.length < 1)
+        if (!imagenRef.current || !imagenRef.current.files || !imagenRef.current.files[0])
             return enqueueSnackbar('Aún no has seleccionado ninguna imagen', { variant: 'info' });
 
         setIsLoading(true);
 
-        Array.from(imagenRef.current.files).forEach((img) => {
-            const fileReader = new FileReader();
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(imagenRef.current.files[0]);
+        fileReader.addEventListener('load', (e) => {
+            const result = e.target?.result;
 
-            fileReader.readAsDataURL(img);
+            if (!result) return enqueueSnackbar('Ocurrió un error cargando la imagen', { variant: 'error' });
 
-            fileReader.addEventListener('load', (e) => {
-                const result = e.target?.result;
+            setCurrentSection((prevState) => ({ ...prevState, url: result as string }));
 
-                if (!result) return enqueueSnackbar('Ocurrió un error cargando la imagen', { variant: 'error' });
-
-                setImages((prevState) => [...prevState, { _id: '', url: result as string, alt: getImageNameFromUrl(img.name) }]);
-
-                setIsLoading(false);
-            });
+            setIsLoading(false);
         });
 
+        fileReader.addEventListener('error', () => {
+            enqueueSnackbar('Ocurrió un error cargando la imagen', { variant: 'error' });
+            setIsLoading(false)
+        });
 
         return;
+    }
+
+    const addImageInfo = async () => {
+        if (!imagenRef.current || !imagenRef.current.files || !imagenRef.current.files[0]) return;
+
+        if ((currentSection.bgcolor && (!currentSection.content)) || (currentSection.content && (!currentSection.bgcolor)) || (currentSection.link && (!currentSection.bgcolor || !currentSection.content)))
+            return enqueueSnackbar('Falta información de la sección', { variant: 'warning' });
+
+        let key = enqueueSnackbar(`¿Subir imagen?`, {
+            variant: 'info',
+            autoHideDuration: 10000,
+            action: ConfirmNotificationButtons,
+        });
+
+        const confirm = await PromiseConfirmHelper(key, 10000);
+
+        if (!confirm) return;
+
+        setIsLoading(true);
+        const data = await dbImages.uploadImageToS3(imagenRef.current.files[0]);
+        setIsLoading(false);
+
+        if (!data.imgUrl || data.error) return enqueueSnackbar('Ocurrió un error subiendo la imagen', { variant: 'error' });
+
+        setImages((prevState) => [...prevState, { ...currentSection, url: data.imgUrl!, alt: imagenRef.current!.files![0].name }]);
+        setCurrentSection({ _id: '', url: '', alt: '' });
     }
 
     const removeImage = async ({ index, _id, url }: { index: number; _id: string; url: string; }) => {
@@ -60,6 +102,8 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
         const confirm = await PromiseConfirmHelper(key, 10000);
 
         if (!confirm) return;
+
+        setIsLoading(true);
 
         if (_id) {
             setIsLoading(true);
@@ -81,7 +125,8 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
 
             setIsLoading(false);
 
-            return enqueueSnackbar(resS3.message, { variant: !resS3.error ? 'success' : 'error' });
+            enqueueSnackbar(resS3.message, { variant: !resS3.error ? 'success' : 'error' });
+            if (resS3.error) return;
         }
 
         setImages((prevState) => prevState.filter((img, idx) => idx !== index - 1));
@@ -101,19 +146,10 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
         if (!accepted) return;
 
         setIsLoading(true);
-
-        const imgs = images.filter((i) => !i._id && !/aws/.test(i.url));
-
-        console.log(imgs)
-
-        // filtramos los ids
-        // let newImages = images.map(({ url, alt }) => ({ imgUrl: url, imgName: alt }));
-
-        // const res = await dbImages.saveIndexImages(newImages);
-
-        // enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
-
+        const res = await dbImages.saveIndexSections(images);
         setIsLoading(false);
+
+        return enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
     }
 
     return (
@@ -123,23 +159,85 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
 
                 <p className={styles.subtitle}>Agregar Imagen de Inicio</p>
 
-                <p>Las imágenes deben tener una dimensión de al menos 1280 x 720</p>
+                <p>Las imágenes deben tener una dimensión de al menos 1280 x 720.</p>
 
                 <input ref={imagenRef} className={styles.no__display} multiple accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={addImage} />
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: '.5rem 1rem', width: '100%' }}>
-                    <Button className='button low--padding' fullWidth onClick={() => isLoading || imagenRef.current!.click()}>Subir imagen</Button>
-                    <Button className='button button--purple low--padding' color='primary' fullWidth onClick={saveChanges}>Guardar cambios</Button>
+                <Button className='button low--padding' fullWidth onClick={() => isLoading || imagenRef.current!.click()}>Agregar imagen</Button>
+
+                <TextField inputRef={textRef} name='texto' label='Texto (no obligatorio)' type='text' color='secondary' variant='filled' multiline />
+
+                <Box display='flex' columnGap={1}>
+                    <TextField sx={{ flexGrow: 1 }} inputRef={linkRef} name='texto' label='Url (no obligatorio)' type='url' color='secondary' variant='filled' multiline />
+                    <TextField sx={{ flexGrow: 1 }} inputRef={linkTextRef} name='link-texto' label='Texto de Url (no obligatorio)' type='text' color='secondary' variant='filled' multiline />
                 </Box>
+
+                <Box>
+                    <p style={{ display: 'inline', paddingRight: '.8rem' }}>Color de fondo</p>
+                    <input ref={colorRef} name='color' type='color' />
+                </Box>
+
+                <Box sx={{ display: 'flex', columnGap: '.8rem', alignItems: 'center' }}>
+                    <p>Opacidad</p>
+                    <input ref={rangeRef} style={{ flexGrow: 1 }} name='color' type='range' min={0} max={255} />
+                </Box>
+
+                <Button className='button low--padding' fullWidth onClick={addInfo}>Agregar información</Button>
+
+                {
+                    currentSection.url &&
+                    <>
+                        <Box className='fadeIn' sx={{ position: 'relative', aspectRatio: 16 / 9, width: '100%', borderRadius: '.5rem', overflow: 'hidden', marginBottom: '1rem' }}>
+                            <MyImage layout='fill' src={currentSection.url} alt={currentSection.alt} style={{ color: currentSection.bgcolor ? currentSection.bgcolor : 'none' }} />
+                            {
+                                currentSection.bgcolor &&
+                                <Box sx={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: currentSection.bgcolor }}>
+                                    <p style={{ fontSize: '2rem', color: 'white', textAlign: 'center', maxWidth: '80%' }}>{currentSection.content}</p>
+                                    {
+                                        (currentSection.link && currentSection.linkText) ?
+                                            ((/\/miprimerrescate/.test(currentSection.link) || /\/apoyo/.test(currentSection.link) || /\/adoptar/.test(currentSection.link) || /\/cambios/.test(currentSection.link) || /\/tienda/.test(currentSection.link)))
+                                                ? <NextLink href={currentSection.link} passHref>
+                                                    <a className='custom__link'>
+                                                        {currentSection.linkText}
+                                                    </a>
+                                                </NextLink>
+                                                : <a href={currentSection.link} className='custom__link' target='_blank' id='456' rel='noreferrer'>{currentSection.linkText}</a>
+                                            : <></>
+                                    }
+                                </Box>
+                            }
+                        </Box>
+                        <Button className='button low--padding button--purple' fullWidth onClick={addImageInfo}>Agregar sección</Button>
+                    </>
+                }
+
 
             </form>
 
+
             <section className='fadeIn' style={{ margin: '0 auto', backgroundColor: '#fcfcfc', borderRadius: '.5rem', overflow: 'hidden', boxShadow: '0 0 1.2rem -.4rem #666' }}>
-                <Slider identifier='hero-form' duration={8000}>
+                <Slider identifier='hero-form' duration={8000} autorun={false}>
                     {
-                        images.map(({ _id, url, alt }, index) =>
+                        images.map(({ _id, url, alt, bgcolor, content, link, linkText }, index) =>
                             <Box key={index} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', aspectRatio: '16/9', position: 'relative' }}>
-                                <Box sx={{ position: 'relative', display: 'block', width: '100%' }}>
+                                <Box sx={{ position: 'relative', zIndex: '1', display: 'block', width: '100%' }}>
                                     <MyImage src={url} alt={alt} layout='responsive' width={1280} height={720} />
+                                    {
+                                        bgcolor &&
+                                        <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
+                                            <p style={{ fontSize: '2rem', color: 'white', textAlign: 'center', maxWidth: '80%' }}>{content}</p>
+                                            {
+                                                (link && linkText) ?
+                                                    ((/\/miprimerrescate/.test(link) || /\/apoyo/.test(link) || /\/adoptar/.test(link) || /\/cambios/.test(link) || /\/tienda/.test(link)))
+                                                        ? <NextLink href={link} passHref>
+                                                            <a className='custom__link'>
+                                                                {linkText}
+                                                            </a>
+                                                        </NextLink>
+                                                        : <a href={link} className='custom__link' target='_blank' id='456' rel='noreferrer'>{linkText}</a>
+                                                    : <></>
+                                            }
+                                        </Box>
+                                    }
                                 </Box>
                                 <Box sx={{ position: 'absolute', zIndex: '99', top: '1rem', left: '1rem', display: 'flex', alignItems: 'stretch', gap: '.5rem' }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', color: '#111', backgroundColor: '#fcfcfc', borderRadius: '4px', width: '1.8rem' }}>
@@ -152,6 +250,8 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
                     }
                 </Slider>
             </section>
+
+            <Button className='button button--purple low--padding' sx={{ mt: 2 }} color='primary' fullWidth onClick={saveChanges}>Guardar cambios</Button>
 
         </section>
     )

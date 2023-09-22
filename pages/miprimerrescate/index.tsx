@@ -50,7 +50,7 @@ const MiPrimerRescatePage: NextPage = () => {
 
       <section className="content-island">
         <h2>Ciclo MPR</h2>
-        <p>Mi Primer Rescate realiza su labor poniendo en práctica la ejecución del "Ciclo MPR", el cual cumple con 4 objetivos para garantizar la salud, felicidad y plenitud del animal rescatado.</p>
+        <p>Mi Primer Rescate realiza su labor poniendo en práctica la ejecución del {'"'}Ciclo MPR{'"'}, el cual cumple con 4 objetivos para garantizar la salud, felicidad y plenitud del animal rescatado.</p>
         <ol>
           <li>
             Rescatar al animal en condiciones vulnerables

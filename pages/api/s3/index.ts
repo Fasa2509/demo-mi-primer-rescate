@@ -51,8 +51,6 @@ const generateUploadURL = async (req: NextApiRequest, res: NextApiResponse) => {
     };
 
     try {
-        // const url = await s3.getSignedUrlPromise('putObject', params);
-
         const client = new S3Client({
             credentials: {
                 accessKeyId,
@@ -66,7 +64,7 @@ const generateUploadURL = async (req: NextApiRequest, res: NextApiResponse) => {
             Bucket,
         });
 
-        // CUIDADO AQUI MI PANAAAAAA
+        // TODO: CUIDADO AQUI MI PANAAAAAA
         // @ts-ignore
         const url = await getSignedUrl(client, command, { expiresIn: 60 });
 
@@ -108,20 +106,5 @@ const deleteObjectByKey = async (req: NextApiRequest, res: NextApiResponse) => {
 
         return res.status(400).json({ error: true, message: 'Ocurrió un error eliminando la imagen' });
     }
-
-    /*await new Promise(( resolve, reject ) => {
-        s3.deleteObject({ Bucket: bucketName, Key }, ( err, data ) => {
-            if ( err ) reject( err );
-
-            resolve( data );
-        });
-    })
-    .then(( data ) => {
-        return res.status(200).json({ error: false, message: 'La imagen fue eliminada' });
-    })
-    .catch(( error ) => {
-        console.log( error );
-        return res.status(400).json({ error: true, message: 'Ocurrió un error eliminando la imagen' });
-    });*/
 
 };

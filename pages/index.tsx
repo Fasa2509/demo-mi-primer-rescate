@@ -87,22 +87,26 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
         </Box>
       </article>
 
-      <Box display='flex' flexWrap='wrap' gap='1.5rem' justifyContent='center' sx={{ my: 6 }}>
-        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
-          <p className={styles.cards__title}>Ayúdanos</p>
-          <p className={styles.cards__content}>Los animales nos necesitan</p>
+      <Box display='flex' flexWrap='wrap' gap='1.5rem' flexDirection='column' sx={{ my: 6 }}>
+        <Box display='flex' gap='1rem'>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
+            <p className={styles.cards__title}>Ayúdanos</p>
+            <p className={styles.cards__content}>Los animales nos necesitan</p>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
+            <p className={styles.cards__title}>Participa en la fundación</p>
+            <p className={styles.cards__content}>Asiste a nuestros eventos</p>
+          </Box>
         </Box>
-        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
-          <p className={styles.cards__title}>Participa en la fundación</p>
-          <p className={styles.cards__content}>Asiste a nuestros eventos</p>
-        </Box>
-        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
-          <p className={styles.cards__title}>Dona</p>
-          <p className={styles.cards__content}>Tu aporte nos ayuda a seguir</p>
-        </Box>
-        <Box sx={{ borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
-          <p className={styles.cards__title}>Cuida a tus mascotas</p>
-          <p className={styles.cards__content}>Trátalas con el amor que ellas te dan</p>
+        <Box display='flex' gap='1rem'>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
+            <p className={styles.cards__title}>Dona</p>
+            <p className={styles.cards__content}>Tu aporte nos ayuda a seguir</p>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
+            <p className={styles.cards__title}>Cuida a tus mascotas</p>
+            <p className={styles.cards__content}>Trátalas con el amor que ellas te dan</p>
+          </Box>
         </Box>
       </Box>
 
@@ -130,13 +134,16 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
 
-  const articles = await dbArticles.getAllArticles();
+  let articles = await dbArticles.getAllArticles();
 
   if (!articles) throw new Error("Error trayendo los artículos de la página");
 
-  const indexImages = await dbImages.getIndexImages();
+  let indexSections = await dbImages.getIndexSections();
 
-  if (!indexImages) throw new Error("Error trayendo las imágenes de inicio de la página");
+  // if (!indexSections || indexSections.sections.length < 1) throw new Error("Error trayendo las imágenes de inicio de la página");
+  if (!indexSections || indexSections.sections.length < 1) indexSections = { _id: '', sections: [] };
+
+  const indexImages = indexSections.sections;
 
   return {
     props: {

@@ -1,6 +1,7 @@
 import { FC, useEffect, useContext, lazy, Suspense } from 'react';
 import Head from 'next/head';
 import { Box } from '@mui/material';
+import NextLink from 'next/link';
 
 import { AuthContext } from '../../context';
 import { Footer, Header, SideMenu, Title } from '../ui';
@@ -76,10 +77,27 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
       <section style={{ minWidth: '310px', backgroundColor: 'green' }}>
         <Slider identifier='hero-slider' duration={12000}>
           {
-            indexImages.map(({ url, alt }, index) =>
-              <Box key={index} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', aspectRatio: '16/9' }}>
+            indexImages.map(({ url, alt, bgcolor, content, _id, link, linkText }, index) =>
+              <Box key={_id} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', aspectRatio: '16/9' }}>
                 <Box sx={{ position: 'relative', display: 'block', width: '100%' }}>
                   <MyImage src={url} alt={alt} layout='responsive' width={1280} height={720} />
+                  {
+                    bgcolor &&
+                    <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
+                      <p style={{ fontSize: '2rem', color: 'white', textAlign: 'center', maxWidth: '80%' }}>{content}</p>
+                      {
+                        (link && linkText) ?
+                          ((/\/miprimerrescate/.test(link) || /\/apoyo/.test(link) || /\/adoptar/.test(link) || /\/cambios/.test(link) || /\/tienda/.test(link)))
+                            ? <NextLink href={link} passHref>
+                              <a className='custom__link'>
+                                {linkText}
+                              </a>
+                            </NextLink>
+                            : <a href={link} className='custom__link' target='_blank' id='456' rel='noreferrer'>{linkText}</a>
+                          : <></>
+                      }
+                    </Box>
+                  }
                 </Box>
               </Box>
             )

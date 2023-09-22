@@ -278,6 +278,21 @@ section .is-active {
   }
 }
 
+.custom__link {
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: #fcfcfc;
+  padding: .3rem .8rem;
+  border-radius: 10rem;
+  background-color: var(--secondary-color-1);
+  cursor: pointer;
+  transition: background-color 300ms ease, color 250ms ease;
+}
+
+.custom__link:hover {
+  background-color: var(--secondary-color-1-hover);
+}
+
 .admin__link {
   font-size: .9rem;
 }
