@@ -116,7 +116,7 @@ export const ModalFull: FC<Props> = ({ products }) => {
                             <SliderImages images={product.images} options={{ indicators: false, animation: 'slide', fullHeightHover: true, interval: 9000, duration: 650 }} layout='intrinsic' objectFit='cover' borderRadius={false} />
                         </div>
 
-                        <Card sx={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start', mb: 2.5, backgroundColor: '#fcfcfc' }}>
+                        <Card sx={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start', mb: 2.5, backgroundColor: '#fafafa', boxShadow: '0 0 1.2rem -.6rem #66666699' }}>
                             <CardContent>
 
                                 <Box display='flex' gap='.5rem'>

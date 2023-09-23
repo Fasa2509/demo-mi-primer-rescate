@@ -128,8 +128,6 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
             enqueueSnackbar(resS3.message, { variant: !resS3.error ? 'success' : 'error' });
             if (resS3.error) return;
         }
-
-        setImages((prevState) => prevState.filter((img, idx) => idx !== index - 1));
     };
 
     const saveChanges = async () => {

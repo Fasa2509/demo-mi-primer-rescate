@@ -17,11 +17,11 @@
     overflow-y: auto;
     background-image: url(/background-blob-scatter.svg);
     background-size: contain;
-    width: 98vw;
-    height: 98vh;
+    width: 95vw;
+    height: 95vh;
     background-color: #fff;
     border-radius: .6rem;
-    box-shadow: 0 0 1rem -.5rem #333333aa;
+    box-shadow: 0 0 1.2rem -.9rem #333333aa;
 }
 
 .modal__close {
