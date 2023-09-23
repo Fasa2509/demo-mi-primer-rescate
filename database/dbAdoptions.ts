@@ -66,7 +66,7 @@ export const getAllAdoptions = async () => {
     try {
         await db.connect();
 
-        const adoptions = await Adoption.find().skip(0).limit(20).sort({ createdAt: -1 });
+        const adoptions = await Adoption.find().skip(0).limit(20).sort({ createdAt: -1 }).lean();
 
         await db.disconnect();
 

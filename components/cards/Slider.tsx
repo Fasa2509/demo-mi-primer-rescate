@@ -17,12 +17,12 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500, autor
 
     useEffect(() => {
         // @ts-ignore
-        if (autorun) intervalRef.current = setInterval(() => setActive((prevState) => (prevState === children.length - 1)
-            ? 0
-            : prevState += 1
-        ), duration);
+        // if (autorun) intervalRef.current = setInterval(() => setActive((prevState) => (prevState === children.length - 1)
+        //     ? 0
+        //     : prevState += 1
+        // ), duration);
 
-        return () => clearInterval(intervalRef.current ? intervalRef.current : setInterval(() => { }));
+        // return () => clearInterval(intervalRef.current ? intervalRef.current : setInterval(() => { }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

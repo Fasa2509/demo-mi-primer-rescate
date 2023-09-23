@@ -11,7 +11,7 @@ export const getAllPets = async (): Promise<IPet[] | null> => {
     try {
         await db.connect();
 
-        const pets: IPet[] = await Pet.find().skip(0).limit(20).sort({ createdAt: -1 });
+        const pets: IPet[] = await Pet.find().skip(0).limit(20).sort({ createdAt: -1 }).lean();
 
         await db.disconnect();
 
@@ -71,7 +71,7 @@ export const getAllTypePets = async (petType: PetType): Promise<IPet[] | null> =
     try {
         await db.connect();
 
-        const pets = await Pet.find({ type: petType, isAble: true, isAdminPet: true }).sort({ createdAt: -1 }).limit(6);
+        const pets = await Pet.find({ type: petType, isAble: true, isAdminPet: true }).sort({ createdAt: -1 }).limit(6).lean();
 
         await db.disconnect();
 
@@ -91,7 +91,8 @@ export const getChangedPets = async (): Promise<IPet[] | null> => {
         const pets = await Pet
             .find({ type: 'cambios', isAble: true, isAdminPet: false })
             .sort({ createdAt: -1 })
-            .limit(6);
+            .limit(6)
+            .lean();
 
         await db.disconnect();
 

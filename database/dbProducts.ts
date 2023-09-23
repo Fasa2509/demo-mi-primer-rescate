@@ -5,45 +5,45 @@ import { IProduct } from "../interfaces";
 import { Dolar, Product } from "../models";
 import { Sizes } from '../interfaces/products';
 
-export const backGetDolarPrice = async (): Promise< Number | null> => {
+export const backGetDolarPrice = async (): Promise<Number | null> => {
 
     try {
         await db.connect();
-        
-        let dolarPrice = await Dolar.findOne({ price: { $gt: 0 }});
-        
+
+        let dolarPrice = await Dolar.findOne({ price: { $gt: 0 } });
+
         await db.disconnect();
-        
+
         return dolarPrice ? dolarPrice.price : 10;
-    } catch( error ) {
+    } catch (error) {
         return null;
     }
 
 }
 
-export const frontGetDolarPrice = async (): Promise< number | null> => {
+export const frontGetDolarPrice = async (): Promise<number | null> => {
 
     try {
         let { data } = await mprApi.get('/product/existency');
 
         return data.price;
-    } catch( error ) {
+    } catch (error) {
         return null;
     }
 
 }
 
-export const updateDolarPrice = async ( price: number ): Promise<{ error: boolean; message: string; }> => {
+export const updateDolarPrice = async (price: number): Promise<{ error: boolean; message: string; }> => {
 
-    if ( price === 0 ) return { error: true, message: 'El precio no es válido' };
+    if (price === 0) return { error: true, message: 'El precio no es válido' };
 
     try {
         let { data } = await mprApi.put('/product/existency', { price: price.toFixed(2) });
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return error.response?.data as { error: boolean; message: string; };
         }
 
@@ -55,9 +55,9 @@ export const updateDolarPrice = async ( price: number ): Promise<{ error: boolea
 
 }
 
-export const checkProductsExistency = async ( productsToCheck: Array<{ _id: string; name: string; quantity: number; size: Sizes; }> ): Promise<{ error: boolean; message: string; payload: string[]; }> => {
+export const checkProductsExistency = async (productsToCheck: Array<{ _id: string; name: string; quantity: number; size: Sizes; }>): Promise<{ error: boolean; message: string; payload: string[]; }> => {
 
-    if ( !(productsToCheck instanceof Array) || productsToCheck.length < 1 ) return { error: true, message: '', payload: ['El carrito está vacío'] }
+    if (!(productsToCheck instanceof Array) || productsToCheck.length < 1) return { error: true, message: '', payload: ['El carrito está vacío'] }
 
     try {
         let { data } = await mprApi.post('/product/existency', {
@@ -65,9 +65,9 @@ export const checkProductsExistency = async ( productsToCheck: Array<{ _id: stri
         });
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 message: '',
@@ -84,15 +84,15 @@ export const checkProductsExistency = async ( productsToCheck: Array<{ _id: stri
     }
 }
 
-export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promise<{ error: boolean; message: string; }> => {
+export const createNewProduct = async (form: IProduct, unica: boolean,): Promise<{ error: boolean; message: string; }> => {
 
     let { name = '', description = '', images = [], price = 0, discount = 0, inStock, tags = [], slug = '' } = form;
-    
-    if ( !name || !description || images.length < 2 || images.length > 4 || price === 0 || tags.length === 0 ) return { error: true, message: 'La información no es válida' };
+
+    if (!name || !description || images.length < 2 || images.length > 4 || price === 0 || tags.length === 0) return { error: true, message: 'La información no es válida' };
 
     let { unique, ...tallas } = inStock;
 
-    if ( unique > -1 && Object.values( tallas ).some(( value: number, index, array) => typeof value === 'number' && value > 0) ) return { error: true, message: 'Las tallas no son válidas' };
+    if (unique > -1 && Object.values(tallas).some((value: number, index, array) => typeof value === 'number' && value > 0)) return { error: true, message: 'Las tallas no son válidas' };
 
     try {
         let { data } = await mprApi.post('/product', {
@@ -108,9 +108,9 @@ export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promi
         });
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -125,12 +125,12 @@ export const createNewProduct = async ( form: IProduct, unica: boolean, ): Promi
     }
 }
 
-export const updateProductById = async ( id: string, payload: IProduct, unique: boolean ): Promise<{ error: boolean; message: string; }> => {
+export const updateProductById = async (id: string, payload: IProduct, unique: boolean): Promise<{ error: boolean; message: string; }> => {
 
     try {
         let res;
 
-        if ( unique ) res = await mprApi.put(`/product?id=${ id }`, {
+        if (unique) res = await mprApi.put(`/product?id=${id}`, {
             ...payload,
             inStock: {
                 ...payload.inStock,
@@ -144,7 +144,7 @@ export const updateProductById = async ( id: string, payload: IProduct, unique: 
             unique,
         });
 
-        if ( !unique ) res = await mprApi.put(`/product?id=${ id }`, {
+        if (!unique) res = await mprApi.put(`/product?id=${id}`, {
             ...payload,
             inStock: {
                 ...payload.inStock,
@@ -156,9 +156,9 @@ export const updateProductById = async ( id: string, payload: IProduct, unique: 
         return res
             ? res.data
             : { error: true, message: 'Error en la petición' };
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -174,18 +174,18 @@ export const updateProductById = async ( id: string, payload: IProduct, unique: 
 
 }
 
-export const discountProducts = async (discount: number, matcher: string ): Promise<{ error: boolean; message: string; }> => {
+export const discountProducts = async (discount: number, matcher: string): Promise<{ error: boolean; message: string; }> => {
 
-    if ( discount < 0 || discount > 50 ) return { error: true, message: 'El descuento no es válido' };
+    if (discount < 0 || discount > 50) return { error: true, message: 'El descuento no es válido' };
 
     try {
         matcher = matcher.replace('/', '');
-        const { data } = await mprApi.get(`/product/${ matcher }?discount=${ discount }`);
+        const { data } = await mprApi.get(`/product/${matcher}?discount=${discount}`);
 
         return data;
-    } catch( error: any ) {
+    } catch (error: any) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -201,15 +201,15 @@ export const discountProducts = async (discount: number, matcher: string ): Prom
 
 }
 
-export const switchProductAbilityById = async ( id: string ) => {
+export const switchProductAbilityById = async (id: string) => {
 
     try {
-        const { data } = await mprApi.delete(`/product?id=${ id }`);
+        const { data } = await mprApi.delete(`/product?id=${id}`);
 
         return data;
-    } catch( error: any ) {
+    } catch (error: any) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return {
                 error: true,
                 // @ts-ignore
@@ -225,7 +225,7 @@ export const switchProductAbilityById = async ( id: string ) => {
 
 }
 
-export const getProductBySlug = async ( slug: string ): Promise<IProduct | null | false> => {
+export const getProductBySlug = async (slug: string): Promise<IProduct | null | false> => {
 
     try {
         await db.connect();
@@ -234,10 +234,10 @@ export const getProductBySlug = async ( slug: string ): Promise<IProduct | null 
 
         await db.disconnect();
 
-        if ( !product ) return false;
+        if (!product) return false;
 
-        return JSON.parse( JSON.stringify( product ) );
-    } catch( error ) {
+        return JSON.parse(JSON.stringify(product));
+    } catch (error) {
         return null;
     }
 
@@ -247,13 +247,13 @@ export const getAllProducts = async (): Promise<IProduct[] | null> => {
 
     try {
         await db.connect();
-        
-        const products = await Product.find().sort({ createdAt: -1 });
+
+        const products = await Product.find().sort({ createdAt: -1 }).lean();
 
         await db.disconnect();
 
-        return JSON.parse( JSON.stringify( products ) );
-    } catch( error ) {
+        return JSON.parse(JSON.stringify(products));
+    } catch (error) {
         return null;
     }
 

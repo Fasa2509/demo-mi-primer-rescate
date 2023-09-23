@@ -13,5 +13,9 @@ const indexImageSchema = new Schema({
     }]
 });
 
+// @ts-ignore
+mongoose.models = {};
+
 const IndexSection = model<IIndexSection>('Section', indexImageSchema);
+
 export default IndexSection;

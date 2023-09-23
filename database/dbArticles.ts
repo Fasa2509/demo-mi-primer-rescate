@@ -8,45 +8,45 @@ export const getAllArticles = async (): Promise<IArticle[] | null> => {
 
     try {
         await db.connect();
-        
-        const allArticles: IArticle[] = await Article.find().sort({ createdAt: -1 }).limit( 10 );
+
+        const allArticles: IArticle[] = await Article.find().sort({ createdAt: -1 }).limit(10).lean();
 
         await db.disconnect();
 
-        if ( !allArticles ) return null;
+        if (!allArticles) return null;
 
-        return JSON.parse( JSON.stringify( allArticles ) );
-    } catch( error ) {
+        return JSON.parse(JSON.stringify(allArticles));
+    } catch (error) {
         return null;
     }
 
 }
 
-export const getMoreArticles = async ( seconds: number ): Promise<IArticle[] | null> => {
+export const getMoreArticles = async (seconds: number): Promise<IArticle[] | null> => {
 
-    if ( !seconds || typeof seconds !== 'number' ) return null;
+    if (!seconds || typeof seconds !== 'number') return null;
 
     try {
         const { data } = await mprApi.get('/article?seconds=' + seconds);
 
-        if ( !data ) return null;
+        if (!data) return null;
 
-        return JSON.parse( JSON.stringify( data ));
-    } catch( error ) {
+        return JSON.parse(JSON.stringify(data));
+    } catch (error) {
         return null;
     }
 
 }
 
-export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<{ error: boolean; message: string }> => {
+export const saveNewArticle = async (title: string, fields: Field[]): Promise<{ error: boolean; message: string }> => {
 
     try {
         let actualFields = fields.map((field) => {
-            if ( field.type === 'link' ) return field;
-            if ( field.type === 'imagen' ) return { ...field, content: '_', content_: '_' }
+            if (field.type === 'link') return field;
+            if (field.type === 'imagen') return { ...field, content: '_', content_: '_' }
             return { ...field, content_: '_' }
         })
-        
+
         let { data } = await mprApi.post('/article', {
             title,
             fields: actualFields,
@@ -54,9 +54,9 @@ export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<
 
         return data;
         // @ts-ignore
-    } catch( error: Error | AxiosError ) {
+    } catch (error: Error | AxiosError) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return { error: true, message: 'Ocurrió un error guardando el artículo' }
         }
 
@@ -68,15 +68,15 @@ export const saveNewArticle = async ( title: string, fields: Field[] ): Promise<
 
 }
 
-export const removeArticle = async ( id: string ): Promise<{ error: boolean; message: string; }> => {
+export const removeArticle = async (id: string): Promise<{ error: boolean; message: string; }> => {
 
     try {
-        const { data } = await mprApi.delete(`/article/${ id }`);
+        const { data } = await mprApi.delete(`/article/${id}`);
 
         return data;
-    } catch( error ) {
+    } catch (error) {
 
-        if ( axios.isAxiosError( error ) ) {
+        if (axios.isAxiosError(error)) {
             return { error: true, message: 'Ocurrió un error guardando el artículo' }
         }
 

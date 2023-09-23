@@ -18,7 +18,7 @@ const orderSchema = new Schema({
             type: String,
             required: true,
             enum: {
-                values: [ 'unique', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ],
+                values: ['unique', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
                 message: '{VALUE} no es una talla permitida',
             }
         },
@@ -76,7 +76,6 @@ const orderSchema = new Schema({
 // @ts-ignore
 mongoose.models = {};
 
-// @ts-ignore
 const Order = model<IOrder>('Order', orderSchema);
 
 // const Order = {}
