@@ -41,7 +41,7 @@ const AuthPage: NextPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') push('/');
-  }, [status])
+  }, [status, push])
 
 
   const handleChangePassword = async () => {
