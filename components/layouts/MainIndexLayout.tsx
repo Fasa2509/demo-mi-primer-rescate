@@ -83,17 +83,17 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
                   <MyImage src={url} alt={alt} layout='responsive' width={1280} height={720} />
                   {
                     bgcolor &&
-                    <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
-                      <p style={{ fontSize: '2rem', color: 'white', textAlign: 'center', maxWidth: '80%' }}>{content}</p>
+                    <Box sx={{ overflow: 'hidden', position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
+                      <p className='slider__content'>{content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
                       {
                         (link && linkText) ?
                           ((/\/miprimerrescate/.test(link) || /\/apoyo/.test(link) || /\/adoptar/.test(link) || /\/cambios/.test(link) || /\/tienda/.test(link)))
                             ? <NextLink href={link} passHref>
-                              <a className='custom__link'>
+                              <a className='slider__link'>
                                 {linkText}
                               </a>
                             </NextLink>
-                            : <a href={link} className='custom__link' target='_blank' id='456' rel='noreferrer'>{linkText}</a>
+                            : <a href={link} className='slider__link' target='_blank' id='456' rel='noreferrer'>{linkText}</a>
                           : <></>
                       }
                     </Box>

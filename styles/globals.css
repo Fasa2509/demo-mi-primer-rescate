@@ -31,6 +31,9 @@ body {
   overflow-x: hidden;
 }
 
+/* rgb(255, 79, 13) */
+/* rgb(153, 255, 230) */
+
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -80,6 +83,32 @@ hr {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.slider__content {
+  transform: translateY(-.3rem);
+  margin: 0 0 .8rem;
+  font-size: 1.7rem;
+  color: white;
+  text-align: center;
+  max-width: 85%;
+  font-weight: 300;
+}
+
+.slider__emphasis {
+  font-weight: 600;
+}
+
+.slider__link {
+  transform: translateY(-.3rem);
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: #fcfcfc;
+  padding: .3rem .8rem;
+  border-radius: .3rem;
+  background-color: var(--secondary-color-1);
+  cursor: pointer;
+  transition: background-color 300ms ease, color 250ms ease;
 }
 
 .content-island {
@@ -268,6 +297,10 @@ section .is-active {
     box-shadow: 0 0 .8rem -.4rem #555;
   }
 
+  .slider__link:hover {
+    background-color: var(--secondary-color-1-hover);
+  }
+
   .notification__buttons.transparent:hover {
     background-color: rgba(0, 0, 0, .35);
   }
@@ -276,17 +309,6 @@ section .is-active {
     background-color: transparent;
     color: var(--secondary-color-1);
   }
-}
-
-.custom__link {
-  font-weight: 400;
-  font-size: 1.1rem;
-  color: #fcfcfc;
-  padding: .3rem .8rem;
-  border-radius: 10rem;
-  background-color: var(--secondary-color-1);
-  cursor: pointer;
-  transition: background-color 300ms ease, color 250ms ease;
 }
 
 .custom__link:hover {
@@ -310,6 +332,17 @@ section .is-active {
 @media screen and (min-width: 576px) {
   html {
     font-size: 17px;
+  }
+
+  .slider__content {
+    font-size: 2.3rem;
+    max-width: 80%;
+    transform: none;
+  }
+
+  .slider__link {
+    transform: none;
+    font-size: 1.3rem;
   }
 
   .SnackbarContent-root #notistack-snackbar {

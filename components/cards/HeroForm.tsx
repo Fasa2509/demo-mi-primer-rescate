@@ -29,15 +29,6 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const addInfo = () => {
-        if (!textRef.current || !colorRef.current || !rangeRef.current || !linkRef.current || !linkTextRef.current || isNaN(Number(rangeRef.current.value))) return;
-
-        setCurrentSection((prevState) => ({ ...prevState, content: textRef.current!.value, bgcolor: colorRef.current!.value + Number(rangeRef.current!.value).toString(16), link: linkRef.current!.value, linkText: linkTextRef.current!.value }));
-        textRef.current.value = '';
-        linkRef.current.value = '';
-        linkTextRef.current.value = '';
-    }
-
     const addImage = async () => {
         if (!imagenRef.current || !imagenRef.current.files || !imagenRef.current.files[0])
             return enqueueSnackbar('Aún no has seleccionado ninguna imagen', { variant: 'info' });
@@ -64,10 +55,19 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
         return;
     }
 
+    const addInfo = () => {
+        if (!textRef.current || !colorRef.current || !rangeRef.current || !linkRef.current || !linkTextRef.current || isNaN(Number(rangeRef.current.value))) return;
+
+        setCurrentSection((prevState) => ({ ...prevState, content: textRef.current!.value, bgcolor: colorRef.current!.value + Number(rangeRef.current!.value).toString(16), link: linkRef.current!.value, linkText: linkTextRef.current!.value }));
+        textRef.current.value = '';
+        linkRef.current.value = '';
+        linkTextRef.current.value = '';
+    }
+
     const addImageInfo = async () => {
         if (!imagenRef.current || !imagenRef.current.files || !imagenRef.current.files[0]) return;
 
-        if ((currentSection.bgcolor && (!currentSection.content)) || (currentSection.content && (!currentSection.bgcolor)) || (currentSection.link && (!currentSection.bgcolor || !currentSection.content)))
+        if ((currentSection.bgcolor && (!currentSection.content)) || (currentSection.content && (!currentSection.bgcolor)) || (currentSection.link && (!currentSection.bgcolor || !currentSection.content || !currentSection.linkText)))
             return enqueueSnackbar('Falta información de la sección', { variant: 'warning' });
 
         let key = enqueueSnackbar(`¿Subir imagen?`, {
@@ -162,6 +162,7 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
                 <input ref={imagenRef} className={styles.no__display} multiple accept='image/png, image/jpg, image/jpeg, image/gif, image/webp' type='file' name='image' onChange={addImage} />
                 <Button className='button low--padding' fullWidth onClick={() => isLoading || imagenRef.current!.click()}>Agregar imagen</Button>
 
+                <p>Usa *_ <span className='slider__emphasis'>texto</span> _* para dar énfasis al texto.</p>
                 <TextField inputRef={textRef} name='texto' label='Texto (no obligatorio)' type='text' color='secondary' variant='filled' multiline />
 
                 <Box display='flex' columnGap={1}>
@@ -188,17 +189,17 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
                             <MyImage layout='fill' src={currentSection.url} alt={currentSection.alt} style={{ color: currentSection.bgcolor ? currentSection.bgcolor : 'none' }} />
                             {
                                 currentSection.bgcolor &&
-                                <Box sx={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: currentSection.bgcolor }}>
-                                    <p style={{ fontSize: '2rem', color: 'white', textAlign: 'center', maxWidth: '80%' }}>{currentSection.content}</p>
+                                <Box sx={{ overflow: 'hidden', position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: currentSection.bgcolor }}>
+                                    <p className='slider__content'>{currentSection.content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
                                     {
                                         (currentSection.link && currentSection.linkText) ?
                                             ((/\/miprimerrescate/.test(currentSection.link) || /\/apoyo/.test(currentSection.link) || /\/adoptar/.test(currentSection.link) || /\/cambios/.test(currentSection.link) || /\/tienda/.test(currentSection.link)))
                                                 ? <NextLink href={currentSection.link} passHref>
-                                                    <a className='custom__link'>
+                                                    <a className='slider__link'>
                                                         {currentSection.linkText}
                                                     </a>
                                                 </NextLink>
-                                                : <a href={currentSection.link} className='custom__link' target='_blank' id='456' rel='noreferrer'>{currentSection.linkText}</a>
+                                                : <a href={currentSection.link} className='slider__link' target='_blank' id='456' rel='noreferrer'>{currentSection.linkText}</a>
                                             : <></>
                                     }
                                 </Box>
@@ -221,17 +222,17 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
                                     <MyImage src={url} alt={alt} layout='responsive' width={1280} height={720} />
                                     {
                                         bgcolor &&
-                                        <Box sx={{ position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
-                                            <p style={{ fontSize: '2rem', color: 'white', textAlign: 'center', maxWidth: '80%' }}>{content}</p>
+                                        <Box sx={{ overflow: 'hidden', position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
+                                            <p className='slider__content'>{content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
                                             {
                                                 (link && linkText) ?
                                                     ((/\/miprimerrescate/.test(link) || /\/apoyo/.test(link) || /\/adoptar/.test(link) || /\/cambios/.test(link) || /\/tienda/.test(link)))
                                                         ? <NextLink href={link} passHref>
-                                                            <a className='custom__link'>
+                                                            <a className='slider__link'>
                                                                 {linkText}
                                                             </a>
                                                         </NextLink>
-                                                        : <a href={link} className='custom__link' target='_blank' id='456' rel='noreferrer'>{linkText}</a>
+                                                        : <a href={link} className='slider__link' target='_blank' id='456' rel='noreferrer'>{linkText}</a>
                                                     : <></>
                                             }
                                         </Box>
