@@ -102,10 +102,10 @@ a {
 .slider__link {
   transform: translateY(-.3rem);
   font-weight: 400;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #fcfcfc;
-  padding: .3rem .8rem;
-  border-radius: .3rem;
+  padding: .4rem .9rem;
+  border-radius: .2rem;
   background-color: var(--secondary-color-1);
   cursor: pointer;
   transition: background-color 300ms ease, color 250ms ease;
@@ -342,7 +342,7 @@ section .is-active {
 
   .slider__link {
     transform: none;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
 
   .SnackbarContent-root #notistack-snackbar {

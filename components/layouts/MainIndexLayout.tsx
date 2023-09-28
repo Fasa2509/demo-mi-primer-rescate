@@ -84,7 +84,7 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
                   {
                     bgcolor &&
                     <Box sx={{ overflow: 'hidden', position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
-                      <p className='slider__content'>{content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
+                      <p key={index} className='slider__content'>{content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span key={index} className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
                       {
                         (link && linkText) ?
                           ((/\/miprimerrescate/.test(link) || /\/apoyo/.test(link) || /\/adoptar/.test(link) || /\/cambios/.test(link) || /\/tienda/.test(link)))

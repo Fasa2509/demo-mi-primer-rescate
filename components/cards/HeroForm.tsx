@@ -190,7 +190,7 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
                             {
                                 currentSection.bgcolor &&
                                 <Box sx={{ overflow: 'hidden', position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: currentSection.bgcolor }}>
-                                    <p className='slider__content'>{currentSection.content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
+                                    <p key={currentSection.bgcolor} className='slider__content'>{currentSection.content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span key={currentSection.bgcolor} className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
                                     {
                                         (currentSection.link && currentSection.linkText) ?
                                             ((/\/miprimerrescate/.test(currentSection.link) || /\/apoyo/.test(currentSection.link) || /\/adoptar/.test(currentSection.link) || /\/cambios/.test(currentSection.link) || /\/tienda/.test(currentSection.link)))
@@ -223,7 +223,7 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
                                     {
                                         bgcolor &&
                                         <Box sx={{ overflow: 'hidden', position: 'absolute', top: 0, left: 0, zIndex: '90', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', aspectRatio: 16 / 9, backgroundColor: bgcolor }}>
-                                            <p className='slider__content'>{content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
+                                            <p key={index} className='slider__content'>{content!.split('*').map((str) => (str.startsWith('_') && str.at(-1) === '_') ? <span key={index} className='slider__emphasis'>{str.slice(1, -1)}</span> : str)}</p>
                                             {
                                                 (link && linkText) ?
                                                     ((/\/miprimerrescate/.test(link) || /\/apoyo/.test(link) || /\/adoptar/.test(link) || /\/cambios/.test(link) || /\/tienda/.test(link)))
