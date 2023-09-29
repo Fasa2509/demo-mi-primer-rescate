@@ -36,7 +36,7 @@
     padding: .7rem;
     border-radius: .7rem;
     color: #333;
-    background-color: #30e9b1;
+    background-color: var(--main-color);
     padding-top: 2.7rem;
     margin-top: -2.3rem;
 }
@@ -130,7 +130,7 @@
     .more__products:hover {
         text-decoration: initial;
     }
-    
+
     .big__product__info:hover .big__product__image,
     .big__product__image:hover {
         transform: scale(1.05);
@@ -139,7 +139,7 @@
 
     .product__long:hover {
         transform: scale(1.02);
-        box-shadow: 0 0 .9rem -.6rem #606060;    
+        box-shadow: 0 0 .9rem -.6rem #606060;
     }
 }
 
@@ -170,13 +170,13 @@
         font-weight: 500;
         font-size: 1.1rem;
     }
-    
+
     .big__product__price__d {
         font-size: .95rem;
         color: #666;
         text-decoration: line-through;
     }
-    
+
     .big__product__discount {
         margin: 0;
         font-weight: 600;

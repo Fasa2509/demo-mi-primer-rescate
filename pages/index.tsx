@@ -110,7 +110,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
         </Box>
       </Box>
 
-      <p className={styles.subtitle}>¿Qué estamos haciendo ahora?</p>
+      <p className={`content-island ${styles.subtitle}`}>¿Qué estamos haciendo ahora?</p>
 
       <section className={styles.articles__container}>
         {

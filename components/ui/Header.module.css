@@ -15,7 +15,7 @@
     position: sticky;
     top: 0;
     height: 80px;
-    color: #fafafa;
+    color: var(--font-color);
 }
 
 .link__logo {
@@ -27,7 +27,7 @@
 
 .link__logo__title {
     line-height: 1;
-    color: #fafafa;
+    color: var(--font-color);
     font-size: 1.3rem;
     font-weight: 500;
 }
@@ -47,7 +47,6 @@
 
 .link.active {
     background-color: var(--secondary-color-1-hover);
-    color: #fff;
     pointer-events: none;
 }
 
@@ -55,7 +54,6 @@
 .link__hover {
     display: flex;
     align-items: center;
-    color: #fafafa;
     position: relative;
 }
 
@@ -68,19 +66,19 @@
     transition: height 800ms ease;
 }
 
-.link__display > a {
+.link__display>a {
     font-size: 1rem;
     font-weight: 400;
     background-color: var(--secondary-color-1);
 }
 
-.admin__links > a {
+.admin__links>a {
     display: flex;
     align-items: center;
     transition: color 250ms ease;
 }
 
-.admin__links > .active {
+.admin__links>.active {
     color: var(--secondary-color-1);
 }
 
@@ -123,11 +121,11 @@
     transform: rotate(-40deg);
 }
 
-.checkbox:checked + .wings::before {
+.checkbox:checked+.wings::before {
     transform: rotate(-40deg);
 }
 
-.checkbox:checked + .wings::after {
+.checkbox:checked+.wings::after {
     transform: rotate(40deg);
 }
 
@@ -136,17 +134,17 @@
         transform: scale(1.03);
     }
 
-    .admin__links > a:hover {
+    .admin__links>a:hover {
         color: var(--secondary-color-1);
     }
 
     .link:hover,
-    .link__hover:hover > .link {
+    .link__hover:hover>.link {
         background-color: var(--secondary-color-1-hover);
-        color: #fff;
+        color: var(--font-color);
     }
 
-    .link__hover:hover > .link__display {
+    .link__hover:hover>.link__display {
         height: 9rem;
     }
 }

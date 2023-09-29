@@ -15,8 +15,9 @@
 .modal__container {
     position: relative;
     overflow-y: auto;
-    background-image: url(/background-blob-scatter.svg);
-    background-size: contain;
+    background-image: url(/background-blob-scatter-haikei.svg);
+    background-size: cover;
+    background-position-y: 10%;
     width: 95vw;
     height: 95vh;
     background-color: #fff;

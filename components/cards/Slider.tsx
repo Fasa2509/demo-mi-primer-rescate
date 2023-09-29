@@ -32,7 +32,7 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500, autor
         setElements(Array.from(els));
         els[0] && els[0].classList.add(styles.active);
 
-        if (!autorun) setActive(els.length - 1)
+        if (!autorun) setActive((els.length - 1 >= 0) ? (els.length - 1) : 0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [children])
 
@@ -46,6 +46,7 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500, autor
         , [active]);
 
     const passElement = (pass: 1 | -1) => {
+        clearInterval(intervalRef.current!);
         setButtonsDisabled(true);
         setTimeout(() => setButtonsDisabled(false), 500);
         setActive((prevState) => {
@@ -54,6 +55,11 @@ export const Slider: FC<Props> = ({ children, identifier, duration = 7500, autor
 
             return prevState += pass;
         });
+        // @ts-ignore
+        if (intervalRef.current) intervalRef.current = setInterval(() => setActive((prevState) => (prevState === children.length - 1)
+            ? 0
+            : prevState += 1
+        ), duration);
     }
 
     return (

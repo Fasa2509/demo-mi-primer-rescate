@@ -25,7 +25,7 @@ export const lightTheme = createTheme({
       main: '#B74FD1'
     },
     secondary: {
-      main: '#2AD8A4'
+      main: '#ff4f0d'
     },
     info: {
       main: '#fafafa'
@@ -100,6 +100,6 @@ export const lightTheme = createTheme({
         }
       }
     }
-    
+
   }
 });

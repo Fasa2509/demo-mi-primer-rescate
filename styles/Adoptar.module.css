@@ -7,7 +7,7 @@
     justify-items: center;
 }
 
-.grid__container > * {
+.grid__container>* {
     max-width: 380px;
 }
 
@@ -24,10 +24,10 @@
     transition: background-color 450ms ease, color 450ms ease;
 }
 
-.pet__focused img {
+/* .pet__focused img {
     transform: scale(1);
     filter: brightness(1);
-}
+} */
 
 @media (hover: hover) {
     .load__pets:hover {

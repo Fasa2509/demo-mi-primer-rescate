@@ -62,13 +62,13 @@
 }
 
 .right::after {
-    top: 56%;
+    top: 54%;
     transform: rotate(-40deg);
 }
 
 .left::after {
+    top: 54%;
     left: .7rem;
-    top: 56%;
 }
 
 .left::before {
@@ -105,9 +105,25 @@
 
     .left::after {
         left: .8rem;
+        top: 60%;
+    }
+
+    .right::after {
+        top: 60%;
     }
 
     .left::before {
         left: .8rem;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .left::after {
+        left: .8rem;
+        top: 57%;
+    }
+
+    .right::after {
+        top: 57%;
     }
 }

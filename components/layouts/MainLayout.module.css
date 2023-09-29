@@ -6,6 +6,11 @@
     padding: .5rem 1rem 3rem;
 }
 
+.slider {
+    min-width: 310px;
+    background-color: var(--main-color-hover);
+}
+
 .phrases__container {
     height: 300px;
     padding: 1.5rem;

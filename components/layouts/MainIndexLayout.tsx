@@ -74,8 +74,8 @@ export const MainIndexLayout: FC<Props> = ({ children, title, H1, pageDescriptio
 
       <Loader />
 
-      <section style={{ minWidth: '310px', backgroundColor: 'green' }}>
-        <Slider identifier='hero-slider' duration={12000}>
+      <section className={styles.slider}>
+        <Slider identifier='hero-slider' duration={10000}>
           {
             indexImages.map(({ url, alt, bgcolor, content, _id, link, linkText }, index) =>
               <Box key={_id} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', aspectRatio: '16/9' }}>

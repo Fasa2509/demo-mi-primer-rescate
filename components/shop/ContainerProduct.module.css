@@ -5,7 +5,7 @@
     padding: 1rem 2rem;
     margin-bottom: 2rem;
     border-radius: 1rem;
-    background-image: url(/background-blob-scatter.svg), url(/wave-haikei-1.svg);
+    background-image: url(/blob-scatter-haikei-darker.svg), url(/wave-haikei.svg);
     background-position: bottom;
     background-size: auto, fill;
     background-repeat: repeat, no-repeat;
@@ -43,20 +43,19 @@
     margin: 0;
     font-size: 1.3em;
     font-weight: 500;
-    padding: .4rem 1rem .5rem;
+    padding: .3rem .8rem;
     border-radius: .3rem;
     color: #fbfbfb;
     background-color: var(--secondary-color-2);
     position: relative;
-    box-shadow: -.4rem .4rem .6rem -.5rem #444;
 }
 
 .products__type__title::after {
     content: '';
     display: block;
     background-color: var(--secondary-color-2);
-    width: 1.5rem;
-    height: .8rem;
+    width: 1.2rem;
+    height: .6rem;
     clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
     position: absolute;
     top: 98%;

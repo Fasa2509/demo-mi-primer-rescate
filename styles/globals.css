@@ -1,14 +1,15 @@
 @import 'hamburgers.css';
 
 :root {
-  --main-color: #2ACED8;
-  --main-color-hover: #2FE3EC;
-  --secondary-color-1: #2AD8A4;
-  --secondary-color-1-hover: #27be91;
-  --secondary-color-1-complement: #19a57b;
+  --font-color: #fcfcfc;
+  --main-color: #84efd4;
+  --main-color-hover: #66dabd;
+  --secondary-color-1: #ff4f0d;
+  --secondary-color-1-hover: #e54e18;
+  --secondary-color-1-complement: #fd431e;
   --secondary-color-2: #B74FD1;
   --secondary-color-2-hover: #9e39b8;
-  --success-color: rgb(7, 179, 7);
+  --success-color: #07b307;
   --error-color: #f10606;
 }
 
@@ -24,7 +25,7 @@ body {
 body {
   overflow-x: hidden;
   background-color: #fafafa;
-  background-image: url(/background-blob-scatter.svg);
+  background-image: url(/background-blob-scatter-haikei.svg);
   background-size: 150%;
   background-repeat: repeat;
   min-width: fit-content;
@@ -102,9 +103,9 @@ a {
 .slider__link {
   transform: translateY(-.3rem);
   font-weight: 400;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #fcfcfc;
-  padding: .4rem .9rem;
+  padding: .3rem .8rem;
   border-radius: .2rem;
   background-color: var(--secondary-color-1);
   cursor: pointer;
@@ -175,6 +176,10 @@ a {
 
 .button--purple {
   background-color: var(--secondary-color-2);
+}
+
+.button--blue {
+  background-color: var(--main-color);
 }
 
 .button--error {
@@ -281,6 +286,10 @@ section .is-active {
     background-color: var(--secondary-color-2-hover);
   }
 
+  .button--blue:hover {
+    background-color: var(--main-color-hover);
+  }
+
   .button--error:hover {
     background-color: #ca2a2a;
   }
@@ -342,6 +351,7 @@ section .is-active {
 
   .slider__link {
     transform: none;
+    padding: .4rem .9rem;
     font-size: 1.3rem;
   }
 
