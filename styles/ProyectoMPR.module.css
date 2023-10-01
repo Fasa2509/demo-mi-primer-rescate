@@ -1,3 +1,4 @@
+/* Nosotros Page */
 .content {
     display: flex;
     flex-direction: column;
@@ -20,4 +21,16 @@
 
 .list {
     padding-left: 1rem;
+}
+
+
+/* Apoyo Page */
+.img__container {
+    position: relative;
+    width: clamp(280px, 100%, 800px);
+    aspect-ratio: 16/9;
+    border-radius: .4rem;
+    overflow: hidden;
+    box-shadow: 0 0 .8rem -.3rem #666;
+    margin: 1rem auto 0;
 }

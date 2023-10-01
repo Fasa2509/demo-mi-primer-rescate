@@ -196,10 +196,10 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
 
       const { latitude, longitude, accuracy } = position.coords;
 
-      // if (accuracy > 55) {
-      //   setDirectionError('La precisión fue baja. Por favor inténtalo de nuevo.');
-      //   return;
-      // }
+      if (accuracy > 55) {
+        setDirectionError('La precisión fue baja. Por favor inténtalo de nuevo.');
+        return;
+      }
 
       const distance = haversine(
         { longitude: Number(process.env.NEXT_PUBLIC_MPR_LONGITUDE || 0), latitude: Number(process.env.NEXT_PUBLIC_MPR_LATITUDE || 0) },

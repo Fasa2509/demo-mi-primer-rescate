@@ -10,6 +10,7 @@ import { Slider } from './Slider';
 import { IIndexImage } from '../../interfaces';
 import { ConfirmNotificationButtons, PromiseConfirmHelper, getImageNameFromUrl, getImageKeyFromUrl } from '../../utils';
 import styles from '../ui/Form.module.css';
+import { mprRevalidatePage } from '../../mprApi';
 
 interface Props {
     images: IIndexImage[];
@@ -145,9 +146,12 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
 
         setIsLoading(true);
         const res = await dbImages.saveIndexSections(images);
+        enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
+        if (!res.error) {
+            const rev = await mprRevalidatePage('/');
+            enqueueSnackbar(rev.message, { variant: !rev.error ? 'success' : 'error' });
+        }
         setIsLoading(false);
-
-        return enqueueSnackbar(res.message, { variant: !res.error ? 'success' : 'error' });
     }
 
     return (

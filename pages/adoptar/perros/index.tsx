@@ -1,8 +1,9 @@
-import { useContext, useEffect, useRef, useState, lazy, Suspense } from 'react';
+import { useContext, useState, lazy, Suspense } from 'react';
 import { NextPage, GetStaticProps } from 'next';
-import VolunteerActivism from '@mui/icons-material/VolunteerActivism';
-import { Box, Button } from '@mui/material';
+import NextLink from 'next/link';
 import { useSnackbar } from 'notistack';
+import { Box, Button, Link } from '@mui/material';
+import VolunteerActivism from '@mui/icons-material/VolunteerActivism';
 
 import { dbPets } from '../../../database';
 import { AuthContext, ScrollContext } from '../../../context';
@@ -67,7 +68,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
     <MainLayout title={'Adopta un perrito'} H1={'Adopta un perrito'} pageDescription={'¿Buscas adoptar un perrito? Ve los perritos que tenemos en nuestra fundación y adopta uno para llenarlo de amor. Encuentra el ideal para ti aquí entre una amplia selección de animales rescatados.'} titleIcon={<VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} />} nextPage='/adoptar/gatos' url='/adoptar/perros'>
 
       <section className='content-island'>
-        <p>¡Los perritos de <b>Mi Primer Rescate</b> son especiales! Vienen llenos de mucho amor, con dósis extra de cariño y una gran ración de dulzura, ¡busca el tuyo aquí!.</p>
+        <p>En este apartado puedes conocer la historia de cada peludo en adopción, si estás interesado en alguno, llena el apartado de <NextLink href='/adoptar/formulario' passHref><Link sx={{ textDecoration: 'underline', color: 'var(--secondary-color-2)' }}>formulario</Link></NextLink>.</p>
       </section>
 
       <div className={styles.grid__container}>

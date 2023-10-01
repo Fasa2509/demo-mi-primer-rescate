@@ -86,6 +86,12 @@ a {
   text-decoration: none;
 }
 
+.url {
+  color: var(--secondary-color-2);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .slider__content {
   transform: translateY(-.3rem);
   margin: 0 0 .8rem;

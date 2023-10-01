@@ -77,7 +77,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
 
       <article className='content-island'>
         <Box sx={{ my: 1.5 }}>
-          <p className={styles.p}>¡Apóyanos en <Link href='https://www.patreon.com/' underline='always' target='_blank' rel='noreferrer'>Patreon</Link> o comparte nuestras redes para llegar a más personas! Aún queda mucho por hacer.</p>
+          <p className={styles.p}>¡Apóyanos en <Link href='https://www.patreon.com/miprimerrescate' underline='always' target='_blank' rel='noreferrer'>Patreon</Link> o comparte nuestras redes para llegar a más personas! Aún queda mucho por hacer.</p>
           <div className={styles.share__container}>
             <Link href={`https://www.facebook.com/sharer.php?u=${process.env.NEXT_PUBLIC_DOMAIN_NAME}&t=¡Visita la página de Mi Primer Rescate!`} target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.facebook}`}><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
             <button className={`${styles.share__button} ${styles.instagram}`} onClick={share}><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
@@ -89,21 +89,21 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
 
       <Box display='flex' flexWrap='wrap' gap='1.5rem' flexDirection='column' sx={{ my: 6 }}>
         <Box sx={{ display: 'flex', gap: '1rem', flexDirection: { xs: 'column', sm: 'row' } }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '8rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-2.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Ayudanos.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
             <p className={styles.cards__title}>Ayúdanos</p>
             <p className={styles.cards__content}>Los animales nos necesitan</p>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '8rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image.webp)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Participa.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
             <p className={styles.cards__title}>Participa en la fundación</p>
             <p className={styles.cards__content}>Asiste a nuestros eventos</p>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', gap: '1rem', flexDirection: { xs: 'column', sm: 'row' } }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '8rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(cat-hero-image.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 70%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Dona.jpg)', backgroundSize: 'cover', backgroundPosition: '0%' }}>
             <p className={styles.cards__title}>Dona</p>
             <p className={styles.cards__content}>Tu aporte nos ayuda a seguir</p>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '8rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(dog-hero-image-3.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 10%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Cuida.jpg)', backgroundSize: 'cover', backgroundPosition: '0%' }}>
             <p className={styles.cards__title}>Cuida a tus mascotas</p>
             <p className={styles.cards__content}>Trátalas con el amor que ellas te dan</p>
           </Box>
