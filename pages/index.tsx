@@ -79,34 +79,6 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
         </Box>
       </article>
 
-      <Button className="button" onClick={async () => {
-        setIsLoading(true);
-        const res = await fetch('http://localhost:3000/api/test', { method: 'POST' });
-        const data = await res.json()
-        setIsLoading(false);
-
-        console.log(data)
-      }}>Autenticación API Mercantil</Button>
-
-      <Button className="button" onClick={async () => {
-        setIsLoading(true);
-        const res = await fetch('http://localhost:3000/api/test');
-        const data = await res.json()
-        setIsLoading(false);
-
-        console.log(data)
-      }}>Pago API Mercantil</Button>
-
-      <div>
-        <Button className="button" onClick={async () => {
-          setIsLoading(true);
-          const res = await fetch('http://localhost:3000/api/test', { method: 'PUT' });
-          const data = await res.json()
-          setIsLoading(false);
-
-          console.log(data)
-        }}>C2P API Mercantil</Button>
-      </div>
 
       <Box display='flex' flexWrap='wrap' gap='.8rem' flexDirection='column' sx={{ my: 6 }}>
         <Box sx={{ display: 'flex', gap: '.8rem', flexDirection: { xs: 'column', md: 'row' } }}>
