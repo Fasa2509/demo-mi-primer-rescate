@@ -81,9 +81,6 @@ export const Header: FC<Props> = ({ shop = false }) => {
               <NextLink href='/adoptar/gatos' passHref>
                 <Link color='info' className={styles.link}>Gatos</Link>
               </NextLink>
-              <NextLink href='/adoptar/otros' passHref>
-                <Link color='info' className={styles.link}>Otros</Link>
-              </NextLink>
               <NextLink href='/adoptar/formulario' passHref>
                 <Link color='info' className={styles.link}>Formulario</Link>
               </NextLink>

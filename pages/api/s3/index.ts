@@ -64,7 +64,6 @@ const generateUploadURL = async (req: NextApiRequest, res: NextApiResponse) => {
             Bucket,
         });
 
-        // TODO: CUIDADO AQUI MI PANAAAAAA
         // @ts-ignore
         const url = await getSignedUrl(client, command, { expiresIn: 60 });
 

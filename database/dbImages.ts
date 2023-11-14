@@ -70,8 +70,7 @@ export const uploadImageToS3 = async (file: File | Blob): Promise<{ error: boole
 
         if (!((res.status >= 200 || res.status < 300))) throw {};
 
-        // TODO: ARREGLAR ESTOOOOOOO
-        return { error: false, message: 'La imagen fue subida', imgUrl: `https://fasa-bucket.s3.sa-east-1.amazonaws.com/${data.Key}` }
+        return { error: false, message: 'La imagen fue subida', imgUrl: `https://mpr-images.s3.sa-east-1.amazonaws.com/${data.Key}` }
     } catch (error) {
         return { error: true, message: 'Ocurrió un error subiendo la imagen' }
     }

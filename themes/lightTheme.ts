@@ -22,13 +22,13 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#B74FD1'
+      main: '#B74FD1',
     },
     secondary: {
-      main: '#ff4f0d'
+      main: '#ff4f0d',
     },
     info: {
-      main: '#fafafa'
+      main: '#fafafa',
     },
   },
   components: {

@@ -5,7 +5,7 @@ import { Box, Button, Link } from '@mui/material';
 import Home from '@mui/icons-material/Home';
 import Facebook from '@mui/icons-material/Facebook';
 import Instagram from '@mui/icons-material/Instagram';
-import Twitter from '@mui/icons-material/Twitter';
+import YouTube from '@mui/icons-material/YouTube';
 import WhatsApp from '@mui/icons-material/WhatsApp';
 
 import { mprRevalidatePage } from '../mprApi';
@@ -46,18 +46,6 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
     setIsLoading(false);
   }
 
-  const share = async () => {
-    try {
-      await navigator.share({
-        title: '¡Visita la página de Mi Primer Rescate!',
-        text: 'Mira su trabajo y participa en sus eventos',
-        url: `${process.env.NEXT_PUBLIC_DOMAIN_NAME}`,
-      });
-    } catch (error) {
-      enqueueSnackbar('No se pudo compartir', { variant: 'warning' });
-    }
-  }
-
   const revalidate = async () => {
     if (process.env.NODE_ENV !== 'production') return;
 
@@ -79,31 +67,64 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
         <Box sx={{ my: 1.5 }}>
           <p className={styles.p}>¡Apóyanos en <Link href='https://www.patreon.com/miprimerrescate' underline='always' target='_blank' rel='noreferrer'>Patreon</Link> o comparte nuestras redes para llegar a más personas! Aún queda mucho por hacer.</p>
           <div className={styles.share__container}>
-            <Link href={`https://www.facebook.com/sharer.php?u=${process.env.NEXT_PUBLIC_DOMAIN_NAME}&t=¡Visita la página de Mi Primer Rescate!`} target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.facebook}`}><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+            {/* <Link href={`https://www.facebook.com/sharer.php?u=${process.env.NEXT_PUBLIC_DOMAIN_NAME}&t=¡Visita la página de Mi Primer Rescate!`} target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.facebook}`}><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
             <button className={`${styles.share__button} ${styles.instagram}`} onClick={share}><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></button>
             <Link href={`https://twitter.com/intent/tweet?text=¡Visita la página de Mi Primer Rescate!&url=${process.env.NEXT_PUBLIC_DOMAIN_NAME}`} target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.twitter}`}><Twitter color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+            <Link href={`https://api.whatsapp.com/send?text=¡Visita la página de Mi Primer Rescate! ${process.env.NEXT_PUBLIC_DOMAIN_NAME}`} target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.whatsapp}`}><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link> */}
+            <Link href='https://facebook.com/people/Fundaci%C3%B3n-Mi-Primer-Rescate/100079585354684/' target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.facebook}`}><Facebook color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+            <Link href='https://instagram.com/miprimerrescate?igshid=MzMyNGUyNmU2YQ==' target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.instagram}`}><Instagram color='info' sx={{ fontSize: '1.5rem' }} /></Link>
+            <Link href='https://www.youtube.com/@MiPrimerRescate' target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.youtube}`}><YouTube color='info' sx={{ fontSize: '1.5rem' }} /></Link>
             <Link href={`https://api.whatsapp.com/send?text=¡Visita la página de Mi Primer Rescate! ${process.env.NEXT_PUBLIC_DOMAIN_NAME}`} target='_blank' rel='noreferrer' className={`${styles.share__button} ${styles.whatsapp}`}><WhatsApp color='info' sx={{ fontSize: '1.5rem' }} /></Link>
           </div>
         </Box>
       </article>
 
-      <Box display='flex' flexWrap='wrap' gap='1.5rem' flexDirection='column' sx={{ my: 6 }}>
-        <Box sx={{ display: 'flex', gap: '1rem', flexDirection: { xs: 'column', sm: 'row' } }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Ayudanos.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
+      <Button className="button" onClick={async () => {
+        setIsLoading(true);
+        const res = await fetch('http://localhost:3000/api/test', { method: 'POST' });
+        const data = await res.json()
+        setIsLoading(false);
+
+        console.log(data)
+      }}>Autenticación API Mercantil</Button>
+
+      <Button className="button" onClick={async () => {
+        setIsLoading(true);
+        const res = await fetch('http://localhost:3000/api/test');
+        const data = await res.json()
+        setIsLoading(false);
+
+        console.log(data)
+      }}>Pago API Mercantil</Button>
+
+      <div>
+        <Button className="button" onClick={async () => {
+          setIsLoading(true);
+          const res = await fetch('http://localhost:3000/api/test', { method: 'PUT' });
+          const data = await res.json()
+          setIsLoading(false);
+
+          console.log(data)
+        }}>C2P API Mercantil</Button>
+      </div>
+
+      <Box display='flex' flexWrap='wrap' gap='.8rem' flexDirection='column' sx={{ my: 6 }}>
+        <Box sx={{ display: 'flex', gap: '.8rem', flexDirection: { xs: 'column', md: 'row' } }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '10rem', boxShadow: '0 0 1rem -.5rem #666', transition: 'box-shadow 300ms ease', ':hover': { boxShadow: '0 0 1.1rem -.3rem #444' }, borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexWrap: 'wrap', flexBasis: '320px', backgroundImage: 'url(Ayudanos.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 50%' }}>
             <p className={styles.cards__title}>Ayúdanos</p>
             <p className={styles.cards__content}>Los animales nos necesitan</p>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Participa.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '10rem', boxShadow: '0 0 1rem -.5rem #666', transition: 'box-shadow 300ms ease', ':hover': { boxShadow: '0 0 1.1rem -.3rem #444' }, borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexWrap: 'wrap', flexBasis: '320px', backgroundImage: 'url(Participa.jpg)', backgroundSize: 'cover', backgroundPosition: '0% 35%' }}>
             <p className={styles.cards__title}>Participa en la fundación</p>
             <p className={styles.cards__content}>Asiste a nuestros eventos</p>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', gap: '1rem', flexDirection: { xs: 'column', sm: 'row' } }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Dona.jpg)', backgroundSize: 'cover', backgroundPosition: '0%' }}>
+        <Box sx={{ display: 'flex', gap: '.8rem', flexDirection: { xs: 'column', md: 'row' } }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '10rem', boxShadow: '0 0 1rem -.5rem #666', transition: 'box-shadow 300ms ease', ':hover': { boxShadow: '0 0 1.1rem -.3rem #444' }, borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexWrap: 'wrap', flexBasis: '320px', backgroundImage: 'url(Dona.jpg)', backgroundSize: 'cover', backgroundPosition: '0%' }}>
             <p className={styles.cards__title}>Dona</p>
             <p className={styles.cards__content}>Tu aporte nos ayuda a seguir</p>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '9rem', borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexBasis: '320px', backgroundImage: 'url(Cuida.jpg)', backgroundSize: 'cover', backgroundPosition: '0%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', maxHeight: '10rem', boxShadow: '0 0 1rem -.5rem #666', transition: 'box-shadow 300ms ease', ':hover': { boxShadow: '0 0 1.1rem -.3rem #444' }, borderRadius: '.3rem', padding: '1.8rem 1.5rem', color: '#fff', flexGrow: 1, flexWrap: 'wrap', flexBasis: '320px', backgroundImage: 'url(Cuida.jpg)', backgroundSize: 'cover', backgroundPosition: '0%' }}>
             <p className={styles.cards__title}>Cuida a tus mascotas</p>
             <p className={styles.cards__content}>Trátalas con el amor que ellas te dan</p>
           </Box>
@@ -128,7 +149,7 @@ const HomePage: NextPage<Props> = ({ articles: myArticles, indexImages }) => {
         }
       </>
 
-    </MainIndexLayout>
+    </MainIndexLayout >
   )
 }
 

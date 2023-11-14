@@ -15,6 +15,7 @@ import { AuthContext, CartContext, ScrollContext } from '../../context';
 import { CartProductInfo, ShopLayout } from '../../components';
 import { ConfirmNotificationButtons, format, PromiseConfirmHelper } from '../../utils';
 import haversine from 'haversine-distance';
+import { TMethod, validMethods, validNumberPhones } from '../../interfaces';
 
 interface Props {
   dolarPrice: number;
@@ -41,7 +42,7 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
 
   const [directionError, setDirectionError] = useState('');
   const [existencyChecked, setExistencyChecked] = useState(false);
-  const [method, setMethod] = useState<'Pago móvil' | 'Paypal' | ''>('');
+  const [method, setMethod] = useState<TMethod | ''>('');
 
 
   useEffect(() => {
@@ -81,25 +82,23 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
       return;
     }
 
-    const validMethod = ['Pago móvil', 'Paypal'];
-
-    if (!validMethod.includes(transactionInfo.method))
-      return enqueueSnackbar('La información del pago es incorrecta', { variant: 'warning' });
+    if (!validMethods.includes(transactionInfo.method as TMethod))
+      return enqueueSnackbar('La información del pago es incorrecta', { variant: 'error' });
 
     if (name.current!.value.trim().length < 2)
-      return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
+      return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'error' });
 
     if (facebook.current!.value.trim().length < 2 && instagram.current!.value.trim().length < 2 && whatsapp.current!.value.trim().length < 2)
-      return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
+      return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'error' });
 
-    if (transactionInfo.method === 'Pago móvil' && (transactionInfo.transactionId.trim().length < 4 || transactionInfo.phone.trim().length < 9))
-      return enqueueSnackbar('La información del pago está incompleta', { variant: 'warning' });
+    if (transactionInfo.method === 'Pago móvil' && (transactionInfo.transactionId.trim().length < 4 || !transactionInfo.phone.trim() || String(Number(transactionInfo.phone.trim())).length < 10) || !validNumberPhones.includes(String(Number(transactionInfo.phone.trim())).substring(0, 3)))
+      return enqueueSnackbar('El número de teléfono no parece ser válido', { variant: 'error' });
 
     if (address.current!.value.trim().length < 5)
-      return enqueueSnackbar('Necesitamos una dirección de entrega completa', { variant: 'warning' });
+      return enqueueSnackbar('Necesitamos una dirección de entrega completa', { variant: 'error' });
 
     if (Object.values(maps).filter(m => m).length !== 2)
-      return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'warning' });
+      return enqueueSnackbar('Necesitamos la ubicación por Maps', { variant: 'error' });
 
     setIsLoading(true);
 
@@ -168,8 +167,11 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
     if (name.current!.value.trim().length < 2)
       return enqueueSnackbar('Necesitamos el nombre del comprador', { variant: 'warning' });
 
-    if (facebook.current!.value.trim().length < 2 && instagram.current!.value.trim().length < 2 && whatsapp.current!.value.trim().length < 2)
+    if (facebook.current!.value.trim().length < 2 && instagram.current!.value.trim().length < 2 && whatsapp.current!.value.trim().length < 10)
       return enqueueSnackbar('Necesitamos al menos un método de contacto', { variant: 'warning' });
+
+    if (whatsapp.current!.value.trim() && (String(Number(whatsapp.current!.value.trim())).length < 10) || !validNumberPhones.includes(String(Number(whatsapp.current!.value.trim())).substring(0, 3)))
+      return enqueueSnackbar('El número de teléfono no parece ser válido', { variant: 'warning' });
 
     setIsLoading(true);
 
@@ -495,10 +497,6 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
                 <Box className='fadeIn' sx={{ mt: 1 }}>
                   <Typography sx={{ fontSize: '1.2rem', fontWeight: '600' }}>PayPal</Typography>
 
-                  <Typography sx={{ fontSize: '1.1rem' }}>Cuenta de prueba</Typography>
-                  <Typography>Correo: mpr_buyer@gmail.com</Typography>
-                  <Typography>Clave: 123456789</Typography>
-
                   <PayPalButtons
                     createOrder={(data, actions) => {
                       return actions.order.create({
@@ -537,14 +535,14 @@ const CarritoPage: NextPage<Props> = ({ dolarPrice }) => {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
 
-  const dolar = await dbProducts.backGetDolarPrice();
+  const dolarPrice = await dbProducts.backGetDolarPrice();
 
-  if (!dolar)
+  if (!dolarPrice)
     throw new Error('Ocurrió un error obteniendo el valor del dólar de la DB');
 
   return {
     props: {
-      dolarPrice: dolar
+      dolarPrice,
     },
   }
 }

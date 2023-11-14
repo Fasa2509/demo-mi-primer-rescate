@@ -169,7 +169,8 @@ export const HeroForm: FC<Props> = ({ images: allImages }) => {
                 <p>Usa *_ <span className='slider__emphasis'>texto</span> _* para dar énfasis al texto.</p>
                 <TextField inputRef={textRef} name='texto' label='Texto (no obligatorio)' type='text' color='secondary' variant='filled' multiline />
 
-                <Box display='flex' columnGap={1}>
+                <Box display='flex' rowGap={1.5} flexDirection='column'>
+                    <p>Si el link dirige a una pestaña interna de esta página, debe iniciar con {'"'}/{'"'} seguido de la dirección. Ejemplo: {'"'}/adoptar/perros{'"'}. Si el link dirige a una página externa que no sea esta, debe ser la dirección completa.</p>
                     <TextField sx={{ flexGrow: 1 }} inputRef={linkRef} name='texto' label='Url (no obligatorio)' type='url' color='secondary' variant='filled' multiline />
                     <TextField sx={{ flexGrow: 1 }} inputRef={linkTextRef} name='link-texto' label='Texto de Url (no obligatorio)' type='text' color='secondary' variant='filled' multiline />
                 </Box>

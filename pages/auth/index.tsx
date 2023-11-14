@@ -125,12 +125,10 @@ const AuthPage: NextPage = () => {
 
                   {
                     [{ id: 'facebook', name: 'Facebook' }, { id: 'google', name: 'Google' }, { id: 'instagram', name: 'Instagram' }].map((provider: any) => {
-                      if (provider.name === 'GitHub') return
-                      <div style={{ display: 'none' }}></div>
                       return <Button
                         key={provider.id}
                         className={`${styles.share__button} ${provider.name === 'Facebook' ? styles.facebook : provider.name === 'Instagram' ? styles.instagram : styles.google}`}
-                        onClick={() => false && signIn(provider.id)}
+                        onClick={() => provider.name === 'Google' && signIn(provider.id)}
                       >
                         {providerIcons[provider.name as keyof ProviderIcons]}{provider.name}
                       </Button>

@@ -10,6 +10,7 @@
   --secondary-color-2: #B74FD1;
   --secondary-color-2-hover: #9e39b8;
   --success-color: #07b307;
+  --warning-color: #f37006;
   --error-color: #f10606;
 }
 
@@ -283,6 +284,11 @@ section .is-active {
   animation-name: fadeIn;
 }
 
+.change__card__button {
+  background-color: var(--main-color);
+  align-self: flex-end;
+}
+
 @media (hover: hover) {
   .button:hover {
     background-color: var(--secondary-color-1-hover);
@@ -323,6 +329,10 @@ section .is-active {
   .buttonOutlined:hover {
     background-color: transparent;
     color: var(--secondary-color-1);
+  }
+
+  .change__card__button:hover {
+    background-color: var(--main-color-hover);
   }
 }
 

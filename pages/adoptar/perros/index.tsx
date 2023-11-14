@@ -12,13 +12,6 @@ import { MainLayout, PetCard } from '../../../components';
 import { IPet } from '../../../interfaces';
 import styles from '../../../styles/Adoptar.module.css';
 
-const callback: IntersectionObserverCallback = (entries) =>
-  entries.forEach((entry) =>
-    (entry.isIntersecting)
-      ? entry.target.classList.add(styles.pet__focused)
-      : entry.target.classList.remove(styles.pet__focused)
-  );
-
 const PetForm = lazy(() =>
   import('../../../components/ui/PetForm')
     .then(({ PetForm }) => ({ default: PetForm }))

@@ -92,30 +92,20 @@ export const Footer: FC = () => {
 
         <div className={cardStyles.card}>
           <Typography sx={{ fontSize: '1.15rem', fontWeight: '600' }}>¡Encuéntranos aquí!</Typography>
-          <p>Mantente al tanto de nuestro proyecto, síguenos por aquí</p>
+          <p>Mantente al tanto de nuestro proyecto, síguenos también por aquí</p>
 
           <div className={cardStyles.social__container}>
-            <a href="https://twitter.com/" target="_blank" rel="noreferrer">
-              <IconButton>
-                <Twitter />
-              </IconButton>
-            </a>
-            <a href="https://facebook.com/" target="_blank" rel="noreferrer">
+            <a href="https://facebook.com/people/Fundaci%C3%B3n-Mi-Primer-Rescate/100079585354684/" target="_blank" rel="noreferrer">
               <IconButton>
                 <Facebook />
               </IconButton>
             </a>
-            <a href="https://instagram.com/" target="_blank" rel="noreferrer">
+            <a href="https://instagram.com/miprimerrescate?igshid=MzMyNGUyNmU2YQ==" target="_blank" rel="noreferrer">
               <IconButton>
                 <Instagram />
               </IconButton>
             </a>
-            <a href="https://web.telegram.org/" target="_blank" rel="noreferrer">
-              <IconButton>
-                <Telegram />
-              </IconButton>
-            </a>
-            <a href="https://youtube.com/" target="_blank" rel="noreferrer">
+            <a href="https://www.youtube.com/@MiPrimerRescate" target="_blank" rel="noreferrer">
               <IconButton>
                 <YouTube />
               </IconButton>

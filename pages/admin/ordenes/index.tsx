@@ -56,7 +56,7 @@ const columns: GridColDef[] = [
     headerName: 'Info Órden',
     renderCell: ({ row }: GridRenderCellParams) => {
       return (
-        <Button className='button button--round low--padding low--font--size' onClick={() => row.setOrder(row.order)}>Ver órden</Button>
+        <Button className='button button--purple button--round low--padding low--font--size' onClick={() => row.setOrder(row.order)}>Ver órden</Button>
       )
     },
     sortable: false,
@@ -71,10 +71,9 @@ const columns: GridColDef[] = [
         <Box>
           <Chip
             // @ts-ignore
-            color={StatusColors[row.transaction.status]}
-            // @ts-ignore
             label={SpanishOrderStatus[row.transaction.status]}
-            sx={{ fontWeight: 500, color: '#fff' }}
+            // @ts-ignore
+            sx={{ fontWeight: 500, color: '#fff', backgroundColor: StatusColors[row.transaction.status] }}
             variant='filled'
           />
         </Box>
@@ -172,7 +171,7 @@ const OrdenesPage: NextPage<Props> = ({ orders }) => {
       <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '1rem', alignItems: { xs: 'center', sm: 'stretch' }, flexDirection: { xs: 'column', sm: 'row', mt: 1.5 } }}>
         <Box sx={{ display: 'flex', gap: '.5rem', minWidth: '220px', borderRadius: '1rem', backgroundColor: '#fff', boxShadow: '0 5px .5rem -.3rem #666', padding: '.8rem' }}>
           <Box display='flex' alignItems='center'>
-            <LocalShippingIcon sx={{ fontSize: '2.6rem', color: 'var(--secondary-color-1)' }} />
+            <LocalShippingIcon sx={{ fontSize: '2.6rem', color: 'var(--main-color)' }} />
           </Box>
           <Box>
             <Typography sx={{ fontSize: '2rem', lineHeight: 1.2 }}>{thisOrders.reduce((prev, { transaction }) => prev += transaction.status === 'send' ? 1 : 0, 0)} <span style={{ fontSize: '1.5rem' }}>órdenes</span></Typography>

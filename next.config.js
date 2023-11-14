@@ -9,7 +9,8 @@ const nextConfig = {
   // },
   images: {
     domains: [
-      "fasa-bucket.s3.sa-east-1.amazonaws.com"
+      "fasa-bucket.s3.sa-east-1.amazonaws.com",
+      "mpr-images.s3.sa-east-1.amazonaws.com",
     ]
   },
   // experimental: {

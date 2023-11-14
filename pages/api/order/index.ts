@@ -9,7 +9,7 @@ import { format as formatDate } from 'date-fns';
 
 import { db } from '../../../database';
 import { Dolar, Order, Product, User } from '../../../models';
-import { IOrder, IOrderProduct, IPaypal, adminRoles } from '../../../interfaces';
+import { IOrder, IOrderProduct, IPaypal, adminRoles, validMethods } from '../../../interfaces';
 import { format } from '../../../utils';
 import { ApiResponse, ApiResponsePayload } from '../../../mprApi';
 
@@ -104,8 +104,6 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!contact.name || Object.values(contact).filter(c => typeof c === 'string' && c.length > 0).length < 2)
         return res.status(400).json({ error: true, message: 'La información de la órden es incorrecta' });
 
-    const validMethods = ['Pago móvil', 'Paypal'];
-
     if (!(transaction instanceof Object) || !validMethods.includes(transaction.method) || !transaction.transactionId)
         return res.status(400).json({ error: true, message: 'La información de la órden no es correcta' });
 
@@ -134,10 +132,10 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             });
 
             if (data.status !== 'COMPLETED')
-                return res.status(400).json({ error: true, message: 'La órden no fue pagada' });
+                return res.status(400).json({ error: true, message: 'La órden no fue completada' });
 
             value = data.purchase_units[0].amount.value;
-        }
+        };
 
         await db.connect();
 
@@ -146,7 +144,7 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!userBuyer) {
             await db.disconnect();
             return res.status(400).json({ error: true, message: 'La información del usuario no es correcta' });
-        }
+        };
 
         const orderItemsId = Array.from(new Set(orderItems.map((order: IOrder) => order._id)));
 
@@ -155,7 +153,7 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         if (!products || products.length < 1) {
             await db.disconnect();
             return res.status(400).json({ error: true, message: 'No se encontraron productos' });
-        }
+        };
 
         for (let p of orderItems) {
             const productInDb = products.find((item) => item._id.toString() === p._id);
@@ -163,7 +161,7 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             if (!productInDb) {
                 await db.disconnect();
                 return res.status(400).json({ error: true, message: 'No se encontró uno de los productos' });
-            }
+            };
 
             // @ts-ignore
             const isLowerQuantity = productInDb.inStock[p.size] < p.quantity;
@@ -176,7 +174,7 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
         let total = 0;
 
-        products.forEach(async (p) => {
+        await Promise.allSettled(products.map((p) => {
             const productsInOrder: IOrderProduct[] = orderItems.filter((item: IOrderProduct) => item._id === p._id.toString());
 
             if (productsInOrder.length === 0) return;
@@ -188,9 +186,8 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
                 total += orderProduct.quantity * p.price * (1 - p.discount);
             });
 
-            await p.save();
-            return;
-        });
+            return p.save();
+        }));
 
         let dolarPrice = await Dolar.findOne({ price: { $gt: 0 } });
 
@@ -214,10 +211,13 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             },
         });
 
-        await newOrder.save();
 
         userBuyer.orders = [newOrder._id, ...userBuyer.orders];
-        await userBuyer.save();
+
+        await Promise.allSettled([
+            newOrder.save(),
+            userBuyer.save(),
+        ]);
 
         await db.disconnect();
 
@@ -234,39 +234,216 @@ const saveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         });
 
-        if (process.env.NODE_ENV !== 'development') {
+        if (process.env.NODE_ENV !== 'production') {
             let info = await transporter.sendMail({
-                from: '"Mi Primer Rescate 👻" <miprimerrescate@gmail.com>', // sender address
+                from: '"Mi Primer Rescate" <miprimerrescate@gmail.com>', // sender address
                 to: userBuyer.email, // list of receivers
-                subject: "MPR - Nueva Órden ✔", // Subject line
+                subject: "MPR - Nueva Órden", // Subject line
                 html: `
-            <h1>Mi Primer Rescate</h1>
-            <p>¡Gracias por comprar en nuestra tienda virtual! 🐱🐶🛍️</p>
-            <p>Cada compra contribuye a que podamos seguir realizando nuestra labor.</p>
-            <p>Aquí un resumen de tu compra.</p>
-            <br />
-            <h2>ID de la Órden</h2>
-            <p>${newOrder._id.toString()}</p>
-            <br />
-            <h2>Info de la Compra</h2>
-            <p>${newOrder.transaction.method}: ${newOrder.transaction.transactionId}${(newOrder.transaction.method === 'Pago móvil' && newOrder.transaction.phone) ? `, ${newOrder.transaction.phone}` : ''}</p>
-            <br />
-            <h2>Productos</h2>
-            ${newOrder.orderItems.map((item) => `<p>${item.name}${item.size !== 'unique' ? ` (${item.size})` : ''}, ${item.quantity} unidad${item.quantity > 1 ? 'es' : ''} x ${format(item.price * (1 - item.discount))} = ${format(item.quantity * item.price * (1 - item.discount))}</p>`).join('')}
-            <br />
-            <h2>Total</h2>
-            <p>${format(newOrder.transaction.totalUSD)} = Bs. ${newOrder.transaction.totalBs.toFixed(2)}</p>
-            <br />
-            <h2>Órden creada el</h2>
-            <p>${formatDate(newOrder.createdAt, 'dd/MM/yyyy hh:mm:ssaa').toLowerCase()}</p>
-            <br />
-            <h2>Sitio de entrega</h2>
-            <p>${newOrder.shippingAddress.address}</p>
-            <br />
-            <p>Haz click en el siguiente enlace para ver la información de la órden en tu perfil.</p>
-            <br />
-            <a href='${process.env.NEXT_PUBLIC_DOMAIN_NAME}/personal' target='_blank' rel='noreferrer'>Ver perfil</a>
-            `, // html body
+                <head>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            font-size: 16px;
+        }
+
+        .container {
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .h1,
+        .h2 {
+            color: white;
+            margin: 0;
+            font-size: 2em;
+            padding-left: 32px;
+        }
+
+        .h2 {
+            font-size: 1.3em;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #ff4f0d;
+            background-image: linear-gradient(90deg, #ff4f0d 0%, #84efd4 100%);
+            margin: 0;
+            padding: 12px 0;
+            text-align: left;
+        }
+
+        .sub-container {
+            margin: 1em auto;
+            width: 75%;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 480px) {
+            .sub-container {
+                width: 90%;
+            }
+        }
+
+        .sub-container>* {
+            margin: 20px auto;
+        }
+
+        .img-container {
+            width: clamp(110px, 100%, 250px);
+            text-align: center;
+        }
+
+        .img {
+            width: 50%;
+        }
+
+        .h3 {
+            color: #9e39b8;
+            font-size: 1.6em;
+            margin: 10px 0 0 0;
+        }
+
+        .p {
+            text-align: justify;
+            margin: 26px auto;
+            color: #222;
+        }
+
+        .h4,
+        .h5 {
+            margin: 0;
+            width: 100%;
+            text-align: left;
+            font-size: 22px;
+            color: #9e39b8
+        }
+
+        .h5 {
+            font-size: 19px;
+            color: #66dabd;
+            margin-bottom: .5em;
+        }
+
+        .info-container {
+            border-radius: 1em;
+            box-shadow: 0 0 1em -.8em #666666;
+            padding: 1.5em;
+        }
+
+        .info-container>.divider {
+            margin-bottom: 1.1em;
+        }
+
+        .info-container p {
+            margin: 0;
+        }
+
+        .ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .li {
+            font-size: 16px;
+            text-align: left;
+            margin: 12px 0;
+            color: #222;
+        }
+
+        #button {
+            background-color: #ff4f0d;
+            color: white;
+            border-radius: 100px;
+            font-size: 19px;
+            padding: 4px 14px;
+            border: none;
+            text-decoration: none;
+            transition: background-color 400ms ease;
+        }
+
+        #button:hover {
+            background-color: #e54e18;
+        }
+
+        #button:visited,
+        #button:link {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="container">
+        <header class="header">
+            <h1 class="h1">Mi Primer Rescate</h1>
+            <h2 class="h2">Compra Realizada</h2>
+        </header>
+
+        <div class="sub-container">
+            <div class="img-container">
+                <img class="img" src="${process.env.NEXT_PUBLIC_DOMAIN_NAME}/Logo-MPR.png" alt="Logo MPR">
+
+                <h3 class="h3">¡Hola ${userBuyer.name.split(' ')[0]}!</h3>
+            </div>
+
+            <p class="p">¡Gracias por comprar en nuestra tienda virtual! 🐱🐶🛍️</p>
+
+            <p class="p">Cada compra contribuye a que podamos seguir realizando nuestra labor.
+            </p>
+
+            <h4 class="h4">Aquí un resumen de tu compra.
+            </h4>
+
+            <section class="info-container">
+                <div class="divider">
+                    <h5 class="h5">ID de la Órden</h5>
+                    <p class="p">${newOrder._id.toString()}</p>
+                </div>
+
+                <div class="divider">
+                    <h5 class="h5">Productos</h5>
+                    <ul class="ul">
+                        ${newOrder.orderItems.map((item) => `<li class="li">${item.name}${item.size !== 'unique' ? `
+                            (${item.size})` : ''}, ${item.quantity} unidad${item.quantity > 1 ? 'es' : ''} x
+                            ${format(item.price * (1 - item.discount))} = ${format(item.quantity * item.price * (1 -
+                    item.discount))}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="divider">
+                    <h5 class="h5">Total</h5>
+                    <p class="p">${format(newOrder.transaction.totalUSD)} = Bs.
+                        ${newOrder.transaction.totalBs.toFixed(2)}
+                    </p>
+                </div>
+
+                <div class="divider">
+                    <h5 class="h5">Órden creada el</h5>
+                    <p class="p">${formatDate(newOrder.createdAt, 'dd/MM/yyyy hh:mm:ssaa').toLowerCase()}</p>
+                </div>
+
+                <div class="divider">
+                    <h5 class="h5">Sitio de entrega</h5>
+                    <p class="p">${newOrder.shippingAddress.address}</p>
+                </div>
+
+            </section>
+
+            <p class="p">Haz click en el siguiente enlace para ver la información de la órden en tu perfil.</p>
+
+            <div>
+                <a id="button" href='${process.env.NEXT_PUBLIC_DOMAIN_NAME}/personal' target='_blank'
+                    rel='noreferrer'>Ver
+                    perfil</a>
+            </div>
+
+        </div>
+    </section>
+</body>
+                `, // html body
             });
         }
 

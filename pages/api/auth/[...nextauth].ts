@@ -3,7 +3,6 @@ import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 import Facebook from 'next-auth/providers/facebook';
 import Instagram from 'next-auth/providers/instagram';
-import GitHub from 'next-auth/providers/github';
 
 import { db } from '../../../database';
 import { User } from '../../../models';
@@ -12,21 +11,16 @@ import { dbUsers } from '../../../database';
 export const nextAuthOptions: NextAuthOptions = {
 
   providers: [
-      
+
     Credentials({
       name: 'Custom Login',
       credentials: {
         email: { label: 'Correo', type: 'email', placeholder: 'correo@google.com' },
         password: { label: 'Contraseña', type: 'password', placeholder: 'Contraseña' },
       },
-      async authorize( credentials, req ) {
-        return await dbUsers.CheckUserEmailPassword( credentials!.email, credentials!.password );
+      async authorize(credentials, req) {
+        return await dbUsers.CheckUserEmailPassword(credentials!.email, credentials!.password);
       }
-    }),
-
-    GitHub({
-      clientId: process.env.GITHUB_ID || '',
-      clientSecret: process.env.GITHUB_SECRET || '',
     }),
 
     Google({
@@ -70,22 +64,22 @@ export const nextAuthOptions: NextAuthOptions = {
       const userInfo = await User.findOne({ email: user.email! }).select('isAble').lean();
       await db.disconnect();
 
-      if ( !userInfo || !userInfo.isAble ) return '/';
+      if (!userInfo || !userInfo.isAble) return '/';
 
       return true;
     },
 
     async jwt({ token, account, user }) {
-      if ( account ) {
+      if (account) {
         token.accessToken = account.access_token;
 
-        switch( account.type ) {
+        switch (account.type) {
           case 'credentials':
             token.user = user;
             break;
 
           case 'oauth':
-            token.user = await dbUsers.oAuthToDbUser( user?.email || '', user?.name || '' );
+            token.user = await dbUsers.oAuthToDbUser(user?.email || '', user?.name || '');
             break;
         }
       }
@@ -102,7 +96,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
   },
 
-  secret: process.env.NEXT_PUBLIC_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 }
 
-export default NextAuth( nextAuthOptions );
+export default NextAuth(nextAuthOptions);

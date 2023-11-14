@@ -98,7 +98,7 @@ export const SideMenu: FC = () => {
                         </a>
                     </NextLink>
 
-                    <SideMenuButton active={router.asPath.startsWith('/adoptar')} text='Adoptar' links={[{ path: '/adoptar/perros', text: 'Perros' }, { path: '/adoptar/gatos', text: 'Gatos' }, { path: '/adoptar/otros', text: 'Otros' }, { path: '/adoptar/formulario', text: 'Formulario' }]}>
+                    <SideMenuButton active={router.asPath.startsWith('/adoptar')} text='Adoptar' links={[{ path: '/adoptar/perros', text: 'Perros' }, { path: '/adoptar/gatos', text: 'Gatos' }, { path: '/adoptar/formulario', text: 'Formulario' }]}>
                         <VolunteerActivism color='secondary' />
                     </SideMenuButton>
 

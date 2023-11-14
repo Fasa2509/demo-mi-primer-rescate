@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const { model, Schema } = mongoose;
-import { IOrder } from '../interfaces';
+import { IOrder, validMethods } from '../interfaces';
 
 const orderSchema = new Schema({
     user: {
@@ -51,7 +51,7 @@ const orderSchema = new Schema({
             method: {
                 type: String,
                 enum: {
-                    values: ['Pago móvil', 'Paypal'],
+                    values: validMethods,
                     message: '{VALUE} no es un valor permitido'
                 },
                 required: true,
