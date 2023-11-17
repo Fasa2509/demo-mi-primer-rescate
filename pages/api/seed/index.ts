@@ -33,8 +33,8 @@ const updateProducts = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const session = await getServerSession(req, res, nextAuthOptions);
 
-    // if ((!session || !session.user) && data )
-    //     return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
+    if ((!session || !session.user) && data)
+        return res.status(400).json({ error: true, message: 'Debes iniciar sesión' });
 
     const validRoles = ['superuser', 'admin'];
 
