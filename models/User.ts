@@ -9,7 +9,7 @@ const userSchema = new Schema({
     role: {
         type: String,
         enum: {
-            values: [ 'user', 'superuser', 'admin' ],
+            values: ['user', 'superuser', 'admin'],
             message: '{VALUE} no es un role válido',
         },
         default: 'user',
@@ -20,6 +20,8 @@ const userSchema = new Schema({
     orders: [{ type: Schema.Types.ObjectId, ref: 'Order', required: true }],
     pets: [{ type: Schema.Types.ObjectId, ref: 'Pet', required: true }],
     createdAt: { type: Number, default: () => Date.now() },
+}, {
+    versionKey: false,
 })
 
 // @ts-ignore

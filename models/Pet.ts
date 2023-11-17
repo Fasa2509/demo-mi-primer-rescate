@@ -18,19 +18,12 @@ const petSchema = new Schema({
     isAble: { type: Boolean, default: true },
     isAdminPet: { type: Boolean, default: false },
     createdAt: { type: Number, default: () => Date.now() },
+}, {
+    versionKey: false,
 });
 
 // @ts-ignore
 mongoose.models = {};
-
-// petSchema.pre('save', function( next ) {
-//     console.log( this );
-
-//     if ( this.type === 'perro' || this.type === 'gato' || this.type === 'otro' && this.images.length > 1 ) throw new Error('Hay imágenes de más');
-//     if ( this.type === 'cambios' || this.type === 'experiencias' && this.images.length === 1 || this.images.length > 4 ) throw new Error('Faltan imágenes');
-    
-//     next();
-// })
 
 const Pet = model<IPet>('Pet', petSchema);
 export default Pet;

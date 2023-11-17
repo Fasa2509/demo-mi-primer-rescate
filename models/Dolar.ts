@@ -3,6 +3,8 @@ const { Schema, model } = mongoose;
 
 const dolarSchema = new Schema({
     price: { type: Number, required: true, min: 0.1 },
+}, {
+    versionKey: false,
 });
 
 // @ts-ignore

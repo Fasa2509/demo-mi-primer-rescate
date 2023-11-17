@@ -11,6 +11,8 @@ const indexImageSchema = new Schema({
         linkText: { type: String, required: false },
         bgcolor: { type: String, required: false },
     }]
+}, {
+    versionKey: false,
 });
 
 // @ts-ignore

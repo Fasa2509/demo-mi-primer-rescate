@@ -88,7 +88,6 @@ export const ModalFull: FC<Props> = ({ products }) => {
                 url: `${process.env.NEXT_PUBLIC_DOMAIN_NAME}${router.asPath}`,
             });
         } catch (error) {
-            console.log(error)
             enqueueSnackbar('No se pudo compartir', { variant: 'warning' });
         }
     }

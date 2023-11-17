@@ -14,7 +14,7 @@ const productSchema = new Schema({
         }],
         required: true,
         validate: {
-            validator: function ( elements: ImageObj[] ) {
+            validator: function (elements: ImageObj[]) {
                 return elements.length >= 2 && elements.length <= 4;
             }
         }
@@ -36,7 +36,7 @@ const productSchema = new Schema({
     tags: [{
         type: String,
         enum: {
-            values: [ 'accesorios', 'consumibles', 'ropa', 'útil' ],
+            values: ['accesorios', 'consumibles', 'ropa', 'útil'],
             message: '{VALUE} no es una etiqueta permitida',
             required: true,
         }
@@ -45,6 +45,8 @@ const productSchema = new Schema({
     slug: { type: String, required: true, lowercase: true, },
     isAble: { type: Boolean, default: true },
     createdAt: { type: Number, default: (() => Date.now())() }
+}, {
+    versionKey: false,
 });
 
 // @ts-ignore

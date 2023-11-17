@@ -71,6 +71,8 @@ const orderSchema = new Schema({
         },
     },
     createdAt: { type: Number, default: () => Date.now(), inmutable: true },
+}, {
+    versionKey: false,
 })
 
 // @ts-ignore

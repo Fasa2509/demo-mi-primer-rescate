@@ -20,10 +20,12 @@ const articleSchema = new Schema({
             url: { type: String, required: true },
             alt: { type: String, required: true },
             width: { type: Number, default: 450, required: true },
-            height: { type: Number, default: 450, required: true},
+            height: { type: Number, default: 450, required: true },
         }],
     }],
     createdAt: { type: Number, default: () => Date.now() },
+}, {
+    versionKey: false,
 })
 
 // @ts-ignore

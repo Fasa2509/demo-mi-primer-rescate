@@ -44,6 +44,8 @@ const adoptionSchema = new Schema({
     input28: { type: String },
     checked: { type: Boolean, default: false },
     createdAt: { type: Number, default: () => Date.now() },
+}, {
+    versionKey: false,
 })
 
 // @ts-ignore
