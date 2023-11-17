@@ -82,7 +82,7 @@ const AuthPage: NextPage = () => {
 
                   <ModalWindow title='Recuperar contraseña' buttonTxt='¿Olvidaste tu contraseña?' buttonStyle={{ alignSelf: 'flex-end', padding: '0', margin: '.1rem 0 .4rem', fontSize: '.9rem', color: 'var(--secondary-color-1)', backgroundColor: '#fff', fontWeight: '400', }}>
                     <Box display='flex' flexDirection='column' gap='.5rem'>
-                      <p style={{ margin: 0 }}>Enviaremos un mail a tu correo electrónico</p>
+                      <p style={{ margin: 0 }}>Enviaremos un mail a tu correo electrónico con un código de recuperación.</p>
 
                       {anError.message &&
                         <Box>
@@ -124,7 +124,7 @@ const AuthPage: NextPage = () => {
                   <Typography textAlign='center'>¡Puedes iniciar sesión con alguna de tus redes!</Typography>
 
                   {
-                    [{ id: 'facebook', name: 'Facebook' }, { id: 'google', name: 'Google' }, { id: 'instagram', name: 'Instagram' }].map((provider: any) => {
+                    [{ id: 'google', name: 'Google' }, /*{ id: 'facebook', name: 'Facebook' },  { id: 'instagram', name: 'Instagram' }*/].map((provider: any) => {
                       return <Button
                         key={provider.id}
                         className={`${styles.share__button} ${provider.name === 'Facebook' ? styles.facebook : provider.name === 'Instagram' ? styles.instagram : styles.google}`}

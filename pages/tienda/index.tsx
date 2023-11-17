@@ -32,9 +32,13 @@ const TiendaPage: NextPage<Props> = ({ products, mostSoldProducts, dolar }) => {
   return (
     <ShopLayout title={'Tienda Virtual'} pageDescription={'Tienda virtual oficial de nuestra fundación MPR. Aquí encontrarás todo tipo de artículos como alimentos y ropa para ti y tu mejor amig@ y mascota. ¡No pierdas el tiempo!'} titleIcon={<ShoppingBag color='info' sx={{ fontSize: '1.5rem' }} />} nextPage='/' url='/tienda'>
 
-      <Suspense fallback={<></>}>
-        <ModalFull products={products} />
-      </Suspense>
+      <>
+        {products.length > 0 &&
+          <Suspense fallback={<></>}>
+            <ModalFull products={products} />
+          </Suspense>
+        }
+      </>
 
       <Box display='flex' sx={{ mb: 1 }}>
         <Typography sx={{ fontSize: '1.2rem', fontWeight: '500', padding: '.4rem 1rem .5rem', borderRadius: '.3rem', color: '#fbfbfb', backgroundColor: 'var(--secondary-color-2)', position: 'relative', boxShadow: '-.4rem .4rem .6rem -.5rem #444' }}>La tasa de hoy es Bs. {dolar} x 1$</Typography>
@@ -302,148 +306,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
   return {
     props: {
-      mostSoldProducts: [
-        {
-          _id: 'abcd1',
-          images: [
-            {
-              url: '/perro-1.webp',
-              alt: 'Perro 1',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/square-dog.jpg',
-              alt: 'Perro cuadrado',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/perro-2.webp',
-              alt: 'Perro 2',
-              width: 500,
-              height: 500,
-            },
-          ],
-          name: 'Capucha perro grande',
-          description: 'Hermosa capucha para perros grandes con forma de oso',
-          price: 5,
-          discount: 0.1,
-          inStock: {
-            unique: 7
-          },
-          tags: ['accesorios', 'útil'],
-          sold: 0,
-          slug: 'capucha_perro_grande',
-          isAble: true,
-          createdAt: (() => Date.now())()
-        },
-        {
-          _id: 'abcd2',
-          images: [
-            {
-              url: '/perro-2.webp',
-              alt: 'Perro 2',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/square-dog.jpg',
-              alt: 'Perro cuadrado',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/perro-1.webp',
-              alt: 'Perro 1',
-              width: 500,
-              height: 500,
-            },
-          ],
-          name: 'Recipiente (estrellado)',
-          description: 'Recipiente estrellado para agua o consumibles',
-          price: 7,
-          discount: 0,
-          inStock: {
-            unique: 6
-          },
-          tags: ['útil'],
-          sold: 0,
-          slug: 'recipiente_estrellado',
-          isAble: true,
-          createdAt: (() => Date.now())()
-        },
-        {
-          _id: 'abcd3',
-          images: [
-            {
-              url: '/gato-2.jpg',
-              alt: 'Perro cuadrado',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/perro-2.webp',
-              alt: 'Perro 2',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/perro-1.webp',
-              alt: 'Perro 1',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/gato-1.webp',
-              alt: 'Perro cuadrado',
-              width: 500,
-              height: 500,
-            },
-          ],
-          name: 'Saco de perrarina XXXXX (20Kg)',
-          description: 'Saco de 20Kg de perrarina marca XXXXX para perros pequeños y medianos',
-          price: 16,
-          discount: 0,
-          inStock: {
-            unique: 12
-          },
-          tags: ['consumibles'],
-          sold: 0,
-          slug: 'perrarina_xxxxx_20kg',
-          isAble: true,
-          createdAt: (() => Date.now())()
-        },
-        {
-          _id: 'abcd4',
-          images: [
-            {
-              url: '/gato-1.webp',
-              alt: 'Perro cuadrado',
-              width: 500,
-              height: 500,
-            },
-            {
-              url: '/perro-2.webp',
-              alt: 'Perro 2',
-              width: 500,
-              height: 500,
-            },
-          ],
-          name: 'Vitamina YYY',
-          description: 'Vitamina YYY para reforzar las defensas de tu mascota y embellecer su pelaje',
-          price: 12,
-          discount: 0.2,
-          inStock: {
-            unique: 15
-          },
-          tags: ['consumibles'],
-          sold: 0,
-          slug: 'vitamina_yyy',
-          isAble: true,
-          createdAt: (() => Date.now())()
-        },
-      ],
+      mostSoldProducts,
       products: products.sort(() => 0.5 - Math.random()).reverse().sort(() => 0.5 - Math.random()).reverse(),
       dolar,
     },

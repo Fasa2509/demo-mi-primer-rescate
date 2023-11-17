@@ -61,7 +61,7 @@ const AdoptarPage: NextPage<Props> = ({ pets: Pets }) => {
     <MainLayout title={'Adopta un perrito'} H1={'Adopta un perrito'} pageDescription={'¿Buscas adoptar un perrito? Ve los perritos que tenemos en nuestra fundación y adopta uno para llenarlo de amor. Encuentra el ideal para ti aquí entre una amplia selección de animales rescatados.'} titleIcon={<VolunteerActivism color='info' sx={{ fontSize: '1.5rem' }} />} nextPage='/adoptar/gatos' url='/adoptar/perros'>
 
       <section className='content-island'>
-        <p>En este apartado puedes conocer la historia de cada peludo en adopción, si estás interesado en alguno, llena el apartado de <NextLink href='/adoptar/formulario' passHref><Link sx={{ textDecoration: 'underline', color: 'var(--secondary-color-2)' }}>formulario</Link></NextLink>.</p>
+        <p>En este apartado puedes conocer la historia de cada peludo en adopción. Si estás interesado en alguno, llena el apartado de <NextLink href='/adoptar/formulario' passHref><Link sx={{ textDecoration: 'underline', color: 'var(--secondary-color-2)' }}>formulario</Link></NextLink>.</p>
       </section>
 
       <div className={styles.grid__container}>
