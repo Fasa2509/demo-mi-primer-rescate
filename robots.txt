@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /auth*
 Disallow: /tienda?*
 Disallow: /personal
-Sitemap: https://miprimerrescate.org/sitemap.xml
+Sitemap: https://miprimerescate.org/sitemap.xml

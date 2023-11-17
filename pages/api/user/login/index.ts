@@ -5,7 +5,6 @@ import bcrypt from 'bcryptjs';
 import { db } from '../../../../database';
 import { User } from '../../../../models';
 import { jwt, validations } from '../../../../utils';
-import { isValidObjectId } from 'mongoose';
 
 type Data =
     | { error: boolean, message: string }
@@ -236,9 +235,14 @@ const sendEmailPassword = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const changeUserPassword = async (req: NextApiRequest, res: NextApiResponse) => {
 
-    const { id = '', newPassword = '' } = req.body as { id: string; newPassword: string; };
+    const { token = '', newPassword = '' } = req.body as { token: string; newPassword: string; };
 
-    if (!isValidObjectId(id))
+    if (!token || token.length < 10)
+        return res.status(400).json({ error: true, message: 'La información suministrada no es válida' });
+
+    const decodedToken = await jwt.isValidEmailToken(token.toString().replaceAll('___', '.'));
+
+    if (!decodedToken)
         return res.status(400).json({ error: true, message: 'La información suministrada no es válida' });
 
     if (!validations.isValidPassword(newPassword))
@@ -247,7 +251,7 @@ const changeUserPassword = async (req: NextApiRequest, res: NextApiResponse) => 
     try {
         await db.connect();
 
-        const user = await User.findById(id);
+        const user = await User.findById(decodedToken._id);
 
         if (!user) {
             await db.disconnect();

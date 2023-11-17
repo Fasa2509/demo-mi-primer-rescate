@@ -57,13 +57,13 @@ export const deleteUserById = async (userId: string, enable: boolean): Promise<{
 
 }
 
-export const updateUserPassword = async (userId: string, userPassword: string): Promise<{ error: boolean; message: string; }> => {
+export const updateUserPassword = async (token: string, userPassword: string): Promise<{ error: boolean; message: string; }> => {
 
-    if (!userId || !validations.isValidPassword(userPassword))
+    if (!token || !validations.isValidPassword(userPassword))
         return { error: true, message: 'La información no es válida' };
 
     try {
-        const { data } = await mprApi.put('/user/login', { id: userId, newPassword: userPassword });
+        const { data } = await mprApi.put('/user/login', { token, newPassword: userPassword });
 
         return data;
     } catch (error) {
